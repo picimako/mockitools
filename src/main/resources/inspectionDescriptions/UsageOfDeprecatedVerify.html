@@ -1,0 +1,38 @@
+<html>
+<body>
+Reports calls to various verify methods which are deprecated since Mockito v3, and are removed in v4.
+<!-- tooltip end -->
+<p>
+    Reported calls:
+<ul>
+    <li><code>MockedStatic.verify(VerificationMode, Verification)</code> that can be replaced with
+        <code>Verification, VerificationMode</code>, essentially switching the two arguments in the call.
+    </li>
+    <li><code>Mockito.verifyZeroInteractions(Object...)</code> that can be replaced with
+        <code>Mockito.verifyNoMoreInteractions(Object...)</code></li>
+</ul>
+<p>
+    The inspection is applied only when the Mockito version included on the module classpath of the currently
+    inspected file is 3.x.
+
+<p>
+<h4>MockedStatic.verify()</h4>
+<pre>
+//from:
+try (MockedStatic&lt;Util> util = Mockito.mockStatic(Util.class)) {
+    util.verify(Mockito.times(1), () -> Util.method(List.of()));
+}
+//to:
+try (MockedStatic&lt;Util> util = Mockito.mockStatic(Util.class)) {
+    util.verify(() -> Util.method(List.of()), Mockito.times(1));
+}
+</pre>
+<h4>Mockito.verifyZeroInteractions()</h4>
+<pre>
+//from:
+Mockito.verifyZeroInteractions(mock1, mock2);
+//to:
+Mockito.verifyNoMoreInteractions(mock1, mock2);
+</pre>
+</body>
+</html>

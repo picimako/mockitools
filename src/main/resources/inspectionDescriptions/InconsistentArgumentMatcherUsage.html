@@ -1,0 +1,28 @@
+<html>
+<body>
+Argument matchers are used incorrectly when, during stubbing, matcher and non-matcher arguments are used in a
+mixed manner. That is not permitted by Mockito. For example:
+<pre>
+    Mockito.when(mock.method(eq("some string"), 25)).thenReturn(10);
+</pre>
+or
+<pre>
+    Mockito.when(mock.method("some string", geq(25))).thenReturn(10);
+</pre>
+As per Mockito documentation: <i>If you are using argument matchers, all arguments have to be provided by matchers.</i>
+<!-- tooltip end -->
+<p>The following ways of stubbing are supported:
+<ul>
+    <li><code>Mockito.when()</code></li>
+    <li><code>BDDMockito.given()</code></li>
+    <li><code>Mockito.do...().when()</code></li>
+    <li>matchers in <code>AdditionalMatchers</code></li>
+</ul>
+<p>
+    You can find more information in the official documents:
+    <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#argument_matchers">Argument
+        matchers documentation</a>,
+    <a href="https://javadoc.io/static/org.mockito/mockito-core/3.11.2/org/mockito/ArgumentMatchers.html">ArgumentMatchers
+        javadoc</a>
+</body>
+</html>

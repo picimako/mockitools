@@ -1,0 +1,22 @@
+<html>
+<body>
+Reports interfaces and named classes that are inherited from types annotated as <code>@NotExtensible</code>.
+<p>
+    According to the javadoc of the <a
+        href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/NotExtensible.html"><code>@NotExtensible</code>
+    annotation</a>, it
+<blockquote><i>Indicates to the user that she should not provide custom implementations of given type.</i></blockquote>
+<!-- tooltip end -->
+<p>
+    The below example shows a snippet that would be reported:
+<pre>
+    import org.mockito.MockSettings;
+    import org.mockito.NotExtensible;
+    import java.util.List;
+
+    //MockSettings is annotated as @NotExtensible, so this interface is reported by the inspection.
+    interface SomeInterface extends MockSettings, List&lt;String> {
+    }
+</pre>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<html>
+<body>
+<!-- tooltip end -->
+This inspection will report any call to <code>Mockito.reset()</code>, regardless of its location in the test method.
+Of course there may be cases where calling <code>reset()</code> is acceptable or even necessary, this inspection
+doesn't take into account those cases.
+<p>
+    Based on Mockito's documentation on <a
+        href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#resetting_mocks">resetting mocks</a>
+<blockquote><i>"Smart Mockito users hardly use this feature because they know it could be a sign of poor tests.
+    Normally, you don't need to reset your mocks, just create new mocks for each test method."</i></blockquote>
+<pre>
+    @Test
+    void testMethod() {
+        //mock setup
+        MockObject mock = Mockito.mock(MockObject.class);
+        when(mock.doSomething())...
+        reset(mock); //reset() is called
+        //another mock setup
+        when(mock.doSomethingElse())...
+    }
+</pre>
+</body>
+</html>

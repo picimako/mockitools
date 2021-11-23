@@ -1,0 +1,35 @@
+<html>
+<body>
+Reports usages of JUnit runners used from the <code>org.mockito.runners</code> package, which is removed in Mockito v4.
+<!-- tooltip end -->
+<p>
+    Quick fixes can be applied to replace these classes
+<ul>
+    <li>ConsoleSpammingMockitoJUnitRunner</li>
+    <li>VerboseMockitoJUnitRunner</li>
+    <li>MockitoJUnitRunner</li>
+</ul>
+to <code>org.mockito.junit.MockitoJUnitRunner</code>.
+<p>
+    The inspection is applied only when the Mockito version included on the module classpath of the currently
+    inspected file is 2.x or 3.x.
+<pre>
+//from:
+import org.junit.runner.RunWith;
+import org.mockito.runners.ConsoleSpammingMockitoJUnitRunner;
+
+@RunWith(ConsoleSpammingMockitoJUnitRunner.class)
+public class JUnitRunnerTest {
+}
+
+//to:
+import org.junit.runner.RunWith;
+import org.mockito.runners.ConsoleSpammingMockitoJUnitRunner; //this import is left in for now
+import org.mockito.junit.MockitoJUnitRunner;
+
+@RunWith(MockitoJUnitRunner.class)
+public class JUnitRunnerTest {
+}
+</pre>
+</body>
+</html>

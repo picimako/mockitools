@@ -1,0 +1,34 @@
+<html>
+<body>
+The <code>extraInterfaces</code> functionality of Mockito has some criteria in order to create proper mocks.
+In all these cases Mockito would stop test execution and fail with an exception letting you know about one of these
+issues.
+<!-- tooltip end -->
+<p>
+    <b>Types specified in the <code>@Mock</code> annotation's <code>extraInterfaces</code> attribute must be interfaces</b>
+
+<pre>
+    @Mock(extraInterfaces = {List.class, Set.class, Object.class}) //Object is not an interface
+    public Object mock;
+</pre>
+
+<b>Types specified in <code>Mockito.withSettings().extraInterfaces()</code> must be interfaces</b>
+
+<pre>
+    //None of the arguments is an interface
+    Mockito.mock(Object.class, Mockito.withSettings().extraInterfaces(Object.class, ArrayList.class, AbstractMap.class));
+</pre>
+
+<b><code>Mockito.withSettings().extraInterfaces()</code> calls must be provided at least one argument</b>
+
+<pre>
+    Mockito.mock(Object.class, Mockito.withSettings().extraInterfaces()); //no argument specified
+</pre>
+
+<p>
+    The respective Mockito exceptions are thrown in Mockito's <a
+        href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java">Reporter.java</a>
+    class. You can look for the <code>extraInterfacesAcceptsOnlyInterfaces(Class)</code> and <code>extraInterfacesRequiresAtLeastOneInterface()</code>
+    methods.
+</body>
+</html>

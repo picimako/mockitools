@@ -1,0 +1,22 @@
+<html>
+<body>
+<!-- tooltip end -->
+Reports when arguments of calls on time and occurrence based <code>VerificationMode</code>s are out of the allowed
+bounds.
+<p>
+    Supported VerificationModes:
+<ul>
+    <li><code>Mockito.times</code></li>
+    <li><code>Mockito.atLeast</code></li>
+    <li><code>Mockito.atMost</code></li>
+    <li><code>Mockito.calls</code></li>
+    <li><code>Mockito.after</code></li>
+    <li><code>Mockito.timeout</code></li>
+</ul>
+<p>
+    None of these calls are allowed negative values as argument. Additionally, <code>Mockito.calls()</code> doesn't
+    allow 0 as argument either, and <code>Mockito.timeout()</code> doesn't allow values above a user-defined threshold
+    (with 5000 as its default value.)
+<p>
+</body>
+</html>

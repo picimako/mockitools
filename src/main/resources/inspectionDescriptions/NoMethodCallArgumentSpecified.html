@@ -1,0 +1,19 @@
+<html>
+<body>
+<!-- tooltip end -->
+Reports Mockito method calls that has no argument passed.
+There are a couple of methods in Mockito that must be passed at least one argument (usually these methods take varargs as argument).
+<pre>
+    @Test
+    void testMethod() {
+        Object mock = Mockito.mock(Object.class, Mockito.withSettings().extraInterfaces());
+        Mockito.verifyNoInteractions();
+        Mockito.verifyNoMoreInteractions();
+        Mockito.verifyZeroInteractions();
+        Mockito.reset();
+        Mockito.ignoreStubs();
+        Mockito.inOrder();
+    }
+</pre>
+</body>
+</html>

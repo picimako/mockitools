@@ -1,0 +1,36 @@
+<html>
+<body>
+Reports usages of certain <code>anyX()</code> matchers which are deprecated since Mockito v2, and are removed in
+v4.
+<!-- tooltip end -->
+<p>
+    Accordingly, it also provides quick fixes
+<ul>
+    <li>to replace <code>anyObject()</code> and <code>anyVararg()</code> with <code>any()</code>,</li>
+    <li>to replace <code>anyCollectionOf()</code>, <code>anyIterableOf()</code>, <code>anyListOf()</code>, <code>anyMapOf()</code>
+        and <code>anySetOf()</code> with their <code>anyX()</code> variants.
+    </li>
+</ul>
+<p>
+    The inspection is applied only when the Mockito version included on the module classpath of the currently
+    inspected file is 2.x or 3.x.
+<p>
+<h4>anyObject/anyVararg -> any</h4>
+<pre>
+//from:
+Mockito.when(mock.method(ArgumentMatchers.anyVararg())).thenReturn(10);
+//to:
+Mockito.when(mock.method(ArgumentMatchers.any())).thenReturn(10);
+</pre>
+<h4>anyXOf -> anyX</h4>
+<pre>
+//from:
+Mockito.when(mock.method(ArgumentMatchers.anyCollectionOf(String.class))).thenReturn(10);
+//to:
+Mockito.when(mock.method(ArgumentMatchers.anyCollection())).thenReturn(10);
+</pre>
+<br>
+Furthermore, if the matcher is referenced via <code>org.mockito.Matchers</code>, it is also replaced with the <code>org.mockito.ArgumentMatchers</code>
+qualifier.
+</body>
+</html>

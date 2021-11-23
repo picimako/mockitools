@@ -1,18 +1,106 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
-<idea-plugin>
-    <id>com.github.picimako.mockitools</id>
-    <name>mockitools</name>
-    <vendor>picimako</vendor>
+<idea-plugin require-restart="false">
+    <id>mockitools</id>
+    <name>Mockitools</name>
+    <vendor url="https://github.com/picimako/mockitools">Tamás Balog</vendor>
+    <version>0.1.0</version>
+    <resource-bundle>messages.MockitoolsBundle</resource-bundle>
 
+    <description>Provides various inspections for the Mockito framework for Java.</description>
+
+    <!-- https://jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html -->
+    <idea-version since-build="203"/>
+
+    <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+         on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.picimako.mockitools.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.picimako.mockitools.services.MyProjectService"/>
-    </extensions>
+        <!-- Inspections for Mockito end-users -->
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.InconsistentArgumentMatcherUsageInspection"
+                id="mockitools.inconsistentArgumentMatcherUsage" language="JAVA"
+                displayName="Inconsistent argument matcher usage" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.VerificationModeValuesBetweenLimitsInspection"
+                id="mockitools.verificationModeValuesBetweenLimits" language="JAVA"
+                displayName="Verification mode values are out of bounds" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.CaptorFieldInitializationInspection"
+                id="mockitools.captorFieldInitialization" language="JAVA"
+                displayName="@Captor field is explicitly initialized" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.CaptorFieldOfTypeArgumentCaptorInspection"
+                id="mockitools.captorFieldOfTypeArgumentCaptor" language="JAVA"
+                displayName="@Captor field is not of the type ArgumentCaptor" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.TimesVerificationModeInspection"
+                id="mockitools.timesVerificationMode" language="JAVA"
+                displayName="Mockito.times() argument validations" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.ExtraInterfacesInspection"
+                id="mockitools.extraInterfaces" language="JAVA"
+                displayName="@Mock#extraInterfaces and MockSettings.extraInterfaces() validations" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.MockTypeInspection"
+                id="mockitools.mockType" language="JAVA"
+                displayName="Mocking/spying non-mockable types" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.CallOnMockitoResetInspection"
+                id="mockitools.callOnMockitoReset" language="JAVA"
+                displayName="Call on Mockito.reset()" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.NoMethodCallArgumentSpecifiedInspection"
+                id="mockitools.noMethodCallArgument" language="JAVA"
+                displayName="No Mockito method call argument specified" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
 
-    <applicationListeners>
-        <listener class="com.github.picimako.mockitools.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
-    </applicationListeners>
+        <!-- v4 migration aids -->
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.migrationaids.v4.ArgumentMatchersCalledViaMatchersInspection"
+                id="mockitools.aid.v4.useArgumentMatchers" language="JAVA"
+                displayName="Argument matchers are used via Matchers" groupPath="Java,Mockito"
+                groupName="Migration aids (v4)" enabledByDefault="true" level="WARNING"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.migrationaids.v4.UsageOfAnyMatchersInspection"
+                id="mockitools.aid.v4.useAny" language="JAVA"
+                displayName="Using deprecated anyX() matcher" groupPath="Java,Mockito"
+                groupName="Migration aids (v4)" enabledByDefault="true" level="WARNING"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.migrationaids.v4.ParameterizedIsNotNullMatcherInspection"
+                id="mockitools.aid.v4.use.non.param.null" language="JAVA"
+                displayName="Using parameterized null matcher" groupPath="Java,Mockito"
+                groupName="Migration aids (v4)" enabledByDefault="true" level="WARNING"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.migrationaids.v4.UsageOfDeprecatedVerifyInspection"
+                id="mockitools.aid.v4.mocked.static.verify" language="JAVA"
+                displayName="Using deprecated Mockito and MockedStatic.verify" groupPath="Java,Mockito"
+                groupName="Migration aids (v4)" enabledByDefault="true" level="WARNING"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.migrationaids.v4.UsageOfDeprecatedPluginClassesInspection"
+                id="mockitools.aid.v4.plugin.classes" language="JAVA"
+                displayName="Using deprecated plugins classes" groupPath="Java,Mockito"
+                groupName="Migration aids (v4)" enabledByDefault="true" level="WARNING"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.migrationaids.v4.UsageOfOldJUnitRunnerInspection"
+                id="mockitools.aid.v4.junit.runners" language="JAVA"
+                displayName="Using deprecated JUnit runner" groupPath="Java,Mockito"
+                groupName="Migration aids (v4)" enabledByDefault="true" level="WARNING"/>
+
+        <!-- Inspections for Mockito framework integration -->
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.framework.NotExtensibleClassInspection"
+                id="mockitools.framework.notExtensibleClass" language="JAVA"
+                displayName="Class extends @NotExtensible class" groupPath="Java,Mockito"
+                groupName="Framework" enabledByDefault="false" level="WARNING"/>
+    </extensions>
 </idea-plugin>

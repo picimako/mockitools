@@ -1,0 +1,35 @@
+<html>
+<body>
+Reports <code>Mockito.times()</code> calls that can be optimized or deleted based on their argument values.
+<ul>
+    <li><code>times(0)</code> calls can be replaced with <code>Mockito.never()</code> for better readability,</li>
+    <li><code>times(1)</code> calls can be removed since 1 is the default value when using <code>times()</code>
+        verification. See <a
+                href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#exact_verification">Mockito
+            exact verification</a> documentation.
+    </li>
+</ul>
+<!-- tooltip end -->
+<p>
+    Quick fixes are also provided for the replacement and removal of these calls.
+<pre>
+//before - times(1) can be omitted
+Mockito.verify(mock, times(1))... 
+//after
+Mockito.verify(mock)...
+    
+//no quick fix, left untouched
+Mockito.verify(mock, times(1).description("message"))...
+
+//before - times(0) can be replaced with never()
+Mockito.verify(mock, times(0))...
+//after
+Mockito.verify(mock, never())...
+
+//before - times(0) can be replaced with never()
+Mockito.verify(mock, times(0).description("message"))...
+//after
+Mockito.verify(mock, never().description("message"))...
+</pre>
+</body>
+</html>

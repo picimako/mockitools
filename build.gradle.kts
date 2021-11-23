@@ -1,5 +1,5 @@
 import org.jetbrains.changelog.markdownToHTML
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+//import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 fun properties(key: String) = project.findProperty(key).toString()
 
@@ -7,9 +7,9 @@ plugins {
     // Java support
     id("java")
     // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.5.30"
+//    id("org.jetbrains.kotlin.jvm") version "1.5.30"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.1.6"
+    id("org.jetbrains.intellij") version "1.2.0"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "1.3.0"
     // Gradle Qodana Plugin
@@ -50,6 +50,11 @@ qodana {
     showReport.set(System.getenv("QODANA_SHOW_REPORT").toBoolean())
 }
 
+dependencies {
+    testImplementation("org.assertj:assertj-core:3.21.0")
+    testImplementation("org.mockito:mockito-core:3.11.2")
+}
+
 tasks {
     // Set the JVM compatibility versions
     properties("javaVersion").let {
@@ -57,9 +62,9 @@ tasks {
             sourceCompatibility = it
             targetCompatibility = it
         }
-        withType<KotlinCompile> {
-            kotlinOptions.jvmTarget = it
-        }
+//        withType<KotlinCompile> {
+//            kotlinOptions.jvmTarget = it
+//        }
     }
 
     wrapper {
@@ -69,7 +74,7 @@ tasks {
     patchPluginXml {
         version.set(properties("pluginVersion"))
         sinceBuild.set(properties("pluginSinceBuild"))
-        untilBuild.set(properties("pluginUntilBuild"))
+//        untilBuild.set(properties("pluginUntilBuild"))
 
         // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
         pluginDescription.set(
@@ -98,12 +103,17 @@ tasks {
 
     // Configure UI tests plugin
     // Read more: https://github.com/JetBrains/intellij-ui-test-robot
-    runIdeForUiTests {
-        systemProperty("robot-server.port", "8082")
-        systemProperty("ide.mac.message.dialogs.as.sheets", "false")
-        systemProperty("jb.privacy.policy.text", "<!--999.999-->")
-        systemProperty("jb.consents.confirmation.enabled", "false")
-    }
+//    runIdeForUiTests {
+//        systemProperty("robot-server.port", "8082")
+//        systemProperty("ide.mac.message.dialogs.as.sheets", "false")
+//        systemProperty("jb.privacy.policy.text", "<!--999.999-->")
+//        systemProperty("jb.consents.confirmation.enabled", "false")
+//    }
+
+    //Uncomment and configure this for functional testing
+//    test {
+//        systemProperty("idea.home.path", "ABSOLUTE PATH TO LOCAL intellij-community")
+//    }
 
     signPlugin {
         certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))

@@ -1,0 +1,35 @@
+<html>
+<body>
+<!-- tooltip end -->
+This inspection validates <code>@Mock</code> and <code>@Spy</code> annotated fields' types and the types specified as the arguments of
+<code>Mockito.mock()</code> and <code>Mockito.spy()</code> calls.
+<p>
+    Based on the logic in Mockito's
+    <a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java">InlineDelegateByteBuddyMockMaker#isTypeMockable(Class)</a>
+    method and
+    <a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineBytecodeGenerator.java">InlineBytecodeGenerator#EXCLUDES</a>
+    field, when attempting to create mocks for primitives, primitive wrapper types, String and Class, Mockito throws an
+    exception that mock creation cannot happen.
+
+<p>
+    The following examples are all non-compliant ones:
+
+<pre>
+class MockTypesTest {
+    @Mock
+    String mock;
+    
+    @Spy
+    int spy;
+    
+    @Test
+    public void shouldInspectMockTypes() {
+        Mockito.mock(Short.class);
+        Mockito.spy(Class.class);
+        Mockito.mock(String.class, Mockito.withSettings().name("name")); 
+    }
+}
+</pre>
+
+</body>
+</html>

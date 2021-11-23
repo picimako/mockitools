@@ -1,0 +1,23 @@
+<html>
+<body>
+Reports Mockito matchers called via <code>org.mockito.Matchers</code> (since it is removed in 4.0.0), and provides a
+quick fix to replace the call to be via <code>org.mockito.ArgumentMatchers</code>.
+<!-- tooltip end -->
+<h4>Examples:</h4>
+<p>
+    The inspection is applied only when the Mockito version included on the module classpath of the currently
+    inspected file is 2.x or 3.x.
+<pre>
+//from:
+Mockito.when(mock.method(org.mockito.Matchers.anyString())).thenReturn(10);
+//to: since Matchers was not referenced via import, ArgumentMatchers is kept that way too
+Mockito.when(mock.method(org.mockito.ArgumentMatchers.anyString())).thenReturn(10);
+</pre>
+<pre>
+//from:
+Mockito.when(mock.method(Matchers.anyString())).thenReturn(10);
+//to: org.mockito.ArgumentMatchers is also imported, if necessary
+Mockito.when(mock.method(ArgumentMatchers.anyString())).thenReturn(10);
+</pre>
+</body>
+</html>

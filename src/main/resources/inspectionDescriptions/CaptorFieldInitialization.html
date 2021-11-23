@@ -1,0 +1,11 @@
+<html>
+<body>
+Since <code>@Captor</code> annotated fields are initialized automagically by Mockito via
+<code>MockitoJUnitRunner</code>, <code>MockitoJUnit.rule</code> or <code>MockitoAnnotations.initMocks()</code> /
+<code>MockitoAnnotations.openMocks()</code>, there is no need for explicit initialization of them.
+<!-- tooltip end -->
+<p>Explicit initializer is reported only when the field is annotated as <code>@Captor</code> and its type is
+    <code>ArgumentCaptor</code>. Otherwise, you'll see another inspection reported, saying that @Captor fields must be
+    of the type ArgumentCaptor.</p>
+</body>
+</html>

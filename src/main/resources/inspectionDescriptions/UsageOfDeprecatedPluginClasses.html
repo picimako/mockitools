@@ -1,0 +1,43 @@
+<html>
+<body>
+Reports usages of <code>org.mockito.configuration.AnnotationEngine</code> and <code>org.mockito.plugins.InstantiatorProvider</code>
+since they are deprecated since Mockito v2, and are removed in v4.
+<!-- tooltip end -->
+<p>
+    Quick fixes can be applied to replace these references to the ones recommended to use.
+<p>
+    The inspection is applied only when the Mockito version included on the module classpath of the currently
+    inspected file is 2.x or 3.x.
+
+<p>
+<h4>AnnotationEngine</h4>
+<pre>
+//from:
+import org.mockito.configuration.AnnotationEngine;
+
+public interface CustomAnnotationEngine extends AnnotationEngine {
+}
+
+//to:
+import org.mockito.plugins.AnnotationEngine;
+
+public interface CustomAnnotationEngine extends AnnotationEngine {
+}
+</pre>
+<h4>InstantiatorProvider</h4>
+<pre>
+//from:
+import org.mockito.plugins.InstantiatorProvider;
+
+public interface CustomInstantiatorProvider extends InstantiatorProvider {
+}
+
+//to:
+import org.mockito.plugins.InstantiatorProvider; //this import is left in for now
+import org.mockito.plugins.InstantiatorProvider2;
+
+public interface CustomInstantiatorProvider extends InstantiatorProvider2 {
+}
+</pre>
+</body>
+</html>

@@ -1,0 +1,59 @@
+//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+
+package com.picimako.mockitools.inspection;
+
+import static com.picimako.mockitools.MockitoQualifiedNames.IN_ORDER;
+import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_NO_INTERACTIONS;
+import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_NO_MORE_INTERACTION;
+import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_ZERO_INTERACTIONS;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
+import static com.picimako.mockitools.MockitoolsPsiUtil.isExtraInterfaces;
+import static com.picimako.mockitools.MockitoolsPsiUtil.isIgnoreStubs;
+import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
+
+import java.util.Optional;
+
+import com.intellij.codeInspection.LocalInspectionToolSession;
+import com.intellij.codeInspection.ProblemHighlightType;
+import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiMethodCallExpression;
+import com.siyeh.ig.callMatcher.CallMatcher;
+import org.jetbrains.annotations.NotNull;
+
+import com.picimako.mockitools.resources.MockitoolsBundle;
+
+/**
+ * Reports method calls that must have at least one argument passed but none is provided.
+ * <p>
+ * These are usually methods with a vararg as their only parameter.
+ *
+ * @since 0.1.0
+ */
+public class NoMethodCallArgumentSpecifiedInspection extends MockitoolsBaseInspection {
+
+    private static final CallMatcher VERIFY_CALLS =
+        CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, VERIFY_NO_INTERACTIONS, VERIFY_NO_MORE_INTERACTION, VERIFY_ZERO_INTERACTIONS, IN_ORDER);
+
+    @Override
+    public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
+        return isInTestSourceContent(session.getFile()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
+    }
+
+    @Override
+    protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
+        if (expression.getArgumentList().isEmpty()) {
+            if (VERIFY_CALLS.matches(expression) || isExtraInterfaces(expression)) {
+                registerProblem(expression, holder, ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
+            } else if (isIgnoreStubs(expression)) {
+                registerProblem(expression, holder, ProblemHighlightType.WARNING);
+            }
+        }
+    }
+
+    private void registerProblem(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder, ProblemHighlightType problemHighlightType) {
+        PsiElement elementToHighlight = Optional.ofNullable(expression.getMethodExpression().getReferenceNameElement()).orElseGet(expression::getMethodExpression);
+        holder.registerProblem(elementToHighlight, MockitoolsBundle.inspection("method.call.no.argument.specified", expression.getMethodExpression().getReferenceName()), problemHighlightType);
+    }
+}
