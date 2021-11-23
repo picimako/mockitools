@@ -115,6 +115,12 @@ tasks {
 //        systemProperty("idea.home.path", "ABSOLUTE PATH TO LOCAL intellij-community")
 //    }
 
+    test {
+        testLogging {
+            exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        }
+    }
+
     signPlugin {
         certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
         privateKey.set(System.getenv("PRIVATE_KEY"))
