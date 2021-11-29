@@ -4,6 +4,9 @@ package com.picimako.mockitools;
 
 import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito;
 
+import com.intellij.openapi.projectRoots.JavaSdk;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.pom.java.LanguageLevel;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
@@ -17,12 +20,30 @@ public abstract class MockitoolsBaseTest extends LightJavaCodeInsightFixtureTest
 
     @Override
     protected @NotNull LightProjectDescriptor getProjectDescriptor() {
-        return JAVA_11;
+        return getRealJdkHomeOrCommunityMockJdk();
     }
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         loadMockito(myFixture.getProjectDisposable(), getModule());
+    }
+
+    /**
+     * Returns a descriptor with Java 11 Mock JDK from intellij-community if the {@code idea.home.path} system property is defined,
+     * otherwise uses the JAVA_HOME environment variable to identify the JDK to use.
+     * <p>
+     * JAVA_HOME based JDK is used mainly in CI/CD environment.
+     */
+    public static LightProjectDescriptor getRealJdkHomeOrCommunityMockJdk() {
+        if (System.getProperty("idea.home.path") != null) {
+            return JAVA_11;
+        }
+        return new ProjectDescriptor(LanguageLevel.JDK_11) {
+            @Override
+            public Sdk getSdk() {
+                return JavaSdk.getInstance().createJdk("Real JDK", System.getenv("JAVA_HOME"), false);
+            }
+        };
     }
 }
