@@ -9,6 +9,8 @@ import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
 
+import com.picimako.mockitools.MockitoolsBaseTest;
+
 /**
  * Base test class for Mockitools inspection unit testing.
  * <p>
@@ -23,7 +25,7 @@ public abstract class MockitoolsInspectionTestBase extends LightJavaCodeInsightF
 
     @Override
     protected @NotNull LightProjectDescriptor getProjectDescriptor() {
-        return JAVA_11;
+        return MockitoolsBaseTest.getJdkHomeBasedDescriptor();
     }
 
     @Override

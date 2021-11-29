@@ -4,6 +4,9 @@ package com.picimako.mockitools;
 
 import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito;
 
+import com.intellij.openapi.projectRoots.JavaSdk;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.pom.java.LanguageLevel;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
@@ -17,12 +20,24 @@ public abstract class MockitoolsBaseTest extends LightJavaCodeInsightFixtureTest
 
     @Override
     protected @NotNull LightProjectDescriptor getProjectDescriptor() {
-        return JAVA_11;
+        return getJdkHomeBasedDescriptor();
     }
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         loadMockito(myFixture.getProjectDisposable(), getModule());
+    }
+    
+    public static LightProjectDescriptor getJdkHomeBasedDescriptor() {
+        if (System.getProperty("idea.home.path") != null) {
+            return JAVA_11;
+        }
+        return new ProjectDescriptor(LanguageLevel.JDK_11) {
+            @Override
+            public Sdk getSdk() {
+                return JavaSdk.getInstance().createJdk("Real JDK", System.getenv("JAVA_HOME"), false);
+            }
+        };
     }
 }

@@ -3,11 +3,8 @@
 package com.picimako.mockitools.inspection.framework;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
-import com.intellij.testFramework.LightProjectDescriptor;
-import org.jetbrains.annotations.NotNull;
 
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
-import com.picimako.mockitools.inspection.framework.NotExtensibleClassInspection;
 
 /**
  * Unit test for {@link NotExtensibleClassInspection}.
@@ -17,11 +14,6 @@ public class NotExtensibleClassInspectionTest extends MockitoolsInspectionTestBa
     @Override
     protected String getTestDataPath() {
         return "src/test/testData/framework/inspection";
-    }
-
-    @Override
-    protected @NotNull LightProjectDescriptor getProjectDescriptor() {
-        return JAVA_15; //to be able to test Java records
     }
 
     @Override

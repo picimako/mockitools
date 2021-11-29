@@ -34,8 +34,8 @@ public interface <warning descr="Mockitools: This interface extends another inte
         }
     }
 
-    record Person(String name, String address) {
-    }
+//    record Person(String name, String address) {
+//    }
 
     @NotExtensible
     class NotExtensibleClass {
