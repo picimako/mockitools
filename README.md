@@ -1,11 +1,11 @@
 # Mockitools IntelliJ plugin
 
 ![Build](https://github.com/picimako/mockitools/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
+[![Version](https://img.shields.io/jetbrains/plugin/v/18117-mockitools.svg)](https://plugins.jetbrains.com/plugin/18117-mockitools)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/18117-mockitools.svg)](https://plugins.jetbrains.com/plugin/18117-mockitools)
 
 <!-- Plugin description -->
-This is an IntelliJ plugin for [Mockito](https://site.mockito.org), one of the (if not the) most popular mocking framework for unit tests in Java.
+This is an IntelliJ-based plugin for [Mockito](https://site.mockito.org), one of the (if not the) most popular mocking framework for unit tests in Java.
 <!-- Plugin description end -->
 
 It is available for IntelliJ Community Edition as well as IntelliJ IDEA Ultimate Edition.
@@ -28,9 +28,9 @@ The list and details of those inspections can be found in [Mockito v4 migration 
 
 SonarLint also have a few inspections for Mockito, you can find them under the [Java category](https://rules.sonarsource.com/java?search=mockito).
 
-If you use SonarLint or any other plugin that has checks for some things provided by the Mockitools plugin, you might want to adjust your settings,
-to have enabled only those versions of the inspections that you feel comfortable working with, and provides the most value to You.
-This will not only help **declutter your editor from duplicate highlights** for the same problems, but **will also improve the analysis performance in the IDE**.
+If you use SonarLint or any other plugin that has checks for things provided by the Mockitools plugin, it is advised adjusting your settings,
+so that only those versions of the inspections are enabled that you feel comfortable working with.
+This will help declutter your editor from duplicate highlights for the same problems, and will also improve the analysis performance in the IDE.
 
 You can find the list of those inspections in the [Mockitools/SonarLint rules](docs/mockitools_sonarlint_rules.md) document.
 
