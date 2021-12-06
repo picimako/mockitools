@@ -3,6 +3,8 @@
 # Mockitools Changelog
 
 ## [Unreleased]
+### Added
+- Plugin is now compatible with IJ 2021.3.
 
 ## 0.1.0
 ### Added
