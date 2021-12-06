@@ -6,7 +6,7 @@ import static com.picimako.mockitools.MockitoolsPsiUtil.MOCKITO_OCCURRENCE_BASED
 import static com.picimako.mockitools.MockitoolsPsiUtil.isAfter;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isCalls;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isTimeout;
-import static com.picimako.mockitools.PsiMethodUtil.getArguments;
+import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 
 import javax.swing.*;
@@ -74,7 +74,7 @@ public class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBas
     }
 
     private void checkIntegerArgumentValue(int upperLimit, PsiMethodCallExpression methodCall, @NotNull ProblemsHolder holder) {
-        PsiExpression verificationModeArgument = getArguments(methodCall)[0];
+        PsiExpression verificationModeArgument = getFirstArgument(methodCall);
         Integer argValue = PsiLiteralUtil.parseInteger(verificationModeArgument.getText());
 
         if (argValue != null && argValue < upperLimit) {
@@ -84,7 +84,7 @@ public class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBas
     }
 
     private void checkLongArgumentValue(int upperLimit, PsiMethodCallExpression methodCall, boolean isTimeout, @NotNull ProblemsHolder holder) {
-        PsiExpression verificationModeArgument = getArguments(methodCall)[0];
+        PsiExpression verificationModeArgument = getFirstArgument(methodCall);
         Long argValue = PsiLiteralUtil.parseLong(verificationModeArgument.getText());
 
         if (argValue != null) {

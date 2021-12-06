@@ -4,7 +4,7 @@ package com.picimako.mockitools.inspection;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO_NEVER;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isTimes;
-import static com.picimako.mockitools.PsiMethodUtil.getArguments;
+import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.PsiMethodUtil.hasSubsequentMethodCall;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 
@@ -73,7 +73,7 @@ public class TimesVerificationModeInspection extends MockitoolsBaseInspection {
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         if (isTimes(expression)) {
-            Integer timesValue = PsiLiteralUtil.parseInteger(getArguments(expression)[0].getText());
+            Integer timesValue = PsiLiteralUtil.parseInteger(getFirstArgument(expression).getText());
 
             if (timesValue != null) {
                 if (reportTimesZeroToNever && timesValue == 0) {

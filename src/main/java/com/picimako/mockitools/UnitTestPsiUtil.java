@@ -32,7 +32,7 @@ public final class UnitTestPsiUtil {
      * In case the application is in unit test mode, it always returns true to simplify unit testing of
      * functionality relying on this method.
      * <p>
-     * Otherwise just delegates to {@link TestUtils#isInTestSourceContent(PsiElement)}.
+     * Otherwise, just delegates to {@link TestUtils#isInTestSourceContent(PsiElement)}.
      *
      * @param file the file to validate
      * @return true if the file is in test sources, false otherwise

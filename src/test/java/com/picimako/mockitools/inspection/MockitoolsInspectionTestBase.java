@@ -59,8 +59,8 @@ public abstract class MockitoolsInspectionTestBase extends LightJavaCodeInsightF
      * without the 'test' prefix.
      */
     protected void doJavaTest(InspectionProfileEntry inspection) {
-        myFixture.enableInspections(inspection);
         myFixture.configureByFile(getTestName(false) + ".java");
+        myFixture.enableInspections(inspection);
         myFixture.testHighlighting(true, false, false);
     }
 
@@ -79,9 +79,7 @@ public abstract class MockitoolsInspectionTestBase extends LightJavaCodeInsightF
      */
     protected void doQuickFixTest(String quickFixName) {
         myFixture.configureByFile(getTestName(false) + ".java");
-        myFixture.enableInspections(getInspection());
-        myFixture.doHighlighting();
-        myFixture.launchAction(myFixture.findSingleIntention(quickFixName));
+        launchQuickFix(quickFixName);
         myFixture.checkResultByFile(getTestName(false) + ".after.java");
     }
 
@@ -96,9 +94,13 @@ public abstract class MockitoolsInspectionTestBase extends LightJavaCodeInsightF
      */
     protected void doQuickFixTest(String quickFixName, String filename, String beforeText, String afterText) {
         myFixture.configureByText(filename, beforeText);
+        launchQuickFix(quickFixName);
+        myFixture.checkResult(afterText);
+    }
+    
+    private void launchQuickFix(String quickFixName) {
         myFixture.enableInspections(getInspection());
         myFixture.doHighlighting();
         myFixture.launchAction(myFixture.findSingleIntention(quickFixName));
-        myFixture.checkResult(afterText);
     }
 }

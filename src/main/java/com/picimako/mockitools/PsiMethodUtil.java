@@ -31,7 +31,7 @@ public final class PsiMethodUtil {
      * For example:
      * <pre>
      * Mockito.verify(mock, times(1))... //times() doesn't have a chained call
-     * Mockito.verify(mock, times(1).description("message"))... //times() has description() as the subquent call
+     * Mockito.verify(mock, times(1).description("message"))... //times() has description() as the subsequent call
      * </pre>
      *
      * @param methodCall the method call to check
@@ -46,6 +46,13 @@ public final class PsiMethodUtil {
      */
     public static PsiExpression[] getArguments(@NotNull PsiMethodCallExpression methodCall) {
         return methodCall.getArgumentList().getExpressions();
+    }
+
+    /**
+     * Gets the first argument of the provided method call, given that the argument list exists and is not null.
+     */
+    public static PsiExpression getFirstArgument(@NotNull PsiMethodCallExpression methodCall) {
+        return getArguments(methodCall)[0];
     }
 
     /**

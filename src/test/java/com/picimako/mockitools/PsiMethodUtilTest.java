@@ -128,6 +128,24 @@ public class PsiMethodUtilTest extends MockitoolsBaseTest {
         assertThat(PsiMethodUtil.getArguments(methodCall)).isEmpty();
     }
 
+    //getFirstArgument
+
+    public void testGetFirstArgument() {
+        myFixture.configureByText("GetArgumentsTest.java",
+            "import org.mockito.Mockito;\n" +
+                "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "public class GetArgumentsTest {\n" +
+                "    public void testMethod() {\n" +
+                "        Mockito.<caret>verify(new Object(), times(1)).toString();\n" +
+                "    }\n" +
+                "}");
+
+        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+
+        assertThat(PsiMethodUtil.getFirstArgument(methodCall).getText()).isEqualTo("new Object()");
+    }
+
     //deleteArguments
 
     public void testDeletesArguments() {

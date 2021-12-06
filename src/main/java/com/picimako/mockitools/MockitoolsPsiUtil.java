@@ -39,7 +39,7 @@ import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.util.TypeConversionUtil;
 import com.siyeh.ig.callMatcher.CallMatcher;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Utilities for working with Mockito PSI.
@@ -245,8 +245,9 @@ public final class MockitoolsPsiUtil {
      * @return true if the type is mockable, false otherwise
      * @see #NON_MOCKABLE_TYPES
      */
-    public static boolean isMockableType(@NotNull PsiType type) {
-        return !TypeConversionUtil.isPrimitiveWrapper(type)
+    public static boolean isMockableType(@Nullable PsiType type) {
+        return type != null 
+            && !TypeConversionUtil.isPrimitiveWrapper(type)
             && !TypeConversionUtil.isPrimitive(type.getCanonicalText())
             && !NON_MOCKABLE_TYPES.contains(type.getCanonicalText());
     }

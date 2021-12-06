@@ -8,13 +8,13 @@ import static com.picimako.mockitools.MockitoolsPsiUtil.isExtraInterfaces;
 import static com.picimako.mockitools.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 import static com.picimako.mockitools.UnitTestPsiUtil.isUnitTest;
+import static com.picimako.mockitools.inspection.ClassObjectAccessUtil.getOperandType;
 
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
@@ -71,14 +71,12 @@ public class ExtraInterfacesInspection extends MockitoolsBaseInspection {
     }
 
     private void checkAndReportNonInterfaceArgument(PsiElement argument, String inspectionMessageKey, @NotNull ProblemsHolder holder) {
-        if (argument instanceof PsiClassObjectAccessExpression) {
-            //e.g. argument: List.class, operandType: List
-            PsiType operandType = ((PsiClassObjectAccessExpression) argument).getOperand().getType();
-            if (operandType instanceof PsiClassType) {
-                PsiClass psiClass = ((PsiClassType) operandType).resolve();
-                if (psiClass != null && !psiClass.isInterface()) {
-                    holder.registerProblem(argument, MockitoolsBundle.inspection(inspectionMessageKey));
-                }
+        //e.g. argument: List.class, operandType: List
+        PsiType operandType = getOperandType(argument);
+        if (operandType instanceof PsiClassType) {
+            PsiClass psiClass = ((PsiClassType) operandType).resolve();
+            if (psiClass != null && !psiClass.isInterface()) {
+                holder.registerProblem(argument, MockitoolsBundle.inspection(inspectionMessageKey));
             }
         }
     }

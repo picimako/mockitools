@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Base test class for non-inspection unit tests.
  * <p>
- * Configures the Java 11 mock JDK and loads the Mockito binary.
+ * Configures the Java 11 JDK and loads the Mockito binary.
  */
 public abstract class MockitoolsBaseTest extends LightJavaCodeInsightFixtureTestCase {
 

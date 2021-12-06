@@ -8,7 +8,7 @@ import static com.picimako.mockitools.MockitoolsPsiUtil.isAdditionalMatchers;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isBDDMockitoGiven;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoDoXWhen;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoWhen;
-import static com.picimako.mockitools.PsiMethodUtil.getArguments;
+import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.PsiMethodUtil.hasSubsequentMethodCall;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 
@@ -59,7 +59,7 @@ public class InconsistentArgumentMatcherUsageInspection extends MockitoolsBaseIn
         //if there is only one method call specified in Mockito.when() or BDDMockito.given()
         if (isMockitoWhen(expression) || isBDDMockitoGiven(expression)) {
             //mockingCall: mock.method(argument1, argument2)
-            PsiExpression mockingCall = getArguments(expression)[0];
+            PsiExpression mockingCall = getFirstArgument(expression);
             if (mockingCall instanceof PsiMethodCallExpression) {
                 //argument list: [argument1, argument2]
                 findAndRegisterInconsistentArguments(((PsiMethodCallExpression) mockingCall).getArgumentList(), holder);

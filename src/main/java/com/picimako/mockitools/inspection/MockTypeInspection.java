@@ -7,14 +7,14 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_SPY;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockableType;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoMock;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoSpy;
-import static com.picimako.mockitools.PsiMethodUtil.getArguments;
+import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.PsiMethodUtil.hasAtLeastOneArgument;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 import static com.picimako.mockitools.UnitTestPsiUtil.isUnitTest;
+import static com.picimako.mockitools.inspection.ClassObjectAccessUtil.getOperandType;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiField;
@@ -50,8 +50,8 @@ public class MockTypeInspection extends MockitoolsBaseInspection {
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         //Mockito.spy method has overloads with single arguments
         if ((isMockitoMock(expression) && hasAtLeastOneArgument(expression)) || isMockitoSpy(expression)) {
-            PsiExpression typeToMock = getArguments(expression)[0];
-            if (typeToMock instanceof PsiClassObjectAccessExpression && !isMockableType(((PsiClassObjectAccessExpression) typeToMock).getOperand().getType())) {
+            PsiExpression typeToMock = getFirstArgument(expression);
+            if (!isMockableType(getOperandType(typeToMock))) {
                 holder.registerProblem(typeToMock, MockitoolsBundle.inspection("non.mockable.type"));
             }
         }
