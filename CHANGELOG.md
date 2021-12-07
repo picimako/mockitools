@@ -3,6 +3,8 @@
 # Mockitools Changelog
 
 ## [Unreleased]
+
+## [0.1.1]
 ### Added
 - Plugin is now compatible with IJ 2021.3.
 - Upgraded gradle to 7.3 and some library versions.
