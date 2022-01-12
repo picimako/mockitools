@@ -7,7 +7,7 @@ import com.intellij.codeInspection.InspectionProfileEntry;
 /**
  * Unit test for {@link CaptorFieldInitializationInspection}.
  */
-public class CaptorFieldInitializationInspectionTest extends MockitoolsInspectionTestBase {
+public class CaptorFieldInitializationInspectionTest extends MockitoolsV3InspectionTestBase {
 
     @Override
     protected InspectionProfileEntry getInspection() {

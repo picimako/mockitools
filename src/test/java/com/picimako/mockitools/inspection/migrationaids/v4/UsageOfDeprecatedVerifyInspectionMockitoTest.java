@@ -4,12 +4,12 @@ package com.picimako.mockitools.inspection.migrationaids.v4;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 
-import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import com.picimako.mockitools.inspection.MockitoolsV3InspectionTestBase;
 
 /**
  * Functional test for {@link UsageOfDeprecatedVerifyInspection}.
  */
-public class UsageOfDeprecatedVerifyInspectionMockitoTest extends MockitoolsInspectionTestBase {
+public class UsageOfDeprecatedVerifyInspectionMockitoTest extends MockitoolsV3InspectionTestBase {
 
     @Override
     protected InspectionProfileEntry getInspection() {

@@ -67,6 +67,44 @@ class MockTypesTest {
 }
 ```
 
+### @DoNotMock annotated types
+
+![](https://img.shields.io/badge/since-0.2.0-blue)
+
+In Mockito 4.1.0 a new `@DoNotMock` annotation was introduced adopted from Google. It has a `reason` attribute to inform users why the type marked with the annotation should not be mocked.
+
+This inspection also marks types in whose type hierarchy there is at least one type annotated with either Mockito's `org.mockito.DoNotMock` annotation or any custom annotation whose fully qulified name
+ends with `org.mockito.DoNotMock`.
+
+When constructing the inspection message, the inspection looks for the annotation's `reason` attribute value.
+
+```java
+class MockTypesTest {
+    @Mock
+    NotMockable mock; //message: ... The reason: Create a real instance instead.
+    @Mock
+    NotMockableWithCustomReason mockCustom; //message: ... The reason: You are doing it wrong.
+    @Mock
+    NotMockableWithEmptyReason mockEmpty; //message: ... No reason provided.
+
+    @DoNotMock
+    private static class NotMockable {
+    }
+
+    @DoNotMock(reason = "You are doing it wrong.")
+    private static class NotMockableWithCustomReason {
+    }
+
+    @DoNotMock(reason = "") //This is just for demonstration purposes. Either specify an actual reason or use the default one if the annotation has one.
+    private static class NotMockableWithEmptyReason {
+    }
+}
+```
+
+Additional resources:
+- [@DoNotMock javadoc](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/DoNotMock.html)
+- [Mockito pull request: Add annotation to mark a type as DoNotMock](https://github.com/mockito/mockito/pull/1833/files)
+
 ## Mockito.reset() is used
 
 ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-CallOnMockitoResetInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/CallOnMockitoResetInspection.java)

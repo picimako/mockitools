@@ -11,7 +11,7 @@ import com.intellij.psi.PsiMethodCallExpression;
 /**
  * Unit test for {@link PsiMethodUtil}.
  */
-public class PsiMethodUtilTest extends MockitoolsBaseTest {
+public class PsiMethodUtilTest extends MockitoolsTestBase {
 
     //hasAtLeastOneArgument
 

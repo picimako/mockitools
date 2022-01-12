@@ -75,6 +75,7 @@ public final class MockitoQualifiedNames {
     public static final String ORG_MOCKITO_CAPTOR = "org.mockito.Captor";
     public static final String ORG_MOCKITO_MOCK = "org.mockito.Mock";
     public static final String ORG_MOCKITO_SPY = "org.mockito.Spy";
+    public static final String ORG_MOCKITO_DO_NOT_MOCK = "org.mockito.DoNotMock";
 
     //Method calls
     public static final String ORG_MOCKITO_MOCKITO_NEVER = "org.mockito.Mockito.never";

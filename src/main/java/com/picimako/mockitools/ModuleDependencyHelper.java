@@ -26,11 +26,12 @@ public final class ModuleDependencyHelper {
     public static boolean isMockitoCore3xAvailableInModuleOf(@NotNull PsiFile file, Project project) {
         Module module = ModuleUtilCore.findModuleForFile(file.getVirtualFile(), project);
         return module != null && Arrays.stream(OrderEnumerator.orderEntries(module)
-            .librariesOnly()
-            .compileOnly()
-            .classes()
-            .usingCache()
-            .getRoots()).anyMatch(lib -> lib.getName().startsWith(MOCKITO_CORE_3_X));
+                .librariesOnly()
+                .compileOnly()
+                .classes()
+                .usingCache()
+                .getRoots())
+            .anyMatch(lib -> lib.getName().startsWith(MOCKITO_CORE_3_X));
     }
 
     /**
@@ -39,11 +40,12 @@ public final class ModuleDependencyHelper {
     public static boolean isMockitoCore2xOr3xAvailableInModuleOf(@NotNull PsiFile file, Project project) {
         Module module = ModuleUtilCore.findModuleForFile(file.getVirtualFile(), project);
         return module != null && Arrays.stream(OrderEnumerator.orderEntries(module)
-            .librariesOnly()
-            .compileOnly()
-            .classes()
-            .usingCache() //to improve performance, since this check is executed at the beginning of migration aid inspections
-            .getRoots()).anyMatch(lib -> lib.getName().startsWith(MOCKITO_CORE_2_X) || lib.getName().startsWith(MOCKITO_CORE_3_X));
+                .librariesOnly()
+                .compileOnly()
+                .classes()
+                .usingCache() //to improve performance, since this check is executed at the beginning of migration aid inspections
+                .getRoots())
+            .anyMatch(lib -> lib.getName().startsWith(MOCKITO_CORE_2_X) || lib.getName().startsWith(MOCKITO_CORE_3_X));
     }
 
     private ModuleDependencyHelper() {

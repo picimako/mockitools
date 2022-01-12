@@ -7,7 +7,7 @@ import com.intellij.codeInspection.InspectionProfileEntry;
 /**
  * Unit test for {@link VerificationModeValuesBetweenLimitsInspection}.
  */
-public class VerificationModeValuesBetweenLimitsInspectionTest extends MockitoolsInspectionTestBase {
+public class VerificationModeValuesBetweenLimitsInspectionTest extends MockitoolsV3InspectionTestBase {
 
     @Override
     protected InspectionProfileEntry getInspection() {

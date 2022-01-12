@@ -10,11 +10,6 @@ import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
 import static com.picimako.mockitools.MockitoQualifiedNames.GIVEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.IGNORE_STUBS;
 import static com.picimako.mockitools.MockitoQualifiedNames.MOCK;
-import static com.picimako.mockitools.MockitoQualifiedNames.RESET;
-import static com.picimako.mockitools.MockitoQualifiedNames.SPY;
-import static com.picimako.mockitools.MockitoQualifiedNames.TIMEOUT;
-import static com.picimako.mockitools.MockitoQualifiedNames.TIMES;
-import static com.picimako.mockitools.MockitoQualifiedNames.WHEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ADDITIONAL_MATCHERS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT_CAPTOR;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT_MATCHERS;
@@ -23,20 +18,31 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MATCHERS
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK_SETTINGS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_STUBBING_STUBBER;
+import static com.picimako.mockitools.MockitoQualifiedNames.RESET;
+import static com.picimako.mockitools.MockitoQualifiedNames.SPY;
+import static com.picimako.mockitools.MockitoQualifiedNames.TIMEOUT;
+import static com.picimako.mockitools.MockitoQualifiedNames.TIMES;
+import static com.picimako.mockitools.MockitoQualifiedNames.WHEN;
 import static com.picimako.mockitools.PsiMethodUtil.getQualifier;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
+import com.intellij.codeInsight.AnnotationUtil;
+import com.intellij.openapi.util.Pair;
 import com.intellij.psi.CommonClassNames;
+import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
+import com.intellij.psi.util.InheritanceUtil;
 import com.intellij.psi.util.TypeConversionUtil;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.Nullable;
@@ -239,6 +245,39 @@ public final class MockitoolsPsiUtil {
     }
 
     /**
+     * Finds the first @DoNotMock annotated type in the class hierarchy, and returns it with the optional reason provided.
+     *
+     * @param type the type to check the type hierarchy of for the @DoNotMock annotation
+     * @return the class annotated as @DoNotMock or null if not found, and the reason provided if any if the class is annotated as @DoNotMock
+     */
+    public static Pair<PsiClass, String> getDoNotMockAnnotatedTypeAndReasonInHierarchy(@Nullable PsiType type) {
+        if (type instanceof PsiClassType) {
+            PsiClass referencedClass = ((PsiClassType) type).resolve();
+            if (referencedClass != null) {
+                var doNotMock = getDoNotMockAnnotationOn(referencedClass);
+                if (doNotMock.isPresent()) {
+                    return Pair.create(referencedClass, AnnotationUtil.getStringAttributeValue(doNotMock.get(), "reason"));
+                }
+                for (PsiClass cls : InheritanceUtil.getSuperClasses(referencedClass)) {
+                    var doNotMockInHierarchy = getDoNotMockAnnotationOn(cls);
+                    if (doNotMockInHierarchy.isPresent()) {
+                        return Pair.create(cls, AnnotationUtil.getStringAttributeValue(doNotMockInHierarchy.get(), "reason"));
+                    }
+                }
+            }
+        }
+        return Pair.empty();
+    }
+
+    private static Optional<PsiAnnotation> getDoNotMockAnnotationOn(PsiClass clazz) {
+        return !CommonClassNames.JAVA_LANG_OBJECT.equals(clazz.getQualifiedName())
+            ? Arrays.stream(clazz.getAnnotations())
+            .filter(annotation -> annotation.getQualifiedName().endsWith(MockitoQualifiedNames.ORG_MOCKITO_DO_NOT_MOCK))
+            .findFirst()
+            : Optional.empty();
+    }
+
+    /**
      * Gets whether the argument type is mockable by Mockito.
      *
      * @param type the type to validate
@@ -246,7 +285,7 @@ public final class MockitoolsPsiUtil {
      * @see #NON_MOCKABLE_TYPES
      */
     public static boolean isMockableType(@Nullable PsiType type) {
-        return type != null 
+        return type != null
             && !TypeConversionUtil.isPrimitiveWrapper(type)
             && !TypeConversionUtil.isPrimitive(type.getCanonicalText())
             && !NON_MOCKABLE_TYPES.contains(type.getCanonicalText());

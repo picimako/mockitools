@@ -18,8 +18,12 @@ public final class ThirdPartyLibraryLoader {
 
     private static final String THIRD_PARTY_LIB_DIRECTORY = "lib";
 
-    public static void loadMockito(@NotNull Disposable projectDisposable, @NotNull Module module) {
-        loadLibrary(projectDisposable, module, "Mockito Library", "mockito-core-3.11.2.jar");
+    public static void loadMockito3(@NotNull Disposable projectDisposable, @NotNull Module module) {
+        loadLibrary(projectDisposable, module, "Mockito 3 Library", "mockito-core-3.11.2.jar");
+    }
+
+    public static void loadMockito4Latest(@NotNull Disposable projectDisposable, @NotNull Module module) {
+        loadLibrary(projectDisposable, module, "Mockito 4 Library", "mockito-core-4.2.0.jar");
     }
 
     public static void loadJUnit4(@NotNull Disposable projectDisposable, @NotNull Module module) {

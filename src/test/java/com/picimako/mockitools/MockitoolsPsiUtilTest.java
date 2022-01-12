@@ -12,8 +12,8 @@ import com.intellij.psi.PsiMethodCallExpression;
 /**
  * Unit test for {@link MockitoolsPsiUtil}.
  */
-public class MockitoolsPsiUtilTest extends MockitoolsBaseTest {
-    
+public class MockitoolsPsiUtilTest extends MockitoolsTestBase {
+
     public void testIsASpecificMethod() {
         TestData[] testData = new TestData[]{
             new TestData("IsMockitoMockTest.java",
@@ -426,9 +426,9 @@ public class MockitoolsPsiUtilTest extends MockitoolsBaseTest {
 
         assertThat(MockitoolsPsiUtil.isMockableType(getField().getTypeElement().getType())).isFalse();
     }
-    
+
     //isMatchers
-    
+
     public void testIsNotMatchers() {
         myFixture.configureByText("isNotMatchersTest.java",
             "import org.mockito.ArgumentMatchers;\n" +

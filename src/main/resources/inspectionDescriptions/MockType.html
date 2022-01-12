@@ -8,14 +8,17 @@ This inspection validates <code>@Mock</code> and <code>@Spy</code> annotated fie
     <a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java">InlineDelegateByteBuddyMockMaker#isTypeMockable(Class)</a>
     method and
     <a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineBytecodeGenerator.java">InlineBytecodeGenerator#EXCLUDES</a>
-    field, when attempting to create mocks for primitives, primitive wrapper types, String and Class, Mockito throws an
-    exception that mock creation cannot happen.
-
+    field, when attempting to create mocks for primitives, primitive wrapper types, String and Class, Mockito throws an exception that mock creation cannot
+    happen.
+<p>
+    Furthermore, types annotated with any annotation called <code>@DoNotMock</code> and whose fully qualified name ends with <code>org.mockito.DoNotMock</code> are also validated.
 <p>
     The following examples are all non-compliant ones:
-
 <pre>
 class MockTypesTest {
+    @Mock
+    NotMockable notMockable;
+    
     @Mock
     String mock;
     
@@ -28,8 +31,11 @@ class MockTypesTest {
         Mockito.spy(Class.class);
         Mockito.mock(String.class, Mockito.withSettings().name("name")); 
     }
+    
+    @DoNotMock
+    private static class NotMockable {
+    }
 }
 </pre>
-
 </body>
 </html>

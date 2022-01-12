@@ -2,14 +2,12 @@
 
 package com.picimako.mockitools.inspection;
 
-import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito;
-
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
 
-import com.picimako.mockitools.MockitoolsBaseTest;
+import com.picimako.mockitools.MockitoolsTestBase;
 
 /**
  * Base test class for Mockitools inspection unit testing.
@@ -25,14 +23,7 @@ public abstract class MockitoolsInspectionTestBase extends LightJavaCodeInsightF
 
     @Override
     protected @NotNull LightProjectDescriptor getProjectDescriptor() {
-        return MockitoolsBaseTest.getRealJdkHomeOrCommunityMockJdk();
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        loadMockito(myFixture.getProjectDisposable(), getModule());
-        loadLibs();
+        return MockitoolsTestBase.getRealJdkHomeOrCommunityMockJdk();
     }
 
     /**

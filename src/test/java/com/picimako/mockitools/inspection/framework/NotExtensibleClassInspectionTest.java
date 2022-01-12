@@ -4,12 +4,12 @@ package com.picimako.mockitools.inspection.framework;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 
-import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import com.picimako.mockitools.inspection.MockitoolsV3InspectionTestBase;
 
 /**
  * Unit test for {@link NotExtensibleClassInspection}.
  */
-public class NotExtensibleClassInspectionTest extends MockitoolsInspectionTestBase {
+public class NotExtensibleClassInspectionTest extends MockitoolsV3InspectionTestBase {
 
     @Override
     protected String getTestDataPath() {

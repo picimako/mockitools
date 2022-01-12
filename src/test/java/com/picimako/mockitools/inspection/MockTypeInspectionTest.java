@@ -7,7 +7,7 @@ import com.intellij.codeInspection.InspectionProfileEntry;
 /**
  * Unit test for {@link MockTypeInspection}.
  */
-public class MockTypeInspectionTest extends MockitoolsInspectionTestBase {
+public class MockTypeInspectionTest extends MockitoolsV4InspectionTestBase {
     
     @Override
     protected InspectionProfileEntry getInspection() {
@@ -15,6 +15,11 @@ public class MockTypeInspectionTest extends MockitoolsInspectionTestBase {
     }
 
     public void testNonMockableTypesTest() {
+        doJavaTest();
+    }
+    
+    public void testNonMockableTypesDoNotMockTest() {
+        myFixture.copyFileToProject("DoNotMock.java");
         doJavaTest();
     }
 }

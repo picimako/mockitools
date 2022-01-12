@@ -7,7 +7,7 @@ import com.intellij.codeInspection.InspectionProfileEntry;
 /**
  * Unit test for {@link TimesVerificationModeInspection}.
  */
-public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTestBase {
+public class TimesVerificationModeInspectionTest extends MockitoolsV3InspectionTestBase {
 
     @Override
     protected InspectionProfileEntry getInspection() {

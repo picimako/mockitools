@@ -7,7 +7,7 @@ import com.intellij.codeInspection.InspectionProfileEntry;
 /**
  * Unit test for {@link NoMethodCallArgumentSpecifiedInspection}.
  */
-public class NoMethodCallArgumentSpecifiedInspectionTest extends MockitoolsInspectionTestBase {
+public class NoMethodCallArgumentSpecifiedInspectionTest extends MockitoolsV3InspectionTestBase {
 
     @Override
     protected InspectionProfileEntry getInspection() {
