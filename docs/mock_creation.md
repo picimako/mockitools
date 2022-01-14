@@ -2,7 +2,7 @@
 
 ## Non-interface type(s) passed into extraInterfaces
 
-![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-ExtraInterfacesInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/ExtraInterfacesInspection.java)
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-ExtraInterfacesInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/ExtraInterfacesInspection.java)
 
 The `extraInterfaces` functionality of Mockito has some criteria in order to create proper mocks.
 
@@ -27,7 +27,7 @@ look for the `extraInterfacesAcceptsOnlyInterfaces(Class)` method.
 
 ## No argument is provided for the extraInterfaces() call
 
-![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-ExtraInterfacesInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/ExtraInterfacesInspection.java)
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-ExtraInterfacesInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/ExtraInterfacesInspection.java)
 
 One of the criteria for the `extraInterfaces()` call is that it must be provided at least one argument.
 In this case Mockito would stop test execution and fail with an exception letting you know about the problem.
@@ -41,7 +41,7 @@ look for the `extraInterfacesRequiresAtLeastOneInterface()` method.
 
 ## Mockito cannot mock certain types
 
-![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-MockTypeInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/MockTypeInspection.java)
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-MockTypeInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/MockTypeInspection.java)
 
 Based on the logic in Mockito's [InlineDelegateByteBuddyMockMaker#isTypeMockable(Class)](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java) method
 and [InlineBytecodeGenerator#EXCLUDES](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineBytecodeGenerator.java) field,
@@ -107,7 +107,7 @@ Additional resources:
 
 ## Mockito.reset() is used
 
-![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-CallOnMockitoResetInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/CallOnMockitoResetInspection.java)
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-CallOnMockitoResetInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/CallOnMockitoResetInspection.java)
 
 Based on Mockito's documentation on [resetting mocks](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#resetting_mocks)
 
@@ -131,3 +131,105 @@ void testMethod() {
 Additional resources:
 - [Reflectoring.io - Clean Unit Tests with Mockito](https://reflectoring.io/clean-unit-tests-with-mockito/) (**Avoid Mockito.reset() for Better Unit Tests** section)
 - [Stack Exchange - Is this an appropriate use of Mockito's reset method?](https://softwareengineering.stackexchange.com/questions/188299/is-this-an-appropriate-use-of-mockitos-reset-method)
+
+## Convert @Mock/@Spy fields to Mockito.mock()/spy() calls
+
+![](https://img.shields.io/badge/intention-orange) ![](https://img.shields.io/badge/since-0.2.0-blue) [![](https://img.shields.io/badge/implementation-ConvertMockSpyFieldToCallIntention-blue)](../src/main/java/com/picimako/mockitools/intention/ConvertMockSpyFieldToCallIntention.java)
+
+The [@Mock](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mock.html) and [@Spy](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Spy.html)
+annotations are an easier way of creating mock and spy objects, and are interchangeable (to a certain degree) with `Mockito.mock()` and `Mockito.spy()` calls.
+
+Thus, this intention provides a means to convert these fields to their Mockito.mock/spy variants, also taking into account the `@Mock` annotation's attributes.
+
+It is not available when the field annotated with both `@Mock` and `@Spy`.
+
+#### Target method
+
+The target method, where the variable is introduced, is selected according to this logic:
+ - if there is only one method in the class, then that is the target method,
+ - if there are multiple methods in the class, then users are able to choose which method to introduce the variable in
+
+Inner classes are not taken into consideration. Converting the field is possible only within the same class.
+
+#### Examples
+
+Below you can find an extensive list of examples, what is converted into what.
+
+<details>
+        <summary><strong>See examples...</strong></summary>
+
+```java
+from: @Spy Object spy;
+to:   Object spy = Mockito.spy(Object.class);
+
+from: @Spy SpiedObject spy = new SpiedObject();
+to:   SpiedObject spy = Mockito.spy(new SpiedObject());
+
+from: @Mock Object mock;
+to:   Object mock = Mockito.mock(Object.class);
+
+from: @Mock(extraInterfaces = {}) Object mock;
+to:   Object mock = Mockito.mock(Object.class);
+
+from: @Mock(extraInterfaces = List.class) Object mock;
+to:   Object mock = Mockito.mock(Object.class, Mockito.withSettings().extraInterfaces(List.class));
+
+from: @Mock(extraInterfaces = {List.class, Set.class}) Object mock;
+to:   Object mock = Mockito.mock(Object.class, Mockito.withSettings().extraInterfaces(List.class, Set.class));
+
+from: @Mock(name = "") Object mock;
+to:   Object mock = Mockito.mock(Object.class);
+
+from: @Mock(stubOnly = true, name = "") Object mock;
+to:   Object mock = Mockito.mock(Object.class, Mockito.withSettings().stubOnly());
+
+from: @Mock(name = "some name") Object mock;
+to:   Object mock = Mockito.mock(Object.class, "some name");
+
+from: @Mock(answer = Answers.CALLS_REAL_METHODS) Object mock;
+to:   Object mock = Mockito.mock(Object.class, Answers.CALLS_REAL_METHODS);
+
+from: @Mock(stubOnly = true) Object mock;
+to:   Object mock = Mockito.mock(Object.class, Mockito.withSettings().stubOnly());
+
+from: @Mock(stubOnly = false) Object mock;
+to:   Object mock = Mockito.mock(Object.class);
+
+from: @Mock(serializable = true) Object mock;
+to:   Object mock = Mockito.mock(Object.class, Mockito.withSettings().serializable());
+
+from: @Mock(lenient = true) Object mock;
+to:   Object mock = Mockito.mock(Object.class, Mockito.withSettings().lenient());
+```
+
+```java
+from:
+@Mock(extraInterfaces = List.class, name = "some name")
+Object mock;
+to:
+Object mock = Mockito.mock(Object.class, Mockito.withSettings().name("some name").extraInterfaces(List.class));
+```
+
+```java
+from:
+@Mock(name = "some name", extraInterfaces = List.class, answer = Answers.CALLS_REAL_METHODS)
+Object mock;
+to:
+Object mock = Mockito.mock(Object.class, Mockito.withSettings()
+    .name("some name")
+    .defaultAnswer(Answers.CALLS_REAL_METHODS)
+    .extraInterfaces(List.class));
+```
+
+```java
+from:
+@Mock(lenient = true, extraInterfaces = {List.class, Set.class}, name = "some name", answer = Answers.CALLS_REAL_METHODS)
+Object mock;
+to:
+Object mock = Mockito.mock(Object.class, Mockito.withSettings()
+    .lenient()
+    .name("some name")
+    .defaultAnswer(Answers.CALLS_REAL_METHODS)
+    .extraInterfaces(List.class, Set.class));
+```
+</details>

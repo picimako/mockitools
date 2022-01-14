@@ -1,0 +1,7 @@
+public class AUnitTest {
+    <spot>@Mock(extraInterfaces = List.class)
+    Object mock;</spot>
+
+    public void method() {
+    }
+}

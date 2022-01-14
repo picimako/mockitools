@@ -33,7 +33,7 @@ public class MockitoolsBundle extends DynamicBundle {
      * @return the actual message
      */
     public static String inspection(@NonNls String id, Object @NotNull ... params) {
-        return MOCKITOOLS + message("mockitools.inspection." + id, params);
+        return MOCKITOOLS + message("inspection." + id, params);
     }
     
     /**
@@ -43,7 +43,7 @@ public class MockitoolsBundle extends DynamicBundle {
      * @return the actual message
      */
     public static String quickFix(@NonNls String id, Object @NotNull ... params) {
-        return message("mockitools.quick.fix." + id, params);
+        return message("quick.fix." + id, params);
     }
 
     /**
@@ -53,7 +53,7 @@ public class MockitoolsBundle extends DynamicBundle {
      * @return the actual message
      */
     public static String quickFixFamily(@NonNls String id, Object @NotNull ... params) {
-        return message("mockitools.quick.fix.family." + id, params);
+        return message("quick.fix.family." + id, params);
     }
 
     /**
@@ -63,6 +63,6 @@ public class MockitoolsBundle extends DynamicBundle {
      * @return the actual message
      */
     public static String inspectionOption(@NonNls String id, Object @NotNull ... params) {
-        return message("mockitools.inspection.option." + id, params);
+        return message("inspection.option." + id, params);
     }
 }

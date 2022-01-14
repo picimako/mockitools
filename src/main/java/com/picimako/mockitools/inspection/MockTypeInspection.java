@@ -55,7 +55,6 @@ public class MockTypeInspection extends MockitoolsBaseInspection {
             : PsiElementVisitor.EMPTY_VISITOR;
     }
 
-
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         //Mockito.spy method has overloads with single arguments

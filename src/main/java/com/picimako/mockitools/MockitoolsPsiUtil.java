@@ -53,6 +53,7 @@ import org.jetbrains.annotations.Nullable;
 public final class MockitoolsPsiUtil {
 
     public static final CallMatcher MOCKITO_OCCURRENCE_BASED_VERIFICATION_MODES = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, TIMES, AT_LEAST, AT_MOST).parameterCount(1);
+    public static final CallMatcher MOCKITO_WITH_SETTINGS = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, "withSettings");
 
     /**
      * The original logic and set of non-mockable types can be found in Mockito's

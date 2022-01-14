@@ -101,5 +101,11 @@
                 id="mockitools.framework.notExtensibleClass" language="JAVA"
                 displayName="Class extends @NotExtensible class" groupPath="Java,Mockito"
                 groupName="Framework" enabledByDefault="false" level="WARNING"/>
+        
+        <!-- Intentions -->
+        <intentionAction>
+            <categoryKey>mockito.intention.category</categoryKey>
+            <className>com.picimako.mockitools.intention.ConvertMockSpyFieldToCallIntention</className>
+        </intentionAction>
     </extensions>
 </idea-plugin>

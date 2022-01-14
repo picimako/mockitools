@@ -1,0 +1,6 @@
+public class AUnitTest {
+
+    public void method() {
+        <spot>Object mock = Mockito.mock(Object.class, Mockito.withSettings().extraInterfaces(List.class));</spot>
+    }
+}

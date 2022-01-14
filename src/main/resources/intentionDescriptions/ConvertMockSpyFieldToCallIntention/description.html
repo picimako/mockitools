@@ -1,0 +1,18 @@
+<html>
+<body>
+<!-- tooltip end -->
+Converts <code>@Mock</code> and <code>@Spy</code> annotated fields to <code>Mockito.mock()</code> and <code>Mockito.spy()</code> local variable declarations,
+respectively.
+<p>
+    Attributes of the <code>@Mock</code> annotation are also taken into account when constructing the Mockito.mock()/spy() calls.
+<p>
+    The created variable declaration is always added as the first statement to the selected method, which is selected according to this logic:
+<ul>
+    <li>if there is only one method in the class, then that is the target method</li>
+    <li>if there are multiple methods in the class, then users are able to choose which method to introduce the variable in</li>
+</ul>
+<p>
+    A detailed list of examples can be found in the <a href="TODO">Mockitools documentation</a>.
+</p>
+</body>
+</html>
