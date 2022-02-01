@@ -3,6 +3,8 @@
 # Mockitools Changelog
 
 ## [Unreleased]
+
+## [0.2.0]
 ### Added
 - [#2](https://github.com/picimako/mockitools/issues/2): Extended `MockTypeInspection` to validate and report types annotated with `@DoNotMock` annotation.
   - You can find more information about this at
