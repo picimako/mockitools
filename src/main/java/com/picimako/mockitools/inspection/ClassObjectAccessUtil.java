@@ -4,9 +4,12 @@
 
 package com.picimako.mockitools.inspection;
 
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassObjectAccessExpression;
+import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -23,6 +26,20 @@ public final class ClassObjectAccessUtil {
         return element instanceof PsiClassObjectAccessExpression
             ? ((PsiClassObjectAccessExpression) element).getOperand().getType()
             : null;
+    }
+
+    /**
+     * Resolves the operand type of the provided element as a PsiClass.
+     *
+     * @return the resolved type as PsiClass or null if resolution could not happen, or type is not PsiClassType
+     */
+    @Nullable
+    public static PsiClass resolveOperandType(@NotNull PsiElement element) {
+        PsiType operandType = getOperandType(element);
+        if (operandType instanceof PsiClassType) {
+            return ((PsiClassType) operandType).resolve();
+        }
+        return null;
     }
 
     private ClassObjectAccessUtil() {

@@ -4,6 +4,7 @@ package com.picimako.mockitools;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiExpression;
+import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -16,10 +17,14 @@ import org.jetbrains.annotations.Nullable;
 public final class PsiMethodUtil {
 
     /**
+     * Returns whether the argument method call has only one argument.
+     */
+    public static boolean hasOneArgument(@NotNull PsiMethodCallExpression methodCall) {
+        return methodCall.getArgumentList() != null && methodCall.getArgumentList().getExpressionCount() == 1;
+    }
+
+    /**
      * Gets whether the argument method call has at least one argument of any kind.
-     *
-     * @param methodCall the method call to check the argument count of
-     * @return true if the method call has at least one argument, false otherwise
      */
     public static boolean hasAtLeastOneArgument(@NotNull PsiMethodCallExpression methodCall) {
         return methodCall.getArgumentList() != null && methodCall.getArgumentList().getExpressionCount() >= 1;
@@ -80,6 +85,15 @@ public final class PsiMethodUtil {
     @Nullable
     public static PsiMethodCallExpression getParentCall(@Nullable PsiElement element) {
         return PsiTreeUtil.getParentOfType(element, PsiMethodCallExpression.class);
+    }
+
+    /**
+     * Return whether the argument PSI element is identifier that belongs to a PsiMethodCallExpression.
+     */
+    public static boolean isIdentifierOfMethodCall(PsiElement element) {
+        return element instanceof PsiIdentifier
+            && element.getParent() instanceof PsiReferenceExpression
+            && element.getParent().getParent() instanceof PsiMethodCallExpression;
     }
 
     private PsiMethodUtil() {

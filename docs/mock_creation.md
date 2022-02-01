@@ -233,3 +233,62 @@ Object mock = Mockito.mock(Object.class, Mockito.withSettings()
     .extraInterfaces(List.class, Set.class));
 ```
 </details>
+
+## Convert Mockito.spy() calls to @Spy fields
+
+![](https://img.shields.io/badge/intention-orange) ![](https://img.shields.io/badge/since-0.2.0-blue) [![](https://img.shields.io/badge/implementation-ConvertSpyCallToFieldIntention-blue)](../src/main/java/com/picimako/mockitools/intention/ConvertSpyCallToFieldIntention.java)
+
+Just like `@Spy` annotated fields can be converted to `Mockito.spy()` calls, it is true vice versa too.
+
+This intention covers the conversion of `Mockito.spy()` calls to `@Spy` annotated fields.
+
+The intention is available on `Mockito.spy()` calls, when the argument of the call is either a new expression (i.e. `new MockObject()`), or a class object access expression (i.e. `MockObject.class`),
+but the argument is not an array creation.
+Furthermore, the type that is being mocked should be mockable either by Mockito's rules or not being annotated with `@DoNotMock`.
+
+**Examples:**
+
+```java
+from: spy(Clazz.class);
+to:   @Spy Clazz clazz;
+
+from: spy(new Clazz());
+to:   @Spy Clazz clazz; //initializer ommitted because of using default constructor
+
+from: spy(new Clazz(<arguments>));
+to:   @Spy Clazz clazz = new Clazz(<arguments>);
+
+from: spy(new Clazz<typeargs>());
+to:   @Spy Clazz<typeargs> clazz;
+
+from: Clazz localVar = spy(Clazz.class);
+to:   @Spy Clazz localVar;
+
+from: Clazz localVar = spy(new Clazz());
+to:   @Spy Clazz lovalVar;
+
+from: Clazz localVar = spy(new Clazz(<arguments>));
+to:   @Spy Clazz lovalVar = new Clazz(<arguments>);
+
+from: Clazz<typeargs> localVar = spy(new Clazz<typeargs>());
+to:   @Spy Clazz<typeargs> lovalVar;
+```
+
+**Naming**
+
+- if the `Mockito.spy()` call is part of a local variable declaration, then by default will use the variable's name,
+but if there is already a field with the same name in the target class, a rename refactor is invoked first.
+- if the call is not part of a local variable declaration, a rename refactor is invoked first, where the default field name provided is the
+mock type's name in lowercase format.
+
+**Target class selection**
+   
+If there is more than one parent class of the selected `spy()` call, a list is shown from which the class where the field will be introduced, can be selected.
+
+**Support notes**
+
+Conversion from `spy()` calls in which an already created object is passed, is not yet supported:
+```java
+Clazz clazz = new Clazz();
+Clazz spy = Mockito.spy(clazz); 
+```

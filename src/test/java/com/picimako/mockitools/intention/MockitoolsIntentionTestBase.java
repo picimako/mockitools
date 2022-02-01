@@ -19,13 +19,17 @@ public abstract class MockitoolsIntentionTestBase extends MockitoolsTestBase {
     protected void checkIntentionIsAvailable(String filename, String text) {
         PsiFile psiFile = myFixture.configureByText(filename, text);
 
-        assertThat(getIntention().isAvailable(getProject(), myFixture.getEditor(), psiFile)).isTrue();
+        assertThat(getIntention().isAvailable(getProject(), myFixture.getEditor(), psiFile))
+            .withFailMessage(() -> "Intention is NOT available while it IS supposed to be.")
+            .isTrue();
     }
 
     protected void checkIntentionIsNotAvailable(String filename, String text) {
         PsiFile psiFile = myFixture.configureByText(filename, text);
 
-        assertThat(getIntention().isAvailable(getProject(), myFixture.getEditor(), psiFile)).isFalse();
+        assertThat(getIntention().isAvailable(getProject(), myFixture.getEditor(), psiFile))
+            .withFailMessage(() -> "Intention IS available while it is NOT supposed to be.")
+            .isFalse();
     }
     
     protected void checkIntentionRun(String filename, String beforeText, String afterText) {

@@ -13,9 +13,56 @@ import com.intellij.psi.PsiMethodCallExpression;
  */
 public class PsiMethodUtilTest extends MockitoolsTestBase {
 
+    //hasOneArgument
+
+    public void testHasOnlyOneArgument() {
+        myFixture.configureByText("OneArgumentTest.java",
+            "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class OneArgumentTest {\n" +
+                "    public void testMethod() {\n" +
+                "        Mockito.<caret>mock(Object.class);\n" +
+                "    }\n" +
+                "}");
+
+        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+
+        assertThat(PsiMethodUtil.hasOneArgument(methodCall)).isTrue();
+    }
+
+    public void testDoesntHaveOnlyOneArgument() {
+        myFixture.configureByText("OneArgumentTest.java",
+            "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class OneArgumentTest {\n" +
+                "    public void testMethod() {\n" +
+                "        Mockito.<caret>mock(Object.class, Mockito.withSettings());\n" +
+                "    }\n" +
+                "}");
+
+        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+
+        assertThat(PsiMethodUtil.hasOneArgument(methodCall)).isFalse();
+    }
+    
     //hasAtLeastOneArgument
 
-    public void testHasOneArgument() {
+    public void testDoesntHaveAtLeastOneArgumentForZero() {
+        myFixture.configureByText("OneArgumentTest.java",
+            "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class OneArgumentTest {\n" +
+                "    public void testMethod() {\n" +
+                "        Mockito.<caret>withSettings();\n" +
+                "    }\n" +
+                "}");
+
+        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+
+        assertThat(PsiMethodUtil.hasAtLeastOneArgument(methodCall)).isFalse();
+    }
+
+    public void testHasAtLeastOneArgumentForOne() {
         myFixture.configureByText("OneArgumentTest.java",
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -30,7 +77,7 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
         assertThat(PsiMethodUtil.hasAtLeastOneArgument(methodCall)).isTrue();
     }
 
-    public void testHasMoreThanOneArgument() {
+    public void testHasAtLeastOneArgumentForMoreThanOne() {
         myFixture.configureByText("MultipleArgumentsTest.java",
             "import org.mockito.Mockito;\n" +
                 "\n" +

@@ -1,0 +1,28 @@
+<html>
+<body>
+<!-- tooltip end -->
+Converts <code>Mockito.spy()</code> calls to <code>@Spy</code> annotated fields.
+<p>
+    The intention is available
+<ul>
+    <li>on Mockito.spy() calls,</li>
+    <li>when the argument of the call is either a new expression, or a class object access expression,</li>
+    <li>the argument is not an array creation,</li>
+    <li>the type that is being mocked can actually be mocked (by Mockito's rules)/allowed to be mocked (by the @DoNotMock annotation)</li>
+</ul>
+<p>
+    <strong>Naming</strong>
+<ul>
+    <li>if the <code>Mockito.spy()</code> call is part of a local variable declaration, then by default will use the variable's name,
+        but if there is already a field with the same name in the target class, a rename refactor is invoked first.
+    </li>
+    <li>if the call is not part of a local variable declaration, a rename refactor is invoked first, where the default field name provided is the
+        mock type's name in lowercase format.
+    </li>
+</ul>
+<p>
+    <strong>Target class selection</strong>
+<p>
+    If there is more than one parent class of the selected spy() call, a list is shown from which the class where the field will be introduced, can be selected.
+</body>
+</html>

@@ -19,7 +19,7 @@ import com.picimako.mockitools.MockitoolsPsiUtil;
  * Unit test for {@link com.picimako.mockitools.MockitoolsPsiUtil}.
  */
 public class MockitoolsPsiUtilDoNotMockTest extends LightJavaCodeInsightFixtureTestCase {
-    
+
     @Override
     protected @NotNull LightProjectDescriptor getProjectDescriptor() {
         return getRealJdkHomeOrCommunityMockJdk();
@@ -35,14 +35,13 @@ public class MockitoolsPsiUtilDoNotMockTest extends LightJavaCodeInsightFixtureT
     protected String getTestDataPath() {
         return "src/test/testData/inspection/donotmockreason";
     }
-    
+
     //getDoNotMockAnnotatedTypeAndReasonInHierarchy
 
     public void testReturnsDoNotMockedClassWithDefaultReason() {
         myFixture.configureByText("DoNotMockTest.java",
             "import org.mockito.DoNotMock;\n" +
                 "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class DoNotMockTest {\n" +
                 "\n" +
@@ -62,7 +61,6 @@ public class MockitoolsPsiUtilDoNotMockTest extends LightJavaCodeInsightFixtureT
         myFixture.configureByText("DoNotMockTest.java",
             "import org.mockito.DoNotMock;\n" +
                 "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class DoNotMockTest {\n" +
                 "\n" +
@@ -82,7 +80,6 @@ public class MockitoolsPsiUtilDoNotMockTest extends LightJavaCodeInsightFixtureT
         myFixture.configureByText("DoNotMockTest.java",
             "import org.mockito.DoNotMock;\n" +
                 "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class DoNotMockTest {\n" +
                 "\n" +
@@ -103,7 +100,6 @@ public class MockitoolsPsiUtilDoNotMockTest extends LightJavaCodeInsightFixtureT
         myFixture.configureByText("DoNotMockTest.java",
             "import pm.org.mockito.DoNotMock;\n" +
                 "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class DoNotMockTest {\n" +
                 "\n" +
@@ -124,7 +120,6 @@ public class MockitoolsPsiUtilDoNotMockTest extends LightJavaCodeInsightFixtureT
         myFixture.configureByText("DoNotMockTest.java",
             "import pm.org.mockito.DoNotMock;\n" +
                 "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class DoNotMockTest {\n" +
                 "\n" +
@@ -145,7 +140,6 @@ public class MockitoolsPsiUtilDoNotMockTest extends LightJavaCodeInsightFixtureT
         myFixture.configureByText("DoNotMockTest.java",
             "import pm.org.mockito.DoNotMock;\n" +
                 "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class DoNotMockTest {\n" +
                 "\n" +
@@ -159,6 +153,39 @@ public class MockitoolsPsiUtilDoNotMockTest extends LightJavaCodeInsightFixtureT
         Pair<PsiClass, String> doNotMock = MockitoolsPsiUtil.getDoNotMockAnnotatedTypeAndReasonInHierarchy(getField().getTypeElement().getType());
         assertThat(doNotMock.first.getQualifiedName()).isEqualTo("DoNotMockTest.NotMockable");
         assertThat(doNotMock.second).isEmpty();
+    }
+
+    //isMockableTypeInAnyWay
+
+    public void testIsNotMockableTypeInAnyWayDoNotMock() {
+        myFixture.copyFileToProject("DoNotMock.java");
+        myFixture.configureByText("DoNotMockTest.java",
+            "import pm.org.mockito.DoNotMock;\n" +
+                "import org.mockito.Mock;\n" +
+                "\n" +
+                "public class DoNotMockTest {\n" +
+                "\n" +
+                "    @Mock\n" +
+                "    NotMockable <caret>notMockable;\n" +
+                "\n" +
+                "    @DoNotMock(reason = \"\")\n" +
+                "    private static class NotMockable {}\n" +
+                "}\n");
+
+        assertThat(MockitoolsPsiUtil.isMockableTypeInAnyWay(getField().getTypeElement().getType())).isFalse();
+    }
+
+    public void testIsNotMockableTypeInAnyWay() {
+        myFixture.configureByText("DoNotMockTest.java",
+            "import org.mockito.Mock;\n" +
+                "\n" +
+                "public class DoNotMockTest {\n" +
+                "\n" +
+                "    @Mock\n" +
+                "    String <caret>notMockable;\n" +
+                "}\n");
+
+        assertThat(MockitoolsPsiUtil.isMockableTypeInAnyWay(getField().getTypeElement().getType())).isFalse();
     }
 
     private PsiField getField() {

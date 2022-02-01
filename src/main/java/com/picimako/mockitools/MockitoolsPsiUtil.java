@@ -270,12 +270,39 @@ public final class MockitoolsPsiUtil {
         return Pair.empty();
     }
 
+    /**
+     * This is a simplified version {@link #getDoNotMockAnnotatedTypeAndReasonInHierarchy(PsiType)} that returns a boolean whether any of
+     * the types in the type hierarchy is annotated with @DoNotMock.
+     *
+     * @param type the type to check the type hierarchy of for the @DoNotMock annotation
+     * @since 0.2.0
+     */
+    private static boolean isDoNotMockAnnotatedInHierarchy(@Nullable PsiType type) {
+        if (type instanceof PsiClassType) {
+            PsiClass referencedClass = ((PsiClassType) type).resolve();
+            if (referencedClass != null) {
+                return getDoNotMockAnnotationOn(referencedClass).isPresent()
+                    || InheritanceUtil.getSuperClasses(referencedClass).stream().anyMatch(cls -> getDoNotMockAnnotationOn(cls).isPresent());
+            }
+        }
+        return false;
+    }
+
     private static Optional<PsiAnnotation> getDoNotMockAnnotationOn(PsiClass clazz) {
         return !CommonClassNames.JAVA_LANG_OBJECT.equals(clazz.getQualifiedName())
             ? Arrays.stream(clazz.getAnnotations())
             .filter(annotation -> annotation.getQualifiedName().endsWith(MockitoQualifiedNames.ORG_MOCKITO_DO_NOT_MOCK))
             .findFirst()
             : Optional.empty();
+    }
+
+    /**
+     * Returns whether the argument type is mockable, be it not restricted by Mockito itself, or by a @DoNotMock annotation.
+     *
+     * @since 0.2.0
+     */
+    public static boolean isMockableTypeInAnyWay(@Nullable PsiType type) {
+        return isMockableType(type) && !isDoNotMockAnnotatedInHierarchy(type);
     }
 
     /**

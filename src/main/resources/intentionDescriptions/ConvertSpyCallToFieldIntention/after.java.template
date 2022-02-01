@@ -1,0 +1,7 @@
+public class AUnitTest {
+    <spot>@Spy
+    SpiedObject spied;</spot>
+    
+    public void method() {
+    }
+}
