@@ -1,7 +1,8 @@
-import org.mockito.Mock;
-import org.mockito.Spy;
+import java.util.ArrayList;
 import java.util.List;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 
 public class NonMockableTypesTest {
 
@@ -35,7 +36,7 @@ public class NonMockableTypesTest {
     @Spy
     private List<String> spyList;
 
-    public void testMethod() {
+    public void testClassObjectAccess() {
         Mockito.mock(<error descr="Mockitools: This type is not mockable by Mockito. Such types include primitive types, Class, String, and the wrapper types of primitives.">String.class</error>);
         Mockito.mock(<error descr="Mockitools: This type is not mockable by Mockito. Such types include primitive types, Class, String, and the wrapper types of primitives.">Class.class</error>);
         Mockito.mock(<error descr="Mockitools: This type is not mockable by Mockito. Such types include primitive types, Class, String, and the wrapper types of primitives.">Short.class</error>);
@@ -49,5 +50,12 @@ public class NonMockableTypesTest {
 
         Mockito.mock(List.class);
         Mockito.spy(List.class);
+    }
+
+    public void testNewExpression() {
+        Mockito.spy(<error descr="Mockitools: This type is not mockable by Mockito. Such types include primitive types, Class, String, and the wrapper types of primitives.">new String()</error>);
+        Mockito.spy(<error descr="Mockitools: This type is not mockable by Mockito. Such types include primitive types, Class, String, and the wrapper types of primitives.">new Short("9")</error>);
+
+        Mockito.spy(new ArrayList<>());
     }
 }

@@ -16,11 +16,13 @@ import static com.picimako.mockitools.inspection.ClassObjectAccessUtil.getOperan
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.intellij.psi.PsiNewExpression;
 import com.intellij.psi.PsiType;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,14 +59,21 @@ public class MockTypeInspection extends MockitoolsBaseInspection {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
-        //Mockito.spy method has overloads with single arguments
+        //Mockito.spy method has overloads only with single arguments
         if ((isMockitoMock(expression) && hasAtLeastOneArgument(expression)) || isMockitoSpy(expression)) {
             PsiExpression typeToMock = getFirstArgument(expression);
-            PsiType operandType = getOperandType(typeToMock);
-            if (!isMockableType(operandType)) {
-                holder.registerProblem(typeToMock, MockitoolsBundle.inspection("non.mockable.type"));
-            } else {
-                checkForDoNotMockType(operandType, holder, typeToMock);
+            PsiType type = null;
+            if (typeToMock instanceof PsiClassObjectAccessExpression) {
+                type = getOperandType(typeToMock);
+            } else if (typeToMock instanceof PsiNewExpression) {
+                type = typeToMock.getType();
+            }
+            if (type != null) {
+                if (!isMockableType(type)) {
+                    holder.registerProblem(typeToMock, MockitoolsBundle.inspection("non.mockable.type"));
+                } else {
+                    checkForDoNotMockType(type, holder, typeToMock);
+                }
             }
         }
     }

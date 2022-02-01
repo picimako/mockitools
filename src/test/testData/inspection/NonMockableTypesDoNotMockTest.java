@@ -1,7 +1,7 @@
 import org.mockito.DoNotMock;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 
 public class NonMockableTypesDoNotMockTest {
 
@@ -43,7 +43,7 @@ public class NonMockableTypesDoNotMockTest {
     @Spy
     <error descr="Mockitools: This type is not mockable since a type in the class hierarchy is annotated as @DoNotMock. The reason: Create a real instance instead.">SubclassOfSubInterfaceOfNotMockableInterface</error> notMockableSpyAnn9;
     
-    public void testMethod() {
+    public void testClassObjectAccess() {
         var notMockableMock = Mockito.mock(<error descr="Mockitools: This type is not mockable since a type in the class hierarchy is annotated as @DoNotMock. The reason: Create a real instance instead.">NotMockable.class</error>);
         var notMockableMock2 = Mockito.mock(<error descr="Mockitools: This type is not mockable since a type in the class hierarchy is annotated as @DoNotMock. The reason: Create a real instance instead.">NotMockableInterface.class</error>);
         var notMockableMock3 = Mockito.mock(<error descr="Mockitools: This type is not mockable since a type in the class hierarchy is annotated as @DoNotMock. No reason provided.">NotMockableWithCustomAnnotation.class</error>);
@@ -63,6 +63,18 @@ public class NonMockableTypesDoNotMockTest {
         var notMockableSpy7 = Mockito.spy(<error descr="Mockitools: This type is not mockable since a type in the class hierarchy is annotated as @DoNotMock. The reason: Create a real instance instead.">SubclassOfNotMockable.class</error>);
         var notMockableSpy8 = Mockito.spy(<error descr="Mockitools: This type is not mockable since a type in the class hierarchy is annotated as @DoNotMock. The reason: Create a real instance instead.">SubInterfaceOfNotMockableInterface.class</error>);
         var notMockableSpy9 = Mockito.spy(<error descr="Mockitools: This type is not mockable since a type in the class hierarchy is annotated as @DoNotMock. The reason: Create a real instance instead.">SubclassOfSubInterfaceOfNotMockableInterface.class</error>);
+    }
+
+    public void testNewExpression() {
+        var notMockableSpy = Mockito.spy(<error descr="Mockitools: This type is not mockable since a type in the class hierarchy is annotated as @DoNotMock. The reason: Create a real instance instead.">new NotMockable()</error>);
+        var notMockableSpy2 = Mockito.spy(<error descr="Mockitools: This type is not mockable since a type in the class hierarchy is annotated as @DoNotMock. The reason: Create a real instance instead.">new NotMockableInterface(){}</error>);
+        var notMockableSpy3 = Mockito.spy(<error descr="Mockitools: This type is not mockable since a type in the class hierarchy is annotated as @DoNotMock. No reason provided.">new NotMockableWithCustomAnnotation()</error>);
+        var notMockableSpy4 = Mockito.spy(<error descr="Mockitools: This type is not mockable since a type in the class hierarchy is annotated as @DoNotMock. The reason: A specific reason">new NotMockableInterfaceWithReason(){}</error>);
+        var notMockableSpy5 = Mockito.spy(<error descr="Mockitools: This type is not mockable since a type in the class hierarchy is annotated as @DoNotMock. The reason: Create a real instance instead.">new SubclassOfNotMockableInterface()</error>);
+        var notMockableSpy6 = Mockito.spy(<error descr="Mockitools: This type is not mockable since a type in the class hierarchy is annotated as @DoNotMock. The reason: Create a real instance instead.">new TwoLevelSubclassOfInterface()</error>);
+        var notMockableSpy7 = Mockito.spy(<error descr="Mockitools: This type is not mockable since a type in the class hierarchy is annotated as @DoNotMock. The reason: Create a real instance instead.">new SubclassOfNotMockable()</error>);
+        var notMockableSpy8 = Mockito.spy(<error descr="Mockitools: This type is not mockable since a type in the class hierarchy is annotated as @DoNotMock. The reason: Create a real instance instead.">new SubInterfaceOfNotMockableInterface(){}</error>);
+        var notMockableSpy9 = Mockito.spy(<error descr="Mockitools: This type is not mockable since a type in the class hierarchy is annotated as @DoNotMock. The reason: Create a real instance instead.">new SubclassOfSubInterfaceOfNotMockableInterface()</error>);
     }
 
     @DoNotMock
