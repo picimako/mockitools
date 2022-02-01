@@ -50,7 +50,6 @@ qodana {
 
 dependencies {
     testImplementation("org.assertj:assertj-core:3.21.0")
-    testImplementation("org.mockito:mockito-core:3.11.2")
 }
 
 tasks {
