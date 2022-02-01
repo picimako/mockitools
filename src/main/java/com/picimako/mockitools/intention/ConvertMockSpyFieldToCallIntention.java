@@ -4,6 +4,7 @@
 
 package com.picimako.mockitools.intention;
 
+import static com.picimako.mockitools.ListPopupHelper.selectItemAndRun;
 import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
@@ -12,10 +13,8 @@ import static com.picimako.mockitools.MockitoolsPsiUtil.MOCKITO_WITH_SETTINGS;
 import static java.util.stream.Collectors.joining;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import javax.swing.*;
 
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.codeInsight.intention.IntentionAction;
@@ -27,8 +26,6 @@ import com.intellij.lang.jvm.annotation.JvmAnnotationAttribute;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.popup.PopupStep;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiAnnotationMemberValue;
@@ -44,12 +41,11 @@ import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNameValuePair;
+import com.intellij.psi.PsiQualifiedReference;
+import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
-import com.intellij.ui.popup.list.ListPopupImpl;
-import com.intellij.util.Consumer;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import com.picimako.mockitools.MockitoQualifiedNames;
 import com.picimako.mockitools.resources.MockitoolsBundle;
@@ -120,43 +116,25 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
         PsiField field = (PsiField) element.getParent();
         PsiMethod[] methodsInClass = ((PsiClass) field.getParent()).getMethods();
         if (methodsInClass.length > 1) {
-            introduceMockitoMockingCallInSelectedMethod(Arrays.asList(methodsInClass), selectedMethod -> introduceMockitoMockingCall(field, selectedMethod, file), editor, project);
+            selectItemAndRun(MockitoolsBundle.message("intention.convert.mocking.field.to.call.select.method"),
+                Arrays.asList(methodsInClass), selectedMethod -> introduceMockitoMockingCall(field, selectedMethod, file), () -> new MethodCellRenderer(true), editor, project);
         } else if (methodsInClass.length == 1) {
             introduceMockitoMockingCall(field, methodsInClass[0], file);
         }
     }
 
     /**
-     * Shows a list popup with the available methods in the class.
-     */
-    private void introduceMockitoMockingCallInSelectedMethod(List<PsiMethod> methodsInClass, Consumer<PsiMethod> introduceField, Editor editor, Project project) {
-        var step = new BaseListPopupStep<>(MockitoolsBundle.message("intention.convert.mocking.field.to.call.select.method"), methodsInClass) {
-            @Override
-            public @Nullable PopupStep<?> onChosen(PsiMethod selectedMethod, boolean finalChoice) {
-                introduceField.consume(selectedMethod);
-                return null;
-            }
-        };
-        //Since com.intellij.ui.popup.PopupFactoryImpl#createListPopup(Project, ListPopupStep, Function<ListCellRenderer ListCellRenderer>)
-        // is available only in later IJ versions
-        new ListPopupImpl(project, step) {
-            @Override
-            protected ListCellRenderer<?> getListElementRenderer() {
-                return new MethodCellRenderer(true);
-            }
-        }.showInBestPositionFor(editor);
-    }
-
-    /**
      * Adds the new variable declaration as the first statement of method body.
      */
-    private void introduceMockitoMockingCall(PsiField field, PsiMethod selectedMethod, PsiFile file) {
+    private void introduceMockitoMockingCall(PsiField fieldToConvert, PsiMethod targetMethod, PsiFile file) {
         StringBuilder mockitoMockingCall;
         //This if-else is safe since isAvailable() returns true only in case of @Mock and @Spy annotations
-        if (field.hasAnnotation(ORG_MOCKITO_MOCK)) {
+        if (fieldToConvert.hasAnnotation(ORG_MOCKITO_MOCK)) {
             //org.mockito.Mockito.mock(<fieldtype>.class
-            mockitoMockingCall = new StringBuilder(ORG_MOCKITO_MOCKITO).append(".").append("mock").append("(").append(field.getType().getCanonicalText()).append(".class");
-            PsiAnnotation mockAnnotation = field.getAnnotation(ORG_MOCKITO_MOCK);
+            mockitoMockingCall = new StringBuilder(ORG_MOCKITO_MOCKITO).append(".").append("mock").append("(");
+            appendType(fieldToConvert, mockitoMockingCall);
+
+            PsiAnnotation mockAnnotation = fieldToConvert.getAnnotation(ORG_MOCKITO_MOCK);
             //Assemble Mockito.mock() call based on the @Mock annotation attributes
             boolean isNonMockSettingsOverride = false;
             //Handle .mock(Class, Answer) and .mock(Class, String)
@@ -210,10 +188,10 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
             }
         } else { //spy
             mockitoMockingCall = new StringBuilder(ORG_MOCKITO_MOCKITO).append(".").append("spy").append("(");
-            if (field.hasInitializer()) {
-                mockitoMockingCall.append(field.getInitializer().getText());
+            if (fieldToConvert.hasInitializer()) {
+                mockitoMockingCall.append(fieldToConvert.getInitializer().getText());
             } else {
-                mockitoMockingCall.append(field.getType().getCanonicalText()).append(".class");
+                appendType(fieldToConvert, mockitoMockingCall);
             }
         }
 
@@ -230,13 +208,13 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
             WriteCommandAction.runWriteCommandAction(file.getProject(), () -> finalMockingInitializer.getArgumentList().getExpressions()[1].delete());
         }
 
-        var mockitoMockingVariableDeclaration = codeStyleManager.shortenClassReferences(elementFactory.createVariableDeclarationStatement(field.getName(), field.getType(), finalMockingInitializer));
+        var mockitoMockingVariableDeclaration = codeStyleManager.shortenClassReferences(elementFactory.createVariableDeclarationStatement(fieldToConvert.getName(), fieldToConvert.getType(), finalMockingInitializer));
 
         //Introduces the variable declaration in the selected method
         //Deletes the field
         PsiDocumentManager.getInstance(file.getProject()).commitAllDocuments();
         WriteCommandAction.runWriteCommandAction(file.getProject(), () -> {
-            PsiCodeBlock methodBody = selectedMethod.getBody();
+            PsiCodeBlock methodBody = targetMethod.getBody();
             if (methodBody != null) {
                 if (methodBody.getFirstBodyElement() != null) {
                     methodBody.addBefore(mockitoMockingVariableDeclaration, methodBody.getFirstBodyElement());
@@ -244,7 +222,7 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
                     methodBody.add(mockitoMockingVariableDeclaration);
                 }
             }
-            field.delete();
+            fieldToConvert.delete();
         });
     }
 
@@ -265,5 +243,16 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
 
     private void appendSetting(StringBuilder sb, String attributeName, String argument) {
         sb.append(".").append(attributeName).append("(").append(argument).append(")");
+    }
+
+    /**
+     * This is to make sure that the mock()/spy() call's argument (when a PsiClassObjectAccessExpression), doesn't include the generic type arguments.
+     */
+    private void appendType(PsiField fieldToConvert, StringBuilder mockitoMockingCall) {
+        Optional.ofNullable(fieldToConvert.getTypeElement())
+            .map(PsiTypeElement::getInnermostComponentReferenceElement)
+            .map(PsiQualifiedReference::getReferenceName)
+            .ifPresentOrElse(mockitoMockingCall::append, () -> mockitoMockingCall.append(fieldToConvert.getType().getCanonicalText()));
+        mockitoMockingCall.append(".class");
     }
 }

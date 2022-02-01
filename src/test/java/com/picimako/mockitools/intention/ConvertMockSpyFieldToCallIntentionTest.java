@@ -227,4 +227,58 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
                 "    }\n" +
                 "}");
     }
+
+    //Generics: @Spy Type<type>; -> Mockito.spy(Type.class)
+
+    public void testConvertsSpyFieldWithGenericsToSpyCall() {
+        checkIntentionRun("ConvertFieldTest.java",
+            "import org.mockito.Spy;\n" +
+                "\n" +
+                "public class ConvertFieldTest {\n" +
+                "    @Spy\n" +
+                "    MockObject<String> mo<caret>ck;\n" +
+                "\n" +
+                "    public void method() {\n" +
+                "    }\n" +
+                "\n" +
+                "    public static final class MockObject<T> { }\n" +
+                "}",
+            "import org.mockito.Mockito;\n" +
+                "import org.mockito.Spy;\n" +
+                "\n" +
+                "public class ConvertFieldTest {\n" +
+                "\n" +
+                "    public void method() {\n" +
+                "        MockObject<String> mock = Mockito.spy(MockObject.class);\n" +
+                "    }\n" +
+                "\n" +
+                "    public static final class MockObject<T> { }\n" +
+                "}");
+    }
+
+    public void testConvertsMockFieldWithGenericsToMockCall() {
+        checkIntentionRun("ConvertFieldTest.java",
+            "import org.mockito.Mock;\n" +
+                "\n" +
+                "public class ConvertFieldTest {\n" +
+                "    @Mock\n" +
+                "    MockObject<String> mo<caret>ck;\n" +
+                "\n" +
+                "    public void method() {\n" +
+                "    }\n" +
+                "\n" +
+                "    public static final class MockObject<T> { }\n" +
+                "}",
+            "import org.mockito.Mock;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class ConvertFieldTest {\n" +
+                "\n" +
+                "    public void method() {\n" +
+                "        MockObject<String> mock = Mockito.mock(MockObject.class);\n" +
+                "    }\n" +
+                "\n" +
+                "    public static final class MockObject<T> { }\n" +
+                "}");
+    }
 }
