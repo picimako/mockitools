@@ -3,22 +3,10 @@
 # Mockitools Changelog
 
 ## [Unreleased]
-### Added
-- [#2](https://github.com/picimako/mockitools/issues/2): Extended `MockTypeInspection` to validate and report types annotated with `@DoNotMock` annotation.
-  - You can find more information about this at
-    - [MockTypeInspection documentation](docs/mock_creation.md#donotmock-annotated-types) 
-    - [@DoNotMock javadoc](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/DoNotMock.html)
-    - [Mockito pull request: Add annotation to mark a type as DoNotMock](https://github.com/mockito/mockito/pull/1833/files)
-- Extended `MockTypeInspection` to validate new expressions (i.e. `new Clazz()`) against non-mockable types.
-- [#4](https://github.com/picimako/mockitools/issues/4): Added intention to convert `Mockito.spy()` calls to `@Spy` annotated fields.
-See [documentation](docs/mock_creation.md#convert-mockitospy-calls-to-spy-fields).
-- [#4](https://github.com/picimako/mockitools/issues/4): Added intention to convert `@Mock` and `@Spy` annotated fields to `Mockito.mock`  and `Mockito.spy()`
-calls, respectively. See [documentation](docs/mock_creation.md#convert-mockspy-fields-to-mockitomockspy-calls).
 
-### Changed
-- Updated gradle-intellij-plugin version to 1.3.1.
-- Updated github workflows configuration to match the changes in the IJ platform plugin template.
-- Plugin is now compatible with IJ 2022.1 EAP.
+## [0.2.0]
+### Added
+- [#2](https://github.com/picimako/mockitools/issues/2): Extended MockTypeInspection@DoNotMockMockTypeInspectionnew Clazz()Mockito.spy()@Spy@Mock@SpyMockito.mockMockito.spy()
 
 ## [0.1.1]
 ### Added
