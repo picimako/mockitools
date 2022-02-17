@@ -21,18 +21,14 @@ public interface MigrationAidBase {
     abstract class V3ToV4BaseInspection extends MockitoolsBaseInspection {
         @Override
         public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-            return !isInTestSourceContent(session.getFile()) || !isMockitoCore3xAvailableInModuleOf(session.getFile(), holder.getProject())
-                ? PsiElementVisitor.EMPTY_VISITOR
-                : methodCallVisitor(holder);
+            return isInTestSourceContent(session.getFile()) && isMockitoCore3xAvailableInModuleOf(session.getFile(), holder.getProject()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
         }
     }
 
     abstract class V23ToV4BaseInspection extends MockitoolsBaseInspection {
         @Override
         public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-            return !isInTestSourceContent(session.getFile()) || !isMockitoCore2xOr3xAvailableInModuleOf(session.getFile(), holder.getProject())
-                ? PsiElementVisitor.EMPTY_VISITOR
-                : methodCallVisitor(holder);
+            return isInTestSourceContent(session.getFile()) && isMockitoCore2xOr3xAvailableInModuleOf(session.getFile(), holder.getProject()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
         }
     }
 }

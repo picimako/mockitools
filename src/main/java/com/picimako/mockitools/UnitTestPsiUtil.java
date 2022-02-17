@@ -12,20 +12,6 @@ import com.siyeh.ig.psiutils.TestUtils;
  */
 public final class UnitTestPsiUtil {
 
-    private static final String UNIT_TEST_FILE_IDENTIFIER = "Test.java";
-
-    /**
-     * Validates whether the argument file is a unit test.
-     * <p>
-     * This is based on the rule that unit test has to end with the word {@code Test}.
-     *
-     * @param file the file to validate
-     * @return true if the file is a unit test, false otherwise
-     */
-    public static boolean isUnitTest(PsiFile file) {
-        return file.getName().endsWith(UNIT_TEST_FILE_IDENTIFIER);
-    }
-
     /**
      * Validates whether the argument file is within test sources.
      * <p>

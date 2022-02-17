@@ -23,7 +23,7 @@ public class CallOnMockitoResetInspection extends MockitoolsBaseInspection {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-        return !isInTestSourceContent(session.getFile()) ? PsiElementVisitor.EMPTY_VISITOR : methodCallVisitor(holder);
+        return isInTestSourceContent(session.getFile()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
     }
 
     @Override

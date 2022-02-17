@@ -65,9 +65,7 @@ public class TimesVerificationModeInspection extends MockitoolsBaseInspection {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-        return !isInTestSourceContent(session.getFile()) || (!reportTimesZeroToNever && !reportTimesOneCanBeOmitted)
-            ? PsiElementVisitor.EMPTY_VISITOR
-            : methodCallVisitor(holder);
+        return isInTestSourceContent(session.getFile()) && (reportTimesZeroToNever || reportTimesOneCanBeOmitted) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
     }
 
     @Override

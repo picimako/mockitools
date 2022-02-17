@@ -14,10 +14,6 @@ public class CaptorFieldInitializationInspectionTest extends MockitoolsV3Inspect
         return new CaptorFieldInitializationInspection();
     }
 
-    public void testCaptorFieldInitTest() {
-        doJavaTest();
-    }
-
     public void testCaptorFieldInit() {
         doJavaTest();
     }

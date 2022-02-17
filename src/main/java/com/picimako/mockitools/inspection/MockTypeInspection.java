@@ -11,7 +11,6 @@ import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoSpy;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.PsiMethodUtil.hasAtLeastOneArgument;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
-import static com.picimako.mockitools.UnitTestPsiUtil.isUnitTest;
 import static com.picimako.mockitools.inspection.ClassObjectAccessUtil.getOperandType;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
@@ -52,9 +51,7 @@ public class MockTypeInspection extends MockitoolsBaseInspection {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-        return isInTestSourceContent(session.getFile())
-            ? isUnitTest(session.getFile()) ? fieldAndMethodCallVisitor(holder) : methodCallVisitor(holder)
-            : PsiElementVisitor.EMPTY_VISITOR;
+        return isInTestSourceContent(session.getFile()) ? fieldAndMethodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
     }
 
     @Override

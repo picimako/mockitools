@@ -7,7 +7,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_RUNNERS_
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_RUNNERS_MOCKITO_JUNIT_RUNNER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_RUNNERS_VERBOSE_MOCKITO_JUNIT_RUNNER;
 import static com.picimako.mockitools.ModuleDependencyHelper.isMockitoCore2xOr3xAvailableInModuleOf;
-import static com.picimako.mockitools.UnitTestPsiUtil.isUnitTest;
+import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
@@ -30,7 +30,7 @@ public class UsageOfOldJUnitRunnerInspection extends MigrationAidBase.V23ToV4Bas
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
         //Whether the file contains JUnit test classes is not validated, since runners may be referenced in non-unittest (i.e. util) classes.
-        if (!isUnitTest(session.getFile()) || !isMockitoCore2xOr3xAvailableInModuleOf(session.getFile(), holder.getProject())) {
+        if (!isInTestSourceContent(session.getFile()) || !isMockitoCore2xOr3xAvailableInModuleOf(session.getFile(), holder.getProject())) {
             return PsiElementVisitor.EMPTY_VISITOR;
         }
 

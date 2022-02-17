@@ -7,7 +7,6 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isExtraInterfaces;
 import static com.picimako.mockitools.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
-import static com.picimako.mockitools.UnitTestPsiUtil.isUnitTest;
 import static com.picimako.mockitools.inspection.ClassObjectAccessUtil.getOperandType;
 
 import com.intellij.codeInsight.AnnotationUtil;
@@ -45,9 +44,7 @@ public class ExtraInterfacesInspection extends MockitoolsBaseInspection {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-        return isInTestSourceContent(session.getFile())
-            ? isUnitTest(session.getFile()) ? annotationAndMethodCallVisitor(holder) : methodCallVisitor(holder)
-            : PsiElementVisitor.EMPTY_VISITOR;
+        return isInTestSourceContent(session.getFile()) ? annotationAndMethodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
     }
 
     @Override

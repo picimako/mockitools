@@ -31,5 +31,5 @@ public class CaptorFieldInit {
     public byte byteCaptorCInit[] = new byte[2];
 
     @Captor
-    public ArgumentCaptor<String> stringCaptorInit = ArgumentCaptor.forClass(String.class);
+    public ArgumentCaptor<String> stringCaptorInit = <warning descr="Mockitools: Explicit initialization of a @Captor field can be omitted.">ArgumentCaptor.forClass(String.class)</warning>;
 }

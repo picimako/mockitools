@@ -5,7 +5,7 @@ package com.picimako.mockitools.inspection;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT_CAPTOR;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_CAPTOR;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isOfTypeArgumentCaptor;
-import static com.picimako.mockitools.UnitTestPsiUtil.isUnitTest;
+import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemDescriptor;
@@ -38,7 +38,7 @@ public class CaptorFieldOfTypeArgumentCaptorInspection extends MockitoolsBaseIns
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-        return !isUnitTest(session.getFile()) ? PsiElementVisitor.EMPTY_VISITOR : fieldVisitor(holder);
+        return isInTestSourceContent(session.getFile()) ? fieldVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
     }
 
     @Override

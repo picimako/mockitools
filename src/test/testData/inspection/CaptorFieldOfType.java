@@ -17,26 +17,26 @@ public class CaptorFieldOfType {
     //Highlight cases
 
     @Captor
-    public String stringNoInit;
+    public String <error descr="Mockitools: A @Captor field must be of the type ArgumentCaptor.">stringNoInit</error>;
 
     @Captor
-    public String stringInit = "";
+    public String <error descr="Mockitools: A @Captor field must be of the type ArgumentCaptor.">stringInit</error> = "";
 
     @Captor
-    public int intCaptor;
+    public int <error descr="Mockitools: A @Captor field must be of the type ArgumentCaptor.">intCaptor</error>;
 
     @Captor
-    public byte[] byteCaptor;
+    public byte[] <error descr="Mockitools: A @Captor field must be of the type ArgumentCaptor.">byteCaptor</error>;
 
     @Captor
-    public byte byteCCaptor[];
+    public byte <error descr="Mockitools: A @Captor field must be of the type ArgumentCaptor.">byteCCaptor</error>[];
 
     @Captor
-    public int intCaptorInit = 2;
+    public int <error descr="Mockitools: A @Captor field must be of the type ArgumentCaptor.">intCaptorInit</error> = 2;
 
     @Captor
-    public byte[] byteCaptorInit = new byte[2];
+    public byte[] <error descr="Mockitools: A @Captor field must be of the type ArgumentCaptor.">byteCaptorInit</error> = new byte[2];
 
     @Captor
-    public byte byteCaptorCInit[] = new byte[2];
+    public byte <error descr="Mockitools: A @Captor field must be of the type ArgumentCaptor.">byteCaptorCInit</error>[] = new byte[2];
 }

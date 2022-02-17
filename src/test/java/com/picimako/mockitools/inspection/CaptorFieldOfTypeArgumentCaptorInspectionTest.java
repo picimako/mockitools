@@ -14,10 +14,6 @@ public class CaptorFieldOfTypeArgumentCaptorInspectionTest extends MockitoolsV3I
         return new CaptorFieldOfTypeArgumentCaptorInspection();
     }
 
-    public void testCaptorFieldOfTypeTest() {
-        doJavaTest();
-    }
-
     public void testCaptorFieldOfType() {
         doJavaTest();
     }
