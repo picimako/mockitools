@@ -2,8 +2,8 @@
 
 package com.picimako.mockitools.inspection;
 
-import static com.picimako.mockitools.MockitoolsTestBase.MOCKITO_4_LIB;
 import static com.picimako.mockitools.MockitoolsTestBase.getRealJdkHomeOrCommunityMockJdk;
+import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito4Latest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.openapi.util.Pair;
@@ -22,11 +22,13 @@ public class MockitoolsPsiUtilDoNotMockTest extends LightJavaCodeInsightFixtureT
 
     @Override
     protected @NotNull LightProjectDescriptor getProjectDescriptor() {
-        return getRealJdkHomeOrCommunityMockJdk(libsToLoad());
+        return getRealJdkHomeOrCommunityMockJdk();
     }
 
-    protected String[] libsToLoad() {
-        return MOCKITO_4_LIB;
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        loadMockito4Latest(myFixture.getProjectDisposable(), getModule());
     }
 
     @Override

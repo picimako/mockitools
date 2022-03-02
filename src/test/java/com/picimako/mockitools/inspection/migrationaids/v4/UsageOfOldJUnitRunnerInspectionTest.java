@@ -2,8 +2,7 @@
 
 package com.picimako.mockitools.inspection.migrationaids.v4;
 
-import static com.picimako.mockitools.MockitoolsTestBase.JUNIT_4;
-import static com.picimako.mockitools.MockitoolsTestBase.MOCKITO_3;
+import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadJUnit4;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 
@@ -20,8 +19,8 @@ public class UsageOfOldJUnitRunnerInspectionTest extends MockitoolsV3InspectionT
     }
 
     @Override
-    protected String[] libsToLoad() {
-        return new String[]{MOCKITO_3, JUNIT_4};
+    protected void loadLibs() {
+        loadJUnit4(myFixture.getProjectDisposable(), getModule());
     }
 
     public void testReplaceConsoleSpammingMockitoJUnitRunner() {

@@ -4,6 +4,8 @@
 
 package com.picimako.mockitools.intention;
 
+import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito4Latest;
+
 import com.intellij.codeInsight.intention.IntentionAction;
 
 /**
@@ -17,8 +19,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
     }
 
     @Override
-    protected String[] libsToLoad() {
-        return MOCKITO_4_LIB;
+    protected void loadLibs() {
+        loadMockito4Latest(myFixture.getProjectDisposable(), getModule());
     }
 
     //@Mock -> Mockito.mock(<type>.class) - empty config
