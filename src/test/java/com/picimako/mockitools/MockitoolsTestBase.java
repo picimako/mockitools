@@ -46,7 +46,7 @@ public abstract class MockitoolsTestBase extends LightJavaCodeInsightFixtureTest
             @Override
             public Sdk getSdk() {
                 return System.getProperty("idea.home.path") != null
-                    ? super.getSdk()
+                    ? JAVA_11.getSdk()
                     : JavaSdk.getInstance().createJdk("Real JDK", System.getenv("JAVA_HOME"), false);
             }
 
