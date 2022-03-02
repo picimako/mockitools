@@ -6,8 +6,6 @@ package com.picimako.mockitools.intention;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 
-import com.picimako.mockitools.ThirdPartyLibraryLoader;
-
 /**
  * Functional test for {@link ConvertSpyCallToFieldIntention}
  */
@@ -19,8 +17,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
     }
 
     @Override
-    protected void loadLibs() {
-        ThirdPartyLibraryLoader.loadMockito4Latest(myFixture.getProjectDisposable(), getModule());
+    protected String[] libsToLoad() {
+        return MOCKITO_4_LIB;
     }
 
     //Availability

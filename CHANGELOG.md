@@ -2,7 +2,14 @@
 
 # Mockitools Changelog
 
-## [Unreleased]
+## [0.3.0]
+### Changed
+- Versioning
+  - IntelliJ versions prior to 2021.1 are no longer supported.
+  - Updated Gradle IntelliJ plugin to 1.4.0, gradle to 7.4, and qodana-action to 4.2.5.
+- Replaced unit test file checks with a less restrictive, test source root content check, because unit test file names don't necessarily end with the word *Test*.
+  This will allow certain functionality to run in files whose names don't end with *Test*.
+- Simplified plugin functional tests.
 
 ## [0.2.0]
 ### Added

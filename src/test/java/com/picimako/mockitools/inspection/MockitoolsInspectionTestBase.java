@@ -16,6 +16,8 @@ import com.picimako.mockitools.MockitoolsTestBase;
  */
 public abstract class MockitoolsInspectionTestBase extends LightJavaCodeInsightFixtureTestCase {
 
+    private static final String[] NO_LIBS = new String[0];
+    
     @Override
     protected String getTestDataPath() {
         return "src/test/testData/inspection";
@@ -23,15 +25,16 @@ public abstract class MockitoolsInspectionTestBase extends LightJavaCodeInsightF
 
     @Override
     protected @NotNull LightProjectDescriptor getProjectDescriptor() {
-        return MockitoolsTestBase.getRealJdkHomeOrCommunityMockJdk();
+        return MockitoolsTestBase.getRealJdkHomeOrCommunityMockJdk(libsToLoad());
     }
 
     /**
      * To load libraries other than Mockito, so that the setUp method doesn't have to be overridden every time.
      */
-    protected void loadLibs() {
+    protected String[] libsToLoad() {
+        return NO_LIBS;
     }
-
+    
     /**
      * Override this to configure the inspection to be tested.
      */

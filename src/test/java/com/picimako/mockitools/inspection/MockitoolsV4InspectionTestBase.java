@@ -4,17 +4,15 @@
 
 package com.picimako.mockitools.inspection;
 
-import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito4Latest;
+import static com.picimako.mockitools.MockitoolsTestBase.MOCKITO_4_LIB;
 
 /**
  * Base class for testing Mockito 4 specific inspections.
  */
 public abstract class MockitoolsV4InspectionTestBase extends MockitoolsInspectionTestBase {
-
+    
     @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        loadMockito4Latest(myFixture.getProjectDisposable(), getModule());
-        loadLibs();
+    protected String[] libsToLoad() {
+        return MOCKITO_4_LIB;
     }
 }
