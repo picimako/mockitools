@@ -44,7 +44,7 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
 
         assertThat(PsiMethodUtil.hasOneArgument(methodCall)).isFalse();
     }
-    
+
     //hasAtLeastOneArgument
 
     public void testDoesntHaveAtLeastOneArgumentForZero() {
@@ -210,5 +210,107 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
         WriteAction.run(() -> CommandProcessor.getInstance().executeCommand(getProject(), () -> PsiMethodUtil.deleteArguments(methodCall), "Delete", "group.id"));
 
         assertThat(methodCall.getArgumentList().isEmpty()).isTrue();
+    }
+
+    //getSubsequentMethodCall
+
+    public void testGetsSubsequentCall() {
+        myFixture.configureByText("SubSequent.java",
+            "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class SubSequent {\n" +
+                "    public void testMethod() {\n" +
+                "        Mockito.ve<caret>rify(new Object()).toString();\n" +
+                "    }\n" +
+                "}");
+
+        var methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        var subsequentMethodCall = PsiMethodUtil.getSubsequentMethodCall(methodCall);
+
+        assertThat(subsequentMethodCall.getMethodExpression().getReferenceName()).isEqualTo("toString");
+    }
+
+    public void testDoesntGetSubsequentCallForNullArgument() {
+        assertThat(PsiMethodUtil.getSubsequentMethodCall(null)).isNull();
+    }
+
+    public void testDoesntGetSubsequentCallWhenThereIsNoSubsequentCall() {
+        myFixture.configureByText("SubSequent.java",
+            "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class SubSequent {\n" +
+                "    public void testMethod() {\n" +
+                "        Mockito.verify(new Object()).toS<caret>tring();\n" +
+                "    }\n" +
+                "}");
+
+        var methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        var subsequentMethodCall = PsiMethodUtil.getSubsequentMethodCall(methodCall);
+
+        assertThat(subsequentMethodCall).isNull();
+    }
+
+    //findCallUpwardsInChain
+
+    public void testFindsCallUpwards() {
+        myFixture.configureByText("FindUpwards.java",
+            "public class FindUpwards {\n" +
+                "    public void testMethod() {\n" +
+                "        \"string\".substring(1).subS<caret>equence(2, 3).toString();\n" +
+                "    }\n" +
+                "}");
+
+
+        var methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        var foundCall = PsiMethodUtil.findCallUpwardsInChain(methodCall, "substring");
+
+        assertThat(foundCall.get().getText()).isEqualTo("\"string\".substring(1)");
+    }
+
+    public void testDoesntFindNonExistentCallUpwards() {
+        myFixture.configureByText("FindUpwards.java",
+            "public class FindUpwards {\n" +
+                "    public void testMethod() {\n" +
+                "        \"string\".substring(1).subS<caret>equence(2, 3).toString();\n" +
+                "    }\n" +
+                "}");
+
+
+        var methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        var foundCall = PsiMethodUtil.findCallUpwardsInChain(methodCall, "toString");
+
+        assertThat(foundCall).isEmpty();
+    }
+
+    //findCallDownwardsInChain
+
+    public void testFindsCallDownwards() {
+        myFixture.configureByText("FindDownwards.java",
+            "public class FindDownwards {\n" +
+                "    public void testMethod() {\n" +
+                "        \"string\".substring(1).subS<caret>equence(2, 3).toString();\n" +
+                "    }\n" +
+                "}");
+
+
+        var methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        var foundCall = PsiMethodUtil.findCallDownwardsInChain(methodCall, "toString");
+
+        assertThat(foundCall.get().getText()).isEqualTo("\"string\".substring(1).subSequence(2, 3).toString()");
+    }
+
+    public void testDoesntFindNonExistentCallDownwards() {
+        myFixture.configureByText("FindDownwards.java",
+            "public class FindDownwards {\n" +
+                "    public void testMethod() {\n" +
+                "        \"string\".substring(1).subS<caret>equence(2, 3).toString();\n" +
+                "    }\n" +
+                "}");
+
+
+        var methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        var foundCall = PsiMethodUtil.findCallDownwardsInChain(methodCall, "substring");
+
+        assertThat(foundCall).isEmpty();
     }
 }

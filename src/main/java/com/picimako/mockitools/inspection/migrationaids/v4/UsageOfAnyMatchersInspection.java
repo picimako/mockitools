@@ -62,7 +62,7 @@ public class UsageOfAnyMatchersInspection extends MigrationAidBase.V23ToV4BaseIn
             holder.registerProblem(
                 expression.getMethodExpression().getReferenceNameElement(), //referenceName null value is already checked by the CallMatcher
                 MockitoolsBundle.inspection("migration.aid.v4.use.any.collection.type", getMethodName(expression)),
-                new ReplaceAnyXOfWithAnyXQuickFix(expression.getMethodExpression().getReferenceName()));
+                new ReplaceAnyXOfWithAnyXQuickFix(getMethodName(expression)));
         }
     }
 
