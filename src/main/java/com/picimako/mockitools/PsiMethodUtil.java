@@ -3,7 +3,9 @@
 package com.picimako.mockitools;
 
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
+import static java.util.stream.Collectors.toList;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.intellij.psi.PsiElement;
@@ -14,6 +16,7 @@ import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiStatement;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -97,6 +100,11 @@ public final class PsiMethodUtil {
     public static PsiExpression getQualifier(@NotNull PsiMethodCallExpression methodCall) {
         return methodCall.getMethodExpression().getQualifierExpression();
     }
+    
+    @Nullable
+    public static PsiElement getReferenceNameElement(PsiMethodCallExpression methodCall) {
+        return methodCall.getMethodExpression().getReferenceNameElement();
+    }
 
     /**
      * Deletes the arguments of the provided method call.
@@ -169,6 +177,33 @@ public final class PsiMethodUtil {
         return callsInChain.stream()
             .filter(call -> methodNameToFind.equals(getMethodName(call)))
             .findFirst();
+    }
+
+//    /**
+//     * Collects the method calls from the call chain in which the provided call is the last one.
+//     * <p>
+//     * Thus, the calls will be in a reverse order compared to the order they are actually called.
+//     */
+//    public static List<PsiMethodCallExpression> collectCallsInChain(@NotNull PsiExpression lastCallInChain) {
+//        var calls = new SmartList<PsiElement>(lastCallInChain);
+//        PsiElement current = lastCallInChain;
+//        while (current.getFirstChild() instanceof PsiReferenceExpression) {
+//            PsiElement previousCall = current.getFirstChild().getFirstChild();
+//            if (previousCall instanceof PsiMethodCallExpression) {
+//                calls.add(previousCall);
+//                current = previousCall;
+//            } else break;
+//        }
+//        return calls.stream().map(PsiMethodCallExpression.class::cast).collect(toList());
+//    }
+    
+    public static List<PsiMethodCallExpression> collectCallsInChainFromFirst(PsiMethodCallExpression expression, boolean includeMySelf) {
+        return PsiTreeUtil.collectParents(expression,
+            PsiMethodCallExpression.class, includeMySelf, e -> e instanceof PsiExpressionList || e instanceof PsiStatement);
+    }
+
+    public static List<PsiMethodCallExpression> collectCallsInChainFromFirst(PsiMethodCallExpression expression) {
+        return collectCallsInChainFromFirst(expression, false);
     }
 
     private PsiMethodUtil() {

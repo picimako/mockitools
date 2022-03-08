@@ -75,6 +75,9 @@ public final class MockitoQualifiedNames {
     public static final String THEN_THROW = "thenThrow";
     public static final String DO_THROW = "doThrow";
     public static final String WILL_THROW = "willThrow";
+    public static final String THEN_RETURN = "thenReturn";
+    public static final String DO_RETURN = "doReturn";
+    public static final String WILL_RETURN = "willReturn";
 
     //MockSettings
     public static final String EXTRA_INTERFACES = "extraInterfaces";
