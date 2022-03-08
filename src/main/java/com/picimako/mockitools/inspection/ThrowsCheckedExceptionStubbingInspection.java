@@ -47,7 +47,7 @@ import com.picimako.mockitools.PsiMethodUtil;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 
 /**
- * Reports exception references in {@code *throw()} stubbing methods based on Mockito's rule on checked exceptions:
+ * Reports exception references in {@code *Throw()} stubbing methods based on Mockito's rule on checked exceptions:
  * <i>If [the specified exception types] contain a checked exception then it has to match one of the checked exceptions of method signature.</i>
  * <p>
  * The following constructs are supported:
@@ -104,7 +104,7 @@ public class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInsp
 
     /**
      * Retrieves the method that is being stubbed on a mock object, resolves the original method and compares the exceptions
-     * specified in the {@code *throw()} call with the ones in the resolved method's {@code throws} clause.
+     * specified in the {@code *Throw()} call with the ones in the resolved method's {@code throws} clause.
      * <p>
      * If an exception specified during stubbing is a checked exception, but it is not listed in the throws clause, it is then reported.
      * <p>
@@ -152,7 +152,7 @@ public class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInsp
     }
 
     /**
-     * Descriptor for holding *throw() call related information.
+     * Descriptor for holding *Throw() call related information.
      */
     private static final class ThrowDescriptor {
         /**
