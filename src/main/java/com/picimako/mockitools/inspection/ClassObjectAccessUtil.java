@@ -1,6 +1,4 @@
-/*
- * Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
- */
+//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection;
 
@@ -8,6 +6,7 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,6 +25,14 @@ public final class ClassObjectAccessUtil {
         return element instanceof PsiClassObjectAccessExpression
             ? ((PsiClassObjectAccessExpression) element).getOperand().getType()
             : null;
+    }
+
+    /**
+     * Alternate version of {@link #getOperandType(PsiElement)} for PsiExpressions.
+     */
+    @Nullable
+    public static PsiType getOperandType(@Nullable PsiExpression expression) {
+        return getOperandType((PsiElement) expression);
     }
 
     /**

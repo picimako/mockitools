@@ -4,6 +4,20 @@
 
 ## [Unreleased]
 
+## [0.3.0]
+- **IntelliJ version support: versions prior to 2021.1 are no longer supported.**
+
+### Added
+- Added a new inspection to report checked exceptions in `*Throw()` stubbing calls that are not specified in the stubbed method's `throws` clause.
+See [documentation](/docs/stubbing.md#invalid-checked-exception-is-passed-into-throw-methods).
+- [#8](https://github.com/picimako/mockitools/issues/8): Added a new inspection that reports multiple consecutive calls on `*Return()` stubbing calls. These can be merged into a single such call.
+See [documentation](docs/stubbing.md#consecutive-return-calls-can-be-merged).
+
+### Changed
+- Updated Gradle IntelliJ plugin to 1.4.0, gradle to 7.4, and qodana-action to 4.2.5.
+- Replaced unit test file checks with a less restrictive, test source root content check, because unit test file names don't necessarily end with the word *Test*.
+  This will allow certain functionality to run in files whose names don't end with *Test*.
+ 
 ## [0.2.0]
 ### Added
 - [#2](https://github.com/picimako/mockitools/issues/2): Extended `MockTypeInspection` to validate and report types annotated with `@DoNotMock` annotation.

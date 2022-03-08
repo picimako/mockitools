@@ -10,9 +10,13 @@ public final class MockitoQualifiedNames {
     //Classes
     public static final String ORG_MOCKITO_MOCKITO = "org.mockito.Mockito";
     public static final String ORG_MOCKITO_BDDMOCKITO = "org.mockito.BDDMockito";
+    public static final String ORG_MOCKITO_BDD_MY_ONGOING_STUBBING = "org.mockito.BDDMockito.BDDMyOngoingStubbing";
+    public static final String ORG_MOCKITO_BDD_STUBBER = "org.mockito.BDDMockito.BDDStubber";
     public static final String ORG_MOCKITO_ARGUMENT_MATCHERS = "org.mockito.ArgumentMatchers";
     public static final String ORG_MOCKITO_ADDITIONAL_MATCHERS = "org.mockito.AdditionalMatchers";
     public static final String ORG_MOCKITO_STUBBING_STUBBER = "org.mockito.stubbing.Stubber";
+    public static final String ORG_MOCKITO_STUBBING_BASESTUBBER = "org.mockito.stubbing.BaseStubber";
+    public static final String ORG_MOCKITO_ONGOING_STUBBING = "org.mockito.stubbing.OngoingStubbing";
     public static final String ORG_MOCKITO_ARGUMENT_CAPTOR = "org.mockito.ArgumentCaptor";
     public static final String ORG_MOCKITO_MOCK_SETTINGS = "org.mockito.MockSettings";
     public static final String ORG_MOCKITO_MATCHERS = "org.mockito.Matchers";
@@ -67,6 +71,13 @@ public final class MockitoQualifiedNames {
     public static final String VERIFY_ZERO_INTERACTIONS = "verifyZeroInteractions";
     public static final String IGNORE_STUBS = "ignoreStubs";
     public static final String VERIFY = "verify";
+
+    public static final String THEN_THROW = "thenThrow";
+    public static final String DO_THROW = "doThrow";
+    public static final String WILL_THROW = "willThrow";
+    public static final String THEN_RETURN = "thenReturn";
+    public static final String DO_RETURN = "doReturn";
+    public static final String WILL_RETURN = "willReturn";
 
     //MockSettings
     public static final String EXTRA_INTERFACES = "extraInterfaces";

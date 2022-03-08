@@ -9,7 +9,7 @@
     <description>Provides various inspections for the Mockito framework for Java.</description>
 
     <!-- https://jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html -->
-    <idea-version since-build="203"/>
+    <idea-version since-build="211"/>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
@@ -62,6 +62,16 @@
                 id="mockitools.noMethodCallArgument" language="JAVA"
                 displayName="No Mockito method call argument specified" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.ThrowsCheckedExceptionStubbingInspection"
+                id="mockitools.methodSignatureBasedThrowsExceptionStubbing" language="JAVA"
+                displayName="Checked exception stubbing based on method throws clause" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.SimplifyConsecutiveStubbingCallsInspection"
+                id="mockitools.simplifyConsecutiveStubbingCalls" language="JAVA"
+                displayName="Consecutive stubbing calls can be simplified" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="WARNING"/>
 
         <!-- v4 migration aids -->
         <localInspection
