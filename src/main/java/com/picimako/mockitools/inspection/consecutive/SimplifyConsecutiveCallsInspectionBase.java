@@ -3,12 +3,15 @@
 package com.picimako.mockitools.inspection.consecutive;
 
 import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
+import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +26,19 @@ import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
  */
 public abstract class SimplifyConsecutiveCallsInspectionBase<T extends ConsecutiveCallDescriptor> extends MockitoolsBaseInspection {
 
+    @Override
+    public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
+        return isInTestSourceContent(session.getFile()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
+    }
+
+    @Override
+    protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
+        callDescriptors().stream()
+            .filter(descriptor -> descriptor.matches(expression))
+            .findFirst()
+            .ifPresent(descriptor -> checkCallChainAndRegister(descriptor, expression, holder));
+    }
+    
     /**
      * Goes through a stubbing call chain, and
      * <ul>
@@ -63,5 +79,7 @@ public abstract class SimplifyConsecutiveCallsInspectionBase<T extends Consecuti
     }
 
     protected abstract void register(List<PsiMethodCallExpression> callsInWholeChain, List<Integer> consecutiveCallIndeces, T descriptor, @NotNull ProblemsHolder holder);
+    
+    protected abstract List<T> callDescriptors();
 
 }

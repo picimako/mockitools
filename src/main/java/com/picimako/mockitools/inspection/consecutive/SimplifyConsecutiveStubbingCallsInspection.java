@@ -48,16 +48,8 @@ public class SimplifyConsecutiveStubbingCallsInspection extends SimplifyConsecut
     );
 
     @Override
-    public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-        return isInTestSourceContent(session.getFile()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
-    }
-
-    @Override
-    protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
-        RETURN_DESCRIPTORS.stream()
-            .filter(descriptor -> descriptor.matches(expression))
-            .findFirst()
-            .ifPresent(descriptor -> checkCallChainAndRegister(descriptor, expression, holder));
+    protected List<ConsecutiveCallDescriptor> callDescriptors() {
+        return RETURN_DESCRIPTORS;
     }
 
     @Override

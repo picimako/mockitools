@@ -15,7 +15,6 @@ import static com.picimako.mockitools.MockitoQualifiedNames.WILL_THROW;
 import static com.picimako.mockitools.PointersUtil.toPointers;
 import static com.picimako.mockitools.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.DO_THROW_WHEN;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.GIVEN_WILL_THROW;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.WHEN_THEN_THROW;
@@ -24,9 +23,7 @@ import static com.picimako.mockitools.inspection.ThrowStubDescriptors.WILL_THROW
 import java.util.List;
 import java.util.function.Predicate;
 
-import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNewExpression;
@@ -68,16 +65,8 @@ public class SimplifyConsecutiveThrowCallsInspection extends SimplifyConsecutive
     );
 
     @Override
-    public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-        return isInTestSourceContent(session.getFile()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
-    }
-
-    @Override
-    protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
-        THROW_CALL_DESCRIPTORS.stream()
-            .filter(descriptor -> descriptor.matches(expression))
-            .findFirst()
-            .ifPresent(descriptor -> checkCallChainAndRegister(descriptor, expression, holder));
+    protected List<ConsecutiveThrowCallDescriptor> callDescriptors() {
+        return THROW_CALL_DESCRIPTORS;
     }
 
     @Override
