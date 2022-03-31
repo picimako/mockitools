@@ -6,6 +6,8 @@ import java.util.Map;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 
+import com.picimako.mockitools.inspection.consecutive.SimplifyConsecutiveStubbingCallsInspection;
+
 /**
  * Functional test for {@link SimplifyConsecutiveStubbingCallsInspection}.
  */

@@ -1,0 +1,22 @@
+<html>
+<body>
+<!-- tooltip end -->
+Reports multiple consecutive calls to <code>*Throw()</code> methods, so that they may be merged into a single call.
+<p>
+    Both <code>org.mockito.Mockito</code> and <code>org.mockito.BDDMockito</code> based stubbing chains are supported,
+    including calls to <code>doThrow()</code>, <code>thenThrow()</code> and <code>willThrow()</code>.
+<p>
+    If there are multiple sections of consecutive calls within the same call chain, they are reported separately for better notification,
+    but upon invoking the quick fix, all sections are merged respectively.
+<p>
+    Every parameter combination of <code>*Throw()</code> calls can be merged but
+<ul>
+    <li>when there are both <code>AnException.class</code> and <code>new AnException()</code> type arguments (as default constructor calls), users can choose
+        which type to convert the expressions to,
+    </li>
+    <li>when there is a <code>new AnException("reason")</code> type call to a parameterized constructor, the arguments are automatically converted to <code>Throwable</code>s
+        to keep the constructor arguments.
+    </li>
+</ul>
+</body>
+</html>
