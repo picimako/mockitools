@@ -5,7 +5,7 @@
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.3.0-blue) [![](https://img.shields.io/badge/implementation-ThrowsCheckedExceptionStubbingInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/ThrowsCheckedExceptionStubbingInspection.java)
 
 Reports exception references in <code>*Throw()</code> stubbing methods based on Mockito's rule on checked exceptions.
-*If [the specified exception types] contain a checked exception then it has to match one of the checked exceptions of method signature.*
+*If [the specified exception types] contain checked exceptions then they have to match one of the checked exceptions in the method signature.*
    
 The following constructs are supported:
 - `Mockito.when().thenThrow(...)`

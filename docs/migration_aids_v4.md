@@ -65,7 +65,7 @@ Mockito.when(mock.method(ArgumentMatchers.anyCollection())).thenReturn(10);
 #### Notes
 
 If a matcher is not used with static import and referenced via `org.mockito.Matchers`, it is also replaced
-with the `org.mockito.ArgumentMatchers` qualifier. See the corresponding logic in [ReplaceMatchersWithArgumentMatchersQuickFix](../src/main/java/com/picimako/mockitools/inspection/migrationaids/v4/UseArgumentMatchersInsteadOfMatchersInspection.java).
+with the `org.mockito.ArgumentMatchers` qualifier. See the corresponding logic in [ReplaceAnyXOfWithAnyXQuickFix](../src/main/java/com/picimako/mockitools/inspection/migrationaids/v4/UsageOfAnyMatchersInspection.java).
 
 ### Usage of parameterized variants of isNull(), isNotNull() and notNull()
 
@@ -89,7 +89,7 @@ Mockito.when(mock.method(ArgumentMatchers.notNull())).thenReturn(10);
 
 ### Usage of deprecated verify methods
 
-![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-DeprecatedMockedStaticVerifyInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/migrationaids/v4/DeprecatedMockedStaticVerifyInspection.java)
+![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-UsageOfDeprecatedVerifyInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/migrationaids/v4/UsageOfDeprecatedVerifyInspection.java)
 ![](https://img.shields.io/badge/mockito-3.x-orange)
 
 #### MockedStatic.verify()
