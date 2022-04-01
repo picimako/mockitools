@@ -46,6 +46,7 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  * @see <a href="https://javadoc.io/static/org.mockito/mockito-core/3.11.2/org/mockito/ArgumentMatchers.html">ArgumentMatchers javadoc</a>
  * @since 0.1.0
  */
+@HasSonarLintAlternative("https://rules.sonarsource.com/java/tag/mockito/RSPEC-6073")
 public class InconsistentArgumentMatcherUsageInspection extends MockitoolsBaseInspection {
 
     @Override
