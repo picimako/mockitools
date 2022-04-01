@@ -7,12 +7,11 @@ import java.util.Map;
 import com.intellij.codeInspection.InspectionProfileEntry;
 
 import com.picimako.mockitools.inspection.MockitoolsV4InspectionTestBase;
-import com.picimako.mockitools.inspection.consecutive.SimplifyConsecutiveStubbingCallsInspection;
 
 /**
- * Functional test for {@link SimplifyConsecutiveStubbingCallsInspection}.
+ * Functional test for {@link SimplifyConsecutiveReturnCallsInspection}.
  */
-public class SimplifyConsecutiveStubbingCallsInspectionTest extends MockitoolsV4InspectionTestBase {
+public class SimplifyConsecutiveReturnCallsInspectionTest extends MockitoolsV4InspectionTestBase {
 
     private static final String MOCK_OBJECT_CLASS =
         "    private static class MockObject {\n" +
@@ -134,7 +133,7 @@ public class SimplifyConsecutiveStubbingCallsInspectionTest extends MockitoolsV4
 
     @Override
     protected InspectionProfileEntry getInspection() {
-        return new SimplifyConsecutiveStubbingCallsInspection();
+        return new SimplifyConsecutiveReturnCallsInspection();
     }
 
     //Highlighting

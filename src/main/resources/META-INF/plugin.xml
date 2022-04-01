@@ -68,7 +68,7 @@
                 displayName="Checked exception stubbing based on method throws clause" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.consecutive.SimplifyConsecutiveStubbingCallsInspection"
+                implementationClass="com.picimako.mockitools.inspection.consecutive.SimplifyConsecutiveReturnCallsInspection"
                 id="mockitools.simplifyConsecutiveReturnStubbingCalls" language="JAVA"
                 displayName="Consecutive *Return() stubbing calls can be simplified" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="WARNING"/>

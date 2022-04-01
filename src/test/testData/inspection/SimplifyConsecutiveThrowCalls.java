@@ -55,7 +55,7 @@ class SimplifyConsecutiveThrowCalls {
         Mockito.doThrow(new IOException()).<warning descr="Mockitools: This call can be merged with previous consecutive 'doThrow' calls.">doThrow</warning>(new IllegalArgumentException("message")).when(mockObject).doSomething();
         Mockito.doThrow(IOException.class).<warning descr="Mockitools: This call can be merged with previous consecutive 'doThrow' calls.">doThrow</warning>(new IllegalArgumentException("message")).when(mockObject).doSomething();
 
-        //BDDMockito.given().willThrow() + BDDMockito.willThrow()
+        //BDDMockito.given().willThrow()
 
         BDDMockito.given(mockObject.doSomething()).willThrow(); //no-no
         BDDMockito.given(mockObject.doSomething()).willThrow().willThrow(NoSuchMethodError.class); //no-no
@@ -64,21 +64,39 @@ class SimplifyConsecutiveThrowCalls {
         BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class, NoSuchMethodException.class); //no-no
         BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class, NoSuchMethodException.class).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(IllegalArgumentException.class);
         BDDMockito.given(mockObject.doSomething()).willThrow(IllegalArgumentException.class).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(IOException.class, NoSuchMethodException.class);
-        
+
         BDDMockito.given(mockObject.doSomething()).willThrow(new IOException()); //no-no
         BDDMockito.given(mockObject.doSomething()).willThrow(new IOException()).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(IllegalArgumentException.class);
         BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException()).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(IllegalArgumentException.class);
         BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException()).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(IllegalArgumentException.class)
             .willReturn(10)
             .willThrow(new IOException(), new IllegalArgumentException()).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(IllegalArgumentException.class);
-        BDDMockito.willThrow(new IOException(), new IllegalArgumentException()).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(IllegalArgumentException.class)
-            .willReturn(10)
-            .willThrow(new IOException(), new IllegalArgumentException()).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(IllegalArgumentException.class)
-            .given(mockObject.doSomething());
 
         BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(new IllegalArgumentException());
         BDDMockito.given(mockObject.doSomething()).willThrow(new IOException()).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(new IllegalArgumentException("message"));
         BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(new IllegalArgumentException("message"));
+
+        //BDDMockito.willThrow()
+
+        BDDMockito.willThrow().given(mockObject).doSomething(); //no-no
+        BDDMockito.willThrow().willThrow(NoSuchMethodError.class).given(mockObject).doSomething(); //no-no
+        BDDMockito.willThrow(NoSuchMethodException.class).given(mockObject).doSomething(); //no-no
+        BDDMockito.willThrow(IOException.class).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(NoSuchMethodException.class).given(mockObject).doSomething();
+        BDDMockito.willThrow(IOException.class, NoSuchMethodException.class).given(mockObject).doSomething(); //no-no
+        BDDMockito.willThrow(IOException.class, NoSuchMethodException.class).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(IllegalArgumentException.class).given(mockObject).doSomething();
+        BDDMockito.willThrow(IllegalArgumentException.class).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(IOException.class, NoSuchMethodException.class).given(mockObject).doSomething();
+
+        BDDMockito.willThrow(new IOException()).given(mockObject).doSomething(); //no-no
+        BDDMockito.willThrow(new IOException()).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(IllegalArgumentException.class).given(mockObject).doSomething();
+        BDDMockito.willThrow(new IOException(), new IllegalArgumentException()).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(IllegalArgumentException.class).given(mockObject).doSomething();
+        BDDMockito.willThrow(new IOException(), new IllegalArgumentException()).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(IllegalArgumentException.class)
+            .willReturn(10)
+            .willThrow(new IOException(), new IllegalArgumentException()).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(IllegalArgumentException.class)
+            .given(mockObject).doSomething();
+
+        BDDMockito.willThrow(IOException.class).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(new IllegalArgumentException()).given(mockObject).doSomething();
+        BDDMockito.willThrow(new IOException()).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(new IllegalArgumentException("message")).given(mockObject).doSomething();
+        BDDMockito.willThrow(IOException.class).<warning descr="Mockitools: This call can be merged with previous consecutive 'willThrow' calls.">willThrow</warning>(new IllegalArgumentException("message")).given(mockObject).doSomething();
     }
 
     private static class MockObject {

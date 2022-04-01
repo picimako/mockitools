@@ -13,19 +13,14 @@ import static com.picimako.mockitools.MockitoQualifiedNames.WHEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.WILL_RETURN;
 import static com.picimako.mockitools.MockitoQualifiedNames.WILL_THROW;
 import static com.picimako.mockitools.PointersUtil.toPointers;
-import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 
 import java.util.List;
 
-import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethodCallExpression;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.mockitools.inspection.ConsecutiveCallDescriptor;
-import com.picimako.mockitools.resources.MockitoolsBundle;
 
 /**
  * Reports multiple consecutive calls to {@code *Return()} methods, so that they may be merged into a single call.
@@ -38,13 +33,18 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  *
  * @since 0.3.0
  */
-public class SimplifyConsecutiveStubbingCallsInspection extends SimplifyConsecutiveCallsInspectionBase<ConsecutiveCallDescriptor> {
+public class SimplifyConsecutiveReturnCallsInspection extends SimplifyConsecutiveCallsInspectionBase {
     private static final List<ConsecutiveCallDescriptor> RETURN_DESCRIPTORS = List.of(
-        new ConsecutiveCallDescriptor(ORG_MOCKITO_MOCKITO, DO_RETURN, 0,
-            DO_RETURN, DO_THROW, "doNothing", "doAnswer", "doCallRealMethod"),
-        new ConsecutiveCallDescriptor(ORG_MOCKITO_BDDMOCKITO, WILL_RETURN, 0,
-            GIVEN, WILL_RETURN, WILL_THROW, "will", "willDoNothing", "willAnswer", "willCallRealMethod"),
-        new ConsecutiveCallDescriptor(ORG_MOCKITO_MOCKITO, THEN_RETURN, 1, WHEN)
+        new ConsecutiveCallDescriptor.Builder(ORG_MOCKITO_MOCKITO)
+            .consecutiveMethodName(DO_RETURN)
+            .chainStarterMethodNames(DO_RETURN, DO_THROW, "doNothing", "doAnswer", "doCallRealMethod").build(),
+        new ConsecutiveCallDescriptor.Builder(ORG_MOCKITO_BDDMOCKITO)
+            .consecutiveMethodName(WILL_RETURN)
+            .chainStarterMethodNames(GIVEN, WILL_RETURN, WILL_THROW, "will", "willDoNothing", "willAnswer", "willCallRealMethod").build(),
+        new ConsecutiveCallDescriptor.Builder(ORG_MOCKITO_MOCKITO)
+            .consecutiveMethodName(THEN_RETURN)
+            .indexToStartInspectionAt(1)
+            .chainStarterMethodNames(WHEN).build()
     );
 
     @Override
@@ -55,9 +55,7 @@ public class SimplifyConsecutiveStubbingCallsInspection extends SimplifyConsecut
     @Override
     protected void register(List<PsiMethodCallExpression> callsInWholeChain, List<Integer> consecutiveCallIndeces,
                             ConsecutiveCallDescriptor descriptor, @NotNull ProblemsHolder holder) {
-        var lastConsecutiveCall = callsInWholeChain.get(getLast(consecutiveCallIndeces));
-        holder.registerProblem(getReferenceNameElement(lastConsecutiveCall),
-            MockitoolsBundle.inspection("can.merge.with.previous.consecutive.calls", descriptor.consecutiveMethodName),
+        doRegister(callsInWholeChain.get(getLast(consecutiveCallIndeces)), descriptor, holder,
             new MergeConsecutiveStubbingCallsQuickFix(descriptor, toPointers(callsInWholeChain), TypeConversionMethod.NO_CONVERSION));
     }
 }

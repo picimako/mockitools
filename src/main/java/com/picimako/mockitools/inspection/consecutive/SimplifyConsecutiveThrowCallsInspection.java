@@ -14,7 +14,6 @@ import static com.picimako.mockitools.MockitoQualifiedNames.WILL_RETURN;
 import static com.picimako.mockitools.MockitoQualifiedNames.WILL_THROW;
 import static com.picimako.mockitools.PointersUtil.toPointers;
 import static com.picimako.mockitools.PsiMethodUtil.getArguments;
-import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.DO_THROW_WHEN;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.GIVEN_WILL_THROW;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.WHEN_THEN_THROW;
@@ -27,12 +26,10 @@ import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNewExpression;
-import com.siyeh.ig.InspectionGadgetsFix;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.mockitools.PsiMethodUtil;
-import com.picimako.mockitools.inspection.ConsecutiveThrowCallDescriptor;
-import com.picimako.mockitools.resources.MockitoolsBundle;
+import com.picimako.mockitools.inspection.ConsecutiveCallDescriptor;
 
 /**
  * Reports multiple consecutive calls to {@code *Throw()} methods, so that they may be merged into a single call.
@@ -53,19 +50,29 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  *
  * @since 0.4.0
  */
-public class SimplifyConsecutiveThrowCallsInspection extends SimplifyConsecutiveCallsInspectionBase<ConsecutiveThrowCallDescriptor> {
-    private static final List<ConsecutiveThrowCallDescriptor> THROW_CALL_DESCRIPTORS = List.of(
-        new ConsecutiveThrowCallDescriptor(ORG_MOCKITO_MOCKITO, DO_THROW, 0, DO_THROW_WHEN,
-            DO_RETURN, DO_THROW, "doNothing", "doAnswer", "doCallRealMethod"),
-        new ConsecutiveThrowCallDescriptor(ORG_MOCKITO_BDDMOCKITO, WILL_THROW, 0, WILL_THROW_GIVEN,
-            WILL_THROW),
-        new ConsecutiveThrowCallDescriptor(ORG_MOCKITO_BDDMOCKITO, WILL_THROW, 0, GIVEN_WILL_THROW,
-            GIVEN, WILL_RETURN, "will", "willDoNothing", "willAnswer", "willCallRealMethod"),
-        new ConsecutiveThrowCallDescriptor(ORG_MOCKITO_MOCKITO, THEN_THROW, 1, WHEN_THEN_THROW, WHEN)
+public class SimplifyConsecutiveThrowCallsInspection extends SimplifyConsecutiveCallsInspectionBase {
+    private static final List<ConsecutiveCallDescriptor> THROW_CALL_DESCRIPTORS = List.of(
+        new ConsecutiveCallDescriptor.Builder(ORG_MOCKITO_MOCKITO)
+            .consecutiveMethodName(DO_THROW)
+            .throwDescriptor(DO_THROW_WHEN)
+            .chainStarterMethodNames(DO_RETURN, DO_THROW, "doNothing", "doAnswer", "doCallRealMethod").build(),
+        new ConsecutiveCallDescriptor.Builder(ORG_MOCKITO_BDDMOCKITO)
+            .consecutiveMethodName(WILL_THROW)
+            .throwDescriptor(WILL_THROW_GIVEN)
+            .chainStarterMethodNames(WILL_THROW).build(),
+        new ConsecutiveCallDescriptor.Builder(ORG_MOCKITO_BDDMOCKITO)
+            .consecutiveMethodName(WILL_THROW)
+            .throwDescriptor(GIVEN_WILL_THROW)
+            .chainStarterMethodNames(GIVEN, WILL_RETURN, "will", "willDoNothing", "willAnswer", "willCallRealMethod").build(),
+        new ConsecutiveCallDescriptor.Builder(ORG_MOCKITO_MOCKITO)
+            .consecutiveMethodName(THEN_THROW)
+            .throwDescriptor(WHEN_THEN_THROW)
+            .indexToStartInspectionAt(1)
+            .chainStarterMethodNames(WHEN).build()
     );
 
     @Override
-    protected List<ConsecutiveThrowCallDescriptor> callDescriptors() {
+    protected List<ConsecutiveCallDescriptor> callDescriptors() {
         return THROW_CALL_DESCRIPTORS;
     }
 
@@ -82,7 +89,7 @@ public class SimplifyConsecutiveThrowCallsInspection extends SimplifyConsecutive
      */
     @Override
     protected void register(List<PsiMethodCallExpression> callsInWholeChain, List<Integer> consecutiveCallIndeces,
-                            ConsecutiveThrowCallDescriptor descriptor, @NotNull ProblemsHolder holder) {
+                            ConsecutiveCallDescriptor descriptor, @NotNull ProblemsHolder holder) {
         var lastConsecutiveCall = callsInWholeChain.get(getLast(consecutiveCallIndeces));
         switch (determineParamCombination(descriptor, consecutiveCallIndeces, callsInWholeChain)) {
             case CLASSES:
@@ -102,16 +109,10 @@ public class SimplifyConsecutiveThrowCallsInspection extends SimplifyConsecutive
         }
     }
 
-    private void doRegister(PsiMethodCallExpression lastConsecutiveCall, ConsecutiveThrowCallDescriptor descriptor,
-                            @NotNull ProblemsHolder holder, InspectionGadgetsFix... quickFixes) {
-        holder.registerProblem(getReferenceNameElement(lastConsecutiveCall),
-            MockitoolsBundle.inspection("can.merge.with.previous.consecutive.calls", descriptor.consecutiveMethodName), quickFixes);
-    }
-
     /**
      * Determines the combination of parameter types specified in the *Throw() calls.
      */
-    private ThrowStubParameterCombination determineParamCombination(ConsecutiveThrowCallDescriptor descriptor, List<Integer> consecutiveCallIndeces,
+    private ThrowStubParameterCombination determineParamCombination(ConsecutiveCallDescriptor descriptor, List<Integer> consecutiveCallIndeces,
                                                                     List<PsiMethodCallExpression> callsInWholeChain) {
         boolean hasClasses = false;
         boolean hasThrowables = false;

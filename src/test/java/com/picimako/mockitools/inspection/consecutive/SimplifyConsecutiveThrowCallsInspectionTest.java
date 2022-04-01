@@ -85,6 +85,20 @@ public class SimplifyConsecutiveThrowCallsInspectionTest extends MockitoolsV4Ins
         "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(\"message\"));"
     );
 
+    private static final Map<String, String> WILL_THROW_GIVEN_CASES = Map.of(
+        "       BDDMockito.willThrow(IOException.class).will<caret>Throw(NoSuchMethodException.class).given(mockObject).doSomething();",
+        "       BDDMockito.willThrow(IOException.class, NoSuchMethodException.class).given(mockObject).doSomething();",
+        "       BDDMockito.willThrow(IOException.class, NoSuchMethodException.class).willT<caret>hrow(IllegalArgumentException.class).given(mockObject).doSomething();",
+        "       BDDMockito.willThrow(IOException.class, NoSuchMethodException.class, IllegalArgumentException.class).given(mockObject).doSomething();",
+        "       BDDMockito.willThrow(IllegalArgumentException.class).will<caret>Throw(IOException.class, NoSuchMethodException.class).given(mockObject).doSomething();",
+        "       BDDMockito.willThrow(IllegalArgumentException.class, IOException.class, NoSuchMethodException.class).given(mockObject).doSomething();",
+        "       BDDMockito.willThrow(new IOException()).wil<caret>lThrow(new IllegalArgumentException(\"message\")).given(mockObject).doSomething();",
+        "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException(\"message\")).given(mockObject).doSomething();",
+        "       BDDMockito.willThrow(IOException.class).wil<caret>lThrow(new IllegalArgumentException(\"message\")).given(mockObject).doSomething();",
+        "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException(\"message\")).given(mockObject).doSomething();"
+    );
+
+
     private static final Map<String, String> TO_CLASSES_MIXED_CASES = Map.of(
         "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException()).wil<caret>lThrow(NoSuchMethodException.class)\n" +
             "           .willReturn(10)\n" +
@@ -168,6 +182,15 @@ public class SimplifyConsecutiveThrowCallsInspectionTest extends MockitoolsV4Ins
         GIVEN_WILL_THROW_CASES.forEach((before, after) ->
             doQuickFixTest("Merge willThrow calls", "QuickFix.java",
                 createClassText(before), createClassText(after)));
+    }
+
+    public void testReplacesWillThrowGivens() {
+        WILL_THROW_GIVEN_CASES.forEach((before, after) -> {
+                System.out.println("Before text: " + before);
+                doQuickFixTest("Merge willThrow calls", "QuickFix.java",
+                    createClassText(before), createClassText(after));
+            }
+        );
     }
 
     public void testMixedToClassesCases() {
