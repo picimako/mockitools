@@ -8,6 +8,8 @@
 ### Added
 - [#8](https://github.com/picimako/mockitools/issues/8): Added a new inspection that reports multiple consecutive calls on `*Throw()` stubbing calls.
 They can be merged into a single such call.
+- [#8](https://github.com/picimako/mockitools/issues/8): Merging of consecutive `*Return()` and `*Throw()` stubbing calls can happen separately if
+there are multiple such sections within a stubbing call chain. They, from now on, also keep line wrapping and indentation after applying the quick fix.
 
 ## [0.3.0]
 - **IntelliJ version support: versions prior to 2021.1 are no longer supported.**

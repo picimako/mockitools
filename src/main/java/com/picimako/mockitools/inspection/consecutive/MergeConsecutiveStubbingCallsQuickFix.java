@@ -2,20 +2,15 @@
 
 package com.picimako.mockitools.inspection.consecutive;
 
-import static com.google.common.collect.Iterables.getLast;
-import static com.picimako.mockitools.ExpressionCreationHelper.createExpressionFromText;
-import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
-import static java.util.stream.Collectors.joining;
-
 import java.util.Arrays;
-import java.util.List;
 
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.util.SmartList;
+import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiManager;
 import com.siyeh.ig.InspectionGadgetsFix;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,11 +21,11 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  * Only a single section of consecutive calls is merged if there are multiple.
  */
 public class MergeConsecutiveStubbingCallsQuickFix extends InspectionGadgetsFix {
-    private final ConsecutiveCallRegistrarDescriptor registrar;
+    private final ConsecutiveCallQuickFixContext context;
     private final TypeConversionMethod argumentTypeConverter;
 
-    public MergeConsecutiveStubbingCallsQuickFix(ConsecutiveCallRegistrarDescriptor registrar, TypeConversionMethod argumentTypeConverter) {
-        this.registrar = registrar;
+    public MergeConsecutiveStubbingCallsQuickFix(ConsecutiveCallQuickFixContext context, TypeConversionMethod argumentTypeConverter) {
+        this.context = context;
         this.argumentTypeConverter = argumentTypeConverter;
     }
 
@@ -39,7 +34,7 @@ public class MergeConsecutiveStubbingCallsQuickFix extends InspectionGadgetsFix 
         switch (argumentTypeConverter) {
             case NO_CONVERSION:
             case TO_THROWABLES_SIMPLE:
-                return MockitoolsBundle.quickFix("merge.with.previous.consecutive.calls", registrar.consecutiveMethodName);
+                return MockitoolsBundle.quickFix("merge.with.previous.consecutive.calls", context.consecutiveMethodName);
             default:
                 return MockitoolsBundle.quickFix("merge.with.previous.consecutive.calls.and.convert.params", argumentTypeConverter.message);
         }
@@ -52,56 +47,38 @@ public class MergeConsecutiveStubbingCallsQuickFix extends InspectionGadgetsFix 
 
     @Override
     protected void doFix(Project project, ProblemDescriptor descriptor) {
-        StringBuilder sb = new StringBuilder(registrar.mockitoClass);
-        var consecutiveCalls = new SmartList<PsiMethodCallExpression>();
+        var firstConsecutiveCall = context.getFirstConsecutiveCall();
+        PsiManager manager = firstConsecutiveCall.getManager();
+        var viewProvider = manager.findViewProvider(context.getContainingFile());
+        if (viewProvider == null) return;
+        Document document = viewProvider.getDocument();
+        if (document == null) return;
+        var documentManager = PsiDocumentManager.getInstance(project);
 
-        for (int i = 0; i < registrar.wholeChainPointers.size(); i++) {
-            PsiMethodCallExpression call = registrar.wholeChainPointers.get(i).getElement();
-
-            String methodName = getMethodName(call);
-            //The indeces check makes it possible to merge only a single section of consecutive calls.
-            //Also, if it's a call that we are looking for the consecutiveness of, save it for later processing.
-            if (registrar.consecutiveCallIndeces.contains(i) && registrar.consecutiveMethodName.equals(methodName)) {
-                consecutiveCalls.add(call);
-                continue;
-            }
-            if (consecutiveCalls.size() == 1) {
-                //If it's a different call and there were no consecutive calls, just add that call.
-                sb.append(".").append(getMethodName(consecutiveCalls.get(0))).append(consecutiveCalls.get(0).getArgumentList().getText());
-            } else if (consecutiveCalls.size() > 1) {
-                //...there were at least two consecutive calls, merge their arguments into one call.
-                mergeCallsAndAppend(consecutiveCalls, sb);
-            }
-            //Add the current call
-            sb.append(".").append(methodName).append(call.getArgumentList().getText());
-            consecutiveCalls.clear();
+        //Convert the first consecutive call's arguments to the target type
+        for (var expression : firstConsecutiveCall.getArgumentList().getExpressions()) {
+            expression.replace(argumentTypeConverter.convert(expression));
         }
+        //Merge arguments by adding them to the first consecutive call
+        context.consecutiveCallIndeces.stream()
+            .skip(1)
+            .map(context::getElement)
+            .flatMap(methodCall -> Arrays.stream(methodCall.getArgumentList().getExpressions()))
+            .map(argumentTypeConverter::convert)
+            .forEach(argument -> {
+                firstConsecutiveCall.getArgumentList().add(argument);
+                documentManager.commitDocument(document);
+            });
 
-        //When one or more matching calls are at the end of the call chain, they have to be added too.
-        if (!consecutiveCalls.isEmpty()) {
-            mergeCallsAndAppend(consecutiveCalls, sb);
+        documentManager.doPostponedOperationsAndUnblockDocument(document);
+        
+        //Remove the consecutive calls except the first one
+        for (int i = 1; i < context.consecutiveCallIndeces.size(); i++) {
+            Integer index = context.consecutiveCallIndeces.get(i);
+            document.deleteString(
+                context.getElement(index - 1).getTextRange().getEndOffset(),
+                context.getElement(index).getTextRange().getEndOffset());
+            documentManager.commitDocument(document);
         }
-
-        var wholeCallChain = getLast(registrar.wholeChainPointers).getElement();
-        wholeCallChain.replace(createExpressionFromText(sb.toString(), wholeCallChain, project));
-    }
-
-    /**
-     * For examples the following of consecutive calls
-     * <pre>
-     * .thenReturn(arg1).thenReturn(arg2).thenReturn(arg2)
-     * </pre>
-     * become
-     * <pre>
-     * .thenReturn(arg1,arg2,arg3)
-     * </pre>
-     */
-    private void mergeCallsAndAppend(List<PsiMethodCallExpression> consecutiveCalls, StringBuilder sb) {
-        sb.append(".").append(registrar.consecutiveMethodName).append("(")
-            .append(consecutiveCalls.stream()
-                .flatMap(c -> Arrays.stream(c.getArgumentList().getExpressions()))
-                .map(argumentTypeConverter::convert)
-                .collect(joining(", ")))
-            .append(")");
     }
 }

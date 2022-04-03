@@ -3,49 +3,38 @@
 package com.picimako.mockitools.inspection.consecutive;
 
 import static com.google.common.collect.Iterables.getLast;
-import static com.picimako.mockitools.PointersUtil.toPointers;
 
 import java.util.List;
 
 import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.psi.SmartPsiElementPointer;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.mockitools.inspection.ThrowStubDescriptor;
 
 /**
- * Data class to be used during quick fix registration, and quick fix application.
+ * Data class to be used during quick fix registration.
  */
-class ConsecutiveCallRegistrarDescriptor {
-    /**
-     * @see ConsecutiveCallAnalysisDescriptor#mockitoClass
-     */
-    final String mockitoClass;
+class ConsecutiveCallRegistrarContext {
     /**
      * @see ConsecutiveCallAnalysisDescriptor#consecutiveMethodName
      */
     final String consecutiveMethodName;
     /**
-     * @see ConsecutiveCallAnalysisDescriptor#throwDescriptor
-     */
-    final ThrowStubDescriptor throwDescriptor;
-    /**
-     * The full list of calls in the currently analyzed call chain. 
+     * The full list of calls in the currently analyzed call chain.
      */
     final List<PsiMethodCallExpression> callsInWholeChain;
     /**
-     * The indeces of the target section of consecutive calls within {@link #callsInWholeChain}. 
+     * The indeces of the target section of consecutive calls within {@link #callsInWholeChain}.
      */
     final List<Integer> consecutiveCallIndeces;
     /**
-     * The list of {@link #callsInWholeChain} as {@link SmartPsiElementPointer}s used within the quick fix.
+     * @see ConsecutiveCallAnalysisDescriptor#throwDescriptor
      */
-    List<SmartPsiElementPointer<PsiMethodCallExpression>> wholeChainPointers;
+    private final ThrowStubDescriptor throwDescriptor;
 
-    ConsecutiveCallRegistrarDescriptor(@NotNull ConsecutiveCallAnalysisDescriptor analyzer,
-                                       @NotNull List<PsiMethodCallExpression> callsInWholeChain,
-                                       @NotNull List<Integer> consecutiveCallIndeces) {
-        mockitoClass = analyzer.mockitoClass;
+    ConsecutiveCallRegistrarContext(@NotNull ConsecutiveCallAnalysisDescriptor analyzer,
+                                    @NotNull List<PsiMethodCallExpression> callsInWholeChain,
+                                    @NotNull List<Integer> consecutiveCallIndeces) {
         consecutiveMethodName = analyzer.consecutiveMethodName;
         throwDescriptor = analyzer.throwDescriptor;
         this.callsInWholeChain = callsInWholeChain;
@@ -57,14 +46,6 @@ class ConsecutiveCallRegistrarDescriptor {
      */
     PsiMethodCallExpression getLastConsecutiveCall() {
         return callsInWholeChain.get(getLast(consecutiveCallIndeces));
-    }
-
-    /**
-     * Initializes the calls as {@link SmartPsiElementPointer}s. It is used when passing the calls to the quick fix.
-     */
-    ConsecutiveCallRegistrarDescriptor initCallsAsPointers() {
-        wholeChainPointers = toPointers(callsInWholeChain);
-        return this;
     }
 
     boolean isCallToClasses(PsiMethodCallExpression call) {

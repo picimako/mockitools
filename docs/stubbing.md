@@ -36,7 +36,7 @@ class MockObject {
 
 ![](https://img.shields.io/badge/inspection-orange)
 
-![](https://img.shields.io/badge/since-0.3.0-blue) [![](https://img.shields.io/badge/implementation-SimplifyConsecutiveStubbingCallsInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/consecutive/SimplifyConsecutiveStubbingCallsInspection.java)
+![](https://img.shields.io/badge/since-0.3.0-blue) [![](https://img.shields.io/badge/implementation-SimplifyConsecutiveReturnCallsInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/consecutive/SimplifyConsecutiveReturnCallsInspection.java)
 
 ![](https://img.shields.io/badge/since-0.4.0-blue) [![](https://img.shields.io/badge/implementation-SimplifyConsecutiveThrowCallsInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/consecutive/SimplifyConsecutiveThrowCallsInspection.java)
 
@@ -47,7 +47,7 @@ Both `org.mockito.Mockito` and `org.mockito.BDDMockito` based stubbing chains ar
 - `doThrow`, `thenThrow()` and `willThrow()`.
 
 If there are multiple sections of consecutive calls within the same call chain, they are reported separately for better notification,
-but upon invoking the quick fix, all sections are merged respectively. It is always the last consecutive call that is registered.
+and all sections can be merged separately, depending on which section the quick fix is invoked on. It is always the last consecutive call that is registered.
 
 ### Return examples
 
@@ -63,11 +63,13 @@ From: Mockito.when(mockObject.invoke()).thenReturn(1).thenCallRealMethod().thenR
 From: Mockito.when(mockObject.invoke()).thenReturn(1).thenReturn(2).thenCallRealMethod().thenReturn(3);
   to: Mockito.when(mockObject.invoke()).thenReturn(1, 2).thenCallRealMethod().thenReturn(3);
 
-From: Mockito.when(mockObject.invoke()).thenReturn(1).thenReturn(2).thenCallRealMethod().thenReturn(3).thenReturn(4);
-  to: Mockito.when(mockObject.invoke()).thenReturn(1, 2).thenCallRealMethod().thenReturn(3, 4);
-
+//caret is on thenReturn(4)
 From: Mockito.when(mockObject.invoke()).thenReturn(1, 2, 3).thenReturn(4).thenCallRealMethod().thenReturn(5).thenReturn(6, 7);
-  to: Mockito.when(mockObject.invoke()).thenReturn(1, 2, 3, 4).thenCallRealMethod().thenReturn(5, 6, 7);
+  to: Mockito.when(mockObject.invoke()).thenReturn(1, 2, 3, 4).thenCallRealMethod().thenReturn(5).thenReturn(6, 7);
+
+//caret is on thenReturn(6, 7)
+From: Mockito.when(mockObject.invoke()).thenReturn(1, 2, 3).thenReturn(4).thenCallRealMethod().thenReturn(5).thenReturn(6, 7);
+  to: Mockito.when(mockObject.invoke()).thenReturn(1, 2, 3).thenReturn(4).thenCallRealMethod().thenReturn(5, 6, 7);
 ```
 
 ### Throw examples
@@ -92,6 +94,21 @@ From: Mockito.when(mockObject.invoke()).thenThrow(IllegalArgumentException.class
   to (when selecting conversion to Classes):    Mockito.when(mockObject.invoke()).thenThrow(IllegalArgumentException.class, IOException.class);
   to (when selecting conversion to Throwables): Mockito.when(mockObject.invoke()).thenThrow(new IllegalArgumentException(), new IOException());
 
-From: Mockito.when(mockObject.invoke()).thenThrow(IllegalArgumentException.class).thenThrow(new IOException("reason"));
-  to: Mockito.when(mockObject.invoke()).thenThrow(new IllegalArgumentException(), new IOException("reason"));
+From: Mockito.when(mockObject.invoke())
+        .thenThrow(IllegalArgumentException.class).thenThrow(new IOException("reason")) //caret is here
+        .thenReturn(10)
+        .thenThrow(IllegalArgumentException.class).thenThrow(IOException.class);
+  to: Mockito.when(mockObject.invoke())
+        .thenThrow(new IllegalArgumentException(), new IOException("reason"))
+        .thenReturn(10)
+        .thenThrow(IllegalArgumentException.class).thenThrow(IOException.class);
+
+From: Mockito.when(mockObject.invoke())
+        .thenThrow(IllegalArgumentException.class).thenThrow(new IOException("reason"))
+        .thenReturn(10)
+        .thenThrow(IllegalArgumentException.class).thenThrow(IOException.class); //caret is here
+  to: Mockito.when(mockObject.invoke())
+        .thenThrow(IllegalArgumentException.class).thenThrow(new IOException("reason"))
+        .thenReturn(10)
+        .thenThrow(IllegalArgumentException.class, IOException.class);
 ```

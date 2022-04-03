@@ -2,7 +2,9 @@
 
 package com.picimako.mockitools.inspection.consecutive;
 
+import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClassObjectAccessExpression;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiNewExpression;
 
@@ -16,21 +18,23 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
 public enum TypeConversionMethod {
     TO_CLASSES(MockitoolsBundle.quickFix("to.class.objects")) {
         @Override
-        String convert(PsiExpression expression) {
-            return expression instanceof PsiNewExpression ? expression.getType().getPresentableText() + ".class" : super.convert(expression);
+        PsiElement convert(PsiExpression expression) {
+            return expression instanceof PsiNewExpression
+                ? createExpression(expression, expression.getType().getPresentableText() + ".class")
+                : super.convert(expression);
         }
     },
     TO_THROWABLES(MockitoolsBundle.quickFix("to.throwables")) {
         @Override
-        String convert(PsiExpression expression) {
+        PsiElement convert(PsiExpression expression) {
             return expression instanceof PsiClassObjectAccessExpression
-                ? "new " + ((PsiClassObjectAccessExpression) expression).getOperand().getType().getPresentableText() + "()"
+                ? createExpression(expression, "new " + ((PsiClassObjectAccessExpression) expression).getOperand().getType().getPresentableText() + "()")
                 : super.convert(expression);
         }
     },
     TO_THROWABLES_SIMPLE("") {
         @Override
-        String convert(PsiExpression expression) {
+        PsiElement convert(PsiExpression expression) {
             return TO_THROWABLES.convert(expression);
         }
     },
@@ -42,7 +46,11 @@ public enum TypeConversionMethod {
         this.message = message;
     }
 
-    String convert(PsiExpression expression) {
-        return expression.getText();
+    PsiElement convert(PsiExpression expression) {
+        return expression;
+    }
+
+    private static PsiElement createExpression(PsiExpression expression, String text) {
+        return JavaPsiFacade.getElementFactory(expression.getProject()).createExpressionFromText(text, expression.getParent());
     }
 }

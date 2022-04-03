@@ -23,9 +23,18 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
 
 /**
  * Base class for reporting simplifiable consecutive calls.
+ * <p>
+ * Flow:
+ * {@link #checkMethodCallExpression} ->
+ * {@link #checkCallChainAndRegister} ->
+ * {@link #registerMultiple} ->
+ * {@link #register} ->
+ * {@link #doRegister}
  */
 public abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsBaseInspection {
 
+    //Analysis workflow
+    
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
         return isInTestSourceContent(session.getFile()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
@@ -58,25 +67,13 @@ public abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsB
             if (analyzer.consecutiveMethodName.equals(getMethodName(call)) && extraCondition().test(call)) {
                 consecutiveCallIndeces.add(i);
             } else {
-                registerMultiple(callsInWholeChain, consecutiveCallIndeces, analyzer, holder);
+                registerMultiple(analyzer, callsInWholeChain, consecutiveCallIndeces, holder);
                 consecutiveCallIndeces.clear();
             }
         }
 
         //When one or more matching calls are at the end of the call chain, they have to be added too.
-        registerMultiple(callsInWholeChain, consecutiveCallIndeces, analyzer, holder);
-    }
-
-    private void registerMultiple(List<PsiMethodCallExpression> callsInWholeChain, List<Integer> consecutiveCallIndeces,
-                                  ConsecutiveCallAnalysisDescriptor analyzer, @NotNull ProblemsHolder holder) {
-        if (consecutiveCallIndeces.size() > 1) {
-            register(new ConsecutiveCallRegistrarDescriptor(analyzer, callsInWholeChain, consecutiveCallIndeces), holder);
-        }
-    }
-
-    protected void doRegister(ConsecutiveCallRegistrarDescriptor registrar, @NotNull ProblemsHolder holder, InspectionGadgetsFix... quickFixes) {
-        holder.registerProblem(getReferenceNameElement(registrar.getLastConsecutiveCall()),
-            MockitoolsBundle.inspection("can.merge.with.previous.consecutive.calls", registrar.consecutiveMethodName), quickFixes);
+        registerMultiple(analyzer, callsInWholeChain, consecutiveCallIndeces, holder);
     }
 
     /**
@@ -86,8 +83,22 @@ public abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsB
         return call -> true;
     }
 
-    protected abstract void register(ConsecutiveCallRegistrarDescriptor context, @NotNull ProblemsHolder holder);
-
     protected abstract List<ConsecutiveCallAnalysisDescriptor> analysisDescriptors();
+    
+    //Registration workflow
+
+    private void registerMultiple(ConsecutiveCallAnalysisDescriptor analyzer, List<PsiMethodCallExpression> callsInWholeChain,
+                                  List<Integer> consecutiveCallIndeces, @NotNull ProblemsHolder holder) {
+        if (consecutiveCallIndeces.size() > 1) {
+            register(new ConsecutiveCallRegistrarContext(analyzer, callsInWholeChain, consecutiveCallIndeces), holder);
+        }
+    }
+
+    protected abstract void register(ConsecutiveCallRegistrarContext context, @NotNull ProblemsHolder holder);
+
+    protected void doRegister(ConsecutiveCallRegistrarContext registrar, @NotNull ProblemsHolder holder, InspectionGadgetsFix... quickFixes) {
+        holder.registerProblem(getReferenceNameElement(registrar.getLastConsecutiveCall()),
+            MockitoolsBundle.inspection("can.merge.with.previous.consecutive.calls", registrar.consecutiveMethodName), quickFixes);
+    }
 
 }
