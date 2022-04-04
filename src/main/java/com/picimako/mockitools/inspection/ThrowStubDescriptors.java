@@ -14,6 +14,8 @@ import static com.picimako.mockitools.MockitoQualifiedNames.THEN_THROW;
 import static com.picimako.mockitools.MockitoQualifiedNames.WHEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.WILL_THROW;
 
+import java.util.List;
+
 /**
  * Provides pre-defined {@link ThrowStubDescriptor}s.
  */
@@ -31,6 +33,8 @@ public final class ThrowStubDescriptors {
     // BDDMockito.willThrow()[.willThrow()].given()
     public static final ThrowStubDescriptor WILL_THROW_GIVEN =
         new ThrowStubDescriptor(GIVEN, ThrowStubDescriptor.StubType.STUBBER, WILL_THROW, ORG_MOCKITO_BDD_STUBBER, ORG_MOCKITO_BDDMOCKITO);
+    
+    public static final List<ThrowStubDescriptor> ALL_DESCRIPTORS = List.of(WHEN_THEN_THROW, GIVEN_WILL_THROW, DO_THROW_WHEN, WILL_THROW_GIVEN);
 
     private ThrowStubDescriptors() {
         //Utility class

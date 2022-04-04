@@ -18,7 +18,7 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
 public enum TypeConversionMethod {
     TO_CLASSES(MockitoolsBundle.quickFix("to.class.objects")) {
         @Override
-        PsiElement convert(PsiExpression expression) {
+        public PsiElement convert(PsiExpression expression) {
             return expression instanceof PsiNewExpression
                 ? createExpression(expression, expression.getType().getPresentableText() + ".class")
                 : super.convert(expression);
@@ -26,7 +26,7 @@ public enum TypeConversionMethod {
     },
     TO_THROWABLES(MockitoolsBundle.quickFix("to.throwables")) {
         @Override
-        PsiElement convert(PsiExpression expression) {
+        public PsiElement convert(PsiExpression expression) {
             return expression instanceof PsiClassObjectAccessExpression
                 ? createExpression(expression, "new " + ((PsiClassObjectAccessExpression) expression).getOperand().getType().getPresentableText() + "()")
                 : super.convert(expression);
@@ -34,7 +34,7 @@ public enum TypeConversionMethod {
     },
     TO_THROWABLES_SIMPLE("") {
         @Override
-        PsiElement convert(PsiExpression expression) {
+        public PsiElement convert(PsiExpression expression) {
             return TO_THROWABLES.convert(expression);
         }
     },
@@ -46,7 +46,7 @@ public enum TypeConversionMethod {
         this.message = message;
     }
 
-    PsiElement convert(PsiExpression expression) {
+    public PsiElement convert(PsiExpression expression) {
         return expression;
     }
 

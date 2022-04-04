@@ -7,6 +7,7 @@ import static com.picimako.mockitools.PsiMethodUtil.findCallUpwardsInChain;
 import static com.picimako.mockitools.PsiMethodUtil.isMethodCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
+import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -30,6 +31,7 @@ public final class ThrowStubDescriptor {
      * The method name that accepts the mock object or the call on a mock object. Usually {@code given} or {@code when}.
      */
     private final String stubberCallName;
+    private final String methodName;
     public final StubType stubType;
     public final CallMatcher matcher;
     public CallMatcher classMatcher;
@@ -38,6 +40,7 @@ public final class ThrowStubDescriptor {
     public ThrowStubDescriptor(String stubberCallName, StubType stubType, String methodName, String instanceName, @Nullable String staticName) {
         this.stubberCallName = stubberCallName;
         this.stubType = stubType;
+        this.methodName = methodName;
         this.matcher = createMatcher(methodName, instanceName, staticName);
     }
 
@@ -49,6 +52,10 @@ public final class ThrowStubDescriptor {
         return stubType == StubType.STUBBING
             ? findCallUpwardsInChain(expression, stubberCallName)
             : findCallDownwardsInChain(expression, stubberCallName);
+    }
+    
+    public boolean isApplicableTo(PsiMethodCallExpression call) {
+        return methodName.equals(getMethodName(call)) && matcher.matches(call);
     }
 
     /**

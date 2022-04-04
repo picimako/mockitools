@@ -126,5 +126,9 @@
             <categoryKey>mockito.intention.category</categoryKey>
             <className>com.picimako.mockitools.intention.ConvertSpyCallToFieldIntention</className>
         </intentionAction>
+        <intentionAction>
+            <categoryKey>mockito.intention.category</categoryKey>
+            <className>com.picimako.mockitools.intention.ConvertThrowStubbingArgumentsIntention</className>
+        </intentionAction>
     </extensions>
 </idea-plugin>

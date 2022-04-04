@@ -1,0 +1,10 @@
+<html>
+<body>
+<!-- tooltip end -->
+Converts arguments of <code>*Throw()</code> stubbing calls from <code>Type.class</code> expressions to <code>new Type()</code> epressions
+and vice versa.
+<p>
+    The intention is available only when either all arguments are <code>PsiClassObjectAccessExpression</code>s or all are <code>PsiNewExpression</code>s,
+    and in case of the latter one there is no call to a non-default constructor.
+</body>
+</html>

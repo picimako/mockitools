@@ -112,3 +112,28 @@ From: Mockito.when(mockObject.invoke())
         .thenReturn(10)
         .thenThrow(IllegalArgumentException.class, IOException.class);
 ```
+
+## Convert arguments of `*Throw()` stubbing methods
+
+![](https://img.shields.io/badge/intention-orange) ![](https://img.shields.io/badge/since-0.4.0-blue) [![](https://img.shields.io/badge/implementation-ConvertThrowStubbingArgumentsIntention-blue)](../src/main/java/com/picimako/mockitools/intention/ConvertThrowStubbingArgumentsIntention.java)
+
+Converts arguments of `*Throw()` stubbing calls from `PsiClassObjectAccessExpression`s to `PsiNewExpression`s and vice versa.
+
+The intention is available only when either all arguments are `PsiClassObjectAccessExpression`s or all are `PsiNewExpression`s,
+and in case of the latter one there is no call to a non-default constructor.
+
+All stubbing approaches are supported:
+- `Mockito.when().thenThrow()`
+- `BDDMockito.given().willThrow()`
+- `Mockito.doThrow().when()`
+- `Mockito.do*().doThrow().when()`
+- `BDDMockito.willl*).willThrow().given()`
+- `BDDMockito.willThrow().given()`
+
+```java
+From: Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new IllegalArgumentException());
+  to: Mockito.when(mockObject.doSomething()).thenThrow(IOException.class, IllegalArgumentException.class);
+
+From: Mockito.when(mockObject.doSomething()).thenThrow(IOException.class, IllegalArgumentException.class);
+  to: Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new IllegalArgumentException());
+```

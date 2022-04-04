@@ -11,6 +11,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.THEN_THROW;
 import static com.picimako.mockitools.MockitoQualifiedNames.WHEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.WILL_RETURN;
 import static com.picimako.mockitools.MockitoQualifiedNames.WILL_THROW;
+import static com.picimako.mockitools.PsiMethodUtil.containsCallToNonDefaultConstructor;
 import static com.picimako.mockitools.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.DO_THROW_WHEN;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.GIVEN_WILL_THROW;
@@ -21,9 +22,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.psi.PsiNewExpression;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.mockitools.PsiMethodUtil;
@@ -128,16 +127,6 @@ public class SimplifyConsecutiveThrowCallsInspection extends SimplifyConsecutive
         if (!hasClasses && hasThrowables) return ThrowStubParameterCombination.THROWABLES;
         //!hasClasses && !hasThrowables is not an option because this method gets executed only when there are consecutive calls to register
         return isThereNonDefaultNewExpressionArg ? ThrowStubParameterCombination.MIXED_WITH_THROWABLES_PREFERRED : ThrowStubParameterCombination.MIXED;
-    }
-
-    private boolean containsCallToNonDefaultConstructor(PsiExpression[] arguments) {
-        for (PsiExpression argument : arguments) {
-            if (argument instanceof PsiNewExpression) {
-                var argumentList = ((PsiNewExpression) argument).getArgumentList();
-                if (argumentList != null && !argumentList.isEmpty()) return true;
-            }
-        }
-        return false;
     }
 
     /**

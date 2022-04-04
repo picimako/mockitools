@@ -12,6 +12,7 @@ import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiExpressionList;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.intellij.psi.PsiNewExpression;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiStatement;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -202,6 +203,20 @@ public final class PsiMethodUtil {
 
     public static List<PsiMethodCallExpression> collectCallsInChainFromFirst(PsiMethodCallExpression expression) {
         return collectCallsInChainFromFirst(expression, false);
+    }
+
+    /**
+     * Returns whether the provided set of expressions contain any {@link PsiNewExpression} that references
+     * a non-default constructor call.
+     */
+    public static boolean containsCallToNonDefaultConstructor(PsiExpression[] arguments) {
+        for (PsiExpression argument : arguments) {
+            if (argument instanceof PsiNewExpression) {
+                var argumentList = ((PsiNewExpression) argument).getArgumentList();
+                if (argumentList != null && !argumentList.isEmpty()) return true;
+            }
+        }
+        return false;
     }
 
     private PsiMethodUtil() {
