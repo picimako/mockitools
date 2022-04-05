@@ -5,7 +5,14 @@ some inspections to help migrate from one version to another; in the context of 
 
 Check out the [Mockito 4.0.0 release notes](https://github.com/mockito/mockito/releases/tag/v4.0.0) for details.
 
-### Argument matchers are called via org.mockito.Matchers instead of org.mockito.ArgumentMatchers 
+- [Argument matchers are called via org.mockito.Matchers instead of org.mockito.ArgumentMatchers](#argument-matchers-are-called-via-orgmockitomatchers-instead-of-orgmockitoargumentmatchers)
+- [Usage of deprecated anyX() matchers](#usage-of-deprecated-anyx-matchers)
+- [Usage of parameterized variants of isNull(), isNotNull() and notNull()](#usage-of-parameterized-variants-of-isnull-isnotnull-and-notnull)
+- [Usage of deprecated verify methods](#usage-of-deprecated-verify-methods)
+- [Usage of deprecated plugins classes](#usage-of-deprecated-plugins-classes)
+- [Usage of deprecated JUnit runners](#usage-of-deprecated-junit-runners)
+
+### Argument matchers are called via org.mockito.Matchers instead of org.mockito.ArgumentMatchers
 
 ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-ArgumentMatchersCalledViaMatchersInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/migrationaids/v4/ArgumentMatchersCalledViaMatchersInspection.java)
 ![](https://img.shields.io/badge/mockito-2.x-orange) ![](https://img.shields.io/badge/mockito-3.x-orange)

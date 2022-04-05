@@ -1,21 +1,23 @@
 # Mock creation
 
+- [Non-interface type(s) passed into extraInterfaces](#non-interface-types-passed-into-extrainterfaces)
+- [No argument is provided for the extraInterfaces() call](#no-argument-is-provided-for-the-extrainterfaces-call)
+- [Mockito cannot mock certain types](#mockito-cannot-mock-certain-types)
+- [Mockito.reset() is used](#mockitoreset-is-used)
+- [Convert @Mock/@Spy fields to Mockito.mock()/spy() calls](#convert-mockspy-fields-to-mockitomockspy-calls)
+- [Convert Mockito.spy() calls to @Spy fields](#convert-mockitospy-calls-to-spy-fields)
+
 ## Non-interface type(s) passed into extraInterfaces
 
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-ExtraInterfacesInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/ExtraInterfacesInspection.java)
 
-The `extraInterfaces` functionality of Mockito has some criteria in order to create proper mocks.
-
-In these cases Mockito would stop test execution and fail with an exception letting you know about one of these issues.
-
-**Types specified in the `@Mock` annotation's `extraInterfaces` attribute must all be interfaces**
+When specifying extra interfaces for a mock object (either `@Mock` annotation's `extraInterfaces` attribute, or in `Mockito.withSettings().extraInterfaces()`)
+the types must be actual interfaces, otherwise Mockito would stop test execution and fail with an exception letting you know about one of these issues.
 
 ```java
 @Mock(extraInterfaces = {List.class, Set.class, Object.class}) //Object is not an interface
 public Object mock;
 ```
-
-**Types specified in `Mockito.withSettings().extraInterfaces()` must be interfaces**
 
 ```java
 //None of the arguments is an interface
@@ -29,8 +31,8 @@ look for the `extraInterfacesAcceptsOnlyInterfaces(Class)` method.
 
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-ExtraInterfacesInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/ExtraInterfacesInspection.java)
 
-One of the criteria for the `extraInterfaces()` call is that it must be provided at least one argument.
-In this case Mockito would stop test execution and fail with an exception letting you know about the problem.
+the `MockSettings.extraInterfaces()` method accepts a varargs of `Class` objects, but if there is no argument passed in,
+Mockito would stop test execution and fail with an exception letting you know about the problem.
 
 ```java
 Mockito.mock(Object.class, Mockito.withSettings().extraInterfaces()); //no argument specified
@@ -41,11 +43,14 @@ look for the `extraInterfacesRequiresAtLeastOneInterface()` method.
 
 ## Mockito cannot mock certain types
 
+### Non-annotation based validation
+
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-MockTypeInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/MockTypeInspection.java)
 
-Based on the logic in Mockito's [InlineDelegateByteBuddyMockMaker#isTypeMockable(Class)](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java) method
-and [InlineBytecodeGenerator#EXCLUDES](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineBytecodeGenerator.java) field,
-when attempting to create mocks for primitives, primitive wrapper types, `String` and `Class`, Mockito throws an exception that mock creation cannot happen.
+Based on Mockito's underlying logic, when attempting to create mocks for primitives, primitive wrapper types, `String` and `Class`, Mockito throws an exception that mock creation cannot happen.
+
+The logic is available in Mockito in [InlineDelegateByteBuddyMockMaker#isTypeMockable(Class)](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java)
+and [InlineBytecodeGenerator#EXCLUDES](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineBytecodeGenerator.java).
 
 This inspection validates `@Mock` and `@Spy` annotated fields' types and the types specified as the arguments of `Mockito.mock()` and `Mockito.spy()` calls.
 The following examples are all non-compliant ones:
@@ -69,12 +74,12 @@ class MockTypesTest {
 
 ### @DoNotMock annotated types
 
-![](https://img.shields.io/badge/since-0.2.0-blue)
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.2.0-blue) [![](https://img.shields.io/badge/implementation-MockTypeInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/MockTypeInspection.java)
 
 In Mockito 4.1.0 a new `@DoNotMock` annotation was introduced adopted from Google. It has a `reason` attribute to inform users why the type marked with the annotation should not be mocked.
 
-This inspection also marks types in whose type hierarchy there is at least one type annotated with either Mockito's `org.mockito.DoNotMock` annotation or any custom annotation whose fully qulified name
-ends with `org.mockito.DoNotMock`.
+This inspection also marks types based on a `@DoNotMock` annotated type's presence in the type hierarchy. If there is one such type annotated with any annotation whose fully qualified name
+ends with `org.mockito.DoNotMock`, be it a custom annotation or Mockito's `org.mockito.DoNotMock`, it is registered.
 
 When constructing the inspection message, the inspection looks for the annotation's `reason` attribute value.
 
@@ -140,14 +145,11 @@ The [@Mock](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/M
 annotations are an easier way of creating mock and spy objects, and are interchangeable (to a certain degree) with `Mockito.mock()` and `Mockito.spy()` calls.
 
 Thus, this intention provides a means to convert these fields to their Mockito.mock/spy variants, also taking into account the `@Mock` annotation's attributes.
-
 It is not available when the field annotated with both `@Mock` and `@Spy`.
 
-#### Target method
+#### Determining the target method
 
-The target method, where the variable is introduced, is selected according to this logic:
- - if there is only one method in the class, then that is the target method,
- - if there are multiple methods in the class, then users are able to choose which method to introduce the variable in
+If there is only one method in the class, then that is the target method, otherwise users are able to choose which method to introduce the variable in.
 
 Inner classes are not taken into consideration. Converting the field is possible only within the same class.
 
@@ -242,7 +244,7 @@ Just like `@Spy` annotated fields can be converted to `Mockito.spy()` calls, it 
 
 This intention covers the conversion of `Mockito.spy()` calls to `@Spy` annotated fields.
 
-The intention is available on `Mockito.spy()` calls, when the argument of the call is either a new expression (i.e. `new MockObject()`), or a class object access expression (i.e. `MockObject.class`),
+It is available on `Mockito.spy()` calls, when the argument of the call is either a new expression (i.e. `new MockObject()`), or a class object access expression (i.e. `MockObject.class`),
 but the argument is not an array creation.
 Furthermore, the type that is being mocked should be mockable either by Mockito's rules or not being annotated with `@DoNotMock`.
 
@@ -265,29 +267,30 @@ from: Clazz localVar = spy(Clazz.class);
 to:   @Spy Clazz localVar;
 
 from: Clazz localVar = spy(new Clazz());
-to:   @Spy Clazz lovalVar;
+to:   @Spy Clazz localVar;
 
 from: Clazz localVar = spy(new Clazz(<arguments>));
-to:   @Spy Clazz lovalVar = new Clazz(<arguments>);
+to:   @Spy Clazz localVar = new Clazz(<arguments>);
 
 from: Clazz<typeargs> localVar = spy(new Clazz<typeargs>());
-to:   @Spy Clazz<typeargs> lovalVar;
+to:   @Spy Clazz<typeargs> localVar;
 ```
 
 **Naming**
 
-- if the `Mockito.spy()` call is part of a local variable declaration, then by default will use the variable's name,
-but if there is already a field with the same name in the target class, a rename refactor is invoked first.
+- if the `Mockito.spy()` call is part of a local variable declaration, then by default will use the variable's name.
+If there is already a field with the same name in the target class, a rename refactor is invoked first.
 - if the call is not part of a local variable declaration, a rename refactor is invoked first, where the default field name provided is the
 mock type's name in lowercase format.
 
 **Target class selection**
    
-If there is more than one parent class of the selected `spy()` call, a list is shown from which the class where the field will be introduced, can be selected.
+If there is more than one parent class of the selected `spy()` call, a list is shown to select the class the field will be introduced in.
 
 **Support notes**
 
-Conversion from `spy()` calls in which an already created object is passed, is not yet supported:
+It is not yet supported to convert `spy()` calls in which an already created object is passed:
+
 ```java
 Clazz clazz = new Clazz();
 Clazz spy = Mockito.spy(clazz); 

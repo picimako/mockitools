@@ -13,6 +13,8 @@ According to the javadoc of the [`@NotExtensible`](https://javadoc.io/doc/org.mo
 
 > Indicates to the user that she should not provide custom implementations of given type.
 
+The inspection is applied to interfaces and named classes that can inherit from other types.
+
 ```java
 import org.mockito.MockSettings;
 import java.util.List;
@@ -21,5 +23,3 @@ import java.util.List;
 interface SomeInterface extends MockSettings, List<String> {
 }
 ```
-
-The inspection is applied to interfaces and named classes that can inherit from other types.

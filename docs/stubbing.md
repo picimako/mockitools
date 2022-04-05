@@ -4,8 +4,9 @@
 
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.3.0-blue) [![](https://img.shields.io/badge/implementation-ThrowsCheckedExceptionStubbingInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/ThrowsCheckedExceptionStubbingInspection.java)
 
-Reports exception references in <code>*Throw()</code> stubbing methods based on Mockito's rule on checked exceptions.
-*If [the specified exception types] contain checked exceptions then they have to match one of the checked exceptions in the method signature.*
+Reports exception references in <code>*Throw()</code> stubbing methods based on Mockito's rule on checked exceptions
+
+> If [the specified exception types] contain checked exceptions then they have to match one of the checked exceptions in the method signature.
    
 The following constructs are supported:
 - `Mockito.when().thenThrow(...)`
@@ -35,9 +36,7 @@ class MockObject {
 ## Consecutive `*Return()` and `*Throw()` calls can be merged
 
 ![](https://img.shields.io/badge/inspection-orange)
-
 ![](https://img.shields.io/badge/since-0.3.0-blue) [![](https://img.shields.io/badge/implementation-SimplifyConsecutiveReturnCallsInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/consecutive/SimplifyConsecutiveReturnCallsInspection.java)
-
 ![](https://img.shields.io/badge/since-0.4.0-blue) [![](https://img.shields.io/badge/implementation-SimplifyConsecutiveThrowCallsInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/consecutive/SimplifyConsecutiveThrowCallsInspection.java)
 
 Reports multiple consecutive calls to `*Return()` and `*Throw()` methods, respectively, so that they may be merged into a single call.
@@ -47,7 +46,7 @@ Both `org.mockito.Mockito` and `org.mockito.BDDMockito` based stubbing chains ar
 - `doThrow`, `thenThrow()` and `willThrow()`.
 
 If there are multiple sections of consecutive calls within the same call chain, they are reported separately for better notification,
-and all sections can be merged separately, depending on which section the quick fix is invoked on. It is always the last consecutive call that is registered.
+and all sections can be merged separately, depending on the section the quick fix is invoked on. It is always the last consecutive call that is registered.
 
 ### Return examples
 
@@ -76,7 +75,7 @@ From: Mockito.when(mockObject.invoke()).thenReturn(1, 2, 3).thenReturn(4).thenCa
 
 When merging `*Throw()` calls, there are a few more cases than in case of `*Return()` ones.
 
-| Argument type combination                               | Quick fix available                                                                                | Type after conversion                      |
+| Argument type combination                               | Quick fix name(s)                                                                                  | Type after conversion                      |
 |---------------------------------------------------------|----------------------------------------------------------------------------------------------------|--------------------------------------------|
 | `Class` + `Class`                                       | Merge *Throw calls                                                                                 | `Class`                                    |
 | `Throwable` + `Throwable`                               | Merge *Throw calls                                                                                 | `Throwable`                                |
@@ -117,9 +116,9 @@ From: Mockito.when(mockObject.invoke())
 
 ![](https://img.shields.io/badge/intention-orange) ![](https://img.shields.io/badge/since-0.4.0-blue) [![](https://img.shields.io/badge/implementation-ConvertThrowStubbingArgumentsIntention-blue)](../src/main/java/com/picimako/mockitools/intention/ConvertThrowStubbingArgumentsIntention.java)
 
-Converts arguments of `*Throw()` stubbing calls from `PsiClassObjectAccessExpression`s to `PsiNewExpression`s and vice versa.
+Converts arguments of `*Throw()` stubbing calls from `Type.class` expressions to `new Type()` expressions and vice versa.
 
-The intention is available only when either all arguments are `PsiClassObjectAccessExpression`s or all are `PsiNewExpression`s,
+The intention is available when either all arguments are `Type.class` style or all are `new Type()` style ones,
 and in case of the latter one there is no call to a non-default constructor.
 
 All stubbing approaches are supported:
