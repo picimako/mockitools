@@ -5,7 +5,7 @@
 - [Mockito cannot mock certain types](#mockito-cannot-mock-certain-types)
 - [Mockito.reset() is used](#mockitoreset-is-used)
 - [Convert @Mock/@Spy fields to Mockito.mock()/spy() calls](#convert-mockspy-fields-to-mockitomockspy-calls)
-- [Convert Mockito.spy() calls to @Spy fields](#convert-mockitospy-calls-to-spy-fields)
+- [Convert Mockito.mock()/spy() calls to @Mock/@Spy fields](#convert-mockitomockspy-calls-to-mockspy-fields)
 
 ## Non-interface type(s) passed into extraInterfaces
 
@@ -236,19 +236,18 @@ Object mock = Mockito.mock(Object.class, Mockito.withSettings()
 ```
 </details>
 
-## Convert Mockito.spy() calls to @Spy fields
+## Convert Mockito.mock()/spy() calls to @Mock/@Spy fields
 
-![](https://img.shields.io/badge/intention-orange) ![](https://img.shields.io/badge/since-0.2.0-blue) [![](https://img.shields.io/badge/implementation-ConvertSpyCallToFieldIntention-blue)](../src/main/java/com/picimako/mockitools/intention/ConvertSpyCallToFieldIntention.java)
+![](https://img.shields.io/badge/intention-orange)
+![](https://img.shields.io/badge/since-0.2.0-blue) [![](https://img.shields.io/badge/implementation-ConvertSpyCallToFieldIntention-blue)](../src/main/java/com/picimako/mockitools/intention/ConvertSpyCallToFieldIntention.java)
+![](https://img.shields.io/badge/since-0.4.0-blue) [![](https://img.shields.io/badge/implementation-ConvertMockCallToFieldIntention-blue)](../src/main/java/com/picimako/mockitools/intention/ConvertMockCallToFieldIntention.java)
 
-Just like `@Spy` annotated fields can be converted to `Mockito.spy()` calls, it is true vice versa too.
+Just like `@Spy` and `@Mock` annotated fields can be converted to `Mockito.spy()` and `@Mockito.mock()` calls, it is true vice versa too.
 
-This intention covers the conversion of `Mockito.spy()` calls to `@Spy` annotated fields.
+**Mockito.spy()**
 
-It is available on `Mockito.spy()` calls, when the argument of the call is either a new expression (i.e. `new MockObject()`), or a class object access expression (i.e. `MockObject.class`),
+This intention is available on `Mockito.spy()` calls, when the argument of the call is either a new expression (i.e. `new MockObject()`), or a class object access expression (i.e. `MockObject.class`),
 but the argument is not an array creation.
-Furthermore, the type that is being mocked should be mockable either by Mockito's rules or not being annotated with `@DoNotMock`.
-
-**Examples:**
 
 ```java
 from: spy(Clazz.class);
@@ -276,16 +275,61 @@ from: Clazz<typeargs> localVar = spy(new Clazz<typeargs>());
 to:   @Spy Clazz<typeargs> localVar;
 ```
 
+**Mockito.mock()**
+
+This intention is available on `Mockito.mock()` calls, when the Class argument of the call is a class object access expression (i.e. `MockObject.class`),
+and in case of the `MockSettings` specific overload, the @Mock annotation supports all configuration specified:
+- it starts with the `Mockito.withSettings()` call,
+- it doesn't have a call other than to `lenient()`, `stubOnly()`, `defaultAnswer()`, `name()`, `extraInterfaces()`
+  or `serializable()` but not its overloaded variant `serializable(SerializableMode)`.
+
+NOTE: there is no validation on whether the specified name or answer is valid to be put into the annotation attribute (as annotation attributes accept constants only),
+the intention is available regardless.
+
+This is mainly to not confuse users when the intention is available and when it is not, and to draw attention to that the attribute values may need adjustment to be used
+in the @Mock annotation.
+
+```java
+from: mock(Clazz.class)
+to:   @Mock Clazz clazz;
+
+from: mock(Clazz.class, "some name")
+to:   @Mock(name = "some name") Clazz clazz;
+
+from: mock(Clazz.class, Answers.RETURNS_SMART_NULLS)
+to:   @Mock(answer = Answers.RETURNS_SMART_NULLS) Clazz clazz;
+
+from: mock(Clazz.class, Answers.RETURNS_DEFAULTS) //the default answer
+to:   @Mock Clazz clazz;
+
+from: mock(Clazz.class, Mockito.withSettings().lenient().serializable())
+to:   @Mock(lenient = true, serializable = true) Clazz clazz;
+
+from: mock(Clazz.class, Mockito.withSettings().name("some name"))
+to:   @Mock(name = "some name") Clazz clazz;
+
+from: mock(Clazz.class, Mockito.withSettings().defaultAnswer(Answers.RETURNS_SMART_NULLS))
+to:   @Mock(answer = Answers.RETURNS_SMART_NULLS) Clazz clazz;
+
+from: mock(Clazz.class, Mockito.withSettings().defaultAnswer(Answers.RETURNS_DEFAULTS)) //the default answer
+to:   @Mock Clazz clazz;
+
+from: mock(Clazz.class, Mockito.withSettings().extraInterfaces(List.class))
+to:   @Mock(extraInterfaces = List.class) Clazz clazz;
+```
+
+Furthermore, the type that is being mocked should be mockable either by Mockito's rules or not being annotated with `@DoNotMock`.
+
 **Naming**
 
-- if the `Mockito.spy()` call is part of a local variable declaration, then by default will use the variable's name.
+- if the `Mockito.spy()`/`Mockito.mock()` call is part of a local variable declaration, then by default will use the variable's name.
 If there is already a field with the same name in the target class, a rename refactor is invoked first.
 - if the call is not part of a local variable declaration, a rename refactor is invoked first, where the default field name provided is the
 mock type's name in lowercase format.
 
 **Target class selection**
    
-If there is more than one parent class of the selected `spy()` call, a list is shown to select the class the field will be introduced in.
+If there is more than one parent class of the selected `spy()`/`mock()` call, a list is shown to select the class the field will be introduced in.
 
 **Support notes**
 

@@ -39,6 +39,7 @@ You can find the list of those inspections in the [Mockitools/SonarLint rules](d
 If [*"Mockito ... tastes really good"* and *"doesn’t give you hangover"*](https://site.mockito.org/#why), this IDE plugin will only make it better. You can find out why, in the dedicated documentation below.
 
 - [Mock creation](docs/mock_creation.md)
+- [Stubbing](docs/stubbing.md)
 - [Mockito verifications](docs/mockito_verifications.md)
 - [Argument matching and capturing](docs/argument_matching_capture.md)
 - [Version migration aids](docs/migration_aids_v4.md)

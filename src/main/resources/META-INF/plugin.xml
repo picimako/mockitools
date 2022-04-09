@@ -6,7 +6,7 @@
     <version>0.4.0</version>
     <resource-bundle>messages.MockitoolsBundle</resource-bundle>
 
-    <description>Provides various inspections for the Mockito framework for Java.</description>
+    <description>Provides integration for the Mockito framework for Java.</description>
 
     <!-- https://jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html -->
     <idea-version since-build="211"/>
@@ -125,6 +125,10 @@
         <intentionAction>
             <categoryKey>mockito.intention.category</categoryKey>
             <className>com.picimako.mockitools.intention.ConvertSpyCallToFieldIntention</className>
+        </intentionAction>
+        <intentionAction>
+            <categoryKey>mockito.intention.category</categoryKey>
+            <className>com.picimako.mockitools.intention.ConvertMockCallToFieldIntention</className>
         </intentionAction>
         <intentionAction>
             <categoryKey>mockito.intention.category</categoryKey>
