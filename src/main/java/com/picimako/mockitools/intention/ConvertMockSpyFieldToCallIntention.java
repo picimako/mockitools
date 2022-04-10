@@ -3,16 +3,24 @@
 package com.picimako.mockitools.intention;
 
 import static com.picimako.mockitools.ListPopupHelper.selectItemAndRun;
+import static com.picimako.mockitools.MockitoQualifiedNames.ANSWER;
+import static com.picimako.mockitools.MockitoQualifiedNames.DEFAULT_ANSWER;
 import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
+import static com.picimako.mockitools.MockitoQualifiedNames.MOCK;
+import static com.picimako.mockitools.MockitoQualifiedNames.NAME;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_SPY;
+import static com.picimako.mockitools.MockitoQualifiedNames.SPY;
 import static com.picimako.mockitools.MockitoolsPsiUtil.MOCKITO_WITH_SETTINGS;
+import static com.picimako.mockitools.intention.ConvertMockCallToFieldIntention.isDefaultAnswer;
 import static java.util.stream.Collectors.joining;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.codeInsight.intention.IntentionAction;
@@ -40,6 +48,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNameValuePair;
 import com.intellij.psi.PsiQualifiedReference;
+import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
@@ -51,15 +60,17 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
 /**
  * Converts {@code @Mock} and {@code @Spy} annotated fields to {@code Mockito.mock()} and {@code Mockito.spy()} local variable declarations, respectively.
  * <p>
- * Attributes of the {@code @Mock} annotation are also taken into account when constructing the Mockito.mock()/spy() calls.
+ * Attributes of the {@code @Mock} annotation are also taken into account when constructing the Mockito.mock() calls.
  * <p>
  * The created variable declaration is always added as the first statement to the selected method, which is selected according to this logic:
  * <ul>
  *     <li>if there is only one method in the class, then that is the target method</li>
  *     <li>if there are multiple methods in the class, then users are able to choose which method to introduce the variable in</li>
  * </ul>
+ * In case of converting @Mock fields, default attribute values are ignored and not added to the result Mockito.mock() call.
  * <p>
  * NOTE: inner classes are not taken into consideration. Converting the field is possible only within the same class.
+ * <p>
  * NOTE 2: the intention is not available when the field is annotated with both {@code @Mock} and {@code @Spy}.
  *
  * @since 0.2.0
@@ -67,7 +78,15 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
 @SuppressWarnings("UnstableApiUsage")
 public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
 
-    private static final Set<String> MOCK_OVERRIDE_ARGS = Set.of("answer", "name");
+    /**
+     * Defines the annotation attributes and the conditions when they are allowed to be added to the Mockito.mock() call.
+     * <p>
+     * These are used for Mockito.mock(Class, String) and Mockito.mock(Class, Answer).
+     */
+    private static final Map<String, Predicate<PsiAnnotationMemberValue>> MOCK_OVERLOAD_ARGS = Map.of(
+        "answer", value -> value instanceof PsiReferenceExpression && !isDefaultAnswer((PsiReferenceExpression) value),
+        "name", value -> !isBlank(value)
+    );
     private static final Set<String> BOOLEAN_ATTRIBUTES = Set.of("stubOnly", "serializable", "lenient");
 
     @IntentionName
@@ -129,43 +148,45 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
         //This if-else is safe since isAvailable() returns true only in case of @Mock and @Spy annotations
         if (fieldToConvert.hasAnnotation(ORG_MOCKITO_MOCK)) {
             //org.mockito.Mockito.mock(<fieldtype>.class
-            mockitoMockingCall = new StringBuilder(ORG_MOCKITO_MOCKITO).append(".").append("mock").append("(");
+            mockitoMockingCall = new StringBuilder(ORG_MOCKITO_MOCKITO).append(".").append(MOCK).append("(");
             appendType(fieldToConvert, mockitoMockingCall);
 
             PsiAnnotation mockAnnotation = fieldToConvert.getAnnotation(ORG_MOCKITO_MOCK);
             //Assemble Mockito.mock() call based on the @Mock annotation attributes
-            boolean isNonMockSettingsOverride = false;
+            boolean isMockSettingsOverride = true;
             //Handle .mock(Class, Answer) and .mock(Class, String)
             if (mockAnnotation.getAttributes().size() == 1) {
-                for (String arg : MOCK_OVERRIDE_ARGS) {
-                    var value = valueOf(mockAnnotation.findAttribute(arg));
-                    if (value.isPresent() && !value.get().getText().replace("\"", "").isBlank()) {
-                        mockitoMockingCall.append(", ").append(value.get().getText());
-                        isNonMockSettingsOverride = true;
+                for (var entry : MOCK_OVERLOAD_ARGS.entrySet()) {
+                    var attributeValue = valueOf(mockAnnotation.findAttribute(entry.getKey()))
+                        .filter(value -> entry.getValue().test(value));
+                    if (attributeValue.isPresent()) {
+                        mockitoMockingCall.append(", ").append(attributeValue.get().getText());
+                        isMockSettingsOverride = false;
                         break;
                     }
                 }
             }
 
             //if there is no attribute specified, no action is needed
-            //If there is at least one attribute specified, but it is not the answer and name specific overrides of Mockito.mock(), then build the MockSettings for Mockito.mock(Class, MockSettings) 
-            if (!mockAnnotation.getAttributes().isEmpty() && !isNonMockSettingsOverride) {
+            //If there is at least one attribute specified, but it is not the answer and name specific overrides of Mockito.mock(),
+            // then build the MockSettings for Mockito.mock(Class, MockSettings) 
+            if (!mockAnnotation.getAttributes().isEmpty() && isMockSettingsOverride) {
                 StringBuilder mockSettings = new StringBuilder(ORG_MOCKITO_MOCKITO).append(".withSettings()");
 
                 //Handle boolean attributes
                 BOOLEAN_ATTRIBUTES.forEach(attributeName ->
-                    Optional.ofNullable(AnnotationUtil.getBooleanAttributeValue(mockAnnotation, attributeName)).ifPresent(enabled -> {
-                        if (Boolean.TRUE.equals(enabled)) { //Given that the default values are false, and to be true they have to be specified explicitly
-                            appendSetting(mockSettings, attributeName, "");
-                        }
-                    }));
+                    Optional.ofNullable(AnnotationUtil.getBooleanAttributeValue(mockAnnotation, attributeName))
+                        .filter(Boolean.TRUE::equals) //Given that the default values are false, and to be true they have to be specified explicitly
+                        .ifPresent(enabled -> appendSetting(mockSettings, attributeName, "")));
 
                 //Handle attributes for whose MockSettings counterpart the value of the attribute must be passed in.
                 //E.g. withSettings().name("some name") or withSettings().answer(anAnswer)
-                valueOf(mockAnnotation.findAttribute("name")).ifPresent(value -> {
-                    if (!value.getText().replace("\"", "").isBlank()) appendSetting(mockSettings, "name", value.getText());
+                valueOf(mockAnnotation.findAttribute(NAME)).ifPresent(value -> {
+                    if (MOCK_OVERLOAD_ARGS.get(NAME).test(value)) appendSetting(mockSettings, NAME, value.getText());
                 });
-                valueOf(mockAnnotation.findAttribute("answer")).ifPresent(value -> appendSetting(mockSettings, "defaultAnswer", value.getText()));
+                valueOf(mockAnnotation.findAttribute(ANSWER)).ifPresent(value -> {
+                    if (MOCK_OVERLOAD_ARGS.get(ANSWER).test(value)) appendSetting(mockSettings, DEFAULT_ANSWER, value.getText());
+                });
 
                 //Handle extraInterfaces attribute.
                 //This needs special care because the attribute value may be an individual value or an array initializer.
@@ -184,8 +205,8 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
 
                 mockitoMockingCall.append(", ").append(mockSettings); //Adds the second parameter to Mockito.mock(Class, MockSettings)
             }
-        } else { //spy
-            mockitoMockingCall = new StringBuilder(ORG_MOCKITO_MOCKITO).append(".").append("spy").append("(");
+        } else { //@Spy -> Mockito.spy()
+            mockitoMockingCall = new StringBuilder(ORG_MOCKITO_MOCKITO).append(".").append(SPY).append("(");
             if (fieldToConvert.hasInitializer()) {
                 mockitoMockingCall.append(fieldToConvert.getInitializer().getText());
             } else {
@@ -224,9 +245,8 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
         });
     }
 
-    @Override
-    public boolean startInWriteAction() {
-        return false;
+    private static boolean isBlank(PsiAnnotationMemberValue value) {
+        return value.getText().replace("\"", "").isBlank();
     }
 
     private boolean isIdentifierOfField(PsiElement element) {
@@ -252,5 +272,10 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
             .map(PsiQualifiedReference::getReferenceName)
             .ifPresentOrElse(mockitoMockingCall::append, () -> mockitoMockingCall.append(fieldToConvert.getType().getCanonicalText()));
         mockitoMockingCall.append(".class");
+    }
+
+    @Override
+    public boolean startInWriteAction() {
+        return false;
     }
 }

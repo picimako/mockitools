@@ -144,8 +144,10 @@ Additional resources:
 The [@Mock](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mock.html) and [@Spy](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Spy.html)
 annotations are an easier way of creating mock and spy objects, and are interchangeable (to a certain degree) with `Mockito.mock()` and `Mockito.spy()` calls.
 
-Thus, this intention provides a means to convert these fields to their Mockito.mock/spy variants, also taking into account the `@Mock` annotation's attributes.
+Thus, this intention provides a means to convert these fields to their Mockito.mock()/spy() variants, also taking into account the `@Mock` annotation's attributes.
 It is not available when the field annotated with both `@Mock` and `@Spy`.
+
+In case of converting `@Mock` fields, default attribute values are also ignored and not added to the result `Mockito.mock()` call.
 
 #### Determining the target method
 
