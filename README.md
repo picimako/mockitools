@@ -1,11 +1,12 @@
 # Mockitools IntelliJ plugin
 
-![Build](https://github.com/picimako/mockitools/workflows/Build/badge.svg)
 [![Version](https://img.shields.io/jetbrains/plugin/v/18117-mockitools.svg)](https://plugins.jetbrains.com/plugin/18117-mockitools)
+![Build](https://github.com/picimako/mockitools/workflows/Build/badge.svg)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/18117-mockitools.svg)](https://plugins.jetbrains.com/plugin/18117-mockitools)
+[![Donate](https://img.shields.io/badge/donate-paypal-yellow.svg)](https://www.paypal.com/donate/?hosted_button_id=VVLWNZWPBRUDL)
 
 <!-- Plugin description -->
-This is an IntelliJ-based plugin for [Mockito](https://site.mockito.org), one of the (if not the) most popular mocking framework for unit tests in Java.
+Mockitools is a plugin for IntelliJ-based IDEs that provides framework integration for [Mockito](https://site.mockito.org), one of the (if not the) most popular mocking frameworks for unit testing in Java.
 <!-- Plugin description end -->
 
 It is available for IntelliJ Community Edition as well as IntelliJ IDEA Ultimate Edition.
@@ -14,22 +15,20 @@ It is available for IntelliJ Community Edition as well as IntelliJ IDEA Ultimate
 
 ### Mockito 4 migration aids
 
-There is a handful of inspections available to help to migrate users from Mockito 2.x/3.x to 4.x.
+There is a handful of inspections available to help migrate users from Mockito 2.x/3.x to 4.x.
 
-Since Mockito 4 has been released only recently, they are enabled by default. But, if you are already
-using Mockito 4, it is recommended to disable them, so that IntelliJ doesn't execute inspection that don't make sense
-in terms of your project(s). See <kbd>Java</kbd> > <kbd>Mockito</kbd> > <kbd>Migration aids (v4)</kbd> in Inspection settings.
+Since Mockito 4 has been released only recently, they are enabled by default, but if you are already
+using Mockito 4, it is recommended to disable them in <kbd>Java</kbd> > <kbd>Mockito</kbd> > <kbd>Migration aids (v4)</kbd> in Inspection settings,
+so they are not executed for your project. As users move to v4, eventually they will get disabled by default.
 
-Eventually, when a good amount of time passed and many users potentially moved to v4, these inspections will be disabled by default.
-
-The list and details of those inspections can be found in [Mockito v4 migration aids](docs/migration_aids_v4.md).
+See the list of those inspections in [Mockito v4 migration aids](docs/migration_aids_v4.md).
 
 ### SonarLint
 
-SonarLint also have a few inspections for Mockito, you can find them under the [Java category](https://rules.sonarsource.com/java?search=mockito).
+SonarLint also has a few inspections for Mockito that you can find under the [Java category](https://rules.sonarsource.com/java?search=mockito) of their rules.
 
-If you use SonarLint or any other plugin that has checks for things provided by the Mockitools plugin, it is advised adjusting your settings,
-so that only those versions of the inspections are enabled that you feel comfortable working with.
+If you use SonarLint to validate things that are available in Mockitools too, it is advised to adjust your settings,
+and have only those ones enabled that you feel comfortable working with. Be it in SonarLint or in Mockitools.
 This will help declutter your editor from duplicate highlights for the same problems, and will also improve the analysis performance in the IDE.
 
 You can find the list of those inspections in the [Mockitools/SonarLint rules](docs/mockitools_sonarlint_rules.md) document.
