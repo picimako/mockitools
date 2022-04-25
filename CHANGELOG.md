@@ -10,6 +10,7 @@
 They can be merged into a single such call.
 - [#8](https://github.com/picimako/mockitools/issues/8): Merging of consecutive `*Return()` and `*Throw()` stubbing calls can happen separately if
 there are multiple such sections within a stubbing call chain. They, from now on, also keep line wrapping and indentation after applying the quick fix.
+- [#13](https://github.com/picimako/mockitools/issues/13): Added 4 new intention actions that can convert between the various stubbing approaches.
 
 ## [0.3.0]
 - **IntelliJ version support: versions prior to 2021.1 are no longer supported.**
