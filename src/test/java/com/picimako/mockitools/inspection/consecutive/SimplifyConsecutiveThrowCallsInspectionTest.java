@@ -319,6 +319,7 @@ public class SimplifyConsecutiveThrowCallsInspectionTest extends MockitoolsV4Ins
             "\n" +
             "class QuickFix {\n" +
             "   void testMethod() {\n" +
+            "       MockObject mockObject = Mockito.mock(MockObject.class);\n" +
             beforeOrAfter + "\n" +
             "   }\n" +
             "\n" +

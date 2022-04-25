@@ -31,6 +31,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "\n" +
                 "class NotAvailable {\n" +
                 "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
                 "        BDDMockito.given(mockObject.doSomething()).willR<caret>eturn(10);\n" +
                 "    }\n" +
                 "    private static class MockObject {\n" +
@@ -48,6 +49,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "\n" +
                 "class NotAvailable {\n" +
                 "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
                 "        BDDMockito.given(mockObject.doSomething()).wi<caret>llThrow(new IOException(), IllegalArgumentException.class);\n" +
                 "    }\n" +
                 "    private static class MockObject {\n" +
@@ -66,6 +68,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "\n" +
                 "class NotAvailable {\n" +
                 "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
                 "        BDDMockito.given(mockObject.doSomething()).will<caret>Throw(new IOException(), new IllegalArgumentException(\"messa\"));\n" +
                 "    }\n" +
                 "    private static class MockObject {\n" +
@@ -83,6 +86,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "\n" +
                 "class Available {\n" +
                 "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
                 "        Mockito.when(mockObject.doSomething()).then<caret>Throw(IOException.class, IllegalArgumentException.class);\n" +
                 "    }\n" +
                 "    private static class MockObject {\n" +
@@ -100,6 +104,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "\n" +
                 "class Available {\n" +
                 "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
                 "        Mockito.when(mockObject.doSomething()).then<caret>Throw(new IOException(), new IllegalArgumentException());\n" +
                 "    }\n" +
                 "    private static class MockObject {\n" +
@@ -117,6 +122,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "\n" +
                 "class Available {\n" +
                 "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
                 "        Mockito.doThr<caret>ow(IOException.class, IllegalArgumentException.class).when(mockObject).doSomething();\n" +
                 "    }\n" +
                 "    private static class MockObject {\n" +
@@ -134,6 +140,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "\n" +
                 "class Available {\n" +
                 "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
                 "        Mockito.do<caret>Throw(new IOException(), new IllegalArgumentException()).when(mockObject).doSomething();\n" +
                 "    }\n" +
                 "    private static class MockObject {\n" +
@@ -151,6 +158,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "\n" +
                 "class Available {\n" +
                 "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
                 "        BDDMockito.given(mockObject.doSomething()).willT<caret>hrow(IOException.class, IllegalArgumentException.class);\n" +
                 "    }\n" +
                 "    private static class MockObject {\n" +
@@ -168,6 +176,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "\n" +
                 "class Available {\n" +
                 "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
                 "        BDDMockito.given(mockObject.doSomething()).willThr<caret>ow(new IOException(), new IllegalArgumentException());\n" +
                 "    }\n" +
                 "    private static class MockObject {\n" +
@@ -185,6 +194,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "\n" +
                 "class Available {\n" +
                 "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
                 "        BDDMockito.willTh<caret>row(IOException.class, IllegalArgumentException.class).given(mockObject).doSomething();\n" +
                 "    }\n" +
                 "    private static class MockObject {\n" +
@@ -202,6 +212,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "\n" +
                 "class Available {\n" +
                 "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
                 "        BDDMockito.willTh<caret>row(new IOException(), new IllegalArgumentException()).given(mockObject).doSomething();\n" +
                 "    }\n" +
                 "    private static class MockObject {\n" +
@@ -222,6 +233,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "class Available {\n" +
                 "\n" +
                 "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
                 "        Mockito.when(mockObject.doSomething()).the<caret>nThrow(new IOException(), new IllegalArgumentException());\n" +
                 "    }\n" +
                 "    private static class MockObject {\n" +
@@ -236,6 +248,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "class Available {\n" +
                 "\n" +
                 "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
                 "        Mockito.when(mockObject.doSomething()).thenThrow(IOException.class, IllegalArgumentException.class);\n" +
                 "    }\n" +
                 "    private static class MockObject {\n" +
@@ -253,6 +266,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "\n" +
                 "class Available {\n" +
                 "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
                 "        Mockito.when(mockObject.doSomething()).thenT<caret>hrow(IOException.class, IllegalArgumentException.class);\n" +
                 "    }\n" +
                 "    private static class MockObject {\n" +
@@ -266,6 +280,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "\n" +
                 "class Available {\n" +
                 "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
                 "        Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new IllegalArgumentException());\n" +
                 "    }\n" +
                 "    private static class MockObject {\n" +
