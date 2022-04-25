@@ -1,0 +1,4 @@
+<spot>BDDMockito
+    .given(mockObject.doSomething())
+    .willReturn(10)
+    .willThrow(IllegalArgumentException.class);</spot>

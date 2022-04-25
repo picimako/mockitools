@@ -117,7 +117,7 @@
                 displayName="Class extends @NotExtensible class" groupPath="Java,Mockito"
                 groupName="Framework" enabledByDefault="false" level="WARNING"/>
         
-        <!-- Intentions -->
+        <!-- Intentions - Convert @Mock/@Spy fields to mock()/spy() calls and vice versa. -->
         <intentionAction>
             <categoryKey>mockito.intention.category</categoryKey>
             <className>com.picimako.mockitools.intention.ConvertMockSpyFieldToCallIntention</className>
@@ -130,9 +130,27 @@
             <categoryKey>mockito.intention.category</categoryKey>
             <className>com.picimako.mockitools.intention.ConvertMockCallToFieldIntention</className>
         </intentionAction>
+        <!-- Intentions - Convert arguments -->
         <intentionAction>
             <categoryKey>mockito.intention.category</categoryKey>
             <className>com.picimako.mockitools.intention.ConvertThrowStubbingArgumentsIntention</className>
+        </intentionAction>
+        <!-- Intentions - Convert stubbing approaches -->
+        <intentionAction>
+            <categoryKey>mockito.intention.category</categoryKey>
+            <className>com.picimako.mockitools.intention.convert.stub.ConvertStubbingToMockitoWhenIntention</className>
+        </intentionAction>
+        <intentionAction>
+            <categoryKey>mockito.intention.category</categoryKey>
+            <className>com.picimako.mockitools.intention.convert.stub.ConvertStubbingToMockitoDoIntention</className>
+        </intentionAction>
+        <intentionAction>
+            <categoryKey>mockito.intention.category</categoryKey>
+            <className>com.picimako.mockitools.intention.convert.stub.ConvertStubbingToBDDMockitoGivenIntention</className>
+        </intentionAction>
+        <intentionAction>
+            <categoryKey>mockito.intention.category</categoryKey>
+            <className>com.picimako.mockitools.intention.convert.stub.ConvertStubbingToBDDMockitoWillIntention</className>
         </intentionAction>
     </extensions>
 </idea-plugin>

@@ -58,6 +58,7 @@ public final class MockitoQualifiedNames {
 
     //Method names
     public static final String WHEN = "when";
+    public static final String THEN = "then";
     public static final String MOCK = "mock";
     public static final String SPY = "spy";
     public static final String GIVEN = "given";

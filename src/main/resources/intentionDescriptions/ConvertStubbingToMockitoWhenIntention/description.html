@@ -1,0 +1,19 @@
+<html>
+<body>
+<!-- tooltip end -->
+Converts stubbing call chains to the <code>Mockito.when().then*()</code> approach.
+<p>
+    The intention is available on <code>Mockito.when()</code> when
+    <ul>
+        <li>the result would not be the same as from what approach the user wants to convert, and</li>
+        <li>the from approach is <code>Mockito.do*().when()</code> and there is no <code>doNothing()</code> call in the chain,
+         and the chain ends with <code>.when(mock).doSomething();</code>, or</li>
+        <li>the from approach is <code>BDDMockito.given().will*()</code>, or</li>
+        <li>the from approach is <code>BDDMockito.will*().given()</code> and there is no <code>willDoNothing()</code> call in the chain,
+        and the chain ends with <code>.given(mock).doSomething();</code></li>
+    </ul>
+<p>
+    The reason for excluding chains containing <code>doNothing()</code> or <code>willDoNothing()</code> calls is that they don't have a matching method in the
+    <code>Mockito.when().then*()</code> approach.
+</body>
+</html>

@@ -18,6 +18,8 @@ import com.intellij.psi.PsiReferenceExpression;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.Nullable;
 
+import com.picimako.mockitools.StubType;
+
 /**
  * Descriptor for holding *Throw() call related information.
  */
@@ -87,23 +89,5 @@ public final class ThrowStubDescriptor {
         classMatcher = CallMatcher.anyOf(classMatchers.toArray(CALL_MATCHER_EMPTY));
         throwablesMatcher = CallMatcher.anyOf(throwablesMatchers.toArray(CALL_MATCHER_EMPTY));
         return CallMatcher.anyOf(matchers.toArray(CALL_MATCHER_EMPTY));
-    }
-
-    /**
-     * Naming is according the Mockito naming conventions.
-     */
-    public enum StubType {
-        /**
-         * When the stubbing of the action is called later in a stubbing call chain than the specification of the mock object.
-         * <p>
-         * E.g. {@code Mockito.when(mockObject.doesSomething()).thenThrow(SomeException.class)}
-         */
-        STUBBING,
-        /**
-         * When the stubbing of the action is called earlier in a stubbing call chain than the specification of the mock object.
-         * <p>
-         * E.g. {@code Mockito.doThrow(SomeException.class).when(mockObject.doesSomething())}
-         */
-        STUBBER
     }
 }

@@ -136,3 +136,37 @@ From: Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new Il
 From: Mockito.when(mockObject.doSomething()).thenThrow(IOException.class, IllegalArgumentException.class);
   to: Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new IllegalArgumentException());
 ```
+
+## Convert between various stubbing approaches
+
+![](https://img.shields.io/badge/intention-orange) ![](https://img.shields.io/badge/since-0.4.0-blue)
+
+[![](https://img.shields.io/badge/impl-ConvertStubbingToBDDMockitoGivenIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/stub/ConvertStubbingToBDDMockitoGivenIntention.java)
+[![](https://img.shields.io/badge/impl-ConvertStubbingToBDDMockitoWillIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/stub/ConvertStubbingToBDDMockitoWillIntention.java)
+[![](https://img.shields.io/badge/impl-ConvertStubbingToMockitoDoIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/stub/ConvertStubbingToMockitoDoIntention.java)
+[![](https://img.shields.io/badge/impl-ConvertStubbingToMockitoWhenIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/stub/ConvertStubbingToMockitoWhenIntention.java)
+
+There are a couple of ways one can approach stubbing in Mockito, including ways via `org.mockito.Mockito` and `org.mockito.BDDMockito`.
+
+These intentions can convert between each approach if they satisfy the following criteria:
+- call chains containing `then()`/`will()` or `doNothing()`/`willDoNothing()` calls can be converted only to approaches that support these methods,
+- when converting from `Mockito.do*().when()` or `BDDMockito.will*().given()` the `when()`/`given()` calls and the sequent method calls have to be present.
+
+Below you can see which approaches support which methods and where their respective intention actions, to convert from them, are available:
+
+| Mockito.when()         | Mockito.do*()         | BDDMockito.given()      | BDDMockito.will*()      |
+|------------------------|-----------------------|-------------------------|-------------------------|
+| `thenReturn`           | `doReturn`            | `willReturn`            | `willReturn`            |
+| `thenThrow`            | `doThrow`             | `willThrow`             | `willThrow`             |
+| `thenAnswer`           | `doAnswer`            | `willAnswer`            | `willAnswer`            |
+| `thenCallRealMethod`   | `doCallRealMethod`    | `willCallRealMethod`    | `willCallRealMethod`    |
+| `then`                 |                       | `will`                  | `will`                  |
+|                        | `doNothing`           |                         | `willDoNothing`         |
+| available at: `when()` | available at: `do*()` | available at: `given()` | available at: `will*()` |
+
+**Example:**
+
+```java
+From: Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new IllegalArgumentException()).thenReturn(20);
+  to: BDDMockito.willThrow(new IOException(), new IllegalArgumentException()).willReturn(20).given(mockObject).doSomething();
+```

@@ -67,8 +67,12 @@ public final class MockitoolsPsiUtil {
     private static final CallMatcher MOCKITO_MOCK = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, MOCK);
     private static final CallMatcher MOCKITO_SPY = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, SPY).parameterCount(1);
     private static final CallMatcher BDDMOCKITO_GIVEN = CallMatcher.staticCall(ORG_MOCKITO_BDDMOCKITO, GIVEN).parameterCount(1);
+    private static final CallMatcher BDDMOCKITO_WILL_X =
+        CallMatcher.staticCall(ORG_MOCKITO_BDDMOCKITO, "will", "willReturn", "willThrow", "willAnswer", "willCallRealMethod");
     private static final CallMatcher MOCKITO_WHEN = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, WHEN).parameterCount(1);
     private static final CallMatcher MOCKITO_DO_X_WHEN = CallMatcher.instanceCall(ORG_MOCKITO_STUBBING_STUBBER, WHEN);
+    private static final CallMatcher MOCKITO_DO_X =
+        CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, "doReturn", "doThrow", "doAnswer", "doCallRealMethod", "doNothing");
     private static final CallMatcher MOCKITO_TIMES = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, TIMES).parameterCount(1);
     private static final CallMatcher MOCKITO_CALLS = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, CALLS).parameterCount(1);
     private static final CallMatcher MOCKITO_AFTER = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, AFTER).parameterCount(1);
@@ -118,6 +122,16 @@ public final class MockitoolsPsiUtil {
     }
 
     /**
+     * Gets whether the argument expression is an {@code org.mockito.BDDMockito.will*} method call.
+     *
+     * @param expression the method call expression
+     * @return true if the method is a BDDMockito.will*, false otherwise
+     */
+    public static boolean isBDDMockitoWillX(PsiMethodCallExpression expression) {
+        return BDDMOCKITO_WILL_X.matches(expression);
+    }
+
+    /**
      * Gets whether the argument expression is a call on a matcher in {@code org.mockito.AdditionalMatchers}.
      *
      * @param expression the method call expression
@@ -157,6 +171,16 @@ public final class MockitoolsPsiUtil {
      */
     public static boolean isMockitoDoXWhen(PsiMethodCallExpression expression) {
         return MOCKITO_DO_X_WHEN.matches(expression);
+    }
+
+    /**
+     * Gets whether the argument expression is an {@code org.mockito.Mockito.do*} method call.
+     *
+     * @param expression the method call expression
+     * @return true if the method is a Mockito.do*, false otherwise
+     */
+    public static boolean isMockitoDoX(PsiMethodCallExpression expression) {
+        return MOCKITO_DO_X.matches(expression);
     }
 
     /**

@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.picimako.mockitools.PsiMethodUtil;
-import com.picimako.mockitools.inspection.ThrowStubDescriptor.StubType;
+import com.picimako.mockitools.StubType;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 
 /**
