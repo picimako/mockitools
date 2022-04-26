@@ -31,6 +31,13 @@ public final class PsiMethodUtil {
     }
 
     /**
+     * Returns whether the argument method call has any argument.
+     */
+    public static boolean hasArgument(@NotNull PsiMethodCallExpression methodCall) {
+        return methodCall.getArgumentList() != null && methodCall.getArgumentList().getExpressionCount() > 0;
+    }
+    
+    /**
      * Returns whether the argument method call has only one argument.
      */
     public static boolean hasOneArgument(@NotNull PsiMethodCallExpression methodCall) {

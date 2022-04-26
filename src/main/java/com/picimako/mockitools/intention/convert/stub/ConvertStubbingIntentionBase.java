@@ -111,7 +111,7 @@ public abstract class ConvertStubbingIntentionBase implements IntentionAction {
         final PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
         var methodCall = (PsiMethodCallExpression) element.getParent().getParent();
 
-        StubbingConverter converter = new StubbingConverter(project, editor, file);
+        StubbingConverter converter = new StubbingConverter(project, editor.getDocument(), file);
 
         if (isMockitoWhen(methodCall)) converter.convert(methodCall, ConvertStubbingToMockitoWhenIntention.TARGET_DESCRIPTOR, targetDescriptor());
         if (isMockitoDoX(methodCall)) converter.convert(methodCall, ConvertStubbingToMockitoDoIntention.TARGET_DESCRIPTOR, targetDescriptor());

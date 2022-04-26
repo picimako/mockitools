@@ -10,6 +10,7 @@ public final class MockitoQualifiedNames {
     //Classes
     public static final String ORG_MOCKITO_MOCKITO = "org.mockito.Mockito";
     public static final String ORG_MOCKITO_BDDMOCKITO = "org.mockito.BDDMockito";
+    public static final String ORG_MOCKITO_BDDMOCKITO_THEN = "org.mockito.BDDMockito.Then";
     public static final String ORG_MOCKITO_BDD_MY_ONGOING_STUBBING = "org.mockito.BDDMockito.BDDMyOngoingStubbing";
     public static final String ORG_MOCKITO_BDD_STUBBER = "org.mockito.BDDMockito.BDDStubber";
     public static final String ORG_MOCKITO_ARGUMENT_MATCHERS = "org.mockito.ArgumentMatchers";

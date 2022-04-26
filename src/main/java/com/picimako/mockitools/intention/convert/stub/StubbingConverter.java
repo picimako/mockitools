@@ -11,38 +11,24 @@ import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 import java.util.List;
 
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.psi.search.ProjectScope;
-import com.siyeh.ig.psiutils.ImportUtils;
-import org.jetbrains.annotations.NotNull;
 
 import com.picimako.mockitools.StubType;
+import com.picimako.mockitools.intention.convert.ConverterBase;
 
 /**
  * Converts stubbing call chains between the different approaches.
  * <p>
  * {@code Mockito.lenient()} is not supported at the moment.
  */
-public final class StubbingConverter {
+public final class StubbingConverter extends ConverterBase {
 
-    private final Project project;
-    private final Editor editor;
-    private final PsiFile file;
-    private final PsiDocumentManager documentManager;
-
-    public StubbingConverter(Project project, Editor editor, PsiFile file) {
-        this.project = project;
-        this.editor = editor;
-        this.file = file;
-        documentManager = PsiDocumentManager.getInstance(project);
+    public StubbingConverter(Project project, Document document, PsiFile file) {
+        super(project, document, file);
     }
 
     /**
@@ -102,7 +88,7 @@ public final class StubbingConverter {
             doBaseConversion(from, to, calls, endOffsetOf(calls.get(0)), to.getBeginningOfStubbing(from));
 
             //Adds the '.when(mock).doSomething()' part at the end of the call chain, so the example becomes: 'Mockito.do*().when(mock).doSomething();'
-            editor.getDocument().insertString(
+            document.insertString(
                 endOffsetOf(getLast(calls)),
                 "." + to.getStubTargetSpecifierMethodName() + "(" + stubbedCallQualifier + ")" + stubbedCallText.replace(stubbedCallQualifier, ""));
         });
@@ -130,7 +116,7 @@ public final class StubbingConverter {
             doBaseConversion(from, to, calls, endOffset, replacement);
 
             //Removes the '.when(mock).doSomething()' part at the end, and the example becomes: 'BDDMockito.given(mock.doSomething()).will*();'
-            editor.getDocument().deleteString(endOffsetOf(calls.get(calls.size() - 3)), endOffsetOf(getLast(calls)));
+            document.deleteString(endOffsetOf(calls.get(calls.size() - 3)), endOffsetOf(getLast(calls)));
         });
     }
 
@@ -138,7 +124,7 @@ public final class StubbingConverter {
 
     private void doBaseConversion(StubbingDescriptor from, StubbingDescriptor to, List<PsiMethodCallExpression> calls, int endOffset, String replacement) {
         replaceBeginningOfChain(calls, endOffset, replacement);
-        importMockitoClass(to);
+        importClass(to.getStubStarterClassFqn());
         convertMethodNames(calls, from, to);
     }
 
@@ -158,8 +144,7 @@ public final class StubbingConverter {
      * @param replacement the replacement text
      */
     private void replaceBeginningOfChain(List<PsiMethodCallExpression> calls, int endOffset, String replacement) {
-        editor.getDocument().replaceString(calls.get(0).getTextOffset(), endOffset, replacement);
-        documentManager.commitDocument(editor.getDocument());
+        performAndCommitDocument(() -> document.replaceString(calls.get(0).getTextOffset(), endOffset, replacement));
     }
 
     /**
@@ -191,26 +176,7 @@ public final class StubbingConverter {
 
             TextRange textRange = getReferenceNameElement(calls.get(i)).getTextRange();
 
-            editor.getDocument().replaceString(textRange.getStartOffset(), textRange.getEndOffset(), newMethodName);
-            documentManager.commitDocument(editor.getDocument());
+            performAndCommitDocument(() -> document.replaceString(textRange.getStartOffset(), textRange.getEndOffset(), newMethodName));
         }
-    }
-
-    /**
-     * Imports the class the stubbing call chain starts with: either {@code org.mockito.Mockito} or {@code org.mockito.BDDMockito}.
-     */
-    private void importMockitoClass(StubbingDescriptor to) {
-        PsiClass mockitoClass = JavaPsiFacade.getInstance(project).findClass(to.getStubStarterClassFqn(), ProjectScope.getLibrariesScope(project));
-        if (mockitoClass != null) {
-            ImportUtils.addImportIfNeeded(mockitoClass, file);
-            documentManager.commitDocument(editor.getDocument());
-            documentManager.doPostponedOperationsAndUnblockDocument(editor.getDocument());
-        }
-    }
-
-    //Support methods
-
-    private static int endOffsetOf(@NotNull PsiElement element) {
-        return element.getTextRange().getEndOffset();
     }
 }

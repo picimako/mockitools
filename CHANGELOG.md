@@ -11,6 +11,8 @@ They can be merged into a single such call.
 - [#8](https://github.com/picimako/mockitools/issues/8): Merging of consecutive `*Return()` and `*Throw()` stubbing calls can happen separately if
 there are multiple such sections within a stubbing call chain. They, from now on, also keep line wrapping and indentation after applying the quick fix.
 - [#13](https://github.com/picimako/mockitools/issues/13): Added 4 new intention actions that can convert between the various stubbing approaches.
+- [#15](https://github.com/picimako/mockitools/issues/15): Added 2 new intention actions that can convert between the `Mockito.verify()`
+and `BDDMockito.then()` approaches, and vice versa.
 
 ## [0.3.0]
 - **IntelliJ version support: versions prior to 2021.1 are no longer supported.**
@@ -35,7 +37,7 @@ These can be merged into a single such call. See [documentation](docs/stubbing.m
     - [Mockito pull request: Add annotation to mark a type as DoNotMock](https://github.com/mockito/mockito/pull/1833/files)
 - Extended `MockTypeInspection` to validate new expressions (i.e. `new Clazz()`) against non-mockable types.
 - [#4](https://github.com/picimako/mockitools/issues/4): Added intention to convert `Mockito.spy()` calls to `@Spy` annotated fields.
-See [documentation](docs/mock_creation.md#convert-mockitospy-calls-to-spy-fields).
+See [documentation](docs/mock_creation.md#convert-mockitomockspy-calls-to-mockspy-fields).
 - [#4](https://github.com/picimako/mockitools/issues/4): Added intention to convert `@Mock` and `@Spy` annotated fields to `Mockito.mock`  and `Mockito.spy()`
 calls, respectively. See [documentation](docs/mock_creation.md#convert-mockspy-fields-to-mockitomockspy-calls).
 

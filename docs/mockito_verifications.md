@@ -80,3 +80,29 @@ void testMethod() {
     Mockito.inOrder();
 }
 ```
+
+## Convert between various verification approaches
+
+![](https://img.shields.io/badge/intention-orange) ![](https://img.shields.io/badge/since-0.4.0-blue)
+[![](https://img.shields.io/badge/impl-ConvertMockitoVerifyToBDDMockitoThenIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/verification/ConvertMockitoVerifyToBDDMockitoThenIntention.java)
+[![](https://img.shields.io/badge/impl-ConvertBDDMockitoThenToMockitoVerifyIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/verification/ConvertBDDMockitoThenToMockitoVerifyIntention.java)
+
+There are a couple of ways one can approach verification in Mockito: via `org.mockito.Mockito` and `org.mockito.BDDMockito`.
+
+These intentions can convert between the `Mockito.verify()` and `BDDMockito.then()` call chains if they satisfy the following criteria:
+- in case of `Mockito.verify()`, a call on the mock object after `verify()` must be present,
+- while in case of `BDDMockito.then()`, both the `should()` call and a call on the mock object after that must be present.
+
+Conversion of `InOrder` verification is not supported at the moment.
+
+**Examples for Mockito.verify() -> BDDMockito.then() direction:**
+
+```java
+//Without verification mode
+From: Mockito.verify(mock).doSomething();
+  to: BDDMockito.then(mock).should().doSomething();
+
+//With verification mode
+From: Mockito.verify(mock, times(2)).doSomething();
+  to: BDDMockito.then(mock).should(times(2)).doSomething();
+```
