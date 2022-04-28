@@ -15,5 +15,8 @@ Converts stubbing call chains to the <code>BDDMockito.given().will*()</code> app
 <p>
     The reason for excluding chains containing <code>doNothing()</code> or <code>willDoNothing()</code> calls is that they don't have a matching method in the
     <code>BDDMockito.given().will*()</code> approach.
+<p>
+    Conversion from <code>Mockito.when().then*()</code> and <code>Mockito.do*().when()</code> approaches is possible only when
+    the <strong>Enforce conventions</strong> inspection is disabled, or it doesn't enforce <code>org.mockito.Mockito</code>.
 </body>
 </html>

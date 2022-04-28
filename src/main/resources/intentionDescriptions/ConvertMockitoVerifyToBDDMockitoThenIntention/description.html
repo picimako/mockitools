@@ -6,5 +6,8 @@ Converts <code>Mockito.verify()</code> call chains to the <code>BDDMockito.then(
     The intention is available on <code>Mockito.verify()</code> when it is followed by a method call on the mock object.
 <p>
     It doesn't support the conversion of <code>InOrder</code> verification.
+<p>
+    Conversion is possible only when the <strong>Enforce conventions</strong> inspection is disabled,
+    or it doesn't enforce <code>org.mockito.Mockito</code>.
 </body>
 </html>

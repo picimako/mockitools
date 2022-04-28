@@ -4,12 +4,13 @@ package com.picimako.mockitools.intention.convert.stub;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 
-import com.picimako.mockitools.intention.MockitoolsIntentionTestBase;
+import com.picimako.mockitools.inspection.EnforceConventionInspection;
+import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
 
 /**
  * Functional test for {@link ConvertStubbingToBDDMockitoGivenIntention}.
  */
-public class ConvertStubbingToBDDMockitoGivenIntentionTest extends MockitoolsIntentionTestBase {
+public class ConvertStubbingToBDDMockitoGivenIntentionTest extends EnforceConventionAwareIntentionTestBase {
 
     @Override
     protected IntentionAction getIntention() {
@@ -45,7 +46,37 @@ public class ConvertStubbingToBDDMockitoGivenIntentionTest extends MockitoolsInt
                 "    }\n" +
                 "}");
     }
+    
+    public void testNotAvailableForMockitoWhenWhenMockitoIsEnforced() {
+        addEnforceConventionInspection(EnforceConventionInspection.Convention.MOCKITO);
+        checkIntentionIsNotAvailable("NotAvailable.java",
+            "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class NotAvailable {\n" +
+                "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
+                "        Mockito.wh<caret>en(mockObject.doSomething()).thenReturn(10);\n" +
+                "    }\n" +
+                "    private static class MockObject {\n" +
+                "        public int doSomething() {\n" +
+                "            return 0;\n" +
+                "        }\n" +
+                "    }\n" +
+                "}");
+    }
 
+    public void testNotAvailableForMockitoDoXWhenMockitoIsEnforced() {
+        addEnforceConventionInspection(EnforceConventionInspection.Convention.MOCKITO);
+        checkIntentionIsNotAvailable("NotAvailable.java",
+            "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class NotAvailable {\n" +
+                "    void testMethod(){\n" +
+                "        Mockito.doTh<caret>row(IllegalArgumentException.class);\n" +
+                "    }\n" +
+                "}");
+    }
+    
     public void testNotAvailableForMockitoDoXWithDoNothing() {
         checkIntentionIsNotAvailable("NotAvailable.java",
             "import org.mockito.Mockito;\n" +
@@ -151,7 +182,43 @@ public class ConvertStubbingToBDDMockitoGivenIntentionTest extends MockitoolsInt
                 "}");
     }
 
+    public void testAvailableForMockitoWhenWhenConventionEnforcingIsDisabled() {
+        addDisabledEnforceConventionInspection();
+        checkIntentionIsAvailable("Available.java",
+            "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class Available {\n" +
+                "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
+                "        Mockito.wh<caret>en(mockObject.doSomething()).thenReturn(10);\n" +
+                "    }\n" +
+                "    private static class MockObject {\n" +
+                "        public int doSomething() {\n" +
+                "            return 0;\n" +
+                "        }\n" +
+                "    }\n" +
+                "}");
+    }
+
     public void testAvailableForMockitoDoX() {
+        checkIntentionIsAvailable("Available.java",
+            "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class Available {\n" +
+                "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
+                "        Mockito.doR<caret>eturn(10).doThrow(IllegalArgumentException.class).when(mockObject).doSomething();\n" +
+                "    }\n" +
+                "    private static class MockObject {\n" +
+                "        public int doSomething() {\n" +
+                "            return 0;\n" +
+                "        }\n" +
+                "    }\n" +
+                "}");
+    }
+
+    public void testAvailableForMockitoDoXWhenConventionEnforcingIsDisabled() {
+        addDisabledEnforceConventionInspection();
         checkIntentionIsAvailable("Available.java",
             "import org.mockito.Mockito;\n" +
                 "\n" +

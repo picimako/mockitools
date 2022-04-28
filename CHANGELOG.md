@@ -13,6 +13,8 @@ there are multiple such sections within a stubbing call chain. They, from now on
 - [#13](https://github.com/picimako/mockitools/issues/13): Added 4 new intention actions that can convert between the various stubbing approaches.
 - [#15](https://github.com/picimako/mockitools/issues/15): Added 2 new intention actions that can convert between the `Mockito.verify()`
 and `BDDMockito.then()` approaches, and vice versa.
+- [#16](https://github.com/picimako/mockitools/issues/16): Added a new inspection that can enforce `org.mockito.Mockito` or `org.mockito.BDDMockito` based
+stubbing and verification.
 
 ## [0.3.0]
 - **IntelliJ version support: versions prior to 2021.1 are no longer supported.**

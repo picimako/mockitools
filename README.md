@@ -39,7 +39,7 @@ If [*"Mockito ... tastes really good"* and *"doesn’t give you hangover"*](http
 
 - [Mock creation](docs/mock_creation.md)
 - [Stubbing](docs/stubbing.md)
-- [Mockito verifications](docs/mockito_verifications.md)
+- [Mockito verifications](docs/verifications.md)
 - [Argument matching and capturing](docs/argument_matching_capture.md)
 - [Version migration aids](docs/migration_aids_v4.md)
 - [Framework integration](docs/framework_integration.md)

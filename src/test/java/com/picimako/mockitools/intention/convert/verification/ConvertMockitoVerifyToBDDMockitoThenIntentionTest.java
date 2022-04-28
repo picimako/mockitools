@@ -4,12 +4,13 @@ package com.picimako.mockitools.intention.convert.verification;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 
-import com.picimako.mockitools.intention.MockitoolsIntentionTestBase;
+import com.picimako.mockitools.inspection.EnforceConventionInspection;
+import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
 
 /**
  * Functional test for {@link ConvertMockitoVerifyToBDDMockitoThenIntention}.
  */
-public class ConvertMockitoVerifyToBDDMockitoThenIntentionTest extends MockitoolsIntentionTestBase {
+public class ConvertMockitoVerifyToBDDMockitoThenIntentionTest extends EnforceConventionAwareIntentionTestBase {
 
     @Override
     protected IntentionAction getIntention() {
@@ -36,6 +37,23 @@ public class ConvertMockitoVerifyToBDDMockitoThenIntentionTest extends Mockitool
                 "class NotAvailable {\n" +
                 "    void testMethod(){\n" +
                 "        Mockito.mo<caret>ck(Object.class);\n" +
+                "    }\n" +
+                "}");
+    }
+
+    public void testNotAvailableWhenMockitoIsEnforced() {
+        addEnforceConventionInspection(EnforceConventionInspection.Convention.MOCKITO);
+        checkIntentionIsNotAvailable("Available.java",
+            "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class Available {\n" +
+                "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
+                "        Mockito.ve<caret>rify(mockObject).doSomething();\n" +
+                "    }\n" +
+                "    private static class MockObject {\n" +
+                "        public void doSomething() {\n" +
+                "        }\n" +
                 "    }\n" +
                 "}");
     }

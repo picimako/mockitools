@@ -8,6 +8,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.WHEN;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isBDDMockitoGiven;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isBDDMockitoWillX;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoDoX;
+import static com.picimako.mockitools.inspection.EnforceConventionInspection.isBDDMockitoEnforced;
 import static com.picimako.mockitools.intention.convert.stub.CallChainEndsWith.ENDS_WITH_GIVEN;
 import static com.picimako.mockitools.intention.convert.stub.CallChainEndsWith.ENDS_WITH_WHEN;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_DO_NOTHING;
@@ -34,6 +35,9 @@ import com.picimako.mockitools.StubType;
  * <p>
  * The reason for excluding chains containing {@code doNothing()} or {@code willDoNothing()} calls is that they don't have a matching method in the
  * {@code Mockito.when().then*()} approach.
+ * <p>
+ * Conversion from {@code BDDMockito.given().will*()} and {@code BDDMockito.will*().given()} approaches is possible only when
+ * {@link com.picimako.mockitools.inspection.EnforceConventionInspection} is disabled, or it doesn't enforce {@code org.mockito.BDDMockito}.
  *
  * @since 0.4.0
  */
@@ -59,8 +63,9 @@ public class ConvertStubbingToMockitoWhenIntention extends ConvertStubbingIntent
     @Override
     protected boolean isAvailableFor(PsiMethodCallExpression methodCall) {
         if (isMockitoDoX(methodCall)) return isCallChainMatch(methodCall, DOESNT_CONTAIN_DO_NOTHING, ENDS_WITH_WHEN);
-        if (isBDDMockitoGiven(methodCall)) return true;
-        if (isBDDMockitoWillX(methodCall)) return isCallChainMatch(methodCall, DOESNT_CONTAIN_WILL_DO_NOTHING, ENDS_WITH_GIVEN);
+        if (isBDDMockitoGiven(methodCall)) return !isBDDMockitoEnforced(methodCall);
+        if (isBDDMockitoWillX(methodCall))
+            return !isBDDMockitoEnforced(methodCall) && isCallChainMatch(methodCall, DOESNT_CONTAIN_WILL_DO_NOTHING, ENDS_WITH_GIVEN);
         return false;
     }
 }

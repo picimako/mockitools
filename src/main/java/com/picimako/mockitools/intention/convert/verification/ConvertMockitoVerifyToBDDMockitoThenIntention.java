@@ -5,6 +5,7 @@ package com.picimako.mockitools.intention.convert.verification;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoVerify;
 import static com.picimako.mockitools.PsiMethodUtil.hasSubsequentMethodCall;
+import static com.picimako.mockitools.inspection.EnforceConventionInspection.isMockitoEnforced;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import com.intellij.psi.PsiMethodCallExpression;
@@ -15,6 +16,9 @@ import com.intellij.psi.PsiMethodCallExpression;
  * The intention is available on {@code Mockito.verify()} when it is followed by a method call on the mock object.
  * <p>
  * It doesn't support the conversion of {@code InOrder} verification.
+ * <p>
+ * Conversion is possible only when{@link com.picimako.mockitools.inspection.EnforceConventionInspection} is disabled,
+ * or it doesn't enforce {@code org.mockito.Mockito}.
  *
  * @since 0.4.0
  */
@@ -26,6 +30,9 @@ public class ConvertMockitoVerifyToBDDMockitoThenIntention extends ConvertVerifi
 
     @Override
     protected boolean isAvailableFor(PsiMethodCallExpression methodCall) {
-        return VERIFY.equals(getMethodName(methodCall)) && isMockitoVerify(methodCall) && hasSubsequentMethodCall(methodCall);
+        return VERIFY.equals(getMethodName(methodCall))
+            && isMockitoVerify(methodCall)
+            && !isMockitoEnforced(methodCall)
+            && hasSubsequentMethodCall(methodCall);
     }
 }

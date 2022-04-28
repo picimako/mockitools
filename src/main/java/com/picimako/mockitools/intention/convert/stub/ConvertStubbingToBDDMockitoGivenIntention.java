@@ -7,6 +7,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKI
 import static com.picimako.mockitools.MockitoolsPsiUtil.isBDDMockitoWillX;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoDoX;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoWhen;
+import static com.picimako.mockitools.inspection.EnforceConventionInspection.isMockitoEnforced;
 import static com.picimako.mockitools.intention.convert.stub.CallChainEndsWith.ENDS_WITH_GIVEN;
 import static com.picimako.mockitools.intention.convert.stub.CallChainEndsWith.ENDS_WITH_WHEN;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_DO_NOTHING;
@@ -33,6 +34,9 @@ import com.picimako.mockitools.StubType;
  * <p>
  * The reason for excluding chains containing {@code doNothing()} or {@code willDoNothing()} calls is that they don't have a matching method in the
  * {@code BDDMockito.given().will*()} approach.
+ * <p>
+ * Conversion from {@code Mockito.when().then*()} and {@code Mockito.do*().when()} approaches is possible only when
+ * {@link com.picimako.mockitools.inspection.EnforceConventionInspection} is disabled or it doesn't enforce {@code org.mockito.Mockito}.
  *
  * @since 0.4.0
  */
@@ -57,8 +61,8 @@ public class ConvertStubbingToBDDMockitoGivenIntention extends ConvertStubbingIn
 
     @Override
     protected boolean isAvailableFor(PsiMethodCallExpression methodCall) {
-        if (isMockitoWhen(methodCall)) return true;
-        if (isMockitoDoX(methodCall)) return isCallChainMatch(methodCall, DOESNT_CONTAIN_DO_NOTHING, ENDS_WITH_WHEN);
+        if (isMockitoWhen(methodCall)) return !isMockitoEnforced(methodCall);
+        if (isMockitoDoX(methodCall)) return !isMockitoEnforced(methodCall) && isCallChainMatch(methodCall, DOESNT_CONTAIN_DO_NOTHING, ENDS_WITH_WHEN);
         if (isBDDMockitoWillX(methodCall)) return isCallChainMatch(methodCall, DOESNT_CONTAIN_WILL_DO_NOTHING, ENDS_WITH_GIVEN);
         return false;
     }

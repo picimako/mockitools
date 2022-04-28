@@ -7,6 +7,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKI
 import static com.picimako.mockitools.MockitoolsPsiUtil.isBDDMockitoGiven;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoDoX;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoWhen;
+import static com.picimako.mockitools.inspection.EnforceConventionInspection.isMockitoEnforced;
 import static com.picimako.mockitools.intention.convert.stub.CallChainEndsWith.ENDS_WITH_WHEN;
 
 import java.util.Set;
@@ -25,7 +26,10 @@ import com.picimako.mockitools.StubType;
  *     <li>the from approach is {@code BDDMockito.given().will*()}, or</li>
  *     <li>the from approach is {@code Mockito.do*().when()}, and the chain ends with {@code .when(mock).doSomething();}</li>
  * </ul>
- * 
+ * <p>
+ * Conversion from {@code Mockito.when().then*()} and {@code Mockito.do*().when()} approaches is possible only when
+ * {@link com.picimako.mockitools.inspection.EnforceConventionInspection} is disabled, or it doesn't enforce {@code org.mockito.Mockito}.
+ *
  * @since 0.4.0
  */
 public class ConvertStubbingToBDDMockitoWillIntention extends ConvertStubbingIntentionBase {
@@ -49,8 +53,9 @@ public class ConvertStubbingToBDDMockitoWillIntention extends ConvertStubbingInt
 
     @Override
     protected boolean isAvailableFor(PsiMethodCallExpression methodCall) {
-        if (isMockitoWhen(methodCall) || isBDDMockitoGiven(methodCall)) return true;
-        if (isMockitoDoX(methodCall)) return isCallChainMatch(methodCall, ENDS_WITH_WHEN);
+        if (isMockitoWhen(methodCall)) return !isMockitoEnforced(methodCall);
+        if (isBDDMockitoGiven(methodCall)) return true;
+        if (isMockitoDoX(methodCall)) return !isMockitoEnforced(methodCall) && isCallChainMatch(methodCall, ENDS_WITH_WHEN);
         return false;
     }
 }

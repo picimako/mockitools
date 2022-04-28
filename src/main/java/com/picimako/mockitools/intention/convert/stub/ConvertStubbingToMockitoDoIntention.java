@@ -7,6 +7,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.WHEN;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isBDDMockitoGiven;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isBDDMockitoWillX;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoWhen;
+import static com.picimako.mockitools.inspection.EnforceConventionInspection.isBDDMockitoEnforced;
 import static com.picimako.mockitools.intention.convert.stub.CallChainEndsWith.ENDS_WITH_GIVEN;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_THEN;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_WILL;
@@ -31,6 +32,9 @@ import com.picimako.mockitools.StubType;
  * <p>
  * The reason for excluding chains containing {@code then()} or {@code will()} calls is that they don't have a matching method in the
  * {@code Mockito.do*().when()} approach.
+ * <p>
+ * Conversion from {@code BDDMockito.given().will*()} and {@code BDDMockito.will*().given()} approaches is possible only when
+ * {@link com.picimako.mockitools.inspection.EnforceConventionInspection} is disabled, or it doesn't enforce {@code org.mockito.BDDMockito}.
  *
  * @since 0.4.0
  */
@@ -56,8 +60,8 @@ public class ConvertStubbingToMockitoDoIntention extends ConvertStubbingIntentio
     @Override
     public boolean isAvailableFor(PsiMethodCallExpression methodCall) {
         if (isMockitoWhen(methodCall)) return isCallChainMatch(methodCall, DOESNT_CONTAIN_THEN);
-        if (isBDDMockitoGiven(methodCall)) return isCallChainMatch(methodCall, DOESNT_CONTAIN_WILL);
-        if (isBDDMockitoWillX(methodCall)) return isCallChainMatch(methodCall, DOESNT_CONTAIN_WILL, ENDS_WITH_GIVEN);
+        if (isBDDMockitoGiven(methodCall)) return !isBDDMockitoEnforced(methodCall) && isCallChainMatch(methodCall, DOESNT_CONTAIN_WILL);
+        if (isBDDMockitoWillX(methodCall)) return !isBDDMockitoEnforced(methodCall) && isCallChainMatch(methodCall, DOESNT_CONTAIN_WILL, ENDS_WITH_GIVEN);
         return false;
     }
 }

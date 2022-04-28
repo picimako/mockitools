@@ -8,6 +8,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.THEN;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isBDDMockitoThen;
 import static com.picimako.mockitools.PsiMethodUtil.getSubsequentMethodCall;
 import static com.picimako.mockitools.PsiMethodUtil.hasSubsequentMethodCall;
+import static com.picimako.mockitools.inspection.EnforceConventionInspection.isBDDMockitoEnforced;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
@@ -20,6 +21,9 @@ import com.siyeh.ig.callMatcher.CallMatcher;
  * The intention is available on {@code BDDMockito.then()} when it is followed by {@code should()} and a method call on the mock object.
  * <p>
  * It doesn't support the conversion of {@code InOrder} verification.
+ * <p>
+ * Conversion is possible only when{@link com.picimako.mockitools.inspection.EnforceConventionInspection} is disabled,
+ * or it doesn't enforce {@code org.mockito.BDDMockito}.
  *
  * @since 0.4.0
  */
@@ -36,7 +40,7 @@ public class ConvertBDDMockitoThenToMockitoVerifyIntention extends ConvertVerifi
 
     @Override
     protected boolean isAvailableFor(PsiMethodCallExpression methodCall) {
-        if (THEN.equals(getMethodName(methodCall)) && isBDDMockitoThen(methodCall)) {
+        if (THEN.equals(getMethodName(methodCall)) && isBDDMockitoThen(methodCall) && !isBDDMockitoEnforced(methodCall)) {
             var should = getSubsequentMethodCall(methodCall);
             return THEN_SHOULD.matches(should) && hasSubsequentMethodCall(should);
         }

@@ -90,6 +90,8 @@ void testMethod() {
 There are a couple of ways one can approach verification in Mockito: via `org.mockito.Mockito` and `org.mockito.BDDMockito`.
 
 These intentions can convert between the `Mockito.verify()` and `BDDMockito.then()` call chains if they satisfy the following criteria:
+- if the ['Enforce conventions' inspection](conventions.md#enforce-orgmockitomockito-over-orgmockitobddmockito-and-vice-versa) doesn't enforce
+the verification the user converts from,
 - in case of `Mockito.verify()`, a call on the mock object after `verify()` must be present,
 - while in case of `BDDMockito.then()`, both the `should()` call and a call on the mock object after that must be present.
 

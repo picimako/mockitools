@@ -77,6 +77,11 @@
                 id="mockitools.simplifyConsecutiveThrowStubbingCalls" language="JAVA"
                 displayName="Consecutive *Throw() stubbing calls can be simplified" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.EnforceConventionInspection"
+                id="mockitools.enforce.convention" language="JAVA"
+                displayName="Enforce conventions" groupPath="Java"
+                groupName="Mockito" enabledByDefault="false" level="ERROR"/>
 
         <!-- v4 migration aids -->
         <localInspection

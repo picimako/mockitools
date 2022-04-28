@@ -149,6 +149,9 @@ From: Mockito.when(mockObject.doSomething()).thenThrow(IOException.class, Illega
 There are a couple of ways one can approach stubbing in Mockito, including ways via `org.mockito.Mockito` and `org.mockito.BDDMockito`.
 
 These intentions can convert between each approach if they satisfy the following criteria:
+- if the conversion is between `org.mockito.Mockito` and `org.mockito.BDDMockito` stubbings,
+and the ['Enforce conventions' inspection](conventions.md#enforce-orgmockitomockito-over-orgmockitobddmockito-and-vice-versa) doesn't enforce
+the stubbing the user converts from,
 - call chains containing `then()`/`will()` or `doNothing()`/`willDoNothing()` calls can be converted only to approaches that support these methods,
 - when converting from `Mockito.do*().when()` or `BDDMockito.will*().given()` the `when()`/`given()` calls and the sequent method calls have to be present.
 

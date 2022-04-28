@@ -10,5 +10,8 @@ Converts stubbing call chains to the <code>BDDMockito.will*().given()</code> app
     <li>the from approach is <code>BDDMockito.given().will*()</code>, or</li>
     <li>the from approach is <code>Mockito.do*().when()</code>, and the chain ends with <code>.when(mock).doSomething();</code></li>
 </ul>
+<p>
+    Conversion from <code>Mockito.when().then*()</code> and <code>Mockito.do*().when()</code> approaches is possible only when
+    the <strong>Enforce conventions</strong> inspection is disabled, or it doesn't enforce <code>org.mockito.Mockito</code>.
 </body>
 </html>

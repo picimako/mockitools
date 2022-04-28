@@ -4,12 +4,13 @@ package com.picimako.mockitools.intention.convert.verification;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 
-import com.picimako.mockitools.intention.MockitoolsIntentionTestBase;
+import com.picimako.mockitools.inspection.EnforceConventionInspection;
+import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
 
 /**
  * Functional test for {@link ConvertBDDMockitoThenToMockitoVerifyIntention}.
  */
-public class ConvertBDDMockitoThenToMockitoVerifyIntentionTest extends MockitoolsIntentionTestBase {
+public class ConvertBDDMockitoThenToMockitoVerifyIntentionTest extends EnforceConventionAwareIntentionTestBase {
 
     @Override
     protected IntentionAction getIntention() {
@@ -40,9 +41,28 @@ public class ConvertBDDMockitoThenToMockitoVerifyIntentionTest extends Mockitool
                 "}");
     }
 
+    public void testNotAvailableWhenBDDMockitoIsEnforced() {
+        addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
+        checkIntentionIsNotAvailable("NotAvailable.java",
+            "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class NotAvailable {\n" +
+                "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
+                "        BDDMockito.th<caret>en(mockObject);\n" +
+                "    }\n" +
+                "    private static class MockObject {\n" +
+                "        public void doSomething() {\n" +
+                "        }\n" +
+                "    }\n" +
+                "}");
+    }
+
     public void testNotAvailableWhenBDDMockitoThenHasNoSubsequentMethodCall() {
         checkIntentionIsNotAvailable("NotAvailable.java",
             "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class NotAvailable {\n" +
                 "    void testMethod(){\n" +
@@ -59,6 +79,7 @@ public class ConvertBDDMockitoThenToMockitoVerifyIntentionTest extends Mockitool
     public void testNotAvailableWhenSubsequentMethodCallToBDDMockitoThenIsNotShould() {
         checkIntentionIsNotAvailable("NotAvailable.java",
             "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class NotAvailable {\n" +
                 "    void testMethod(){\n" +
@@ -75,6 +96,7 @@ public class ConvertBDDMockitoThenToMockitoVerifyIntentionTest extends Mockitool
     public void testNotAvailableWhenBDDMockitoThenShouldHasNoSubsequentMethodCall() {
         checkIntentionIsNotAvailable("NotAvailable.java",
             "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class NotAvailable {\n" +
                 "    void testMethod(){\n" +
@@ -91,6 +113,7 @@ public class ConvertBDDMockitoThenToMockitoVerifyIntentionTest extends Mockitool
     public void testAvailableForBDDMockitoThenShouldWithoutVerificationMode() {
         checkIntentionIsAvailable("Available.java",
             "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class Available {\n" +
                 "    void testMethod(){\n" +
@@ -126,6 +149,7 @@ public class ConvertBDDMockitoThenToMockitoVerifyIntentionTest extends Mockitool
     public void testConvertsBDDMockitoThenToMockitoVerifyWithoutVerificationMode() {
         checkIntentionRun("ConversionTest.java",
             "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class ConversionTest {\n" +
                 "    void testMethod(){\n" +
