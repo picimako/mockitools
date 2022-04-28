@@ -24,14 +24,14 @@ public class ConvertBDDMockitoThenToMockitoVerifyIntentionTest extends EnforceCo
     }
 
     public void testNotAvailableForNonMethodCallIdentifier() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "class NotAvailable {\n" +
                 "    private String fiel<caret>d;\n" +
                 "}");
     }
 
     public void testNotAvailableOnNonBDDMockitoThenMethod() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class NotAvailable {\n" +
@@ -43,7 +43,7 @@ public class ConvertBDDMockitoThenToMockitoVerifyIntentionTest extends EnforceCo
 
     public void testNotAvailableWhenBDDMockitoIsEnforced() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -60,7 +60,7 @@ public class ConvertBDDMockitoThenToMockitoVerifyIntentionTest extends EnforceCo
     }
 
     public void testNotAvailableWhenBDDMockitoThenHasNoSubsequentMethodCall() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -77,7 +77,7 @@ public class ConvertBDDMockitoThenToMockitoVerifyIntentionTest extends EnforceCo
     }
 
     public void testNotAvailableWhenSubsequentMethodCallToBDDMockitoThenIsNotShould() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -94,7 +94,7 @@ public class ConvertBDDMockitoThenToMockitoVerifyIntentionTest extends EnforceCo
     }
 
     public void testNotAvailableWhenBDDMockitoThenShouldHasNoSubsequentMethodCall() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -111,7 +111,7 @@ public class ConvertBDDMockitoThenToMockitoVerifyIntentionTest extends EnforceCo
     }
 
     public void testAvailableForBDDMockitoThenShouldWithoutVerificationMode() {
-        checkIntentionIsAvailable("Available.java",
+        checkIntentionIsAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -128,7 +128,7 @@ public class ConvertBDDMockitoThenToMockitoVerifyIntentionTest extends EnforceCo
     }
 
     public void testAvailableForBDDMockitoThenShouldWithVerificationMode() {
-        checkIntentionIsAvailable("Available.java",
+        checkIntentionIsAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -147,7 +147,7 @@ public class ConvertBDDMockitoThenToMockitoVerifyIntentionTest extends EnforceCo
     //Conversion
 
     public void testConvertsBDDMockitoThenToMockitoVerifyWithoutVerificationMode() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -177,7 +177,7 @@ public class ConvertBDDMockitoThenToMockitoVerifyIntentionTest extends EnforceCo
     }
 
     public void testConvertsBDDMockitoThenToMockitoVerifyWithVerificationMode() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -207,7 +207,7 @@ public class ConvertBDDMockitoThenToMockitoVerifyIntentionTest extends EnforceCo
     }
 
     public void testConvertsBDDMockitoThenToMockitoVerifyWithVerificationModeWithLineWrapping() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +

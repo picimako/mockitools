@@ -24,14 +24,14 @@ public class ConvertMockitoVerifyToBDDMockitoThenIntentionTest extends EnforceCo
     }
 
     public void testNotAvailableForNonMethodCallIdentifier() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "class NotAvailable {\n" +
                 "    private String fiel<caret>d;\n" +
                 "}");
     }
 
     public void testNotAvailableOnNonMockitoVerifyMethod() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class NotAvailable {\n" +
@@ -59,7 +59,7 @@ public class ConvertMockitoVerifyToBDDMockitoThenIntentionTest extends EnforceCo
     }
 
     public void testNotAvailableWhenMockitoVerifyHasNoSubsequentMethodCall() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class NotAvailable {\n" +
@@ -75,7 +75,7 @@ public class ConvertMockitoVerifyToBDDMockitoThenIntentionTest extends EnforceCo
     }
 
     public void testNotAvailableOnMockitoVerifyWithNoArgument() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class NotAvailable {\n" +
@@ -86,7 +86,7 @@ public class ConvertMockitoVerifyToBDDMockitoThenIntentionTest extends EnforceCo
     }
 
     public void testAvailableForMockitoVerifyWithoutVerificationMode() {
-        checkIntentionIsAvailable("Available.java",
+        checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class Available {\n" +
@@ -102,7 +102,7 @@ public class ConvertMockitoVerifyToBDDMockitoThenIntentionTest extends EnforceCo
     }
 
     public void testAvailableForMockitoVerifyWithVerificationMode() {
-        checkIntentionIsAvailable("Available.java",
+        checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class Available {\n" +
@@ -120,7 +120,7 @@ public class ConvertMockitoVerifyToBDDMockitoThenIntentionTest extends EnforceCo
     //Conversion
 
     public void testConvertsMockitoVerifyToBDDMockitoThenWithoutVerificationMode() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class ConversionTest {\n" +
@@ -149,7 +149,7 @@ public class ConvertMockitoVerifyToBDDMockitoThenIntentionTest extends EnforceCo
     }
 
     public void testConvertsMockitoVerifyToBDDMockitoThenWithVerificationMode() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class ConversionTest {\n" +
@@ -178,7 +178,7 @@ public class ConvertMockitoVerifyToBDDMockitoThenIntentionTest extends EnforceCo
     }
 
     public void testConvertsMockitoVerifyToBDDMockitoThenWithVerificationModeWithLineWrapping() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class ConversionTest {\n" +

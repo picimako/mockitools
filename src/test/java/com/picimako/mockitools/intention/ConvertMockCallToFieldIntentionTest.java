@@ -30,14 +30,15 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testNotAvailableForNonMethodCallIdentifier() {
-        checkIntentionIsNotAvailable("NotAvailableTest.java", "public class NotAvaila<caret>bleTest { }");
+        checkIntentionIsNotAvailable(
+            "public class NotAvaila<caret>ble { }");
     }
 
     public void testNotAvailableForNotMockMethod() {
-        checkIntentionIsNotAvailable("NotAvailableTest.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
-                "public class NotAvailableTest {\n" +
+                "public class NotAvailable {\n" +
                 "    public void testMethod() {\n" +
                 "        Mockito.sp<caret>y(Object.class);\n" +
                 "    }\n" +
@@ -45,10 +46,10 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testNotAvailableForNotClassObjectAccessExpression() {
-        checkIntentionIsNotAvailable("NotAvailableTest.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
-                "public class NotAvailableTest {\n" +
+                "public class NotAvailable {\n" +
                 "    public void testMethod() {\n" +
                 "        Mockito.sp<caret>y(new Object());\n" +
                 "    }\n" +
@@ -56,10 +57,10 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testNotAvailableForNotMockableType() {
-        checkIntentionIsNotAvailable("NotAvailableTest.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
-                "public class NotAvailableTest {\n" +
+                "public class NotAvailable {\n" +
                 "    public void testMethod() {\n" +
                 "        Mockito.sp<caret>y(new String());\n" +
                 "    }\n" +
@@ -67,10 +68,10 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testNotAvailableForNonMockitoWithSettings() {
-        checkIntentionIsNotAvailable("NotAvailableTest.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
-                "public class NotAvailableTest {\n" +
+                "public class NotAvailable {\n" +
                 "    public void testMethod() {\n" +
                 "        var mockSettings = Mockito.withSettings();\n" +
                 "        Mockito.mo<caret>ck(Object.class, mockSettings);\n" +
@@ -79,10 +80,10 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testNotAvailableForNotSupportedMockSettings() {
-        checkIntentionIsNotAvailable("NotAvailableTest.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
-                "public class NotAvailableTest {\n" +
+                "public class NotAvailable {\n" +
                 "    public void testMethod() {\n" +
                 "        Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().spiedInstance(new Object()));\n" +
                 "    }\n" +
@@ -90,11 +91,11 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testNotAvailableForNotSupportedMockSettingsSerializableWithMode() {
-        checkIntentionIsNotAvailable("NotAvailableTest.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.mock.SerializableMode;\n" +
                 "\n" +
-                "public class NotAvailableTest {\n" +
+                "public class NotAvailable {\n" +
                 "    public void testMethod() {\n" +
                 "        Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().serializable(SerializableMode.ACROSS_CLASSLOADERS));\n" +
                 "    }\n" +
@@ -102,10 +103,10 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testAvailableForMockitoMock() {
-        checkIntentionIsAvailable("AvailableTest.java",
+        checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
-                "public class AvailableTest {\n" +
+                "public class Available {\n" +
                 "    public void testMethod() {\n" +
                 "        Mockito.mo<caret>ck(Object.class);\n" +
                 "    }\n" +
@@ -113,10 +114,10 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testAvailableForMockitoMockWithName() {
-        checkIntentionIsAvailable("AvailableTest.java",
+        checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
-                "public class AvailableTest {\n" +
+                "public class Available {\n" +
                 "    public void testMethod() {\n" +
                 "        Mockito.mo<caret>ck(Object.class, \"some name\");\n" +
                 "    }\n" +
@@ -124,11 +125,11 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testAvailableForMockitoMockWithAnswer() {
-        checkIntentionIsAvailable("AvailableTest.java",
+        checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Answers;\n" +
                 "\n" +
-                "public class AvailableTest {\n" +
+                "public class Available {\n" +
                 "    public void testMethod() {\n" +
                 "        Mockito.mo<caret>ck(Object.class, Answers.CALLS_REAL_METHODS);\n" +
                 "    }\n" +
@@ -136,11 +137,11 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testAvailableForMockitoMockWithSettings() {
-        checkIntentionIsAvailable("AvailableTest.java",
+        checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "import java.util.List;\n" +
                 "\n" +
-                "public class AvailableTest {\n" +
+                "public class Available {\n" +
                 "    public void testMethod() {\n" +
                 "        Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().extraInterfaces(List.class));\n" +
                 "    }\n" +
@@ -148,10 +149,10 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testAvailableForNotSupportedMockSettingsSerializableWithoutMode() {
-        checkIntentionIsAvailable("AvailableTest.java",
+        checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
-                "public class AvailableTest {\n" +
+                "public class Available {\n" +
                 "    public void testMethod() {\n" +
                 "        Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().serializable());\n" +
                 "    }\n" +
@@ -161,7 +162,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     //Conversions
 
     public void testConvertsMockitoMock() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class ConversionTest {\n" +
@@ -185,7 +186,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testConvertsMockitoMockFromVariable() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class ConversionTest {\n" +
@@ -206,7 +207,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testConvertsMockitoMockWithName() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class ConversionTest {\n" +
@@ -230,7 +231,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testConvertsMockitoMockWithNameFromVariable() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class ConversionTest {\n" +
@@ -251,7 +252,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testConvertsMockitoMockWithDefaultAnswer() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Answers;\n" +
                 "\n" +
@@ -277,7 +278,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testConvertsMockitoMockWithDefaultAnswerFromVariable() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Answers;\n" +
                 "\n" +
@@ -300,7 +301,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testConvertsMockitoMockWithNonDefaultAnswer() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Answers;\n" +
                 "\n" +
@@ -326,7 +327,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testConvertsMockitoMockWithNonDefaultAnswerFromVariable() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Answers;\n" +
                 "\n" +
@@ -349,7 +350,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testConvertsMockitoMockWithBooleanSettings() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class ConversionTest {\n" +
@@ -373,7 +374,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testConvertsMockitoMockWithBooleanSettingsFromVariable() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class ConversionTest {\n" +
@@ -394,7 +395,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testConvertsMockitoMockWithSettingsName() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class ConversionTest {\n" +
@@ -418,7 +419,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testConvertsMockitoMockWithSettingsNameFromVariable() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class ConversionTest {\n" +
@@ -439,7 +440,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testConvertsMockitoMockWithSettingsDefaultAnswer() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Answers;\n" +
                 "\n" +
@@ -465,7 +466,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testConvertsMockitoMockWithSettingsDefaultAnswerFromVariable() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Answers;\n" +
                 "\n" +
@@ -488,7 +489,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testConvertsMockitoMockWithSettingsNonDefaultAnswer() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Answers;\n" +
                 "\n" +
@@ -514,7 +515,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testConvertsMockitoMockWithSettingsNonDefaultAnswerFromVariable() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Answers;\n" +
                 "\n" +
@@ -540,7 +541,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testConvertsMockitoMockWithSettingsSingleExtraInterface() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import java.util.List;\n" +
                 "\n" +
@@ -566,7 +567,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     }
 
     public void testConvertsMockitoMockWithSettingsMultipleExtraInterfaces() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import java.util.List;\n" +
                 "import java.util.Set;\n" +
@@ -596,7 +597,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     //Generics
 
     public void testConvertsMockitoMockWithGenericsFromVariable() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class ConversionTest {\n" +

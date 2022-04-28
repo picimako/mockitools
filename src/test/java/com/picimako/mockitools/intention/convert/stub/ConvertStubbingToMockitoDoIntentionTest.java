@@ -24,14 +24,14 @@ public class ConvertStubbingToMockitoDoIntentionTest extends EnforceConventionAw
     }
 
     public void testNotAvailableForNonMethodCallIdentifier() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "class NotAvailable {\n" +
                 "    private String fiel<caret>d;\n" +
                 "}");
     }
 
     public void testNotAvailableForConversionToItself() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class NotAvailable {\n" +
@@ -47,7 +47,7 @@ public class ConvertStubbingToMockitoDoIntentionTest extends EnforceConventionAw
     }
 
     public void testNotAvailableForMockitoWhenWithCallToThen() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.invocation.InvocationOnMock\n" +
                 "\n" +
@@ -66,7 +66,7 @@ public class ConvertStubbingToMockitoDoIntentionTest extends EnforceConventionAw
 
     public void testNotAvailableForBDDMockitoGivenWhenBDDMockitoIsEnforced() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -84,7 +84,7 @@ public class ConvertStubbingToMockitoDoIntentionTest extends EnforceConventionAw
     }
 
     public void testNotAvailableForBDDMockitoGivenWithCallToWill() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "import org.mockito.invocation.InvocationOnMock\n" +
@@ -104,7 +104,7 @@ public class ConvertStubbingToMockitoDoIntentionTest extends EnforceConventionAw
 
     public void testNotAvailableForBDDMockitoWillXWhenBDDMockitoIsEnforced() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -122,7 +122,7 @@ public class ConvertStubbingToMockitoDoIntentionTest extends EnforceConventionAw
     }
 
     public void testNotAvailableForBDDMockitoWillXWithCallToWill() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "import org.mockito.invocation.InvocationOnMock\n" +
@@ -141,7 +141,7 @@ public class ConvertStubbingToMockitoDoIntentionTest extends EnforceConventionAw
     }
 
     public void testNotAvailableForBDDMockitoWillXWithoutCallAfterGiven() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "import org.mockito.invocation.InvocationOnMock\n" +
@@ -160,7 +160,7 @@ public class ConvertStubbingToMockitoDoIntentionTest extends EnforceConventionAw
     }
 
     public void testNotAvailableForBDDMockitoWillXWithoutCallToGiven() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.invocation.InvocationOnMock\n" +
                 "\n" +
@@ -172,7 +172,7 @@ public class ConvertStubbingToMockitoDoIntentionTest extends EnforceConventionAw
     }
 
     public void testNotAvailableForNonMatchingCall() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class NotAvailable {\n" +
@@ -189,7 +189,7 @@ public class ConvertStubbingToMockitoDoIntentionTest extends EnforceConventionAw
     }
 
     public void testAvailableForMockitoWhen() {
-        checkIntentionIsAvailable("Available.java",
+        checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class Available {\n" +
@@ -206,7 +206,7 @@ public class ConvertStubbingToMockitoDoIntentionTest extends EnforceConventionAw
     }
 
     public void testAvailableForBDDMockitoGiven() {
-        checkIntentionIsAvailable("Available.java",
+        checkIntentionIsAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -225,7 +225,7 @@ public class ConvertStubbingToMockitoDoIntentionTest extends EnforceConventionAw
 
     public void testAvailableForBDDMockitoGivenWhenConventionEnforcingIsDisabled() {
         addDisabledEnforceConventionInspection();
-        checkIntentionIsAvailable("Available.java",
+        checkIntentionIsAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -243,7 +243,7 @@ public class ConvertStubbingToMockitoDoIntentionTest extends EnforceConventionAw
     }
 
     public void testAvailableForBDDMockitoWillX() {
-        checkIntentionIsAvailable("Available.java",
+        checkIntentionIsAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -262,7 +262,7 @@ public class ConvertStubbingToMockitoDoIntentionTest extends EnforceConventionAw
 
     public void testAvailableForBDDMockitoWillXWhenConventionEnforcingIsDisabled() {
         addDisabledEnforceConventionInspection();
-        checkIntentionIsAvailable("Available.java",
+        checkIntentionIsAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -282,7 +282,7 @@ public class ConvertStubbingToMockitoDoIntentionTest extends EnforceConventionAw
     //Conversion
 
     public void testConvertsFromMockitoWhen() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class ConversionTest {\n" +
@@ -312,7 +312,7 @@ public class ConvertStubbingToMockitoDoIntentionTest extends EnforceConventionAw
     }
 
     public void testConvertsFromBDDMockitoGiven() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -344,7 +344,7 @@ public class ConvertStubbingToMockitoDoIntentionTest extends EnforceConventionAw
     }
 
     public void testConvertsFromBDDMockitoWillX() {
-        checkIntentionRun("ConversionTest.java",
+        checkIntentionRun(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +

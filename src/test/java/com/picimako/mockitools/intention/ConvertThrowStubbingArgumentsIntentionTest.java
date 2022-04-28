@@ -19,15 +19,16 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
     //Availability
 
     public void testNotAvailableForNonMethodCallIdentifier() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "class NotAvailable {\n" +
                 "    private String fiel<caret>d;\n" +
                 "}");
     }
 
     public void testNotAvailableWhenMethodNameDoesntMatch() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class NotAvailable {\n" +
                 "    void testMethod(){\n" +
@@ -43,9 +44,10 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
     }
 
     public void testNotAvailableWhenNotAllArgumentsAreTheSameKind() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import java.io.IOException;\n" +
                 "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class NotAvailable {\n" +
                 "    void testMethod(){\n" +
@@ -61,10 +63,11 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
     }
 
     public void testNotAvailableWhenThereIsNonDefaultConstructorNewExpressionArgument() {
-        checkIntentionIsNotAvailable("NotAvailable.java",
+        checkIntentionIsNotAvailable(
             "import java.io.IOException;\n" +
                 "import java.sql.SQLException;\n" +
                 "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class NotAvailable {\n" +
                 "    void testMethod(){\n" +
@@ -80,7 +83,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
     }
 
     public void testAvailableOnThenThrowClasses() {
-        checkIntentionIsAvailable("Available.java",
+        checkIntentionIsAvailable(
             "import java.io.IOException;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -98,7 +101,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
     }
 
     public void testAvailableOnThenThrowThrowables() {
-        checkIntentionIsAvailable("Available.java",
+        checkIntentionIsAvailable(
             "import java.io.IOException;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -116,7 +119,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
     }
 
     public void testAvailableOnDoThrowClasses() {
-        checkIntentionIsAvailable("Available.java",
+        checkIntentionIsAvailable(
             "import java.io.IOException;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -134,7 +137,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
     }
 
     public void testAvailableOnDoThrowThrowables() {
-        checkIntentionIsAvailable("Available.java",
+        checkIntentionIsAvailable(
             "import java.io.IOException;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -152,9 +155,10 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
     }
 
     public void testAvailableOnGivenWillThrowClasses() {
-        checkIntentionIsAvailable("Available.java",
+        checkIntentionIsAvailable(
             "import java.io.IOException;\n" +
                 "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class Available {\n" +
                 "    void testMethod(){\n" +
@@ -170,9 +174,10 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
     }
 
     public void testAvailableOnGivenWillThrowThrowables() {
-        checkIntentionIsAvailable("Available.java",
+        checkIntentionIsAvailable(
             "import java.io.IOException;\n" +
                 "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class Available {\n" +
                 "    void testMethod(){\n" +
@@ -188,9 +193,10 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
     }
 
     public void testAvailableWillThrowGivenClasses() {
-        checkIntentionIsAvailable("Available.java",
+        checkIntentionIsAvailable(
             "import java.io.IOException;\n" +
                 "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class Available {\n" +
                 "    void testMethod(){\n" +
@@ -206,9 +212,10 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
     }
 
     public void testAvailableWillThrowGivenThrowables() {
-        checkIntentionIsAvailable("Available.java",
+        checkIntentionIsAvailable(
             "import java.io.IOException;\n" +
                 "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class Available {\n" +
                 "    void testMethod(){\n" +
@@ -226,11 +233,11 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
     //Conversion
     
     public void testConvertsThrowablesToClasses() {
-        checkIntentionRun("ConvertArguments.java",
+        checkIntentionRun(
             "import java.io.IOException;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
-                "class Available {\n" +
+                "class ConversionTest {\n" +
                 "\n" +
                 "    void testMethod(){\n" +
                 "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
@@ -245,7 +252,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
             "import java.io.IOException;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
-                "class Available {\n" +
+                "class ConversionTest {\n" +
                 "\n" +
                 "    void testMethod(){\n" +
                 "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
@@ -260,11 +267,11 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
     }
 
     public void testConvertsClassesToThrowables() {
-        checkIntentionRun("ConvertArguments.java",
+        checkIntentionRun(
             "import java.io.IOException;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
-                "class Available {\n" +
+                "class ConversionTest {\n" +
                 "    void testMethod(){\n" +
                 "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
                 "        Mockito.when(mockObject.doSomething()).thenT<caret>hrow(IOException.class, IllegalArgumentException.class);\n" +
@@ -278,7 +285,7 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
             "import java.io.IOException;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
-                "class Available {\n" +
+                "class ConversionTest {\n" +
                 "    void testMethod(){\n" +
                 "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
                 "        Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new IllegalArgumentException());\n" +
