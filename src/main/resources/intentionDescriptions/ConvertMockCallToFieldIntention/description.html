@@ -1,0 +1,36 @@
+<html>
+<body>
+<!-- tooltip end -->
+Converts <code>Mockito.mock()</code> calls to <code>@Mock</code> annotated fields.
+<p>
+    The intention is available
+<ul>
+    <li>on <code>Mockito.mock(Class)</code>, <code>Mockito.mock(Class, String)</code>, <code>Mockito.mock(Class, Answer)</code>
+        and <code>Mockito.mock(Class, MockSettings)</code> calls,
+    </li>
+    <li>when the type that is being mocked can actually be mocked (by Mockito's rules)/allowed to be mocked (by the @DoNotMock annotation),</li>
+    <li>and in case of the <code>MockSettings</code> specific overload, if the @Mock annotation supports all configuration specified.</li>
+</ul>
+The annotation supports the specified <code>MockSettings</code> if
+<ul>
+    <li>it starts with the <code>Mockito.withSettings()</code> call,</li>
+    <li>it doesn't have a call other than to <code>lenient()</code>, <code>stubOnly()</code>, <code>defaultAnswer()</code>, <code>name()</code>,
+        <code>extraInterfaces()</code> or <code>serializable()</code> but not its overloaded variant <code>serializable(SerializableMode)</code>.
+    </li>
+</ul>
+<p>
+    <strong>Naming</strong>
+<ul>
+    <li>if the <code>Mockito.spy()</code> call is part of a local variable declaration, then by default will use the variable's name,
+        but if there is already a field with the same name in the target class, a rename refactor is invoked first.
+    </li>
+    <li>if the call is not part of a local variable declaration, a rename refactor is invoked first, where the default field name provided is the
+        mock type's name in lowercase format.
+    </li>
+</ul>
+<p>
+    <strong>Target class selection</strong>
+<p>
+    If there is more than one parent class of the selected spy() call, a list is shown from which the class where the field will be introduced, can be selected.
+</body>
+</html>

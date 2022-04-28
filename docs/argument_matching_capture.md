@@ -8,14 +8,13 @@ Argument matchers are used inconsistently (and incorrectly) when, during stubbin
 mixed manner. That is not permitted by Mockito, and test execution fails when it encounters this problem. As per Mockito documentation:
 > If you are using argument matchers, all arguments have to be provided by matchers.
 
-For example:
+For example, the followings are invalid, and would block test execution.
 
 ```java
 Mockito.when(mock.method(eq("some string"), 25)).thenReturn(10);
 //or
 Mockito.when(mock.method("some string", geq(25))).thenReturn(10);
 ```
-are invalid, and would block test execution.
 
 The following ways of stubbing are supported by this inspection:
 - `Mockito.when()`
@@ -38,7 +37,7 @@ SonarLint also have a rule for this validation: [Mockito argument matchers shoul
 ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-CaptorFieldInitializationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/CaptorFieldInitializationInspection.java)
 
 Since `@Captor` annotated fields are initialized automagically by Mockito via `MockitoJUnitRunner`, `MockitoJUnit.rule()` or
-`MockitoAnnotations.initMocks()` / `MockitoAnnotations.openMocks()`, there is no need to explicitly initialize them.
+`MockitoAnnotations.initMocks()/openMocks()`, there is no need to explicitly initialize them.
 
 This inspection reports `ArgumentCaptor` type `@Captor` fields that have an initializer specified.
 
@@ -70,27 +69,25 @@ Fields that are annotated as `@Captor` must have `ArgumentCaptor` as their type,
 This inspection reports fields that are annotated as `@Captor` but their types are not `ArgumentCaptor`.
 It also provides a quick fix (*Convert field type to ArgumentCaptor<>*) to convert the field type to ArgumentCaptor with the appropriate generic type.
 
-See some examples below (with the before-after states):
-
 ```java
 //-- arrays --
 
 @Captor
-String[] captor;
+String[] captor; //before
 @Captor
-ArgumentCaptor<String[]> captor;
+ArgumentCaptor<String[]> captor; //after
 
 //-- primitive types --
 
 @Captor
-char captor;
+char captor; //before
 @Captor
-ArgumentCaptor<Character> captor; //field type is replaced with its boxed type
+ArgumentCaptor<Character> captor; //after: field type is replaced with its boxed type
 
 //-- types with generic types --
 
 @Captor
-List<List<String>> captor;
+List<List<String>> captor; //before
 @Captor
-ArgumentCaptor<List<List<String>>> captor;
+ArgumentCaptor<List<List<String>>> captor; //after
 ```

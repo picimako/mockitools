@@ -13,6 +13,7 @@ import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiExpressionList;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.intellij.psi.PsiNewExpression;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiStatement;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -30,10 +31,24 @@ public final class PsiMethodUtil {
     }
 
     /**
+     * Returns whether the argument method call has any argument.
+     */
+    public static boolean hasArgument(@NotNull PsiMethodCallExpression methodCall) {
+        return methodCall.getArgumentList() != null && methodCall.getArgumentList().getExpressionCount() > 0;
+    }
+    
+    /**
      * Returns whether the argument method call has only one argument.
      */
     public static boolean hasOneArgument(@NotNull PsiMethodCallExpression methodCall) {
         return methodCall.getArgumentList() != null && methodCall.getArgumentList().getExpressionCount() == 1;
+    }
+
+    /**
+     * Returns whether the argument method call has 2 arguments.
+     */
+    public static boolean hasTwoArguments(@NotNull PsiMethodCallExpression methodCall) {
+        return methodCall.getArgumentList() != null && methodCall.getArgumentList().getExpressionCount() == 2;
     }
 
     /**
@@ -91,6 +106,13 @@ public final class PsiMethodUtil {
      */
     public static PsiExpression getFirstArgument(@NotNull PsiMethodCallExpression methodCall) {
         return getArguments(methodCall)[0];
+    }
+
+    /**
+     * Gets the 2nd argument of the provided method call, given that the argument list exists and is not null.
+     */
+    public static PsiExpression get2ndArgument(@NotNull PsiMethodCallExpression methodCall) {
+        return getArguments(methodCall)[1];
     }
 
     /**
@@ -179,23 +201,23 @@ public final class PsiMethodUtil {
             .findFirst();
     }
 
-//    /**
-//     * Collects the method calls from the call chain in which the provided call is the last one.
-//     * <p>
-//     * Thus, the calls will be in a reverse order compared to the order they are actually called.
-//     */
-//    public static List<PsiMethodCallExpression> collectCallsInChain(@NotNull PsiExpression lastCallInChain) {
-//        var calls = new SmartList<PsiElement>(lastCallInChain);
-//        PsiElement current = lastCallInChain;
-//        while (current.getFirstChild() instanceof PsiReferenceExpression) {
-//            PsiElement previousCall = current.getFirstChild().getFirstChild();
-//            if (previousCall instanceof PsiMethodCallExpression) {
-//                calls.add(previousCall);
-//                current = previousCall;
-//            } else break;
-//        }
-//        return calls.stream().map(PsiMethodCallExpression.class::cast).collect(toList());
-//    }
+    /**
+     * Collects the method calls from the call chain in which the provided call is the last one.
+     * <p>
+     * Thus, the calls will be in a reverse order compared to the order they are actually called.
+     */
+    public static List<PsiMethodCallExpression> collectCallsInChainFromLast(@NotNull PsiExpression lastCallInChain) {
+        var calls = new SmartList<PsiElement>(lastCallInChain);
+        PsiElement current = lastCallInChain;
+        while (current.getFirstChild() instanceof PsiReferenceExpression) {
+            PsiElement previousCall = current.getFirstChild().getFirstChild();
+            if (previousCall instanceof PsiMethodCallExpression) {
+                calls.add(previousCall);
+                current = previousCall;
+            } else break;
+        }
+        return calls.stream().map(PsiMethodCallExpression.class::cast).collect(toList());
+    }
     
     public static List<PsiMethodCallExpression> collectCallsInChainFromFirst(PsiMethodCallExpression expression, boolean includeMySelf) {
         return PsiTreeUtil.collectParents(expression,
@@ -204,6 +226,20 @@ public final class PsiMethodUtil {
 
     public static List<PsiMethodCallExpression> collectCallsInChainFromFirst(PsiMethodCallExpression expression) {
         return collectCallsInChainFromFirst(expression, false);
+    }
+
+    /**
+     * Returns whether the provided set of expressions contain any {@link PsiNewExpression} that references
+     * a non-default constructor call.
+     */
+    public static boolean containsCallToNonDefaultConstructor(PsiExpression[] arguments) {
+        for (PsiExpression argument : arguments) {
+            if (argument instanceof PsiNewExpression) {
+                var argumentList = ((PsiNewExpression) argument).getArgumentList();
+                if (argumentList != null && !argumentList.isEmpty()) return true;
+            }
+        }
+        return false;
     }
 
     private PsiMethodUtil() {

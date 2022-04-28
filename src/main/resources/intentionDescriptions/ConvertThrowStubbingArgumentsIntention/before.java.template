@@ -1,0 +1,4 @@
+void testMethod(){
+    BDDMockito.given(mockObject.doSomething())
+        .willThrow(<spot>new IOException(), new IllegalArgumentException()</spot>);
+}

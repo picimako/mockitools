@@ -24,28 +24,28 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
     //Intention availability
 
     public void testIntentionIsNotAvailableForNonMockNonSpyField() {
-        checkIntentionIsNotAvailable("ConvertFieldTest.java",
-            "public class ConvertFieldTest {\n" +
+        checkIntentionIsNotAvailable(
+            "public class NotAvailable {\n" +
                 "    Object mo<caret>ck;\n" +
                 "}");
     }
 
     public void testIntentionIsNotAvailableWhenTheParentClassHasNoMethod() {
-        checkIntentionIsNotAvailable("ConvertFieldTest.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.Mock;\n" +
                 "\n" +
-                "public class ConvertFieldTest {\n" +
+                "public class NotAvailable {\n" +
                 "    @Mock\n" +
                 "    Object mo<caret>ck;\n" +
                 "}");
     }
 
     public void testIntentionIsNotAvailableWhenBothMockAndSpyAnnotationsAreOnField() {
-        checkIntentionIsNotAvailable("ConvertFieldTest.java",
+        checkIntentionIsNotAvailable(
             "import org.mockito.Mock;\n" +
                 "import org.mockito.Spy;\n" +
                 "\n" +
-                "public class ConvertFieldTest {\n" +
+                "public class NotAvailable {\n" +
                 "    @Mock\n" +
                 "    @Spy\n" +
                 "    Object mo<caret>ck;\n" +
@@ -53,10 +53,10 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
     }
 
     public void testIntentionIsAvailableOnMockField() {
-        checkIntentionIsAvailable("ConvertFieldTest.java",
+        checkIntentionIsAvailable(
             "import org.mockito.Mock;\n" +
                 "\n" +
-                "public class ConvertFieldTest {\n" +
+                "public class Available {\n" +
                 "    @Mock\n" +
                 "    Object mo<caret>ck;\n" +
                 "\n" +
@@ -65,10 +65,10 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
     }
 
     public void testIntentionIsAvailableOnSpyField() {
-        checkIntentionIsAvailable("ConvertFieldTest.java",
+        checkIntentionIsAvailable(
             "import org.mockito.Spy;\n" +
                 "\n" +
-                "public class ConvertFieldTest {\n" +
+                "public class Available {\n" +
                 "    @Spy\n" +
                 "    Object mo<caret>ck;\n" +
                 "\n" +
@@ -79,10 +79,10 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
     //@Mock -> Mockito.mock(<type>.class)
 
     public void testConvertsMockFieldToMockCallFirstInCodeBlockOfManyStatements() {
-        checkIntentionRun("ConvertFieldTest.java",
+        checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "\n" +
-                "public class ConvertFieldTest {\n" +
+                "public class ConversionTest {\n" +
                 "    @Mock\n" +
                 "    Object mo<caret>ck;\n" +
                 "\n" +
@@ -93,7 +93,7 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
             "import org.mockito.Mock;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
-                "public class ConvertFieldTest {\n" +
+                "public class ConversionTest {\n" +
                 "\n" +
                 "    public void method() {\n" +
                 "        Object mock = Mockito.mock(Object.class);\n" +
@@ -103,10 +103,10 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
     }
 
     public void testConvertsMockFieldToMockCallFirstInCodeBlockOfNoStatement() {
-        checkIntentionRun("ConvertFieldTest.java",
+        checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "\n" +
-                "public class ConvertFieldTest {\n" +
+                "public class ConversionTest {\n" +
                 "    @Mock\n" +
                 "    Object mo<caret>ck;\n" +
                 "\n" +
@@ -115,7 +115,7 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
             "import org.mockito.Mock;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
-                "public class ConvertFieldTest {\n" +
+                "public class ConversionTest {\n" +
                 "\n" +
                 "    public void method() {\n" +
                 "        Object mock = Mockito.mock(Object.class);\n" +
@@ -124,10 +124,10 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
     }
 
     public void testConvertsMockFieldToMockCallIntoSelectedMethod() {
-        checkIntentionRun("ConvertFieldTest.java",
+        checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "\n" +
-                "public class ConvertFieldtest {\n" +
+                "public class ConversionTest {\n" +
                 "    @Mock\n" +
                 "    Object mo<caret>ck;\n" +
                 "\n" +
@@ -140,7 +140,7 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
             "import org.mockito.Mock;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
-                "public class ConvertFieldtest {\n" +
+                "public class ConversionTest {\n" +
                 "\n" +
                 "    public void method() {\n" +
                 "        Object mock = Mockito.mock(Object.class);\n" +
@@ -154,10 +154,10 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
     //@Spy -> Mockito.spy(<type>.class)
 
     public void testConvertsSpyFieldToSpyCallFirstInCodeBlockOfManyStatements() {
-        checkIntentionRun("ConvertFieldTest.java",
+        checkIntentionRun(
             "import org.mockito.Spy;\n" +
                 "\n" +
-                "public class ConvertFieldTest {\n" +
+                "public class ConversionTest {\n" +
                 "    @Spy\n" +
                 "    Object mo<caret>ck;\n" +
                 "\n" +
@@ -168,7 +168,7 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Spy;\n" +
                 "\n" +
-                "public class ConvertFieldTest {\n" +
+                "public class ConversionTest {\n" +
                 "\n" +
                 "    public void method() {\n" +
                 "        Object mock = Mockito.spy(Object.class);\n" +
@@ -178,10 +178,10 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
     }
 
     public void testConvertsSpyFieldToSpyCallFirstInCodeBlockOfNoStatement() {
-        checkIntentionRun("ConvertFieldTest.java",
+        checkIntentionRun(
             "import org.mockito.Spy;\n" +
                 "\n" +
-                "public class ConvertFieldTest {\n" +
+                "public class ConversionTest {\n" +
                 "    @Spy\n" +
                 "    Object mo<caret>ck;\n" +
                 "\n" +
@@ -190,7 +190,7 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Spy;\n" +
                 "\n" +
-                "public class ConvertFieldTest {\n" +
+                "public class ConversionTest {\n" +
                 "\n" +
                 "    public void method() {\n" +
                 "        Object mock = Mockito.spy(Object.class);\n" +
@@ -199,10 +199,10 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
     }
 
     public void testConvertsSpyFieldToSpyCallIntoSelectedMethod() {
-        checkIntentionRun("ConvertFieldTest.java",
+        checkIntentionRun(
             "import org.mockito.Spy;\n" +
                 "\n" +
-                "public class ConvertFieldtest {\n" +
+                "public class ConversionTest {\n" +
                 "    @Spy\n" +
                 "    Object mo<caret>ck;\n" +
                 "\n" +
@@ -215,7 +215,7 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Spy;\n" +
                 "\n" +
-                "public class ConvertFieldtest {\n" +
+                "public class ConversionTest {\n" +
                 "\n" +
                 "    public void method() {\n" +
                 "        Object mock = Mockito.spy(Object.class);\n" +
@@ -229,10 +229,10 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
     //Generics: @Spy Type<type>; -> Mockito.spy(Type.class)
 
     public void testConvertsSpyFieldWithGenericsToSpyCall() {
-        checkIntentionRun("ConvertFieldTest.java",
+        checkIntentionRun(
             "import org.mockito.Spy;\n" +
                 "\n" +
-                "public class ConvertFieldTest {\n" +
+                "public class ConversionTest {\n" +
                 "    @Spy\n" +
                 "    MockObject<String> mo<caret>ck;\n" +
                 "\n" +
@@ -244,7 +244,7 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Spy;\n" +
                 "\n" +
-                "public class ConvertFieldTest {\n" +
+                "public class ConversionTest {\n" +
                 "\n" +
                 "    public void method() {\n" +
                 "        MockObject<String> mock = Mockito.spy(MockObject.class);\n" +
@@ -255,10 +255,10 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
     }
 
     public void testConvertsMockFieldWithGenericsToMockCall() {
-        checkIntentionRun("ConvertFieldTest.java",
+        checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "\n" +
-                "public class ConvertFieldTest {\n" +
+                "public class ConversionTest {\n" +
                 "    @Mock\n" +
                 "    MockObject<String> mo<caret>ck;\n" +
                 "\n" +
@@ -270,7 +270,7 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
             "import org.mockito.Mock;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
-                "public class ConvertFieldTest {\n" +
+                "public class ConversionTest {\n" +
                 "\n" +
                 "    public void method() {\n" +
                 "        MockObject<String> mock = Mockito.mock(MockObject.class);\n" +

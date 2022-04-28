@@ -10,6 +10,7 @@ public final class MockitoQualifiedNames {
     //Classes
     public static final String ORG_MOCKITO_MOCKITO = "org.mockito.Mockito";
     public static final String ORG_MOCKITO_BDDMOCKITO = "org.mockito.BDDMockito";
+    public static final String ORG_MOCKITO_BDDMOCKITO_THEN = "org.mockito.BDDMockito.Then";
     public static final String ORG_MOCKITO_BDD_MY_ONGOING_STUBBING = "org.mockito.BDDMockito.BDDMyOngoingStubbing";
     public static final String ORG_MOCKITO_BDD_STUBBER = "org.mockito.BDDMockito.BDDStubber";
     public static final String ORG_MOCKITO_ARGUMENT_MATCHERS = "org.mockito.ArgumentMatchers";
@@ -19,10 +20,13 @@ public final class MockitoQualifiedNames {
     public static final String ORG_MOCKITO_ONGOING_STUBBING = "org.mockito.stubbing.OngoingStubbing";
     public static final String ORG_MOCKITO_ARGUMENT_CAPTOR = "org.mockito.ArgumentCaptor";
     public static final String ORG_MOCKITO_MOCK_SETTINGS = "org.mockito.MockSettings";
+    public static final String ORG_MOCKITO_ANSWER = "org.mockito.stubbing.Answer";
+    public static final String ORG_MOCKITO_ANSWERS = "org.mockito.Answers";
     public static final String ORG_MOCKITO_MATCHERS = "org.mockito.Matchers";
     public static final String ORG_MOCKITO_MOCKED_STATIC = "org.mockito.MockedStatic";
     public static final String ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE = "org.mockito.verification.VerificationMode";
     public static final String ORG_MOCKITO_MOCKED_STATIC_VERIFICATION = "org.mockito.MockedStatic.Verification";
+    public static final String ORG_MOCKITO_MOCK_SERIALIZABLE_MODE = "org.mockito.mock.SerializableMode";
 
     //Plugin classes
     public static final String ORG_MOCKITO_CONFIGURATION_ANNOTATION_ENGINE = "org.mockito.configuration.AnnotationEngine";
@@ -55,6 +59,7 @@ public final class MockitoQualifiedNames {
 
     //Method names
     public static final String WHEN = "when";
+    public static final String THEN = "then";
     public static final String MOCK = "mock";
     public static final String SPY = "spy";
     public static final String GIVEN = "given";
@@ -80,6 +85,12 @@ public final class MockitoQualifiedNames {
     public static final String WILL_RETURN = "willReturn";
 
     //MockSettings
+    public static final String ANSWER = "answer";
+    public static final String DEFAULT_ANSWER = "defaultAnswer";
+    public static final String SERIALIZABLE = "serializable";
+    public static final String STUB_ONLY = "stubOnly";
+    public static final String LENIENT = "lenient";
+    public static final String NAME = "name";
     public static final String EXTRA_INTERFACES = "extraInterfaces";
 
     //Annotations

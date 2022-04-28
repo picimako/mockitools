@@ -1,0 +1,7 @@
+public class AUnitTest {
+    <spot>@Mock(name = "mock name")
+    MockObject mock;</spot>
+    
+    public void method() {
+    }
+}

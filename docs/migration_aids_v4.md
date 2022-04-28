@@ -5,7 +5,14 @@ some inspections to help migrate from one version to another; in the context of 
 
 Check out the [Mockito 4.0.0 release notes](https://github.com/mockito/mockito/releases/tag/v4.0.0) for details.
 
-### Argument matchers are called via org.mockito.Matchers instead of org.mockito.ArgumentMatchers 
+- [Argument matchers are called via org.mockito.Matchers instead of org.mockito.ArgumentMatchers](#argument-matchers-are-called-via-orgmockitomatchers-instead-of-orgmockitoargumentmatchers)
+- [Usage of deprecated anyX() matchers](#usage-of-deprecated-anyx-matchers)
+- [Usage of parameterized variants of isNull(), isNotNull() and notNull()](#usage-of-parameterized-variants-of-isnull-isnotnull-and-notnull)
+- [Usage of deprecated verify methods](#usage-of-deprecated-verify-methods)
+- [Usage of deprecated plugins classes](#usage-of-deprecated-plugins-classes)
+- [Usage of deprecated JUnit runners](#usage-of-deprecated-junit-runners)
+
+### Argument matchers are called via org.mockito.Matchers instead of org.mockito.ArgumentMatchers
 
 ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-ArgumentMatchersCalledViaMatchersInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/migrationaids/v4/ArgumentMatchersCalledViaMatchersInspection.java)
 ![](https://img.shields.io/badge/mockito-2.x-orange) ![](https://img.shields.io/badge/mockito-3.x-orange)
@@ -65,7 +72,7 @@ Mockito.when(mock.method(ArgumentMatchers.anyCollection())).thenReturn(10);
 #### Notes
 
 If a matcher is not used with static import and referenced via `org.mockito.Matchers`, it is also replaced
-with the `org.mockito.ArgumentMatchers` qualifier. See the corresponding logic in [ReplaceMatchersWithArgumentMatchersQuickFix](../src/main/java/com/picimako/mockitools/inspection/migrationaids/v4/UseArgumentMatchersInsteadOfMatchersInspection.java).
+with the `org.mockito.ArgumentMatchers` qualifier. See the corresponding logic in [ReplaceAnyXOfWithAnyXQuickFix](../src/main/java/com/picimako/mockitools/inspection/migrationaids/v4/UsageOfAnyMatchersInspection.java).
 
 ### Usage of parameterized variants of isNull(), isNotNull() and notNull()
 
@@ -89,7 +96,7 @@ Mockito.when(mock.method(ArgumentMatchers.notNull())).thenReturn(10);
 
 ### Usage of deprecated verify methods
 
-![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-DeprecatedMockedStaticVerifyInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/migrationaids/v4/DeprecatedMockedStaticVerifyInspection.java)
+![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-UsageOfDeprecatedVerifyInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/migrationaids/v4/UsageOfDeprecatedVerifyInspection.java)
 ![](https://img.shields.io/badge/mockito-3.x-orange)
 
 #### MockedStatic.verify()

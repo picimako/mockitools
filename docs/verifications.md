@@ -4,14 +4,13 @@
 
 ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-VerificationModeValuesBetweenLimitsInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/VerificationModeValuesBetweenLimitsInspection.java)
 
-This inspection validates certain time and occurrence based methods for `VerificationMode` whether their arguments are out of the allowed bounds.
+This inspection validates the followin time and occurrence based methods for `VerificationMode` whether their arguments are out of the allowed bounds:
+`Mockito.times`, `Mockito.atLeast`, `Mockito.atMost`, `Mockito.calls`, `Mockito.after`, `Mockito.timeout`
 
-Supported verification modes: `Mockito.times`, `Mockito.atLeast`, `Mockito.atMost`, `Mockito.calls`, `Mockito.after`, `Mockito.timeout`
-
-None of these calls are allowed negative values as argument. Additionally, `Mockito.calls()` doesn't allow 0 as argument either,
+None of these calls are allowed negative values as arguments. Additionally, `Mockito.calls()` doesn't allow 0 as argument either,
 and `Mockito.timeout()` doesn't allow values above a user-defined threshold (with 5000 as its default value - see inspection settings).
 
-The following are non-compliant examples:
+The following are all non-compliant examples:
 
 ```java
 Mockito.verify(mockObject, times(-10)).method(); //negative value
@@ -42,22 +41,16 @@ Both of them can be enabled/disabled on the inspection's settings panel.
 Quick fixes are also provided for the replacement and removal of these calls.
 
 ```java
-//before
-Mockito.verify(mock, times(1))... //times(1) can be omitted
-//after
-Mockito.verify(mock)...
+From: Mockito.verify(mock, times(1))... //times(1) can be omitted
+  to: Mockito.verify(mock)...
     
 Mockito.verify(mock, times(1).description("message"))... //no quick fix, left untouched
 
-//before
-Mockito.verify(mock, times(0))... //times(0) can be replaced with never()
-//after
-Mockito.verify(mock, never())...
+From: Mockito.verify(mock, times(0))... //times(0) can be replaced with never()
+  to: Mockito.verify(mock, never())...
 
-//before
-Mockito.verify(mock, times(0).description("message"))... //times(0) can be replaced with never()
-//after
-Mockito.verify(mock, never().description("message"))...
+From: Mockito.verify(mock, times(0).description("message"))... //times(0) can be replaced with never()
+  to: Mockito.verify(mock, never().description("message"))...
 ```
 
 ## No method call argument is provided
@@ -65,9 +58,8 @@ Mockito.verify(mock, never().description("message"))...
 ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-NoMethodCallArgumentSpecifiedInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/NoMethodCallArgumentSpecifiedInspection.java)
 
 There are a couple of methods in Mockito that must be passed at least one argument (usually these methods take varargs as argument),
-so this inspection reports when there is no argument specified in those calls.
+so this inspection reports when there is no argument specified in those calls:
 
-Method calls validated:
 - `Mockito.withSettings().extraInterfaces()`
 - `Mockito.verifyNoInteractions()`
 - `Mockito.verifyNoMoreInteractions()`
@@ -75,7 +67,7 @@ Method calls validated:
 - `Mockito.ignoreStubs()`
 - `Mockito.inOrder()`
 
-All the example below are non-compliant ones:
+The following are all non-compliant examples:
 
 ```java
 @Test
@@ -87,4 +79,32 @@ void testMethod() {
     Mockito.ignoreStubs();  //marked with only warning level since this wouldn't block test execution
     Mockito.inOrder();
 }
+```
+
+## Convert between various verification approaches
+
+![](https://img.shields.io/badge/intention-orange) ![](https://img.shields.io/badge/since-0.4.0-blue)
+[![](https://img.shields.io/badge/impl-ConvertMockitoVerifyToBDDMockitoThenIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/verification/ConvertMockitoVerifyToBDDMockitoThenIntention.java)
+[![](https://img.shields.io/badge/impl-ConvertBDDMockitoThenToMockitoVerifyIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/verification/ConvertBDDMockitoThenToMockitoVerifyIntention.java)
+
+There are a couple of ways one can approach verification in Mockito: via `org.mockito.Mockito` and `org.mockito.BDDMockito`.
+
+These intentions can convert between the `Mockito.verify()` and `BDDMockito.then()` call chains if they satisfy the following criteria:
+- if the ['Enforce conventions' inspection](conventions.md#enforce-orgmockitomockito-over-orgmockitobddmockito-and-vice-versa) doesn't enforce
+the verification the user converts from,
+- in case of `Mockito.verify()`, a call on the mock object after `verify()` must be present,
+- while in case of `BDDMockito.then()`, both the `should()` call and a call on the mock object after that must be present.
+
+Conversion of `InOrder` verification is not supported at the moment.
+
+**Examples for Mockito.verify() -> BDDMockito.then() direction:**
+
+```java
+//Without verification mode
+From: Mockito.verify(mock).doSomething();
+  to: BDDMockito.then(mock).should().doSomething();
+
+//With verification mode
+From: Mockito.verify(mock, times(2)).doSomething();
+  to: BDDMockito.then(mock).should(times(2)).doSomething();
 ```

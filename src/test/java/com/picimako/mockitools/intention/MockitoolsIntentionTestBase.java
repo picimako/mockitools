@@ -16,8 +16,8 @@ public abstract class MockitoolsIntentionTestBase extends MockitoolsTestBase {
     
     protected abstract IntentionAction getIntention();
     
-    protected void checkIntentionIsAvailable(String filename, String text) {
-        PsiFile psiFile = myFixture.configureByText(filename, text);
+    protected void checkIntentionIsAvailable(String text) {
+        PsiFile psiFile = myFixture.configureByText("Available.java", text);
 
         assertThat(getIntention().isAvailable(getProject(), myFixture.getEditor(), psiFile))
             .withFailMessage(() -> "Intention is NOT available while it IS supposed to be.")
@@ -31,9 +31,17 @@ public abstract class MockitoolsIntentionTestBase extends MockitoolsTestBase {
             .withFailMessage(() -> "Intention IS available while it is NOT supposed to be.")
             .isFalse();
     }
+
+    protected void checkIntentionIsNotAvailable(String text) {
+        PsiFile psiFile = myFixture.configureByText("NotAvailable.java", text);
+
+        assertThat(getIntention().isAvailable(getProject(), myFixture.getEditor(), psiFile))
+            .withFailMessage(() -> "Intention IS available while it is NOT supposed to be.")
+            .isFalse();
+    }
     
-    protected void checkIntentionRun(String filename, String beforeText, String afterText) {
-        PsiFile psiFile = myFixture.configureByText(filename, beforeText);
+    protected void checkIntentionRun(String beforeText, String afterText) {
+        PsiFile psiFile = myFixture.configureByText("ConversionTest.java", beforeText);
         runIntentionOn(psiFile, getIntention());
         myFixture.checkResult(afterText);
     }

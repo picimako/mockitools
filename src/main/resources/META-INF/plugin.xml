@@ -3,10 +3,10 @@
     <id>mockitools</id>
     <name>Mockitools</name>
     <vendor url="https://github.com/picimako/mockitools">Tamás Balog</vendor>
-    <version>0.3.0</version>
+    <version>0.4.0</version>
     <resource-bundle>messages.MockitoolsBundle</resource-bundle>
 
-    <description>Provides various inspections for the Mockito framework for Java.</description>
+    <description>Provides integration for the Mockito framework for Java.</description>
 
     <!-- https://jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html -->
     <idea-version since-build="211"/>
@@ -68,10 +68,20 @@
                 displayName="Checked exception stubbing based on method throws clause" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.SimplifyConsecutiveStubbingCallsInspection"
-                id="mockitools.simplifyConsecutiveStubbingCalls" language="JAVA"
-                displayName="Consecutive stubbing calls can be simplified" groupPath="Java"
+                implementationClass="com.picimako.mockitools.inspection.consecutive.SimplifyConsecutiveReturnCallsInspection"
+                id="mockitools.simplifyConsecutiveReturnStubbingCalls" language="JAVA"
+                displayName="Consecutive *Return() stubbing calls can be simplified" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.consecutive.SimplifyConsecutiveThrowCallsInspection"
+                id="mockitools.simplifyConsecutiveThrowStubbingCalls" language="JAVA"
+                displayName="Consecutive *Throw() stubbing calls can be simplified" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.EnforceConventionInspection"
+                id="mockitools.enforce.convention" language="JAVA"
+                displayName="Enforce conventions" groupPath="Java"
+                groupName="Mockito" enabledByDefault="false" level="ERROR"/>
 
         <!-- v4 migration aids -->
         <localInspection
@@ -112,7 +122,7 @@
                 displayName="Class extends @NotExtensible class" groupPath="Java,Mockito"
                 groupName="Framework" enabledByDefault="false" level="WARNING"/>
         
-        <!-- Intentions -->
+        <!-- Intentions - Convert @Mock/@Spy fields to mock()/spy() calls and vice versa. -->
         <intentionAction>
             <categoryKey>mockito.intention.category</categoryKey>
             <className>com.picimako.mockitools.intention.ConvertMockSpyFieldToCallIntention</className>
@@ -120,6 +130,41 @@
         <intentionAction>
             <categoryKey>mockito.intention.category</categoryKey>
             <className>com.picimako.mockitools.intention.ConvertSpyCallToFieldIntention</className>
+        </intentionAction>
+        <intentionAction>
+            <categoryKey>mockito.intention.category</categoryKey>
+            <className>com.picimako.mockitools.intention.ConvertMockCallToFieldIntention</className>
+        </intentionAction>
+        <!-- Intentions - Convert arguments -->
+        <intentionAction>
+            <categoryKey>mockito.intention.category</categoryKey>
+            <className>com.picimako.mockitools.intention.ConvertThrowStubbingArgumentsIntention</className>
+        </intentionAction>
+        <!-- Intentions - Convert stubbing approaches -->
+        <intentionAction>
+            <categoryKey>mockito.intention.category</categoryKey>
+            <className>com.picimako.mockitools.intention.convert.stub.ConvertStubbingToMockitoWhenIntention</className>
+        </intentionAction>
+        <intentionAction>
+            <categoryKey>mockito.intention.category</categoryKey>
+            <className>com.picimako.mockitools.intention.convert.stub.ConvertStubbingToMockitoDoIntention</className>
+        </intentionAction>
+        <intentionAction>
+            <categoryKey>mockito.intention.category</categoryKey>
+            <className>com.picimako.mockitools.intention.convert.stub.ConvertStubbingToBDDMockitoGivenIntention</className>
+        </intentionAction>
+        <intentionAction>
+            <categoryKey>mockito.intention.category</categoryKey>
+            <className>com.picimako.mockitools.intention.convert.stub.ConvertStubbingToBDDMockitoWillIntention</className>
+        </intentionAction>
+        <!-- Intentions - Convert verification approaches -->
+        <intentionAction>
+            <categoryKey>mockito.intention.category</categoryKey>
+            <className>com.picimako.mockitools.intention.convert.verification.ConvertMockitoVerifyToBDDMockitoThenIntention</className>
+        </intentionAction>
+        <intentionAction>
+            <categoryKey>mockito.intention.category</categoryKey>
+            <className>com.picimako.mockitools.intention.convert.verification.ConvertBDDMockitoThenToMockitoVerifyIntention</className>
         </intentionAction>
     </extensions>
 </idea-plugin>

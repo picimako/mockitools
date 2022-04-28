@@ -1,0 +1,5 @@
+public class AUnitTest {
+    public void method() {
+        <spot>MockObject mock = Mockito.mock(MockObject.class, "mock name");</spot>
+    }
+}
