@@ -6,10 +6,13 @@
 
 ## [0.4.0]
 ### Added
+- [#4](https://github.com/picimako/mockitools/issues/4): Added an intention action that can convert `Mockito.mock()` calls to `@Mock` annotated fields.
 - [#8](https://github.com/picimako/mockitools/issues/8): Added a new inspection that reports multiple consecutive calls on `*Throw()` stubbing calls.
 They can be merged into a single such call.
 - [#8](https://github.com/picimako/mockitools/issues/8): Merging of consecutive `*Return()` and `*Throw()` stubbing calls can happen separately if
 there are multiple such sections within a stubbing call chain. They, from now on, also keep line wrapping and indentation after applying the quick fix.
+- [#12](https://github.com/picimako/mockitools/issues/12): Added a new intention action that can convert arguments of `*Throw()` stubbing methods
+from `Type.class` expressions to `new Type()` expressions and vice versa.
 - [#13](https://github.com/picimako/mockitools/issues/13): Added 4 new intention actions that can convert between the various stubbing approaches.
 - [#15](https://github.com/picimako/mockitools/issues/15): Added 2 new intention actions that can convert between the `Mockito.verify()`
 and `BDDMockito.then()` approaches, and vice versa.
@@ -29,7 +32,7 @@ These can be merged into a single such call. See [documentation](docs/stubbing.m
 - Updated Gradle IntelliJ plugin to 1.4.0, gradle to 7.4, and qodana-action to 4.2.5.
 - Replaced unit test file checks with a less restrictive, test source root content check, because unit test file names don't necessarily end with the word *Test*.
   This will allow certain functionality to run in files whose names don't end with *Test*.
- 
+  
 ## [0.2.0]
 ### Added
 - [#2](https://github.com/picimako/mockitools/issues/2): Extended `MockTypeInspection` to validate and report types annotated with `@DoNotMock` annotation.
