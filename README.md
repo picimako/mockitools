@@ -47,11 +47,6 @@ If [*"Mockito ... tastes really good"* and *"doesn’t give you hangover"*](http
 
 In the Intellij Inspections settings, all inspections are available under the <kbd>Java</kbd> > <kbd>Mockito</kbd> folder.
 
-## Other plugins for Mockito
-
-If you are interested in Mockito code generation, check out the [JUnit 5 Mockito code generator](https://plugins.jetbrains.com/plugin/12833-junit-5-mockito-code-generator).
-For using postfix templates, try out [Mockito Postfix Completion](https://plugins.jetbrains.com/plugin/8150-mockito-postfix-completion).
-
 ## Licensing
 
 This project and the plugin logo are licensed under the terms of Apache Licence Version 2.0.
