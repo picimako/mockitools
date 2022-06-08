@@ -16,12 +16,6 @@ import static com.picimako.mockitools.MockitoolsPsiUtil.MOCKITO_WITH_SETTINGS;
 import static com.picimako.mockitools.intention.ConvertMockCallToFieldIntention.isDefaultAnswer;
 import static java.util.stream.Collectors.joining;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Predicate;
-
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.util.IntentionFamilyName;
@@ -50,12 +44,17 @@ import com.intellij.psi.PsiNameValuePair;
 import com.intellij.psi.PsiQualifiedReference;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiTypeElement;
-import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
+import com.picimako.mockitools.MockitoQualifiedNames;
+import com.picimako.mockitools.PsiClassUtil;
+import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
-import com.picimako.mockitools.MockitoQualifiedNames;
-import com.picimako.mockitools.resources.MockitoolsBundle;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Converts {@code @Mock} and {@code @Spy} annotated fields to {@code Mockito.mock()} and {@code Mockito.spy()} local variable declarations, respectively.
@@ -148,7 +147,7 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
         //This if-else is safe since isAvailable() returns true only in case of @Mock and @Spy annotations
         if (fieldToConvert.hasAnnotation(ORG_MOCKITO_MOCK)) {
             //org.mockito.Mockito.mock(<fieldtype>.class
-            mockitoMockingCall = new StringBuilder(ORG_MOCKITO_MOCKITO).append(".").append(MOCK).append("(");
+            mockitoMockingCall = new StringBuilder("Mockito").append(".").append(MOCK).append("(");
             appendType(fieldToConvert, mockitoMockingCall);
 
             PsiAnnotation mockAnnotation = fieldToConvert.getAnnotation(ORG_MOCKITO_MOCK);
@@ -171,7 +170,7 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
             //If there is at least one attribute specified, but it is not the answer and name specific overrides of Mockito.mock(),
             // then build the MockSettings for Mockito.mock(Class, MockSettings) 
             if (!mockAnnotation.getAttributes().isEmpty() && isMockSettingsOverride) {
-                StringBuilder mockSettings = new StringBuilder(ORG_MOCKITO_MOCKITO).append(".withSettings()");
+                StringBuilder mockSettings = new StringBuilder("Mockito").append(".withSettings()");
 
                 //Handle boolean attributes
                 BOOLEAN_ATTRIBUTES.forEach(attributeName ->
@@ -206,7 +205,7 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
                 mockitoMockingCall.append(", ").append(mockSettings); //Adds the second parameter to Mockito.mock(Class, MockSettings)
             }
         } else { //@Spy -> Mockito.spy()
-            mockitoMockingCall = new StringBuilder(ORG_MOCKITO_MOCKITO).append(".").append(SPY).append("(");
+            mockitoMockingCall = new StringBuilder("Mockito").append(".").append(SPY).append("(");
             if (fieldToConvert.hasInitializer()) {
                 mockitoMockingCall.append(fieldToConvert.getInitializer().getText());
             } else {
@@ -216,23 +215,22 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
 
         mockitoMockingCall.append(")");
 
-        var elementFactory = JavaPsiFacade.getElementFactory(file.getProject());
-        var codeStyleManager = JavaCodeStyleManager.getInstance(file.getProject());
-        var mockitoMockingInitializer = (PsiExpression) codeStyleManager.shortenClassReferences(elementFactory.createExpressionFromText(mockitoMockingCall.toString(), file));
-
-        //Post-process variable initializer: if the second argument is a call to Mockito.withSettings() then it can be omitted.
-        //E.g. mock(Type.class, Mockito.withSettings()) -> mock(Type.class)
-        var finalMockingInitializer = (PsiMethodCallExpression) mockitoMockingInitializer;
-        if (finalMockingInitializer.getArgumentList().getExpressionCount() > 1 && MOCKITO_WITH_SETTINGS.matches(finalMockingInitializer.getArgumentList().getExpressions()[1])) {
-            WriteCommandAction.runWriteCommandAction(file.getProject(), () -> finalMockingInitializer.getArgumentList().getExpressions()[1].delete());
-        }
-
-        var mockitoMockingVariableDeclaration = codeStyleManager.shortenClassReferences(elementFactory.createVariableDeclarationStatement(fieldToConvert.getName(), fieldToConvert.getType(), finalMockingInitializer));
-
-        //Introduces the variable declaration in the selected method
-        //Deletes the field
-        PsiDocumentManager.getInstance(file.getProject()).commitAllDocuments();
         WriteCommandAction.runWriteCommandAction(file.getProject(), () -> {
+            var elementFactory = JavaPsiFacade.getElementFactory(file.getProject());
+            PsiClassUtil.importClass(ORG_MOCKITO_MOCKITO, file);
+            var mockitoMockingInitializer = (PsiExpression) elementFactory.createExpressionFromText(mockitoMockingCall.toString(), file);
+
+            //Post-process variable initializer: if the second argument is a call to Mockito.withSettings() then it can be omitted.
+            //E.g. mock(Type.class, Mockito.withSettings()) -> mock(Type.class)
+            var finalMockingInitializer = (PsiMethodCallExpression) mockitoMockingInitializer;
+            if (finalMockingInitializer.getArgumentList().getExpressionCount() > 1 && MOCKITO_WITH_SETTINGS.matches(finalMockingInitializer.getArgumentList().getExpressions()[1])) {
+                finalMockingInitializer.getArgumentList().getExpressions()[1].delete();
+            }
+
+            //Introduces the variable declaration in the selected method
+            //Deletes the field
+            PsiDocumentManager.getInstance(file.getProject()).commitAllDocuments();
+            var mockitoMockingVariableDeclaration = elementFactory.createVariableDeclarationStatement(fieldToConvert.getName(), fieldToConvert.getType(), finalMockingInitializer);
             PsiCodeBlock methodBody = targetMethod.getBody();
             if (methodBody != null) {
                 if (methodBody.getFirstBodyElement() != null) {
