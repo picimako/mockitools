@@ -1,21 +1,18 @@
-/*
- * Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
- */
+//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention;
 
 import static com.picimako.mockitools.PsiMethodUtil.containsCallToNonDefaultConstructor;
+import static com.picimako.mockitools.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.PsiMethodUtil.isIdentifierOfMethodCall;
 import static com.picimako.mockitools.inspection.consecutive.TypeConversionMethod.TO_CLASSES;
 import static com.picimako.mockitools.inspection.consecutive.TypeConversionMethod.TO_THROWABLES;
-
-import java.util.Arrays;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.ide.highlighter.JavaFileType;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClassObjectAccessExpression;
@@ -25,12 +22,13 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNewExpression;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-
 import com.picimako.mockitools.inspection.ThrowStubDescriptor;
 import com.picimako.mockitools.inspection.ThrowStubDescriptors;
 import com.picimako.mockitools.inspection.consecutive.TypeConversionMethod;
 import com.picimako.mockitools.resources.MockitoolsBundle;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
 
 /**
  * Converts arguments of {@code *Throw()} stubbing calls from {@link PsiClassObjectAccessExpression}s to {@link PsiNewExpression}s
@@ -66,6 +64,8 @@ public class ConvertThrowStubbingArgumentsIntention implements IntentionAction {
         return MockitoolsBundle.message("intention.convert.throw.arguments.to.x.family");
     }
 
+    //Availability
+
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
         if (file.getFileType().equals(JavaFileType.INSTANCE)) {
@@ -84,13 +84,13 @@ public class ConvertThrowStubbingArgumentsIntention implements IntentionAction {
 
     private boolean isArgumentListConvertible(PsiMethodCallExpression call, ThrowStubDescriptor descriptor) {
         if (descriptor.classMatcher.matches(call)) {
-            if (Arrays.stream(call.getArgumentList().getExpressions()).allMatch(PsiClassObjectAccessExpression.class::isInstance)) {
+            if (areAllClassObjectAccessExpressions(getArguments(call))) {
                 message = TO_THROWABLES.message;
                 return true;
             }
         } else if (descriptor.throwablesMatcher.matches(call)) {
             var arguments = call.getArgumentList().getExpressions();
-            if (Arrays.stream(arguments).allMatch(PsiNewExpression.class::isInstance) && !containsCallToNonDefaultConstructor(arguments)) {
+            if (areAllNewExpressions(arguments) && !containsCallToNonDefaultConstructor(arguments)) {
                 message = TO_CLASSES.message;
                 return true;
             }
@@ -98,25 +98,32 @@ public class ConvertThrowStubbingArgumentsIntention implements IntentionAction {
         return false;
     }
 
+    //Conversion
+
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
         final PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
         var call = (PsiMethodCallExpression) element.getParent().getParent();
 
-        var arguments = call.getArgumentList().getExpressions();
-        if (Arrays.stream(arguments).allMatch(PsiClassObjectAccessExpression.class::isInstance)) {
-            convert(arguments, TO_THROWABLES);
-        } else if (Arrays.stream(arguments).allMatch(PsiNewExpression.class::isInstance)) {
-            convert(arguments, TO_CLASSES);
-        }
+        WriteCommandAction.runWriteCommandAction(project, () -> {
+            var arguments = getArguments(call);
+            if (areAllClassObjectAccessExpressions(arguments)) convert(arguments, TO_THROWABLES);
+            else if (areAllNewExpressions(arguments)) convert(arguments, TO_CLASSES);
+        });
     }
 
     private void convert(PsiExpression[] arguments, TypeConversionMethod conversionMethod) {
-        ApplicationManager.getApplication().runWriteAction(() -> {
-            for (var argument : arguments) {
-                argument.replace(conversionMethod.convert(argument));
-            }
-        });
+        for (var argument : arguments) {
+            argument.replace(conversionMethod.convert(argument));
+        }
+    }
+
+    private boolean areAllNewExpressions(PsiExpression[] expressions) {
+        return Arrays.stream(expressions).allMatch(PsiNewExpression.class::isInstance);
+    }
+
+    private boolean areAllClassObjectAccessExpressions(PsiExpression[] expressions) {
+        return Arrays.stream(expressions).allMatch(PsiClassObjectAccessExpression.class::isInstance);
     }
 
     @Override
