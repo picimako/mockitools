@@ -62,7 +62,7 @@ public abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsB
         var consecutiveCallIndeces = new SmartList<Integer>();
 
         for (int i = analyzer.indexToStartInspectionAt; i < callsInWholeChain.size(); i++) {
-            var call = callsInWholeChain.get(i);
+            PsiMethodCallExpression call = callsInWholeChain.get(i);
 
             if (analyzer.consecutiveMethodName.equals(getMethodName(call)) && extraCondition().test(call)) {
                 consecutiveCallIndeces.add(i);
@@ -100,4 +100,5 @@ public abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsB
         holder.registerProblem(getReferenceNameElement(registrar.getLastConsecutiveCall()),
             MockitoolsBundle.inspection("can.merge.with.previous.consecutive.calls", registrar.consecutiveMethodName), quickFixes);
     }
+
 }

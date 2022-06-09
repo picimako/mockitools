@@ -66,7 +66,7 @@ import com.picimako.mockitools.MockitoQualifiedNames;
  * <p>
  * If there is more than one parent class of the selected spy() call, a list is shown from which the class where the field will be introduced, can be selected.
  * <p>
- * NOTE: The format {@code spy(&lt;reference to already created object>)} where the object passed in to the spy() call is created outside
+ * NOTE: The format {@code spy(&lt;reference to already created object>)} where the object passed in to the spy() call is created outside of
  * the call is not yet supported.
  *
  * @see ConvertMockCallToFieldIntention

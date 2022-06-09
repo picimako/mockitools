@@ -38,17 +38,17 @@ public class InconsistentArgumentsTest {
         BDDMockito.given(mock.methodWithParams("some string", Integer.class)).willReturn(10);
 
         //Highlight cases
-        Mockito.when(mock.methodWithParams<error descr="Both matcher and non-matcher arguments are used.">(ArgumentMatchers.eq("some string"), Integer.class)</error>).thenReturn(10);
-        Mockito.when(mock.methodWithParams<error descr="Both matcher and non-matcher arguments are used.">("some string", eq(Integer.class))</error>).thenReturn(10);
+        Mockito.when(mock.methodWithParams<error descr="Mockitools: Both matcher and non-matcher arguments are used.">(ArgumentMatchers.eq("some string"), Integer.class)</error>).thenReturn(10);
+        Mockito.when(mock.methodWithParams<error descr="Mockitools: Both matcher and non-matcher arguments are used.">("some string", eq(Integer.class))</error>).thenReturn(10);
 
-        Mockito.when(mock.methodWithParam(AdditionalMatchers.and<error descr="Both matcher and non-matcher arguments are used.">(ArgumentMatchers.eq("some string"), "another string")</error>)).thenReturn(10);
-        Mockito.when(mock.methodWithParam(AdditionalMatchers.and<error descr="Both matcher and non-matcher arguments are used.">("some string", eq("another string"))</error>)).thenReturn(10);
+        Mockito.when(mock.methodWithParam(AdditionalMatchers.and<error descr="Mockitools: Both matcher and non-matcher arguments are used.">(ArgumentMatchers.eq("some string"), "another string")</error>)).thenReturn(10);
+        Mockito.when(mock.methodWithParam(AdditionalMatchers.and<error descr="Mockitools: Both matcher and non-matcher arguments are used.">("some string", eq("another string"))</error>)).thenReturn(10);
 
-        Mockito.doReturn(10).when(mock).methodWithParams<error descr="Both matcher and non-matcher arguments are used.">(Mockito.anyString(), Integer.class)</error>;
-        Mockito.doReturn(10).when(mock).methodWithParams<error descr="Both matcher and non-matcher arguments are used.">("some string", eq(Integer.class))</error>;
+        Mockito.doReturn(10).when(mock).methodWithParams<error descr="Mockitools: Both matcher and non-matcher arguments are used.">(Mockito.anyString(), Integer.class)</error>;
+        Mockito.doReturn(10).when(mock).methodWithParams<error descr="Mockitools: Both matcher and non-matcher arguments are used.">("some string", eq(Integer.class))</error>;
 
-        BDDMockito.given(mock.methodWithParams<error descr="Both matcher and non-matcher arguments are used.">(anyString(), Integer.class)</error>).willReturn(10);
-        BDDMockito.given(mock.methodWithParams<error descr="Both matcher and non-matcher arguments are used.">("some string", eq(Integer.class))</error>).willReturn(10);
+        BDDMockito.given(mock.methodWithParams<error descr="Mockitools: Both matcher and non-matcher arguments are used.">(anyString(), Integer.class)</error>).willReturn(10);
+        BDDMockito.given(mock.methodWithParams<error descr="Mockitools: Both matcher and non-matcher arguments are used.">("some string", eq(Integer.class))</error>).willReturn(10);
     }
 
     private static final class MockObject {

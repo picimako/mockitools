@@ -8,6 +8,8 @@ import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.PsiMethodUtil.hasSubsequentMethodCall;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 
+import javax.swing.*;
+
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
@@ -22,12 +24,11 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.util.PsiLiteralUtil;
-import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.InspectionGadgetsFix;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import com.picimako.mockitools.resources.MockitoolsBundle;
 
 /**
  * Inspects {@code Mockito.times()} calls whether they can be optimized or deleted based on their argument values.
@@ -89,18 +90,23 @@ public class TimesVerificationModeInspection extends MockitoolsBaseInspection {
      * <p>
      * At least for now, static import of {@code Mockito.never()} is not applied.
      */
-    private static final class ReplaceTimesZeroWithNeverQuickFix extends TimesQuickFix {
+    private static final class ReplaceTimesZeroWithNeverQuickFix extends InspectionGadgetsFix {
+
         @Override
         protected void doFix(Project project, ProblemDescriptor descriptor) {
             PsiMethodCallExpression methodCall = (PsiMethodCallExpression) descriptor.getPsiElement();
-            PsiElement replaced = methodCall.replace(
-                JavaPsiFacade.getElementFactory(project).createExpressionFromText(ORG_MOCKITO_MOCKITO_NEVER + "()", methodCall));
+            PsiElement replaced = methodCall.replace(JavaPsiFacade.getElementFactory(project).createExpressionFromText(ORG_MOCKITO_MOCKITO_NEVER + "()", methodCall));
             JavaCodeStyleManager.getInstance(project).shortenClassReferences(replaced);
         }
 
         @Override
         public @IntentionName @NotNull String getName() {
             return MockitoolsBundle.quickFix("times.zero.replace.with.never");
+        }
+
+        @Override
+        public @IntentionFamilyName @NotNull String getFamilyName() {
+            return MockitoolsBundle.quickFix("times.family.name");
         }
     }
 
@@ -109,7 +115,8 @@ public class TimesVerificationModeInspection extends MockitoolsBaseInspection {
      * <p>
      * When applied, code snippets like {@code Mockito.verify(mock, times(1))} become {@code Mockito.verify(mock)}.
      */
-    private static final class DeleteTimesOneQuickFix extends TimesQuickFix {
+    private static final class DeleteTimesOneQuickFix extends InspectionGadgetsFix {
+
         @Override
         protected void doFix(Project project, ProblemDescriptor descriptor) {
             descriptor.getPsiElement().delete();
@@ -119,9 +126,7 @@ public class TimesVerificationModeInspection extends MockitoolsBaseInspection {
         public @IntentionName @NotNull String getName() {
             return MockitoolsBundle.quickFix("times.one.delete.call");
         }
-    }
 
-    private abstract static class TimesQuickFix extends InspectionGadgetsFix {
         @Override
         public @IntentionFamilyName @NotNull String getFamilyName() {
             return MockitoolsBundle.quickFix("times.family.name");

@@ -41,30 +41,31 @@ public final class VerificationConverter extends ConverterBase {
     public void convertToBDDMockito(PsiMethodCallExpression mockitoVerify) {
         var calls = collectCallsInChainFromFirst(mockitoVerify, true);
 
-        runWriteCommandAction(project, () -> {
-            if (MOCKITO_VERIFY_MOCK.matches(mockitoVerify)) {
+        if (MOCKITO_VERIFY_MOCK.matches(mockitoVerify)) {
+            runWriteCommandAction(project, () -> {
                 //Replace Mockito.verify with BDDMockito.then
                 replaceBeginningOfChain(calls, "BDDMockito.then", ORG_MOCKITO_BDDMOCKITO);
                 //Insert should() after BDDMockito.then
                 performAndCommitDocument(() -> document.insertString(getReferenceNameElement(getLast(calls)).getTextOffset() - 1, ".should()"));
-            } else if (MOCKITO_VERIFY_MOCK_MODE.matches(mockitoVerify)) {
+            });
+        } else if (MOCKITO_VERIFY_MOCK_MODE.matches(mockitoVerify)) {
+            runWriteCommandAction(project, () -> {
                 //It replaces the text between the two arguments of Mockito.verify() with the text ").should("
                 //E.g. 'Mockito.verify(mock, times(2))' becomes 'Mockito.verify(mock).should(times(2))'
                 document.replaceString(endOffsetOf(getFirstArgument(mockitoVerify)), get2ndArgument(mockitoVerify).getTextOffset(), ").should(");
                 //Replace Mockito.verify with BDDMockito.then
                 replaceBeginningOfChain(calls, "BDDMockito.then", ORG_MOCKITO_BDDMOCKITO);
-
-            }
-        });
+            });
+        }
     }
 
     /**
      * Converts the argument {@code BDDMockito.then().should()} call and the following chain to the {@code Mockito.verify()} approach.
      */
     public void convertToMockitoVerify(PsiMethodCallExpression bddMockitoThen) {
-        runWriteCommandAction(project, () -> {
-            var calls = collectCallsInChainFromFirst(bddMockitoThen, true);
+        var calls = collectCallsInChainFromFirst(bddMockitoThen, true);
 
+        runWriteCommandAction(project, () -> {
             //Get verification mode argument from 'should()' (or empty string if there's none), and add it after the mock object argument
             String verificationModeArgument = hasArgument(calls.get(1)) ? ", " + getFirstArgument(calls.get(1)).getText() : "";
             document.insertString(endOffsetOf(getFirstArgument(bddMockitoThen)), verificationModeArgument);

@@ -12,10 +12,10 @@ public class TimesArgumentsTest {
         Mockito.verify(mockObject, times(10).description("")).toString();
 
         //Highlight cases
-        Mockito.verify(mockObject, <warning descr="This call can be replaced with Mockito.never().">times(0)</warning>).toString();
-        Mockito.verify(mockObject, <warning descr="This call can be omitted since 'times(1)' is the default behaviour.">times(1)</warning>).toString();
+        Mockito.verify(mockObject, <warning descr="Mockitools: This call can be replaced with Mockito.never().">times(0)</warning>).toString();
+        Mockito.verify(mockObject, <warning descr="Mockitools: This call can be omitted since 'times(1)' is the default behaviour.">times(1)</warning>).toString();
 
-        Mockito.verify(mockObject, <warning descr="This call can be replaced with Mockito.never().">times(0)</warning>.description("")).toString();
+        Mockito.verify(mockObject, <warning descr="Mockitools: This call can be replaced with Mockito.never().">times(0)</warning>.description("")).toString();
         Mockito.verify(mockObject, times(1).description("")).toString();
     }
 }

@@ -9,7 +9,7 @@ public class EnforceBDDMockitoV3Methods {
     MockObject mockObject;
 
     public void verificationMethods() {
-        Mockito.<error descr="Stubbing/verification must be performed via org.mockito.BDDMockito">verifyZeroInteractions</error>(mockObject);
+        Mockito.<error descr="Mockitools: Stubbing/verification must be performed via org.mockito.BDDMockito">verifyZeroInteractions</error>(mockObject);
     }
 
     private static class MockObject {

@@ -3,9 +3,8 @@
 [![Version](https://img.shields.io/jetbrains/plugin/v/18117-mockitools.svg)](https://plugins.jetbrains.com/plugin/18117-mockitools)
 ![Build](https://github.com/picimako/mockitools/workflows/Build/badge.svg)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/18117-mockitools.svg)](https://plugins.jetbrains.com/plugin/18117-mockitools)
-![](https://img.shields.io/badge/since-IJ2021.1-blue) ![](https://img.shields.io/badge/until-IJ2022.2-blue)
-[![PayPal](https://img.shields.io/badge/donate-paypal-yellow.svg)](https://www.paypal.com/donate/?hosted_button_id=VVLWNZWPBRUDL)
-[![BuyMeACoffee](https://img.shields.io/badge/donate-buymeacoffee-yellow.svg)](https://www.buymeacoffee.com/picimako)
+![](https://img.shields.io/badge/since-IJ2021.1-blue) ![](https://img.shields.io/badge/until-IJ2022.1-blue)
+[![Donate](https://img.shields.io/badge/donate-paypal-yellow.svg)](https://www.paypal.com/donate/?hosted_button_id=VVLWNZWPBRUDL)
 
 <!-- Plugin description -->
 Mockitools is a plugin for IntelliJ-based IDEs that provides framework integration for [Mockito](https://site.mockito.org), one of the (if not the) most popular mocking frameworks for unit testing in Java.
@@ -30,7 +29,7 @@ See the list of those inspections in [Mockito v4 migration aids](docs/migration_
 SonarLint also has a few inspections for Mockito that you can find under the [Java category](https://rules.sonarsource.com/java?search=mockito) of their rules.
 
 If you use SonarLint to validate things that are available in Mockitools too, it is advised to adjust your settings,
-and have only those enabled that you feel comfortable working with. Be it in SonarLint or in Mockitools.
+and have only those ones enabled that you feel comfortable working with. Be it in SonarLint or in Mockitools.
 This will help declutter your editor from duplicate highlights for the same problems, and will also improve the analysis performance in the IDE.
 
 You can find the list of those inspections in the [Mockitools/SonarLint rules](docs/sonarlint_rules.md) document.

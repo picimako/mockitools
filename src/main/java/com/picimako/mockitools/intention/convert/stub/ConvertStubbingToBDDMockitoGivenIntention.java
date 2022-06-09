@@ -36,7 +36,7 @@ import com.picimako.mockitools.StubType;
  * {@code BDDMockito.given().will*()} approach.
  * <p>
  * Conversion from {@code Mockito.when().then*()} and {@code Mockito.do*().when()} approaches is possible only when
- * {@link com.picimako.mockitools.inspection.EnforceConventionInspection} is disabled, or it doesn't enforce {@code org.mockito.Mockito}.
+ * {@link com.picimako.mockitools.inspection.EnforceConventionInspection} is disabled or it doesn't enforce {@code org.mockito.Mockito}.
  *
  * @since 0.4.0
  */

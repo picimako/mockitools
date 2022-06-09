@@ -5,8 +5,9 @@ package com.picimako.mockitools.inspection;
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
-import com.picimako.mockitools.MockitoolsTestBase;
 import org.jetbrains.annotations.NotNull;
+
+import com.picimako.mockitools.MockitoolsTestBase;
 
 /**
  * Base test class for Mockitools inspection unit testing.
