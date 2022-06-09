@@ -6,7 +6,6 @@ import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.psi.PsiFile;
-
 import com.picimako.mockitools.MockitoolsTestBase;
 
 /**

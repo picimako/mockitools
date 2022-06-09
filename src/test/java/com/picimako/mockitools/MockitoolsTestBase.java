@@ -19,11 +19,6 @@ import org.jetbrains.annotations.NotNull;
 public abstract class MockitoolsTestBase extends LightJavaCodeInsightFixtureTestCase {
 
     @Override
-    protected @NotNull LightProjectDescriptor getProjectDescriptor() {
-        return getRealJdkHomeOrCommunityMockJdk();
-    }
-
-    @Override
     protected void setUp() throws Exception {
         super.setUp();
         loadLibs();
@@ -31,6 +26,11 @@ public abstract class MockitoolsTestBase extends LightJavaCodeInsightFixtureTest
 
     protected void loadLibs() {
         loadMockito3(myFixture.getProjectDisposable(), getModule());
+    }
+
+    @Override
+    protected @NotNull LightProjectDescriptor getProjectDescriptor() {
+        return getRealJdkHomeOrCommunityMockJdk();
     }
 
     /**
