@@ -30,7 +30,7 @@ See the list of those inspections in [Mockito v4 migration aids](docs/migration_
 SonarLint also has a few inspections for Mockito that you can find under the [Java category](https://rules.sonarsource.com/java?search=mockito) of their rules.
 
 If you use SonarLint to validate things that are available in Mockitools too, it is advised to adjust your settings,
-and have only those ones enabled that you feel comfortable working with. Be it in SonarLint or in Mockitools.
+and have only those enabled that you feel comfortable working with. Be it in SonarLint or in Mockitools.
 This will help declutter your editor from duplicate highlights for the same problems, and will also improve the analysis performance in the IDE.
 
 You can find the list of those inspections in the [Mockitools/SonarLint rules](docs/sonarlint_rules.md) document.

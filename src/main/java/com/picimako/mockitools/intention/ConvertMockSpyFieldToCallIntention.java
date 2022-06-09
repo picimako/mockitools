@@ -34,7 +34,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiCodeBlock;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
@@ -218,7 +217,7 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
         WriteCommandAction.runWriteCommandAction(file.getProject(), () -> {
             var elementFactory = JavaPsiFacade.getElementFactory(file.getProject());
             PsiClassUtil.importClass(ORG_MOCKITO_MOCKITO, file);
-            var mockitoMockingInitializer = (PsiExpression) elementFactory.createExpressionFromText(mockitoMockingCall.toString(), file);
+            var mockitoMockingInitializer = elementFactory.createExpressionFromText(mockitoMockingCall.toString(), file);
 
             //Post-process variable initializer: if the second argument is a call to Mockito.withSettings() then it can be omitted.
             //E.g. mock(Type.class, Mockito.withSettings()) -> mock(Type.class)
