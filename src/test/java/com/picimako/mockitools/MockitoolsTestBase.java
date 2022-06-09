@@ -28,7 +28,7 @@ public abstract class MockitoolsTestBase extends LightJavaCodeInsightFixtureTest
         super.setUp();
         loadLibs();
     }
-    
+
     protected void loadLibs() {
         loadMockito3(myFixture.getProjectDisposable(), getModule());
     }
