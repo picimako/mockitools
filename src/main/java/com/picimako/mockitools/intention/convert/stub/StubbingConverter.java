@@ -40,13 +40,16 @@ public final class StubbingConverter extends ConverterBase {
      */
     public void convert(PsiMethodCallExpression firstCallInChain, StubbingDescriptor from, StubbingDescriptor to) {
         //To make sure that converting a chain to itself doesn't happen
-        if (from.hasSameStubTypeAs(to) && from.getStubTargetSpecifierMethodName().equals(to.getStubTargetSpecifierMethodName())) return;
+        if (from.hasSameStubTypeAs(to) && from.getStubTargetSpecifierMethodName().equals(to.getStubTargetSpecifierMethodName()))
+            return;
 
-        var calls = collectCallsInChainFromFirst(firstCallInChain, true);
+        WriteCommandAction.runWriteCommandAction(project, () -> {
+            var calls = collectCallsInChainFromFirst(firstCallInChain, true);
 
-        if (from.hasSameStubTypeAs(to)) convertSameType(calls, from, to);
-        else if (to.getStubType() == StubType.STUBBER) convertToStubber(calls, from, to);
-        else if (to.getStubType() == StubType.STUBBING) convertToStubbing(calls, from, to);
+            if (from.hasSameStubTypeAs(to)) convertSameType(calls, from, to);
+            else if (to.getStubType() == StubType.STUBBER) convertToStubber(calls, from, to);
+            else if (to.getStubType() == StubType.STUBBING) convertToStubbing(calls, from, to);
+        });
     }
 
     //Stub type specific conversions
@@ -63,8 +66,7 @@ public final class StubbingConverter extends ConverterBase {
      * </pre>
      */
     private void convertSameType(List<PsiMethodCallExpression> calls, StubbingDescriptor from, StubbingDescriptor to) {
-        WriteCommandAction.runWriteCommandAction(project,
-            () -> doBaseConversion(from, to, calls, endOffsetOf(calls.get(0).getMethodExpression().getQualifierExpression()), to.getBeginningOfStubbing(from)));
+        doBaseConversion(from, to, calls, endOffsetOf(calls.get(0).getMethodExpression().getQualifierExpression()), to.getBeginningOfStubbing(from));
     }
 
     /**
@@ -78,20 +80,18 @@ public final class StubbingConverter extends ConverterBase {
      * </pre>
      */
     private void convertToStubber(List<PsiMethodCallExpression> calls, StubbingDescriptor from, StubbingDescriptor to) {
-        WriteCommandAction.runWriteCommandAction(project, () -> {
-            //These have to be saved before the base conversion, so their values are kept properly
-            var stubbedCall = ((PsiMethodCallExpression) getFirstArgument(calls.get(0))); //mock.doSomething()
-            String stubbedCallQualifier = stubbedCall.getMethodExpression().getQualifierExpression().getText(); //"mock"
-            String stubbedCallText = stubbedCall.getText(); //"mock.doSomething()"
+        //These have to be saved before the base conversion, so their values are kept properly
+        var stubbedCall = ((PsiMethodCallExpression) getFirstArgument(calls.get(0))); //mock.doSomething()
+        String stubbedCallQualifier = stubbedCall.getMethodExpression().getQualifierExpression().getText(); //"mock"
+        String stubbedCallText = stubbedCall.getText(); //"mock.doSomething()"
 
-            //At this point the example chain becomes 'Mockito.do*();'
-            doBaseConversion(from, to, calls, endOffsetOf(calls.get(0)), to.getBeginningOfStubbing(from));
+        //At this point the example chain becomes 'Mockito.do*();'
+        doBaseConversion(from, to, calls, endOffsetOf(calls.get(0)), to.getBeginningOfStubbing(from));
 
-            //Adds the '.when(mock).doSomething()' part at the end of the call chain, so the example becomes: 'Mockito.do*().when(mock).doSomething();'
-            document.insertString(
-                endOffsetOf(getLast(calls)),
-                "." + to.getStubTargetSpecifierMethodName() + "(" + stubbedCallQualifier + ")" + stubbedCallText.replace(stubbedCallQualifier, ""));
-        });
+        //Adds the '.when(mock).doSomething()' part at the end of the call chain, so the example becomes: 'Mockito.do*().when(mock).doSomething();'
+        document.insertString(
+            endOffsetOf(getLast(calls)),
+            "." + to.getStubTargetSpecifierMethodName() + "(" + stubbedCallQualifier + ")" + stubbedCallText.replace(stubbedCallQualifier, ""));
     }
 
     /**
@@ -105,19 +105,17 @@ public final class StubbingConverter extends ConverterBase {
      * </pre>
      */
     private void convertToStubbing(List<PsiMethodCallExpression> calls, StubbingDescriptor from, StubbingDescriptor to) {
-        WriteCommandAction.runWriteCommandAction(project, () -> {
-            var stubbingMethod = calls.get(calls.size() - 2); //when(mock)
-            int endOffset = endOffsetOf(calls.get(0).getMethodExpression().getQualifierExpression()); //end offset of Mockito
+        var stubbingMethod = calls.get(calls.size() - 2); //when(mock)
+        int endOffset = endOffsetOf(calls.get(0).getMethodExpression().getQualifierExpression()); //end offset of Mockito
 
-            //BDDMockito.given + ( + mock + .doSomething() + )
-            String replacement = to.getBeginningOfStubbing(from) + "(" + getFirstArgument(stubbingMethod).getText() + getLast(calls).getText().replace(stubbingMethod.getText(), "") + ")";
+        //BDDMockito.given + ( + mock + .doSomething() + )
+        String replacement = to.getBeginningOfStubbing(from) + "(" + getFirstArgument(stubbingMethod).getText() + getLast(calls).getText().replace(stubbingMethod.getText(), "") + ")";
 
-            //At this point the example chain becomes 'BDDMockito.given(mock.doSomething()).will*().when(mock).doSomething();'
-            doBaseConversion(from, to, calls, endOffset, replacement);
+        //At this point the example chain becomes 'BDDMockito.given(mock.doSomething()).will*().when(mock).doSomething();'
+        doBaseConversion(from, to, calls, endOffset, replacement);
 
-            //Removes the '.when(mock).doSomething()' part at the end, and the example becomes: 'BDDMockito.given(mock.doSomething()).will*();'
-            document.deleteString(endOffsetOf(calls.get(calls.size() - 3)), endOffsetOf(getLast(calls)));
-        });
+        //Removes the '.when(mock).doSomething()' part at the end, and the example becomes: 'BDDMockito.given(mock.doSomething()).will*();'
+        document.deleteString(endOffsetOf(calls.get(calls.size() - 3)), endOffsetOf(getLast(calls)));
     }
 
     //Low-level conversion logic
