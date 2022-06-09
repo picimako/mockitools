@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+## [0.4.1]
+### Changed
+- Added support for IJ2022.2.
+- Removed **Mockitools:** prefix from inspection messages. This might help make them more comprehensible, and it removes
+  the clutter when they are displayed in the code analysis results tool window.
+- Refactored `ConvertMockSpyFieldToCallIntention` to prevent EDT slow operations errors.
+
 ## [0.4.0]
 ### Added
 - [#4](https://github.com/picimako/mockitools/issues/4): Added an intention action that can convert `Mockito.mock()` calls to `@Mock` annotated fields.
