@@ -13,7 +13,6 @@ import org.jetbrains.annotations.PropertyKey;
  */
 public class MockitoolsBundle extends DynamicBundle {
 
-    private static final String MOCKITOOLS = "Mockitools: ";
     @NonNls
     private static final String MOCKITO_BUNDLE = "messages.MockitoolsBundle";
     private static final MockitoolsBundle INSTANCE = new MockitoolsBundle();
@@ -33,7 +32,7 @@ public class MockitoolsBundle extends DynamicBundle {
      * @return the actual message
      */
     public static String inspection(@NonNls String id, Object @NotNull ... params) {
-        return MOCKITOOLS + message("inspection." + id, params);
+        return message("inspection." + id, params);
     }
     
     /**

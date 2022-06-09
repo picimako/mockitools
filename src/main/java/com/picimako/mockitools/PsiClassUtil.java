@@ -5,12 +5,15 @@ package com.picimako.mockitools;
 import java.util.List;
 import java.util.Optional;
 
+import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiExpression;
+import com.intellij.psi.search.ProjectScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.introduceField.ElementToWorkOn;
 import com.intellij.util.SmartList;
+import com.siyeh.ig.psiutils.ImportUtils;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -33,6 +36,11 @@ public final class PsiClassUtil {
             parent = PsiTreeUtil.getParentOfType(parent, PsiClass.class);
         }
         return parentClasses;
+    }
+
+    public static void importClass(String fqn, PsiElement context) {
+        PsiClass collectionClass = JavaPsiFacade.getInstance(context.getProject()).findClass(fqn, ProjectScope.getAllScope(context.getProject()));
+        ImportUtils.addImportIfNeeded(collectionClass, context);
     }
 
     private PsiClassUtil() {
