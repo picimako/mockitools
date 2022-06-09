@@ -9,18 +9,18 @@ public class EnforceBDDMockitoMethods {
     MockObject mockObject;
 
     public void stubbingMethods() {
-        Mockito.<error descr="Mockitools: Stubbing/verification must be performed via org.mockito.BDDMockito">when</error>(mockObject.doSomething()).thenReturn(10);
-        Mockito.<error descr="Mockitools: Stubbing/verification must be performed via org.mockito.BDDMockito">doReturn</error>(10).when(mockObject).doSomething();
-        Mockito.<error descr="Mockitools: Stubbing/verification must be performed via org.mockito.BDDMockito">doThrow</error>(IllegalArgumentException.class).when(mockObject).doSomething();
-        Mockito.<error descr="Mockitools: Stubbing/verification must be performed via org.mockito.BDDMockito">doAnswer</error>(Answers.CALLS_REAL_METHODS).when(mockObject).doSomething();
-        Mockito.<error descr="Mockitools: Stubbing/verification must be performed via org.mockito.BDDMockito">doCallRealMethod</error>().when(mockObject).doSomething();
-        Mockito.<error descr="Mockitools: Stubbing/verification must be performed via org.mockito.BDDMockito">doNothing</error>().when(mockObject).voidMethod();
+        Mockito.<error descr="Stubbing/verification must be performed via org.mockito.BDDMockito">when</error>(mockObject.doSomething()).thenReturn(10);
+        Mockito.<error descr="Stubbing/verification must be performed via org.mockito.BDDMockito">doReturn</error>(10).when(mockObject).doSomething();
+        Mockito.<error descr="Stubbing/verification must be performed via org.mockito.BDDMockito">doThrow</error>(IllegalArgumentException.class).when(mockObject).doSomething();
+        Mockito.<error descr="Stubbing/verification must be performed via org.mockito.BDDMockito">doAnswer</error>(Answers.CALLS_REAL_METHODS).when(mockObject).doSomething();
+        Mockito.<error descr="Stubbing/verification must be performed via org.mockito.BDDMockito">doCallRealMethod</error>().when(mockObject).doSomething();
+        Mockito.<error descr="Stubbing/verification must be performed via org.mockito.BDDMockito">doNothing</error>().when(mockObject).voidMethod();
     }
 
     public void verificationMethods() {
-        Mockito.<error descr="Mockitools: Stubbing/verification must be performed via org.mockito.BDDMockito">verify</error>(mockObject, Mockito.times(2)).doSomething();
-        Mockito.<error descr="Mockitools: Stubbing/verification must be performed via org.mockito.BDDMockito">verifyNoMoreInteractions</error>(mockObject);
-        Mockito.<error descr="Mockitools: Stubbing/verification must be performed via org.mockito.BDDMockito">verifyNoInteractions</error>(mockObject);
+        Mockito.<error descr="Stubbing/verification must be performed via org.mockito.BDDMockito">verify</error>(mockObject, Mockito.times(2)).doSomething();
+        Mockito.<error descr="Stubbing/verification must be performed via org.mockito.BDDMockito">verifyNoMoreInteractions</error>(mockObject);
+        Mockito.<error descr="Stubbing/verification must be performed via org.mockito.BDDMockito">verifyNoInteractions</error>(mockObject);
     }
 
     public void dontEnforceBDDMockitoMethod() {
