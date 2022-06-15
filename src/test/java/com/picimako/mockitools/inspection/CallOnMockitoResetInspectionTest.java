@@ -5,7 +5,7 @@ package com.picimako.mockitools.inspection;
 import com.intellij.codeInspection.InspectionProfileEntry;
 
 /**
- * Unit test for {@link CallOnMockitoResetInspection}
+ * Functional test for {@link CallOnMockitoResetInspection}
  */
 public class CallOnMockitoResetInspectionTest extends MockitoolsV3InspectionTestBase {
 

@@ -5,7 +5,7 @@ package com.picimako.mockitools.inspection;
 import com.intellij.codeInspection.InspectionProfileEntry;
 
 /**
- * Unit test for {@link VerificationModeValuesBetweenLimitsInspection}.
+ * Functional test for {@link VerificationModeValuesBetweenLimitsInspection}.
  */
 public class VerificationModeValuesBetweenLimitsInspectionTest extends MockitoolsV3InspectionTestBase {
 

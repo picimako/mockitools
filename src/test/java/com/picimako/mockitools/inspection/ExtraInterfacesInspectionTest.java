@@ -5,7 +5,7 @@ package com.picimako.mockitools.inspection;
 import com.intellij.codeInspection.InspectionProfileEntry;
 
 /**
- * Unit test for {@link ExtraInterfacesInspection}.
+ * Functional test for {@link ExtraInterfacesInspection}.
  */
 public class ExtraInterfacesInspectionTest extends MockitoolsV3InspectionTestBase {
 

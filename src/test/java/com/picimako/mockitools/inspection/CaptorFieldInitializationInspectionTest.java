@@ -5,7 +5,7 @@ package com.picimako.mockitools.inspection;
 import com.intellij.codeInspection.InspectionProfileEntry;
 
 /**
- * Unit test for {@link CaptorFieldInitializationInspection}.
+ * Functional test for {@link CaptorFieldInitializationInspection}.
  */
 public class CaptorFieldInitializationInspectionTest extends MockitoolsV3InspectionTestBase {
 

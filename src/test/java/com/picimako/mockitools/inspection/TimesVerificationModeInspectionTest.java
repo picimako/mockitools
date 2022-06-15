@@ -5,7 +5,7 @@ package com.picimako.mockitools.inspection;
 import com.intellij.codeInspection.InspectionProfileEntry;
 
 /**
- * Unit test for {@link TimesVerificationModeInspection}.
+ * Functional test for {@link TimesVerificationModeInspection}.
  */
 public class TimesVerificationModeInspectionTest extends MockitoolsV3InspectionTestBase {
 

@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import com.picimako.mockitools.MockitoolsPsiUtil;
 
 /**
- * Unit test for {@link com.picimako.mockitools.MockitoolsPsiUtil}.
+ * Functional test for {@link com.picimako.mockitools.MockitoolsPsiUtil}.
  */
 public class MockitoolsPsiUtilDoNotMockTest extends LightJavaCodeInsightFixtureTestCase {
 

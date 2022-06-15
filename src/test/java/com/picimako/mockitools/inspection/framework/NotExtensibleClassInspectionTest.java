@@ -7,7 +7,7 @@ import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsV3InspectionTestBase;
 
 /**
- * Unit test for {@link NotExtensibleClassInspection}.
+ * Functional test for {@link NotExtensibleClassInspection}.
  */
 public class NotExtensibleClassInspectionTest extends MockitoolsV3InspectionTestBase {
 

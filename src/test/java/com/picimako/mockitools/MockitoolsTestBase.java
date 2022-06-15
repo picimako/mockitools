@@ -12,7 +12,7 @@ import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Base test class for non-inspection unit tests.
+ * Base test class for non-inspection integration tests.
  * <p>
  * Configures the Java 11 JDK and loads the Mockito binary.
  */

@@ -5,7 +5,7 @@ package com.picimako.mockitools.inspection;
 import com.intellij.codeInspection.InspectionProfileEntry;
 
 /**
- * Unit test for {@link MockTypeInspection}.
+ * Functional test for {@link MockTypeInspection}.
  */
 public class MockTypeInspectionTest extends MockitoolsV4InspectionTestBase {
     

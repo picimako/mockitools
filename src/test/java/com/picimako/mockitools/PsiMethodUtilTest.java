@@ -9,7 +9,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.psi.PsiMethodCallExpression;
 
 /**
- * Unit test for {@link PsiMethodUtil}.
+ * Functional test for {@link PsiMethodUtil}.
  */
 public class PsiMethodUtilTest extends MockitoolsTestBase {
 
