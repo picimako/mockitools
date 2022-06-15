@@ -2,33 +2,22 @@
 
 package com.picimako.mockitools.inspection;
 
+import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito3;
+import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito4Latest;
+
 import com.intellij.codeInspection.InspectionProfileEntry;
-import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import com.picimako.mockitools.MockitoolsTestBase;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Base test class for Mockitools inspection unit testing.
  * <p>
  * Loads the Java 11 mock JDK and the Mockito binary for testing.
  */
-public abstract class MockitoolsInspectionTestBase extends LightJavaCodeInsightFixtureTestCase {
+public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
 
     @Override
     protected String getTestDataPath() {
         return "src/test/testData/inspection";
-    }
-
-    @Override
-    protected @NotNull LightProjectDescriptor getProjectDescriptor() {
-        return MockitoolsTestBase.getRealJdkHomeOrCommunityMockJdk();
-    }
-
-    /**
-     * To load libraries other than Mockito, so that the setUp method doesn't have to be overridden every time.
-     */
-    protected void loadLibs() {
     }
 
     /**
@@ -92,5 +81,27 @@ public abstract class MockitoolsInspectionTestBase extends LightJavaCodeInsightF
         myFixture.enableInspections(getInspection());
         myFixture.doHighlighting();
         myFixture.launchAction(myFixture.findSingleIntention(quickFixName));
+    }
+
+    /**
+     * Base class for testing Mockito 3 specific inspections.
+     */
+    public static abstract class MockitoV3 extends MockitoolsInspectionTestBase {
+        @Override
+        protected void setUp() throws Exception {
+            super.setUp();
+            loadMockito3(myFixture.getProjectDisposable(), getModule());
+        }
+    }
+
+    /**
+     * Base class for testing Mockito 4 specific inspections.
+     */
+    public static abstract class MockitoV4 extends MockitoolsInspectionTestBase {
+        @Override
+        protected void setUp() throws Exception {
+            super.setUp();
+            loadMockito4Latest(myFixture.getProjectDisposable(), getModule());
+        }
     }
 }

@@ -7,7 +7,7 @@ import com.intellij.codeInspection.InspectionProfileEntry;
 /**
  * Functional test for {@link CallOnMockitoResetInspection}
  */
-public class CallOnMockitoResetInspectionTest extends MockitoolsV3InspectionTestBase {
+public class CallOnMockitoResetInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {

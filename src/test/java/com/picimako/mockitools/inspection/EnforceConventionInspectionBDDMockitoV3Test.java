@@ -7,7 +7,7 @@ import com.intellij.codeInspection.InspectionProfileEntry;
 /**
  * Functional test for {@link EnforceConventionInspection}.
  */
-public class EnforceConventionInspectionBDDMockitoV3Test extends MockitoolsV3InspectionTestBase {
+public class EnforceConventionInspectionBDDMockitoV3Test extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {

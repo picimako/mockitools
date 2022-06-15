@@ -7,7 +7,7 @@ import com.intellij.codeInspection.InspectionProfileEntry;
 /**
  * Functional test for {@link CaptorFieldOfTypeArgumentCaptorInspection}.
  */
-public class CaptorFieldOfTypeArgumentCaptorInspectionTest extends MockitoolsV3InspectionTestBase {
+public class CaptorFieldOfTypeArgumentCaptorInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {

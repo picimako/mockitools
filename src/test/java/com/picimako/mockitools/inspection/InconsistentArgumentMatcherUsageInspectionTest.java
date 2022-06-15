@@ -7,7 +7,7 @@ import com.intellij.codeInspection.InspectionProfileEntry;
 /**
  * Functional test for {@link InconsistentArgumentMatcherUsageInspection}.
  */
-public class InconsistentArgumentMatcherUsageInspectionTest extends MockitoolsV3InspectionTestBase {
+public class InconsistentArgumentMatcherUsageInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {

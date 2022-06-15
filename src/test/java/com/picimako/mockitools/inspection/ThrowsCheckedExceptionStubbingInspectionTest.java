@@ -7,7 +7,7 @@ import com.intellij.codeInspection.InspectionProfileEntry;
 /**
  * Functional test for {@link ThrowsCheckedExceptionStubbingInspection}.
  */
-public class ThrowsCheckedExceptionStubbingInspectionTest extends MockitoolsV4InspectionTestBase {
+public class ThrowsCheckedExceptionStubbingInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
 
     @Override
     protected InspectionProfileEntry getInspection() {

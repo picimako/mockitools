@@ -7,7 +7,7 @@ import com.intellij.codeInspection.InspectionProfileEntry;
 /**
  * Functional test for {@link VerificationModeValuesBetweenLimitsInspection}.
  */
-public class VerificationModeValuesBetweenLimitsInspectionTest extends MockitoolsV3InspectionTestBase {
+public class VerificationModeValuesBetweenLimitsInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {

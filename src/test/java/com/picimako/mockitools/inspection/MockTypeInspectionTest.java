@@ -7,7 +7,7 @@ import com.intellij.codeInspection.InspectionProfileEntry;
 /**
  * Functional test for {@link MockTypeInspection}.
  */
-public class MockTypeInspectionTest extends MockitoolsV4InspectionTestBase {
+public class MockTypeInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
     
     @Override
     protected InspectionProfileEntry getInspection() {
