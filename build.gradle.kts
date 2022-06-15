@@ -6,7 +6,7 @@ plugins {
     // Java support
     id("java")
     // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.6.21"
+    id("org.jetbrains.kotlin.jvm") version "1.7.0"
     // Gradle IntelliJ Plugin
     id("org.jetbrains.intellij") version "1.5.3"
     // Gradle Changelog Plugin
@@ -26,7 +26,7 @@ repositories {
 // Set the JVM language level used to compile sources and generate files - Java 11 is required since 2020.3
 kotlin {
     jvmToolchain {
-        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(11))
+        languageVersion.set(JavaLanguageVersion.of(11))
     }
 }
 
