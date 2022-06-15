@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+## [0.5.0]
+### Changed
+- Removed support for IJ2021.1. From now on 2021.2 is the earliest version supported.
+
 ## [0.4.1]
 ### Changed
 - Added support for IJ2022.2.
