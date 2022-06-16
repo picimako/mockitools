@@ -11,7 +11,7 @@ import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoSpy;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.PsiMethodUtil.hasAtLeastOneArgument;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
-import static com.picimako.mockitools.inspection.ClassObjectAccessUtil.getOperandType;
+import static com.picimako.mockitools.ClassObjectAccessUtil.getOperandType;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;

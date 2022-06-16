@@ -28,12 +28,12 @@
                 displayName="Verification mode values are out of bounds" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.CaptorFieldInitializationInspection"
+                implementationClass="com.picimako.mockitools.inspection.captor.CaptorFieldInitializationInspection"
                 id="mockitools.captorFieldInitialization" language="JAVA"
                 displayName="@Captor field is explicitly initialized" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="WARNING"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.CaptorFieldOfTypeArgumentCaptorInspection"
+                implementationClass="com.picimako.mockitools.inspection.captor.CaptorFieldOfTypeArgumentCaptorInspection"
                 id="mockitools.captorFieldOfTypeArgumentCaptor" language="JAVA"
                 displayName="@Captor field is not of the type ArgumentCaptor" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>

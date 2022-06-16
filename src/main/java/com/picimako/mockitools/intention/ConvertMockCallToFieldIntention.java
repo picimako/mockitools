@@ -25,7 +25,7 @@ import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.PsiMethodUtil.hasOneArgument;
 import static com.picimako.mockitools.PsiMethodUtil.hasTwoArguments;
 import static com.picimako.mockitools.PsiMethodUtil.isIdentifierOfMethodCall;
-import static com.picimako.mockitools.inspection.ClassObjectAccessUtil.getOperandType;
+import static com.picimako.mockitools.ClassObjectAccessUtil.getOperandType;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
