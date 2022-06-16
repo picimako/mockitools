@@ -318,6 +318,9 @@ to:   @Mock Clazz clazz;
 
 from: mock(Clazz.class, Mockito.withSettings().extraInterfaces(List.class))
 to:   @Mock(extraInterfaces = List.class) Clazz clazz;
+
+from: mock(Clazz.class, Mockito.withSettings().strictness(Strictness.WARN))
+to:   @Mock(strictness = Mock.Strictness.WARN) Clazz clazz;
 ```
 
 Furthermore, the type that is being mocked should be mockable either by Mockito's rules or not being annotated with `@DoNotMock`.

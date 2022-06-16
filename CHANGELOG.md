@@ -5,6 +5,9 @@
 ## [Unreleased]
 
 ## [0.5.0]
+### Added
+- Strictness configuration is now supported by the conversion between `@Mock` and `Mockito.mock(Class, MockSettings)` in both directions.
+
 ### Changed
 - Removed support for IJ2021.1. From now on 2021.2 is the earliest version supported.
 

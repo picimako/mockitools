@@ -66,7 +66,7 @@ public final class MockitoolsPsiUtil {
      */
     private static final Set<String> NON_MOCKABLE_TYPES = Set.of(CommonClassNames.JAVA_LANG_CLASS, CommonClassNames.JAVA_LANG_STRING);
 
-    private static final CallMatcher MOCKITO_MOCK = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, MOCK);
+    public static final CallMatcher.Simple MOCKITO_MOCK = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, MOCK);
     private static final CallMatcher MOCKITO_SPY = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, SPY).parameterCount(1);
     private static final CallMatcher BDDMOCKITO_GIVEN = CallMatcher.staticCall(ORG_MOCKITO_BDDMOCKITO, GIVEN).parameterCount(1);
     private static final CallMatcher BDDMOCKITO_WILL_X =

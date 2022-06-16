@@ -439,6 +439,32 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
+    public void testConvertsMockitoMockWithSettingsStrictness() {
+        checkIntentionRun(
+            "import org.mockito.Mockito;\n" +
+                "import org.mockito.quality.Strictness;\n" +
+                "\n" +
+                "public class ConversionTest {\n" +
+                "    public void testMethod() {\n" +
+                "        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().strictness(Strictness.WARN)));\n" +
+                "    }\n" +
+                "    public void aMethod(Object object) { }\n" +
+                "}",
+            "import org.mockito.Mock;\n" +
+                "import org.mockito.Mockito;\n" +
+                "import org.mockito.quality.Strictness;\n" +
+                "\n" +
+                "public class ConversionTest {\n" +
+                "    @Mock(strictness = Mock.Strictness.WARN)\n" +
+                "    Object object;\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "        aMethod(object);\n" +
+                "    }\n" +
+                "    public void aMethod(Object object) { }\n" +
+                "}");
+    }
+
     public void testConvertsMockitoMockWithSettingsDefaultAnswer() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
