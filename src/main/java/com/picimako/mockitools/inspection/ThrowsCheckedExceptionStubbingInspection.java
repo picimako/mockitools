@@ -6,8 +6,10 @@ import static com.picimako.mockitools.ExceptionUtil.isCheckedException;
 import static com.picimako.mockitools.MockitoQualifiedNames.DO_THROW;
 import static com.picimako.mockitools.MockitoQualifiedNames.THEN_THROW;
 import static com.picimako.mockitools.MockitoQualifiedNames.WILL_THROW;
+import static com.picimako.mockitools.PointersUtil.toPointer;
 import static com.picimako.mockitools.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.PsiMethodUtil.getSubsequentMethodCall;
+import static com.picimako.mockitools.PsiTypesUtil.evaluateType;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.DO_THROW_WHEN;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.GIVEN_WILL_THROW;
@@ -15,26 +17,31 @@ import static com.picimako.mockitools.inspection.ThrowStubDescriptors.WHEN_THEN_
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.WILL_THROW_GIVEN;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 import com.intellij.codeInspection.LocalInspectionToolSession;
+import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.codeInspection.util.IntentionFamilyName;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiCall;
-import com.intellij.psi.PsiClassObjectAccessExpression;
+import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiType;
+import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.picimako.mockitools.ClassObjectAccessUtil;
+import com.picimako.mockitools.PsiMethodUtil;
+import com.picimako.mockitools.PsiTypesUtil;
+import com.picimako.mockitools.StubType;
+import com.picimako.mockitools.resources.MockitoolsBundle;
+import com.siyeh.ig.InspectionGadgetsFix;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.picimako.mockitools.PsiMethodUtil;
-import com.picimako.mockitools.StubType;
-import com.picimako.mockitools.resources.MockitoolsBundle;
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Reports exception references in {@code *Throw()} stubbing methods based on Mockito's rule on checked exceptions:
@@ -83,9 +90,11 @@ public class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInsp
      * Retrieves the method that is being stubbed on a mock object, resolves the original method and compares the exceptions
      * specified in the {@code *Throw()} call with the ones in the resolved method's {@code throws} clause.
      * <p>
-     * If an exception specified during stubbing is a checked exception, but it is not listed in the throws clause, it is then reported.
+     * If an exception specified during stubbing is a checked exception, but it is not listed in the {@code throws} clause,
+     * it is then reported.
      * <p>
-     * The return value signals whether the execution stepped into this method. It helps shorten the code in #checkMethodCallExpression().
+     * The return value signals whether the descriptor matched the current method call expression.
+     * It helps shorten the code in {@link #checkMethodCallExpression(PsiMethodCallExpression, ProblemsHolder)}.
      */
     private boolean checkAndRegister(ThrowStubDescriptor descriptor, PsiMethodCallExpression expression, PsiExpression[] exceptionRefs, ProblemsHolder holder) {
         if (descriptor.matcher.matches(expression)) {
@@ -93,22 +102,20 @@ public class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInsp
                 .map(PsiMethodUtil::getFirstArgument) //mockObject.doSomething() / mockObject
                 .filter(descriptor::isValidStubbingArgument)
                 .map(stub -> resolveStubbedMethod(stub, descriptor.stubType)) //doSomething()
-                .map(psiMethod -> psiMethod.getThrowsList().getReferencedTypes())
-                .ifPresent(throwsClauseTypes -> {
+                .ifPresent(stubbedMethod -> {
+                    var throwsClauseTypes = stubbedMethod.getThrowsList().getReferencedTypes();
                     for (var exceptionRef : exceptionRefs) {
                         if (isCheckedException(exceptionRef)
                             && Arrays.stream(throwsClauseTypes).noneMatch(type -> type.equals(evaluateType(exceptionRef)))) {
-                            holder.registerProblem(exceptionRef, MockitoolsBundle.inspection("invalid.checked.exception.in.stubbing"));
+                            holder.registerProblem(exceptionRef,
+                                MockitoolsBundle.inspection("invalid.checked.exception.in.stubbing"),
+                                new AddExceptionToThrowsClauseQuickFix(toPointer(stubbedMethod)));
                         }
                     }
                 });
             return true;
         }
         return false;
-    }
-
-    private PsiType evaluateType(PsiExpression expression) {
-        return expression instanceof PsiClassObjectAccessExpression ? ClassObjectAccessUtil.getOperandType(expression) : expression.getType();
     }
 
     /**
@@ -126,5 +133,55 @@ public class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInsp
             : Optional.ofNullable(getSubsequentMethodCall(PsiTreeUtil.getParentOfType(stub, PsiMethodCallExpression.class)))
             .map(PsiCall::resolveMethod)
             .orElse(null);
+    }
+
+    /**
+     * Quick fix to add the stubbed checked exception to the {@code throws} clause of the stubbed method,
+     * if it is not specified there.
+     * <p>
+     * For example:
+     * <pre>
+     * MockObject mock = Mockito.mock(MockObject.class);
+     * Mockito.when(mock.doSomething()).thenThrow(IOException.class);
+     *
+     * //From:
+     * private static class MockObject {
+     *     public int doSomething() throws NoSuchMethodException {
+     *         return 0;
+     *     }
+     * }
+     *
+     * //to:
+     * private static class MockObject {
+     *     public int doSomething() throws NoSuchMethodException, IOException {
+     *         return 0;
+     *     }
+     * }
+     * </pre>
+     *
+     * @since 0.5.0
+     */
+    private static final class AddExceptionToThrowsClauseQuickFix extends InspectionGadgetsFix {
+        private final SmartPsiElementPointer<PsiMethod> stubbedMethod;
+
+        public AddExceptionToThrowsClauseQuickFix(SmartPsiElementPointer<PsiMethod> stubbedMethod) {
+            this.stubbedMethod = stubbedMethod;
+        }
+
+        @Override
+        protected void doFix(Project project, ProblemDescriptor descriptor) {
+            var exception = descriptor.getPsiElement();
+            if (!(exception instanceof PsiExpression)) return;
+            PsiType exceptionType = PsiTypesUtil.evaluateClassObjectOrNewExpressionType(exception);
+            if (exceptionType instanceof PsiClassType) {
+                var exceptionTypeRef = JavaPsiFacade.getElementFactory(project).createReferenceElementByType((PsiClassType) exceptionType);
+                stubbedMethod.getElement().getThrowsList().add(exceptionTypeRef);
+            }
+        }
+
+        @Override
+        public @IntentionFamilyName @NotNull String getFamilyName() {
+            return MockitoolsBundle.quickFix("add.exception.to.method.throws.clause");
+        }
     }
 }
