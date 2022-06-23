@@ -9,6 +9,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_ZERO_INTERACT
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isExtraInterfaces;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isIgnoreStubs;
+import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
@@ -54,7 +55,7 @@ public class NoMethodCallArgumentSpecifiedInspection extends MockitoolsBaseInspe
     }
 
     private void registerProblem(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder, ProblemHighlightType problemHighlightType) {
-        PsiElement elementToHighlight = Optional.ofNullable(expression.getMethodExpression().getReferenceNameElement()).orElseGet(expression::getMethodExpression);
+        PsiElement elementToHighlight = Optional.ofNullable(getReferenceNameElement(expression)).orElseGet(expression::getMethodExpression);
         holder.registerProblem(elementToHighlight, MockitoolsBundle.inspection("method.call.no.argument.specified", getMethodName(expression)), problemHighlightType);
     }
 }

@@ -3,6 +3,7 @@
 package com.picimako.mockitools.inspection;
 
 import static com.picimako.mockitools.MockitoolsPsiUtil.isReset;
+import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
@@ -28,8 +29,8 @@ public class CallOnMockitoResetInspection extends MockitoolsBaseInspection {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
-        if (isReset(expression) && expression.getMethodExpression().getReferenceNameElement() != null) {
-            holder.registerProblem(expression.getMethodExpression().getReferenceNameElement(), MockitoolsBundle.inspection("call.to.reset"));
+        if (isReset(expression) && getReferenceNameElement(expression) != null) {
+            holder.registerProblem(getReferenceNameElement(expression), MockitoolsBundle.inspection("call.to.reset"));
         }
     }
 }
