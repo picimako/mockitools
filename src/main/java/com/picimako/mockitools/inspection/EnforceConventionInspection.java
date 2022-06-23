@@ -3,7 +3,9 @@
 package com.picimako.mockitools.inspection;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
+import static com.picimako.mockitools.MockitoolsPsiUtil.INORDER_VERIFY;
 import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 
@@ -28,8 +30,8 @@ import java.util.Optional;
 /**
  * Helps to enforce project conventions for using Mockito.
  * <p>
- * It reports calls to static stubbing and verification methods of {@code org.mockito.Mockito} if {@code org.mockito.BDDMockito}
- * based stubbing and verification must be used, and vice versa.
+ * It reports calls to static stubbing and verification methods of {@code org.mockito.Mockito / org.mockito.InOrder}
+ * if {@code org.mockito.BDDMockito} based stubbing and verification must be used, and vice versa.
  * <p>
  * Whether to enforce one or the other can be configured on the inspection's options panel.
  * <p>
@@ -42,14 +44,16 @@ import java.util.Optional;
  * @since 0.4.0
  */
 public class EnforceConventionInspection extends MockitoolsBaseInspection {
-
     public static final String SHORT_NAME = "EnforceConvention";
-
-    private static final CallMatcher MOCKITO_MATCHER = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO,
-        "when", "doReturn", "doThrow", "doAnswer", "doCallRealMethod", "doNothing", //stubbing
-        "verify", "verifyNoMoreInteractions", "verifyNoInteractions", //verification
-        "verifyZeroInteractions" //to support Mockito 3.x
-    );
+    public static final CallMatcher IN_ORDER_VERIFY = CallMatcher.anyOf(
+        INORDER_VERIFY.parameterCount(1),
+        INORDER_VERIFY.parameterCount(2));
+    private static final CallMatcher MOCKITO_MATCHER = CallMatcher.anyOf(
+        CallMatcher.staticCall(ORG_MOCKITO_MOCKITO,
+            "when", "doReturn", "doThrow", "doAnswer", "doCallRealMethod", "doNothing", //stubbing
+            "verify", "verifyNoMoreInteractions", "verifyNoInteractions", //verification
+            "verifyZeroInteractions" //to support Mockito 3.x
+        ), IN_ORDER_VERIFY);
     private static final CallMatcher BDDMOCKITO_MATCHER = CallMatcher.staticCall(ORG_MOCKITO_BDDMOCKITO,
         "given", "will", "willReturn", "willThrow", "willAnswer", "willCallRealMethod", "willDoNothing", //stubbing
         "then" //verification
@@ -64,9 +68,9 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
         final JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 5, true, false));
         panel.add(new JLabel(MockitoolsBundle.inspectionOption("enforce.stubbing.and.verification.label")));
 
-        ButtonGroup group = new ButtonGroup();
-        for (Convention convention : Convention.values()) {
-            JRadioButton radioButton = new JRadioButton(convention.getMessage(), convention == conventionToEnforce);
+        var group = new ButtonGroup();
+        for (var convention : Convention.values()) {
+            var radioButton = new JRadioButton(convention.getMessage(), convention == conventionToEnforce);
             radioButton.setBorder(JBUI.Borders.emptyLeft(20));
             radioButton.addActionListener(e -> conventionToEnforce = convention);
             panel.add(radioButton);
@@ -128,7 +132,7 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
     //Convention type
 
     public enum Convention {
-        MOCKITO(ORG_MOCKITO_MOCKITO),
+        MOCKITO(ORG_MOCKITO_MOCKITO + " / " + ORG_MOCKITO_INORDER),
         BDD_MOCKITO(ORG_MOCKITO_BDDMOCKITO);
 
         private final String classFqn;

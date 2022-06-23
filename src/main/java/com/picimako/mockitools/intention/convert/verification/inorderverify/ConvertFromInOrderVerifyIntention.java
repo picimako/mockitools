@@ -5,6 +5,7 @@ package com.picimako.mockitools.intention.convert.verification.inorderverify;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY;
 import static com.picimako.mockitools.PsiMethodUtil.getMethodCallAtCaret;
 import static com.picimako.mockitools.PsiMethodUtil.hasSubsequentMethodCall;
+import static com.picimako.mockitools.inspection.EnforceConventionInspection.IN_ORDER_VERIFY;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isBDDMockitoEnforced;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isMockitoEnforced;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
@@ -14,9 +15,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.MockitoolsPsiUtil;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase;
-import com.siyeh.ig.callMatcher.CallMatcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +28,6 @@ import java.util.List;
  * @since 0.5.0
  */
 public class ConvertFromInOrderVerifyIntention extends ConvertVerificationIntentionBase {
-
-    private static final CallMatcher IN_ORDER_VERIFY = CallMatcher.anyOf(
-        MockitoolsPsiUtil.INORDER_VERIFY.parameterCount(1),
-        MockitoolsPsiUtil.INORDER_VERIFY.parameterCount(2)
-    );
 
     public ConvertFromInOrderVerifyIntention() {
         super("InOrder.verify()");
