@@ -121,7 +121,7 @@
                 id="mockitools.framework.notExtensibleClass" language="JAVA"
                 displayName="Class extends @NotExtensible class" groupPath="Java,Mockito"
                 groupName="Framework" enabledByDefault="false" level="WARNING"/>
-        
+
         <!-- Intentions - Convert @Mock/@Spy fields to mock()/spy() calls and vice versa. -->
         <intentionAction>
             <categoryKey>mockito.intention.category</categoryKey>
@@ -160,11 +160,18 @@
         <!-- Intentions - Convert verification approaches -->
         <intentionAction>
             <categoryKey>mockito.intention.category</categoryKey>
-            <className>com.picimako.mockitools.intention.convert.verification.ConvertMockitoVerifyToBDDMockitoThenIntention</className>
+            <className>com.picimako.mockitools.intention.convert.verification.mockitoverify.ConvertFromMockitoVerifyIntention
+            </className>
         </intentionAction>
         <intentionAction>
             <categoryKey>mockito.intention.category</categoryKey>
-            <className>com.picimako.mockitools.intention.convert.verification.ConvertBDDMockitoThenToMockitoVerifyIntention</className>
+            <className>com.picimako.mockitools.intention.convert.verification.bddmockitothen.ConvertFromBDDMockitoIntention
+            </className>
+        </intentionAction>
+        <intentionAction>
+            <categoryKey>mockito.intention.category</categoryKey>
+            <className>com.picimako.mockitools.intention.convert.verification.inorderverify.ConvertFromInOrderVerifyIntention
+            </className>
         </intentionAction>
     </extensions>
 </idea-plugin>
