@@ -8,9 +8,11 @@ import static java.util.stream.Collectors.toList;
 import java.util.List;
 import java.util.Optional;
 
+import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiExpressionList;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNewExpression;
@@ -56,6 +58,12 @@ public final class PsiMethodUtil {
      */
     public static boolean hasAtLeastOneArgument(@NotNull PsiMethodCallExpression methodCall) {
         return methodCall.getArgumentList() != null && methodCall.getArgumentList().getExpressionCount() >= 1;
+    }
+
+    @NotNull
+    public static PsiMethodCallExpression getMethodCallAtCaret(PsiFile file, Editor editor) {
+        final PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
+        return (PsiMethodCallExpression) element.getParent().getParent();
     }
 
     /**

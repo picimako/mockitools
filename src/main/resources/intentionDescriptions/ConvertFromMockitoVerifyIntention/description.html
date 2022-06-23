@@ -1,0 +1,12 @@
+<html>
+<body>
+<!-- tooltip end -->
+Converts <code>Mockito.verify()</code> call chains either to <code>BDDMockito.then().should()</code> or <code>InOrder.verify()</code>
+based on the user's choice.
+<p>
+    The intention is available on <code>Mockito.verify()</code> when it is followed by a method call on the mock object.
+<p>
+    Conversion to <code>BDDMockito.then().should()</code> is available only when the <strong>Enforce
+    conventions</strong> inspection is disabled, or it doesn't enforce <code>org.mockito.Mockito</code>.
+</body>
+</html>

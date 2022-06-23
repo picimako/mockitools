@@ -7,9 +7,6 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 
-import java.util.Optional;
-import javax.swing.*;
-
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
@@ -18,12 +15,15 @@ import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.util.ui.JBUI;
+import com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase;
+import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.picimako.mockitools.resources.MockitoolsBundle;
+import javax.swing.*;
+import java.util.Optional;
 
 /**
  * Helps to enforce project conventions for using Mockito.
@@ -37,7 +37,7 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  * <p>
  * There are no dedicated quick fixes since separate intention actions are available to convert between these approaches.
  * See subclasses of {@link com.picimako.mockitools.intention.convert.stub.ConvertStubbingIntentionBase}
- * and {@link com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase}.
+ * and {@link ConvertVerificationIntentionBase}.
  *
  * @since 0.4.0
  */
@@ -128,19 +128,17 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
     //Convention type
 
     public enum Convention {
-        MOCKITO {
-            @Override
-            @Nls String getMessage() {
-                return ORG_MOCKITO_MOCKITO;
-            }
-        },
-        BDD_MOCKITO {
-            @Override
-            @Nls String getMessage() {
-                return ORG_MOCKITO_BDDMOCKITO;
-            }
-        };
+        MOCKITO(ORG_MOCKITO_MOCKITO),
+        BDD_MOCKITO(ORG_MOCKITO_BDDMOCKITO);
 
-        abstract @Nls String getMessage();
+        private final String classFqn;
+
+        Convention(String classFqn) {
+            this.classFqn = classFqn;
+        }
+
+        public @Nls String getMessage() {
+            return classFqn;
+        }
     }
 }

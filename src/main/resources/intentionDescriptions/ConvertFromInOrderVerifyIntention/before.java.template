@@ -1,0 +1,2 @@
+InOrder inOrder = Mockito.inOrder(mockObject);
+<spot>inOrder.verify(mockObject).doSomething();</spot>
