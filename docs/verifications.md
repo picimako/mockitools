@@ -90,7 +90,7 @@ void testMethod() {
 
 There are a couple of ways one can approach verification in Mockito: via `org.mockito.Mockito`, `org.mockito.BDDMockito`, `org.mockito.InOrder`.
 
-These intentions can convert between these approaches if they satisfy some preconditions:
+These intentions can convert between those approaches if they satisfy some preconditions:
 - in case of `Mockito.verify()` and `InOrder.verify()`, a call must be present on the mock object after `verify()` ,
 - while in case of `BDDMockito.then()`, both the `should()` call and a call on the mock object after that must be present.
 
@@ -125,4 +125,27 @@ From: BDDMockito.then(mock).should().doSomething();
 to:
       InOrder inOrder = Mockito.inOrder(mock);
       inOrder.verify(mock).doSomething();
+```
+
+### Selection based conversion
+
+![](https://img.shields.io/badge/since-0.5.0-blue)
+
+Conversion of `InOrder.verify()` based verifications is also available via selecting one or more such call chains in the editor.
+
+The availability and conversion logic is the same as for the single conversion options, the only difference being that
+**all** selected call chains must be valid `InOrder.verify()` ones.
+
+**Example (InOrder.verify() -> BDDMockito.then() - selection is between \[\[ and ]]):**
+
+```java
+From:
+      InOrder inOrder = Mockito.inOrder(mock, mock2);
+      [[inOrder.verify(mock).doSomething();
+      inOrder.verify(mock2, times(2)).doSomething();]]
+to:
+      InOrder inOrder = Mockito.inOrder(mock, mock2);
+      BDDMockito.then(mock).should().doSomething();
+      BDDMockito.then(mock2).should(times(2)).doSomething();
+
 ```

@@ -12,7 +12,6 @@ import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase;
@@ -37,22 +36,22 @@ public class ConvertFromMockitoVerifyIntention extends ConvertVerificationIntent
     }
 
     @Override
-    protected boolean isAvailableFor(PsiMethodCallExpression methodCall) {
+    public boolean isAvailableFor(PsiMethodCallExpression methodCall) {
         return VERIFY.equals(getMethodName(methodCall))
             && isMockitoVerify(methodCall)
             && hasSubsequentMethodCall(methodCall);
     }
 
     @Override
-    public List<AnAction> actionSelectionOptions(Project project, Editor editor, PsiFile file) {
+    public List<AnAction> actionSelectionOptions(Editor editor, PsiFile file) {
         var actions = new ArrayList<AnAction>(2);
         var mockitoVerify = getMethodCallAtCaret(file, editor);
         if (!isBDDMockitoEnforced(mockitoVerify)) {
-            actions.add(new ConvertMockitoVerifyToInOrderVerifyAction(project, editor.getDocument(), file));
+            actions.add(new ConvertMockitoVerifyToInOrderVerifyAction(editor));
         }
         if (!isMockitoEnforced(mockitoVerify)) {
-            actions.add(new ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderAction(project, editor.getDocument(), file));
-            actions.add(new ConvertMockitoVerifyToBDDMockitoThenWithInOrderAction(project, editor.getDocument(), file));
+            actions.add(new ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderAction(editor));
+            actions.add(new ConvertMockitoVerifyToBDDMockitoThenWithInOrderAction(editor));
         }
         return actions;
     }

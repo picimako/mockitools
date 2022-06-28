@@ -5,17 +5,15 @@ package com.picimako.mockitools.intention.convert.verification.inorderverify;
 import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.PsiMethodUtil.get2ndArgument;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.PsiMethodUtil.getMethodCallAtCaret;
 import static com.picimako.mockitools.PsiMethodUtil.hasTwoArguments;
+import static com.picimako.mockitools.Ranges.endOffsetOf;
 
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiMethodCallExpression;
 import com.picimako.mockitools.MockitoQualifiedNames;
 import com.picimako.mockitools.intention.convert.verification.BaseConvertVerificationAction;
 import com.picimako.mockitools.resources.MockitoolsBundle;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Converts {@code InOrder.verify()} call chains to the {@code BDDMockito.then()}, omitting the InOrder
@@ -27,13 +25,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderAction extends BaseConvertVerificationAction {
 
-    public ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderAction(Project project, @NotNull Document document, PsiFile file) {
-        super(project, document, file, MockitoolsBundle.message("intention.convert.verification.bddmockito.without.inorder"));
+    public ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderAction(Editor editor, boolean isBulkMode) {
+        super(editor, MockitoolsBundle.message("intention.convert.verification.bddmockito.without.inorder"), isBulkMode);
     }
 
     @Override
-    protected void performAction(Project project, Editor editor, PsiFile file) {
-        var inOrderVerify = getMethodCallAtCaret(file, editor);
+    protected void perform(PsiMethodCallExpression inOrderVerify, Project project, Editor editor) {
         var calls = collectCallsInChainFromFirst(inOrderVerify, true);
 
         //Replace '<inorder>.verify' with 'BDDMockito.then'

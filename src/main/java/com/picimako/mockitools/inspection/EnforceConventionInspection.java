@@ -14,6 +14,7 @@ import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.util.ui.JBUI;
@@ -106,7 +107,7 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
      *
      * @param methodCall the method call the intention availability is being checked
      */
-    public static boolean isMockitoEnforced(PsiMethodCallExpression methodCall) {
+    public static boolean isMockitoEnforced(PsiElement methodCall) {
         return isEnforced(methodCall, Convention.MOCKITO);
     }
 
@@ -116,11 +117,11 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
      *
      * @param methodCall the method call the intention availability is being checked
      */
-    public static boolean isBDDMockitoEnforced(PsiMethodCallExpression methodCall) {
+    public static boolean isBDDMockitoEnforced(PsiElement methodCall) {
         return isEnforced(methodCall, Convention.BDD_MOCKITO);
     }
 
-    private static boolean isEnforced(PsiMethodCallExpression methodCall, Convention convention) {
+    private static boolean isEnforced(PsiElement methodCall, Convention convention) {
         var profile = InspectionProfileManager.getInstance(methodCall.getProject()).getCurrentProfile();
         if (profile.isToolEnabled(HighlightDisplayKey.find(SHORT_NAME))) {
             var enforceConvention = (EnforceConventionInspection) profile.getUnwrappedTool(SHORT_NAME, methodCall);

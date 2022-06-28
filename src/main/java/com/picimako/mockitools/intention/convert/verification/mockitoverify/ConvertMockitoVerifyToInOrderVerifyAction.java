@@ -3,12 +3,10 @@
 package com.picimako.mockitools.intention.convert.verification.mockitoverify;
 
 import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
-import static com.picimako.mockitools.PsiMethodUtil.getMethodCallAtCaret;
 
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiMethodCallExpression;
 import com.picimako.mockitools.MemberInplaceRenameHelper;
 import com.picimako.mockitools.intention.convert.verification.BaseConvertVerificationAction;
 
@@ -21,13 +19,12 @@ import com.picimako.mockitools.intention.convert.verification.BaseConvertVerific
  * @since 0.5.0
  */
 public class ConvertMockitoVerifyToInOrderVerifyAction extends BaseConvertVerificationAction {
-    public ConvertMockitoVerifyToInOrderVerifyAction(Project project, Document document, PsiFile file) {
-        super(project, document, file, "InOrder.verify()");
+    public ConvertMockitoVerifyToInOrderVerifyAction(Editor editor) {
+        super(editor, "InOrder.verify()");
     }
 
     @Override
-    protected void performAction(Project project, Editor editor, PsiFile file) {
-        var mockitoVerify = getMethodCallAtCaret(file, editor);
+    protected void perform(PsiMethodCallExpression mockitoVerify, Project project, Editor editor) {
         var calls = collectCallsInChainFromFirst(mockitoVerify, true);
 
         var addedVariable = createAndAddInOrderVariable(mockitoVerify, calls);

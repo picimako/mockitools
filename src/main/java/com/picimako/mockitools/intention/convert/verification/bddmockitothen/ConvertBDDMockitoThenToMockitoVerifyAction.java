@@ -5,13 +5,12 @@ package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.PsiMethodUtil.getMethodCallAtCaret;
 import static com.picimako.mockitools.PsiMethodUtil.hasArgument;
+import static com.picimako.mockitools.Ranges.endOffsetOf;
 
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiMethodCallExpression;
 import com.picimako.mockitools.intention.convert.verification.BaseConvertVerificationAction;
 
 /**
@@ -23,13 +22,12 @@ import com.picimako.mockitools.intention.convert.verification.BaseConvertVerific
  * @since 0.4.0
  */
 public class ConvertBDDMockitoThenToMockitoVerifyAction extends BaseConvertVerificationAction {
-    public ConvertBDDMockitoThenToMockitoVerifyAction(Project project, Document document, PsiFile file) {
-        super(project, document, file, "Mockito.verify()");
+    public ConvertBDDMockitoThenToMockitoVerifyAction(Editor editor) {
+        super(editor, "Mockito.verify()");
     }
 
     @Override
-    protected void performAction(Project project, Editor editor, PsiFile file) {
-        var bddMockitoThen = getMethodCallAtCaret(file, editor);
+    protected void perform(PsiMethodCallExpression bddMockitoThen, Project project, Editor editor) {
         var calls = collectCallsInChainFromFirst(bddMockitoThen, true);
 
         //Get verification mode argument from 'should()' (or empty string if there's none), and add it after the mock object argument

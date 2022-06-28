@@ -10,7 +10,7 @@ import com.picimako.mockitools.MockitoolsActionTestBase;
 public class ConvertMockitoVerifyToInOrderVerifyActionTest extends MockitoolsActionTestBase {
 
     public void testConvertsMockitoVerifyToInOrderVerifyWithoutVerificationMode() {
-        checkAction(() -> new ConvertMockitoVerifyToInOrderVerifyAction(getProject(), myFixture.getEditor().getDocument(), getFile()),
+        checkAction(() -> new ConvertMockitoVerifyToInOrderVerifyAction(myFixture.getEditor()),
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class ConversionTest {\n" +
@@ -40,7 +40,7 @@ public class ConvertMockitoVerifyToInOrderVerifyActionTest extends MockitoolsAct
     }
 
     public void testConvertsMockitoVerifyToInOrderVerifyWithVerificationMode() {
-        checkAction(() -> new ConvertMockitoVerifyToInOrderVerifyAction(getProject(), myFixture.getEditor().getDocument(), getFile()),
+        checkAction(() -> new ConvertMockitoVerifyToInOrderVerifyAction(myFixture.getEditor()),
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class ConversionTest {\n" +
@@ -70,7 +70,7 @@ public class ConvertMockitoVerifyToInOrderVerifyActionTest extends MockitoolsAct
     }
 
     public void testConvertsMockitoVerifyToInOrderVerifyWithVerificationModeWithLineWrapping() {
-        checkAction(() -> new ConvertMockitoVerifyToInOrderVerifyAction(getProject(), myFixture.getEditor().getDocument(), getFile()),
+        checkAction(() -> new ConvertMockitoVerifyToInOrderVerifyAction(myFixture.getEditor()),
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class ConversionTest {\n" +

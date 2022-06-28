@@ -3,8 +3,13 @@
 package com.picimako.mockitools.intention.convert.verification;
 
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
+import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
+import static com.intellij.psi.util.PsiTreeUtil.getNextSiblingOfType;
+import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.PsiMethodUtil.getMethodCallAtCaret;
 import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
+import static com.picimako.mockitools.Ranges.endOffsetOf;
 
 import com.google.common.collect.Iterables;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -18,7 +23,9 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiCodeBlock;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.search.ProjectScope;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -32,17 +39,22 @@ import java.util.List;
  * Base action class for verification approach conversion.
  */
 public abstract class BaseConvertVerificationAction extends AnAction {
-    private final PsiDocumentManager documentManager;
-    private final Project project;
     protected final Document document;
-    private final PsiFile file;
+    private final PsiDocumentManager documentManager;
+    /**
+     * Whether the conversion is caret- (single call chain) or selection-based (one or more call chains).
+     */
+    private final boolean isBulkMode;
 
-    protected BaseConvertVerificationAction(Project project, Document document, PsiFile file, String actionText) {
+    protected BaseConvertVerificationAction(Editor editor, String actionText, boolean isBulkMode) {
         super(actionText);
-        documentManager = PsiDocumentManager.getInstance(project);
-        this.project = project;
-        this.document = document;
-        this.file = file;
+        document = editor.getDocument();
+        documentManager = PsiDocumentManager.getInstance(editor.getProject());
+        this.isBulkMode = isBulkMode;
+    }
+
+    protected BaseConvertVerificationAction(Editor editor, String actionText) {
+        this(editor, actionText, false);
     }
 
     @Override
@@ -53,10 +65,36 @@ public abstract class BaseConvertVerificationAction extends AnAction {
         if (file == null) return;
         Project project = e.getProject();
 
-        runWriteCommandAction(project, () -> performAction(project, editor, file));
+        runWriteCommandAction(project, () -> {
+            if (isBulkMode) performActionInBulk(editor, file);
+            else performAction(project, editor, file);
+        });
     }
 
-    protected abstract void performAction(Project project, Editor editor, PsiFile file);
+    /**
+     * Performs this action for a single call chain.
+     */
+    protected void performAction(Project project, Editor editor, PsiFile file) {
+        perform(getMethodCallAtCaret(file, editor), project, editor);
+    }
+
+    /**
+     * Performs this action for one or more call chain under selection.
+     */
+    protected void performActionInBulk(Editor editor, PsiFile file) {
+        var statement = ConvertVerificationIntentionBase.findFirstSelectedStatement(file, editor.getSelectionModel().getSelectionStart());
+        while (statement != null && endOffsetOf(statement) <= editor.getSelectionModel().getSelectionEnd()) {
+            var identifier = findChildOfType(statement, PsiIdentifier.class);
+            var verificationIdentifier = getParentOfType(identifier, PsiMethodCallExpression.class);
+            performAndCommitDocument(() -> perform(verificationIdentifier, editor.getProject(), editor));
+            statement = getNextSiblingOfType(statement, PsiExpressionStatement.class);
+        }
+    }
+
+    /**
+     * Performs the actual conversion.
+     */
+    protected abstract void perform(PsiMethodCallExpression verificationCall, Project project, Editor editor);
 
     /**
      * Replaces the beginning of the text of the call chain with the provided replacement text.
@@ -77,7 +115,7 @@ public abstract class BaseConvertVerificationAction extends AnAction {
         //end offset of Mockito.verify/BDDMockito.then
         int endOffset = endOffsetOf(getReferenceNameElement(calls.get(0)));
         performAndCommitDocument(() -> document.replaceString(calls.get(0).getTextOffset(), endOffset, replacement));
-        importClass(mockitoClass);
+        importClass(mockitoClass, calls.get(0).getProject(), calls.get(0).getContainingFile());
     }
 
     /**
@@ -106,10 +144,10 @@ public abstract class BaseConvertVerificationAction extends AnAction {
     /**
      * Imports the class the stubbing call chain starts with: either {@code org.mockito.Mockito} or {@code org.mockito.BDDMockito}.
      */
-    protected final void importClass(String fqn) {
+    protected final void importClass(String fqn, Project project, PsiElement context) {
         PsiClass mockitoClass = JavaPsiFacade.getInstance(project).findClass(fqn, ProjectScope.getLibrariesScope(project));
         if (mockitoClass != null) {
-            performAndCommitDocument(() -> ImportUtils.addImportIfNeeded(mockitoClass, file));
+            performAndCommitDocument(() -> ImportUtils.addImportIfNeeded(mockitoClass, context));
             documentManager.doPostponedOperationsAndUnblockDocument(document);
         }
     }
@@ -124,7 +162,8 @@ public abstract class BaseConvertVerificationAction extends AnAction {
      */
     protected PsiElement createAndAddInOrderVariable(PsiMethodCallExpression verificationCall, List<PsiMethodCallExpression> calls) {
         //Create an InOrder object from the verified mock: 'InOrder inOrder = Mockito.InOrder(mock);'
-        importClass(MockitoQualifiedNames.ORG_MOCKITO_INORDER);
+        var project = verificationCall.getProject();
+        importClass(MockitoQualifiedNames.ORG_MOCKITO_INORDER, project, verificationCall.getContainingFile());
         String inOrderVariableText = "InOrder inOrder = Mockito.inOrder(" + getFirstArgument(verificationCall).getText() + ");";
         var inOrderVariable = JavaPsiFacade.getElementFactory(project).createStatementFromText(inOrderVariableText, verificationCall);
 
@@ -140,9 +179,5 @@ public abstract class BaseConvertVerificationAction extends AnAction {
     protected final void performAndCommitDocument(Runnable runnable) {
         runnable.run();
         documentManager.commitDocument(document);
-    }
-
-    protected final int endOffsetOf(@NotNull PsiElement element) {
-        return element.getTextRange().getEndOffset();
     }
 }

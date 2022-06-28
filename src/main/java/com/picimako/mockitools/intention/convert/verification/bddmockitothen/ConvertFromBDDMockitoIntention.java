@@ -17,7 +17,6 @@ import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase;
@@ -50,7 +49,7 @@ public class ConvertFromBDDMockitoIntention extends ConvertVerificationIntention
     }
 
     @Override
-    protected boolean isAvailableFor(PsiMethodCallExpression methodCall) {
+    public boolean isAvailableFor(PsiMethodCallExpression methodCall) {
         if (THEN.equals(getMethodName(methodCall)) && isBDDMockitoThen(methodCall)) {
             var should = getSubsequentMethodCall(methodCall);
             return THEN_SHOULD.matches(should) && hasSubsequentMethodCall(should);
@@ -59,16 +58,16 @@ public class ConvertFromBDDMockitoIntention extends ConvertVerificationIntention
     }
 
     @Override
-    public List<AnAction> actionSelectionOptions(Project project, Editor editor, PsiFile file) {
+    public List<AnAction> actionSelectionOptions(Editor editor, PsiFile file) {
         var actions = new ArrayList<AnAction>(3);
         var then = getMethodCallAtCaret(file, editor);
         var should = getSubsequentMethodCall(then);
         if (!isBDDMockitoEnforced(then)) {
-            actions.add(new ConvertBDDMockitoThenToMockitoVerifyAction(project, editor.getDocument(), file));
-            actions.add(new ConvertBDDMockitoThenToInOrderVerifyAction(project, editor.getDocument(), file));
+            actions.add(new ConvertBDDMockitoThenToMockitoVerifyAction(editor));
+            actions.add(new ConvertBDDMockitoThenToInOrderVerifyAction(editor));
         }
         if (!isMockitoEnforced(then) && THEN_SHOULD_WITHOUT_INORDER.matches(should)) {
-            actions.add(new AddInOrderToBDDMockitoAction(project, editor.getDocument(), file));
+            actions.add(new AddInOrderToBDDMockitoAction(editor));
         }
         if (actions.isEmpty()) actions.add(NoActionAvailableAction.INSTANCE);
         return actions;

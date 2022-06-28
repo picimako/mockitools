@@ -160,7 +160,7 @@ public class ConvertFromBDDMockitoIntentionTest extends EnforceConventionAwareIn
                 "        BDDMockito.th<caret>en(Mockito.mock(Object.class)).should().doSomething();\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoIntention().actionSelectionOptions(getProject(), getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(AddInOrderToBDDMockitoAction.class);
@@ -178,7 +178,7 @@ public class ConvertFromBDDMockitoIntentionTest extends EnforceConventionAwareIn
                 "        BDDMockito.th<caret>en(mock).should(Mockito.inOrder(mock)).doSomething();\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoIntention().actionSelectionOptions(getProject(), getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(NoActionAvailableAction.class);
@@ -195,7 +195,7 @@ public class ConvertFromBDDMockitoIntentionTest extends EnforceConventionAwareIn
                 "        BDDMockito.th<caret>en(Mockito.mock(Object.class)).should().doSomething();\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoIntention().actionSelectionOptions(getProject(), getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(
@@ -215,7 +215,7 @@ public class ConvertFromBDDMockitoIntentionTest extends EnforceConventionAwareIn
                 "        BDDMockito.th<caret>en(mock).should(Mockito.inOrder(mock)).doSomething();\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoIntention().actionSelectionOptions(getProject(), getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(
@@ -234,7 +234,7 @@ public class ConvertFromBDDMockitoIntentionTest extends EnforceConventionAwareIn
                 "        BDDMockito.th<caret>en(Mockito.mock(Object.class)).should().doSomething();\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoIntention().actionSelectionOptions(getProject(), getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(
@@ -255,7 +255,7 @@ public class ConvertFromBDDMockitoIntentionTest extends EnforceConventionAwareIn
                 "        BDDMockito.th<caret>en(mock).should(Mockito.inOrder(mock)).doSomething();\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoIntention().actionSelectionOptions(getProject(), getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(

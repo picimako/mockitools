@@ -10,7 +10,7 @@ import com.picimako.mockitools.MockitoolsActionTestBase;
 public class ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderActionTest extends MockitoolsActionTestBase {
 
     public void testConvertsInOrderVerifyToBDDMockitoThenWithoutVerificationMode() {
-        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderAction(getProject(), myFixture.getEditor().getDocument(), getFile()),
+        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderAction(myFixture.getEditor(), false),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -43,7 +43,7 @@ public class ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderActionTest extend
     }
 
     public void testConvertsInOrderVerifyToBDDMockitoThenWithVerificationMode() {
-        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderAction(getProject(), myFixture.getEditor().getDocument(), getFile()),
+        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderAction(myFixture.getEditor(), false),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -67,6 +67,146 @@ public class ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderActionTest extend
                 "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
                 "        InOrder order = Mockito.inOrder(mockObject);\n" +
                 "        BDDMockito.then(mockObject).should(Mockito.times(2)).doSomething();\n" +
+                "    }\n" +
+                "    private static class MockObject {\n" +
+                "        public void doSomething() {\n" +
+                "        }\n" +
+                "    }\n" +
+                "}");
+    }
+
+    public void testConvertsInOrderVerifyToBDDMockitoThenWithoutVerificationModeInBulkSingle() {
+        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderAction(myFixture.getEditor(), true),
+            "import org.mockito.InOrder;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class ConversionTest {\n" +
+                "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
+                "        InOrder order = Mockito.inOrder(mockObject);\n" +
+                "        <selection>order.verify(mockObject).doSomething();</selection>\n" +
+                "    }\n" +
+                "    private static class MockObject {\n" +
+                "        public void doSomething() {\n" +
+                "        }\n" +
+                "    }\n" +
+                "}",
+            "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.InOrder;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class ConversionTest {\n" +
+                "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
+                "        InOrder order = Mockito.inOrder(mockObject);\n" +
+                "        BDDMockito.then(mockObject).should().doSomething();\n" +
+                "    }\n" +
+                "    private static class MockObject {\n" +
+                "        public void doSomething() {\n" +
+                "        }\n" +
+                "    }\n" +
+                "}");
+    }
+
+    public void testConvertsInOrderVerifyToBDDMockitoThenWithVerificationModeInBulkSingle() {
+        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderAction(myFixture.getEditor(), true),
+            "import org.mockito.InOrder;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class ConversionTest {\n" +
+                "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
+                "        InOrder order = Mockito.inOrder(mockObject);\n" +
+                "        <selection>order.verify(mockObject, Mockito.times(2)).doSomething();</selection>\n" +
+                "    }\n" +
+                "    private static class MockObject {\n" +
+                "        public void doSomething() {\n" +
+                "        }\n" +
+                "    }\n" +
+                "}",
+            "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.InOrder;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class ConversionTest {\n" +
+                "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
+                "        InOrder order = Mockito.inOrder(mockObject);\n" +
+                "        BDDMockito.then(mockObject).should(Mockito.times(2)).doSomething();\n" +
+                "    }\n" +
+                "    private static class MockObject {\n" +
+                "        public void doSomething() {\n" +
+                "        }\n" +
+                "    }\n" +
+                "}");
+    }
+
+    public void testConvertsInOrderVerifyToBDDMockitoThenWithoutVerificationModeInBulkMultiple() {
+        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderAction(myFixture.getEditor(), true),
+            "import org.mockito.InOrder;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class ConversionTest {\n" +
+                "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
+                "        MockObject mockObject2 = Mockito.mock(MockObject.class);\n" +
+                "        InOrder order = Mockito.inOrder(mockObject, mockObject2);\n" +
+                "        <selection>order.verify(mockObject).doSomething();\n" +
+                "        order.verify(mockObject2).doSomething();</selection>\n" +
+                "    }\n" +
+                "    private static class MockObject {\n" +
+                "        public void doSomething() {\n" +
+                "        }\n" +
+                "    }\n" +
+                "}",
+            "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.InOrder;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class ConversionTest {\n" +
+                "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
+                "        MockObject mockObject2 = Mockito.mock(MockObject.class);\n" +
+                "        InOrder order = Mockito.inOrder(mockObject, mockObject2);\n" +
+                "        BDDMockito.then(mockObject).should().doSomething();\n" +
+                "        BDDMockito.then(mockObject2).should().doSomething();\n" +
+                "    }\n" +
+                "    private static class MockObject {\n" +
+                "        public void doSomething() {\n" +
+                "        }\n" +
+                "    }\n" +
+                "}");
+    }
+
+    public void testConvertsInOrderVerifyToBDDMockitoThenWithVerificationModeInBulkMultiple() {
+        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderAction(myFixture.getEditor(), true),
+            "import org.mockito.InOrder;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class ConversionTest {\n" +
+                "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
+                "        MockObject mockObject2 = Mockito.mock(MockObject.class);\n" +
+                "        InOrder order = Mockito.inOrder(mockObject, mockObject2);\n" +
+                "        <selection>order.verify(mockObject, Mockito.times(2)).doSomething();\n" +
+                "        order.verify(mockObject2).doSomething();</selection>\n" +
+                "    }\n" +
+                "    private static class MockObject {\n" +
+                "        public void doSomething() {\n" +
+                "        }\n" +
+                "    }\n" +
+                "}",
+            "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.InOrder;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class ConversionTest {\n" +
+                "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
+                "        MockObject mockObject2 = Mockito.mock(MockObject.class);\n" +
+                "        InOrder order = Mockito.inOrder(mockObject, mockObject2);\n" +
+                "        BDDMockito.then(mockObject).should(Mockito.times(2)).doSomething();\n" +
+                "        BDDMockito.then(mockObject2).should().doSomething();\n" +
                 "    }\n" +
                 "    private static class MockObject {\n" +
                 "        public void doSomething() {\n" +

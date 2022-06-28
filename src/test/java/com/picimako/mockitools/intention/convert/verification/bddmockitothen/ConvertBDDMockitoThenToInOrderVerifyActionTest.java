@@ -10,7 +10,7 @@ import com.picimako.mockitools.MockitoolsActionTestBase;
 public class ConvertBDDMockitoThenToInOrderVerifyActionTest extends MockitoolsActionTestBase {
 
     public void testConvertsBDDMockitoThenToInOrderVerifyWithNewInOrderWithoutVerificationMode() {
-        checkAction(() -> new ConvertBDDMockitoThenToInOrderVerifyAction(getProject(), myFixture.getEditor().getDocument(), getFile()),
+        checkAction(() -> new ConvertBDDMockitoThenToInOrderVerifyAction(myFixture.getEditor()),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -41,7 +41,7 @@ public class ConvertBDDMockitoThenToInOrderVerifyActionTest extends MockitoolsAc
     }
 
     public void testConvertsBDDMockitoThenToInOrderVerifyWithNewInOrderWithVerificationMode() {
-        checkAction(() -> new ConvertBDDMockitoThenToInOrderVerifyAction(getProject(), myFixture.getEditor().getDocument(), getFile()),
+        checkAction(() -> new ConvertBDDMockitoThenToInOrderVerifyAction(myFixture.getEditor()),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -72,7 +72,7 @@ public class ConvertBDDMockitoThenToInOrderVerifyActionTest extends MockitoolsAc
     }
 
     public void testConvertsBDDMockitoThenToInOrderVerifyReusingSpecifiedInOrderWithoutVerificationMode() {
-        checkAction(() -> new ConvertBDDMockitoThenToInOrderVerifyAction(getProject(), myFixture.getEditor().getDocument(), getFile()),
+        checkAction(() -> new ConvertBDDMockitoThenToInOrderVerifyAction(myFixture.getEditor()),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -104,7 +104,7 @@ public class ConvertBDDMockitoThenToInOrderVerifyActionTest extends MockitoolsAc
     }
 
     public void testConvertsBDDMockitoThenToInOrderVerifyReusingSpecifiedInOrderWithVerificationMode() {
-        checkAction(() -> new ConvertBDDMockitoThenToInOrderVerifyAction(getProject(), myFixture.getEditor().getDocument(), getFile()),
+        checkAction(() -> new ConvertBDDMockitoThenToInOrderVerifyAction(myFixture.getEditor()),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +

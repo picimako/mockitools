@@ -4,14 +4,11 @@ package com.picimako.mockitools.intention.convert.verification.inorderverify;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
-import static com.picimako.mockitools.PsiMethodUtil.getMethodCallAtCaret;
 
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiMethodCallExpression;
 import com.picimako.mockitools.intention.convert.verification.BaseConvertVerificationAction;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Converts {@code InOrder.verify()} call chains to the {@code Mockito.verify()} approach.
@@ -22,15 +19,14 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ConvertInOrderVerifyToMockitoVerifyAction extends BaseConvertVerificationAction {
 
-    public ConvertInOrderVerifyToMockitoVerifyAction(Project project, @NotNull Document document, PsiFile file) {
-        super(project, document, file, "Mockito.verify()");
+    public ConvertInOrderVerifyToMockitoVerifyAction(Editor editor, boolean isBulkMode) {
+        super(editor, "Mockito.verify()", isBulkMode);
     }
 
     @Override
-    protected void performAction(Project project, Editor editor, PsiFile file) {
-        var inOrderVerify = getMethodCallAtCaret(file, editor);
-        var calls = collectCallsInChainFromFirst(inOrderVerify, true);
-        importClass(ORG_MOCKITO_MOCKITO);
+    public void perform(PsiMethodCallExpression verificationCall, Project project, Editor editor) {
+        var calls = collectCallsInChainFromFirst(verificationCall, true);
+        importClass(ORG_MOCKITO_MOCKITO, project, verificationCall.getContainingFile());
         replaceBeginningOfChain(calls, "Mockito.verify");
     }
 }

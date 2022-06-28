@@ -10,7 +10,12 @@ Can perform conversion of <code>InOrder.verify()</code> call chains to the follo
     <li>to <code>BDDMockito.then()</code> without an InOrder, practically omitting the source InOrder variable.</li>
 </ul>
 <p>
-    The intention is available on <code>InOrder.verify()</code> when it is followed by a method call on the mock object.
+    The intention is available on <code>InOrder.verify()</code> when it is followed by a method call on the mock object,
+    when the user wants to convert only a single verification call, and also available when the users select one or more
+    <code>InOrder.verify()</code> call chains that they want to convert.
+<p>
+    Call chains when there is no separate <code>InOrder</code> local variable is created, but <code>
+    Mockito.inOrder(mockObject)</code> is called inline, is not supported at the moment.
 <p>
     Conversion to <code>Mockito.verify()</code> is available only when the <strong>Enforce
     conventions</strong> inspection is disabled, or it enforces <code>org.mockito.Mockito</code>,

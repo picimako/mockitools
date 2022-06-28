@@ -13,6 +13,8 @@ when they are specified in the stubbing, but not in the mentioned `throws` claus
 Along with it extended the possible conversion options from and to `Mockito.verify()` and `BDDMockito.then()` as well.
 Details are available in the [Verifications](https://github.com/picimako/mockitools/blob/main/docs/verifications.md) document.
 - `EnforceConventionInspection` can now report `InOrder.verify()` calls too, as part of enforcing `BDDMockito.then()` verification.
+- [#20](https://github.com/picimako/mockitools/issues/20): Extended the conversion of `InOrder.verify()` call chains with a bulk mode,
+so that if multiple (or just a single) such call chain is selected/highlighted in the editor, they all can be converted to the same approach at once.
 
 ### Changed
 - Removed support for IJ2021.1. From now on 2021.2 is the earliest version supported.

@@ -6,13 +6,12 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKI
 import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.PsiMethodUtil.get2ndArgument;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.PsiMethodUtil.getMethodCallAtCaret;
 import static com.picimako.mockitools.PsiMethodUtil.hasTwoArguments;
+import static com.picimako.mockitools.Ranges.endOffsetOf;
 
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNamedElement;
 import com.picimako.mockitools.MemberInplaceRenameHelper;
 import com.picimako.mockitools.intention.convert.verification.BaseConvertVerificationAction;
@@ -25,13 +24,12 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  * @since 0.5.0
  */
 public final class ConvertMockitoVerifyToBDDMockitoThenWithInOrderAction extends BaseConvertVerificationAction {
-    public ConvertMockitoVerifyToBDDMockitoThenWithInOrderAction(Project project, Document document, PsiFile file) {
-        super(project, document, file, MockitoolsBundle.message("intention.convert.verification.bddmockito.with.inorder"));
+    public ConvertMockitoVerifyToBDDMockitoThenWithInOrderAction(Editor editor) {
+        super(editor, MockitoolsBundle.message("intention.convert.verification.bddmockito.with.inorder"));
     }
 
     @Override
-    protected void performAction(Project project, Editor editor, PsiFile file) {
-        var mockitoVerify = getMethodCallAtCaret(file, editor);
+    protected void perform(PsiMethodCallExpression mockitoVerify, Project project, Editor editor) {
         var calls = collectCallsInChainFromFirst(mockitoVerify, true);
 
         var addedVariable = createAndAddInOrderVariable(mockitoVerify, calls);

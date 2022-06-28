@@ -133,7 +133,7 @@ public class ConvertFromMockitoVerifyIntentionTest extends EnforceConventionAwar
                 "        Mockito.ve<caret>rify(Mockito.mock(Object.class)).doSomething();\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromMockitoVerifyIntention().actionSelectionOptions(getProject(), getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromMockitoVerifyIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(ConvertMockitoVerifyToInOrderVerifyAction.class);
@@ -149,7 +149,7 @@ public class ConvertFromMockitoVerifyIntentionTest extends EnforceConventionAwar
                 "        Mockito.ve<caret>rify(Mockito.mock(Object.class)).doSomething();\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromMockitoVerifyIntention().actionSelectionOptions(getProject(), getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromMockitoVerifyIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(
@@ -167,7 +167,7 @@ public class ConvertFromMockitoVerifyIntentionTest extends EnforceConventionAwar
                 "        Mockito.ve<caret>rify(Mockito.mock(Object.class)).doSomething();\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromMockitoVerifyIntention().actionSelectionOptions(getProject(), getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromMockitoVerifyIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(

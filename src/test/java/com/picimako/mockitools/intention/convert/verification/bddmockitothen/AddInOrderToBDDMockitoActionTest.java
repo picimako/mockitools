@@ -10,7 +10,7 @@ import com.picimako.mockitools.MockitoolsActionTestBase;
 public class AddInOrderToBDDMockitoActionTest extends MockitoolsActionTestBase {
 
     public void testAddsInOrderArgumentToBDDMockitoThenWithoutVerificationMode() {
-        checkAction(() -> new AddInOrderToBDDMockitoAction(getProject(), myFixture.getEditor().getDocument(), getFile()),
+        checkAction(() -> new AddInOrderToBDDMockitoAction(myFixture.getEditor()),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -42,7 +42,7 @@ public class AddInOrderToBDDMockitoActionTest extends MockitoolsActionTestBase {
     }
 
     public void testAddsInOrderArgumentToBDDMockitoThenWithVerificationMode() {
-        checkAction(() -> new AddInOrderToBDDMockitoAction(getProject(), myFixture.getEditor().getDocument(), getFile()),
+        checkAction(() -> new AddInOrderToBDDMockitoAction(myFixture.getEditor()),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +

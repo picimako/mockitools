@@ -2,6 +2,9 @@
 
 package com.picimako.mockitools.intention.convert.verification;
 
+import static com.intellij.psi.util.PsiTreeUtil.getNextSiblingOfType;
+import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
+import static com.picimako.mockitools.PsiMethodUtil.getMethodCallForIdentifier;
 import static com.picimako.mockitools.PsiMethodUtil.isIdentifierOfMethodCall;
 
 import com.intellij.codeInsight.intention.IntentionAction;
@@ -12,13 +15,18 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.util.IncorrectOperationException;
 import com.picimako.mockitools.ListPopupHelper;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,6 +34,7 @@ import java.util.List;
  *
  * @see com.picimako.mockitools.intention.convert.verification.mockitoverify.ConvertFromMockitoVerifyIntention
  * @see com.picimako.mockitools.intention.convert.verification.bddmockitothen.ConvertFromBDDMockitoIntention
+ * @see com.picimako.mockitools.intention.convert.verification.inorderverify.ConvertFromInOrderVerifyIntention
  * @since 0.4.0
  */
 public abstract class ConvertVerificationIntentionBase implements IntentionAction {
@@ -40,7 +49,7 @@ public abstract class ConvertVerificationIntentionBase implements IntentionActio
 
     @Override
     public @IntentionName @NotNull String getText() {
-        return MockitoolsBundle.message("intention.convert.verification.to.x", sourceApproachName);
+        return MockitoolsBundle.message("intention.convert.verification.to");
     }
 
     @Override
@@ -55,16 +64,19 @@ public abstract class ConvertVerificationIntentionBase implements IntentionActio
         if (!file.getFileType().equals(JavaFileType.INSTANCE)) return false;
 
         final PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
-        if (isIdentifierOfMethodCall(element)) {
-            var methodCall = (PsiMethodCallExpression) element.getParent().getParent();
-            return isAvailableFor(methodCall);
-        }
-        return false;
+        return isIdentifierOfMethodCall(element) && isAvailableFor(getMethodCallForIdentifier(element));
     }
+
+    /**
+     * Returns if this intention should be available for the provided method call.
+     */
+    public abstract boolean isAvailableFor(PsiMethodCallExpression methodCall);
+
+    //Invocation
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        ListPopupHelper.showActionsInListPopup(MockitoolsBundle.message("intention.convert.verification.select.target"), actionSelectionOptions(project, editor, file), editor);
+        ListPopupHelper.showActionsInListPopup(MockitoolsBundle.message("intention.convert.verification.select.target"), actionSelectionOptions(editor, file), editor);
     }
 
     /**
@@ -74,12 +86,23 @@ public abstract class ConvertVerificationIntentionBase implements IntentionActio
      * <p>
      * Visibility is public, so that it is available in tests.
      */
-    public abstract List<AnAction> actionSelectionOptions(Project project, Editor editor, PsiFile file);
+    public List<AnAction> actionSelectionOptions(Editor editor, PsiFile file) {
+        return Collections.singletonList(NoActionAvailableAction.INSTANCE);
+    }
 
     /**
-     * Returns if this intention should be available for the provided method call.
+     * It checks if the selection start is at whitespaces preceding a call chain, to improve user experience,
+     * since the first expression doesn't have to be selected precisely.
      */
-    protected abstract boolean isAvailableFor(PsiMethodCallExpression methodCall);
+    @Nullable
+    public static PsiExpressionStatement findFirstSelectedStatement(PsiFile file, int selectionStart) {
+        var elementAtStart = file.findElementAt(selectionStart);
+        if (elementAtStart instanceof PsiIdentifier)
+            return getParentOfType(elementAtStart, PsiExpressionStatement.class);
+        else if (elementAtStart instanceof PsiWhiteSpace)
+            return getNextSiblingOfType(elementAtStart, PsiExpressionStatement.class);
+        return null;
+    }
 
     @Override
     public boolean startInWriteAction() {

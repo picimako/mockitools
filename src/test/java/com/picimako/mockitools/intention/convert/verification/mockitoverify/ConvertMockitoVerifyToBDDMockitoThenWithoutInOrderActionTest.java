@@ -10,7 +10,7 @@ import com.picimako.mockitools.MockitoolsActionTestBase;
 public class ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderActionTest extends MockitoolsActionTestBase {
 
     public void testConvertsMockitoVerifyToBDDMockitoThenWithoutVerificationMode() {
-        checkAction(() -> new ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderAction(getProject(), myFixture.getEditor().getDocument(), getFile()),
+        checkAction(() -> new ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderAction(myFixture.getEditor()),
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class ConversionTest {\n" +
@@ -39,7 +39,7 @@ public class ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderActionTest extend
     }
 
     public void testConvertsMockitoVerifyToBDDMockitoThenWithVerificationMode() {
-        checkAction(() -> new ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderAction(getProject(), myFixture.getEditor().getDocument(), getFile()),
+        checkAction(() -> new ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderAction(myFixture.getEditor()),
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class ConversionTest {\n" +
@@ -68,7 +68,7 @@ public class ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderActionTest extend
     }
 
     public void testConvertsMockitoVerifyToBDDMockitoThenWithVerificationModeWithLineWrapping() {
-        checkAction(() -> new ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderAction(getProject(), myFixture.getEditor().getDocument(), getFile()),
+        checkAction(() -> new ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderAction(myFixture.getEditor()),
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class ConversionTest {\n" +

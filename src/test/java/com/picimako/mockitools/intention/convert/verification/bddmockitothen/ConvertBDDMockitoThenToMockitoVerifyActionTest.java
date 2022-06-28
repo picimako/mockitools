@@ -10,7 +10,7 @@ import com.picimako.mockitools.MockitoolsActionTestBase;
 public class ConvertBDDMockitoThenToMockitoVerifyActionTest extends MockitoolsActionTestBase {
 
     public void testConvertsBDDMockitoThenToMockitoVerifyWithoutVerificationMode() {
-        checkAction(() -> new ConvertBDDMockitoThenToMockitoVerifyAction(getProject(), myFixture.getEditor().getDocument(), getFile()),
+        checkAction(() -> new ConvertBDDMockitoThenToMockitoVerifyAction(myFixture.getEditor()),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -40,7 +40,7 @@ public class ConvertBDDMockitoThenToMockitoVerifyActionTest extends MockitoolsAc
     }
 
     public void testConvertsBDDMockitoThenToMockitoVerifyWithVerificationMode() {
-        checkAction(() -> new ConvertBDDMockitoThenToMockitoVerifyAction(getProject(), myFixture.getEditor().getDocument(), getFile()),
+        checkAction(() -> new ConvertBDDMockitoThenToMockitoVerifyAction(myFixture.getEditor()),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -70,7 +70,7 @@ public class ConvertBDDMockitoThenToMockitoVerifyActionTest extends MockitoolsAc
     }
 
     public void testConvertsBDDMockitoThenToMockitoVerifyWithVerificationModeWithLineWrapping() {
-        checkAction(() -> new ConvertBDDMockitoThenToMockitoVerifyAction(getProject(), myFixture.getEditor().getDocument(), getFile()),
+        checkAction(() -> new ConvertBDDMockitoThenToMockitoVerifyAction(myFixture.getEditor()),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
