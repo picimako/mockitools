@@ -10,7 +10,7 @@ import com.picimako.mockitools.MockitoolsActionTestBase;
 public class ConvertInOrderVerifyToBDDMockitoThenWithInOrderActionTest extends MockitoolsActionTestBase {
 
     public void testConvertsInOrderVerifyToBDDMockitoThenWithoutVerificationMode() {
-        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction(myFixture.getEditor(), false),
+        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction(false),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -43,7 +43,7 @@ public class ConvertInOrderVerifyToBDDMockitoThenWithInOrderActionTest extends M
     }
 
     public void testConvertsInOrderVerifyToBDDMockitoThenWithVerificationMode() {
-        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction(myFixture.getEditor(), false),
+        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction(false),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -76,7 +76,7 @@ public class ConvertInOrderVerifyToBDDMockitoThenWithInOrderActionTest extends M
     }
 
     public void testConvertsInOrderVerifyToBDDMockitoThenWithoutVerificationModeInBulkSingle() {
-        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction(myFixture.getEditor(), true),
+        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction(true),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -109,7 +109,7 @@ public class ConvertInOrderVerifyToBDDMockitoThenWithInOrderActionTest extends M
     }
 
     public void testConvertsInOrderVerifyToBDDMockitoThenWithVerificationModeInBulkSingle() {
-        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction(myFixture.getEditor(), true),
+        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction(true),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -142,7 +142,7 @@ public class ConvertInOrderVerifyToBDDMockitoThenWithInOrderActionTest extends M
     }
 
     public void testConvertsInOrderVerifyToBDDMockitoThenWithoutVerificationModeInBulkMultiple() {
-        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction(myFixture.getEditor(), true),
+        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction(true),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -179,7 +179,7 @@ public class ConvertInOrderVerifyToBDDMockitoThenWithInOrderActionTest extends M
     }
 
     public void testConvertsInOrderVerifyToBDDMockitoThenWithVerificationModeInBulkMultiple() {
-        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction(myFixture.getEditor(), true),
+        checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction(true),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +

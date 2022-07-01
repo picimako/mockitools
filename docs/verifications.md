@@ -131,12 +131,21 @@ to:
 
 ![](https://img.shields.io/badge/since-0.5.0-blue)
 
-Conversion of `InOrder.verify()` based verifications is also available via selecting one or more such call chains in the editor.
+Conversion of one or more verification call chains is also available via selection in the editor.
+It can convert between `org.mockito.Mockito`, `org.mockito.BDDMockito` and `org.mockito.InOrder` in any direction, with some nuances that should be taken into consideration.
 
-The availability and conversion logic is the same as for the single conversion options, the only difference being that
-**all** selected call chains must be valid `InOrder.verify()` ones.
+The availability is the same, while the conversion logic is mostly the same, as for the single conversion options:
+- when converting from `BDDMockito.then()`
+  - `InOrder.verify()` as a target is available only when **all** `BDDMockito.then()` chains in the selection use an `InOrder` variable, and they use the same one,
+  - adding an `InOrder` to the `should()` call is available only when **none** of the `BDDMockito.then()` chains use an `InOrder` variable.
+- when a new `InOrder` local variable is created, it is used in all selected and converted verifications. If you want to use different ones for different verifications,
+you can convert them one by one.
 
-**Example (InOrder.verify() -> BDDMockito.then() - selection is between \[\[ and ]]):**
+#### Examples
+
+Selections are between [\[ and ]].
+
+**InOrder.verify() -> BDDMockito.then()**
 
 ```java
 From:
@@ -147,5 +156,16 @@ to:
       InOrder inOrder = Mockito.inOrder(mock, mock2);
       BDDMockito.then(mock).should().doSomething();
       BDDMockito.then(mock2).should(times(2)).doSomething();
+```
 
+**Mockito.verify() -> InOrder.verify()**
+
+```java
+From:
+      [[Mockito.verify(mock).doSomething();
+      Mockito.verify(mock2, times(2)).doSomething();]]
+to:
+      InOrder inOrder = Mockito.inOrder(mock, mock2);
+      inOrder.verify(mock).doSomething();
+      inOrder.verify(mock2, times(2)).doSomething();
 ```

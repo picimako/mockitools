@@ -1,12 +1,13 @@
 <html>
 <body>
 <!-- tooltip end -->
-Converts <code>Mockito.verify()</code> call chains either to <code>BDDMockito.then().should()</code> or <code>InOrder.verify()</code>
-based on the user's choice.
+Can perform conversion of one or more <code>Mockito.verify()</code> call chains to the following approaches:
+<ul>
+    <li>to <code>InOrder.verify()</code>,</li>
+    <li>to <code>BDDMockito.then()</code> using a newly created an <code>InOrder</code> local variable,</li>
+    <li>to <code>BDDMockito.then()</code> without an InOrder, omitting the source InOrder variable.</li>
+</ul>
 <p>
     The intention is available on <code>Mockito.verify()</code> when it is followed by a method call on the mock object.
-<p>
-    Conversion to <code>BDDMockito.then().should()</code> is available only when the <strong>Enforce
-    conventions</strong> inspection is disabled, or it doesn't enforce <code>org.mockito.Mockito</code>.
 </body>
 </html>

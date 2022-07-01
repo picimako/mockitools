@@ -10,7 +10,7 @@ import com.picimako.mockitools.MockitoolsActionTestBase;
 public class AddInOrderToBDDMockitoActionTest extends MockitoolsActionTestBase {
 
     public void testAddsInOrderArgumentToBDDMockitoThenWithoutVerificationMode() {
-        checkAction(() -> new AddInOrderToBDDMockitoAction(myFixture.getEditor()),
+        checkAction(() -> new AddInOrderToBDDMockitoAction(false),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -42,7 +42,7 @@ public class AddInOrderToBDDMockitoActionTest extends MockitoolsActionTestBase {
     }
 
     public void testAddsInOrderArgumentToBDDMockitoThenWithVerificationMode() {
-        checkAction(() -> new AddInOrderToBDDMockitoAction(myFixture.getEditor()),
+        checkAction(() -> new AddInOrderToBDDMockitoAction(false),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -64,6 +64,74 @@ public class AddInOrderToBDDMockitoActionTest extends MockitoolsActionTestBase {
                 "    void testMethod(){\n" +
                 "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
                 "        InOrder order = Mockito.inOrder(mockObject);\n" +
+                "        BDDMockito.then(mockObject).should(order, Mockito.times(2)).doSomething();\n" +
+                "    }\n" +
+                "    private static class MockObject {\n" +
+                "        public void doSomething() {\n" +
+                "        }\n" +
+                "    }\n" +
+                "}");
+    }
+
+    public void testAddsInOrderArgumentToBDDMockitoThenWithoutVerificationModeInSelection() {
+        checkAction(() -> new AddInOrderToBDDMockitoAction(true),
+            "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class ConversionTest {\n" +
+                "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
+                "        <selection>BDDMockito.then(mockObject).should().doSomething();\n" +
+                "        BDDMockito.then(mockObject).should().doSomething();</selection>\n" +
+                "    }\n" +
+                "    private static class MockObject {\n" +
+                "        public void doSomething() {\n" +
+                "        }\n" +
+                "    }\n" +
+                "}",
+            "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.InOrder;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class ConversionTest {\n" +
+                "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
+                "        InOrder order = Mockito.inOrder(mockObject);\n" +
+                "        BDDMockito.then(mockObject).should(order).doSomething();\n" +
+                "        BDDMockito.then(mockObject).should(order).doSomething();\n" +
+                "    }\n" +
+                "    private static class MockObject {\n" +
+                "        public void doSomething() {\n" +
+                "        }\n" +
+                "    }\n" +
+                "}");
+    }
+
+    public void testAddsInOrderArgumentToBDDMockitoThenWithVerificationModeInSelection() {
+        checkAction(() -> new AddInOrderToBDDMockitoAction(true),
+            "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class ConversionTest {\n" +
+                "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
+                "        <selection>BDDMockito.then(mockObject).should(Mockito.times(2)).doSomething();\n" +
+                "        BDDMockito.then(mockObject).should(Mockito.times(2)).doSomething();</selection>\n" +
+                "    }\n" +
+                "    private static class MockObject {\n" +
+                "        public void doSomething() {\n" +
+                "        }\n" +
+                "    }\n" +
+                "}",
+            "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.InOrder;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class ConversionTest {\n" +
+                "    void testMethod(){\n" +
+                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
+                "        InOrder order = Mockito.inOrder(mockObject);\n" +
+                "        BDDMockito.then(mockObject).should(order, Mockito.times(2)).doSomething();\n" +
                 "        BDDMockito.then(mockObject).should(order, Mockito.times(2)).doSomething();\n" +
                 "    }\n" +
                 "    private static class MockObject {\n" +

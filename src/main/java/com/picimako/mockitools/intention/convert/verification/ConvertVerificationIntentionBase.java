@@ -2,10 +2,16 @@
 
 package com.picimako.mockitools.intention.convert.verification;
 
-import static com.intellij.psi.util.PsiTreeUtil.getNextSiblingOfType;
+import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
+import static com.intellij.psi.util.PsiTreeUtil.getPrevSiblingOfType;
+import static com.intellij.util.text.CharArrayUtil.containsOnlyWhiteSpaces;
+import static com.picimako.mockitools.FromSelectionDataRetriever.collectStatementsInSelection;
+import static com.picimako.mockitools.FromSelectionDataRetriever.selectionLengthIn;
 import static com.picimako.mockitools.PsiMethodUtil.getMethodCallForIdentifier;
 import static com.picimako.mockitools.PsiMethodUtil.isIdentifierOfMethodCall;
+import static com.picimako.mockitools.Ranges.charSequenceInRange;
+import static com.picimako.mockitools.TokenTypes.isTokenType;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.util.IntentionFamilyName;
@@ -14,17 +20,19 @@ import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.JavaTokenType;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
+import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.util.IncorrectOperationException;
 import com.picimako.mockitools.ListPopupHelper;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -63,14 +71,70 @@ public abstract class ConvertVerificationIntentionBase implements IntentionActio
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
         if (!file.getFileType().equals(JavaFileType.INSTANCE)) return false;
 
-        final PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
-        return isIdentifierOfMethodCall(element) && isAvailableFor(getMethodCallForIdentifier(element));
+        if (!editor.getSelectionModel().hasSelection()) {
+            final PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
+            return isIdentifierOfMethodCall(element) && isAvailableFor(getMethodCallForIdentifier(element));
+        } else return isAvailableForBulkConversion(editor, file);
+    }
+
+    /**
+     * Returns whether this intention will be available for selection based conversion.
+     * <p>
+     * Selections shorter than 15 characters, and ones containing only whitespaces, are not considered a suitable selection.
+     */
+    private boolean isAvailableForBulkConversion(Editor editor, PsiFile file) {
+        var model = editor.getSelectionModel();
+        int selectionStart = model.getSelectionStart();
+        int selectionEnd = model.getSelectionEnd();
+
+        //The shortest option is selecting 'x.verify(y).z();'. This is to prevent executing further logic for unnecessarily short selections.
+        if (selectionLengthIn(model) < 15
+            || containsOnlyWhiteSpaces(charSequenceInRange(editor, selectionStart, selectionEnd))
+            || !isSymbolAfterMethodCallChain(file.findElementAt(selectionEnd)))
+            return false;
+
+        for (var statement : collectStatementsInSelection(editor, file)) {
+            var identifier = findChildOfType(statement, PsiIdentifier.class);
+            if (identifier == null) return false;
+            var verificationCall = getParentOfType(identifier, PsiMethodCallExpression.class);
+            if (verificationCall == null) return false;
+            //If we find at least one call chain in the selection that doesn't satisfy the current intention's availability criteria,
+            //then the intention won't be available.
+            if (!isCorrectIdentifier(identifier, verificationCall) || !isAvailableFor(verificationCall)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns if the argument identifier is the same as the currently inspected call chain's qualifier expression,
+     * and that the call chain has the proper type of qualifier expression.
+     */
+    private boolean isCorrectIdentifier(@NotNull PsiElement identifier, @NotNull PsiMethodCallExpression verificationCall) {
+        var qualifier = verificationCall.getMethodExpression().getQualifierExpression();
+        return PsiManager.getInstance(identifier.getProject()).areElementsEquivalent(identifier.getParent(), qualifier)
+            && isQualifierHaveCorrectType(qualifier);
+    }
+
+    /**
+     * Returns if the element is a whitespace, or semicolon, succeeding a method call.
+     */
+    private boolean isSymbolAfterMethodCallChain(PsiElement element) {
+        return (element instanceof PsiWhiteSpace && getPrevSiblingOfType(element, PsiExpressionStatement.class) != null)
+            || (isTokenType(element, JavaTokenType.SEMICOLON) && getPrevSiblingOfType(element, PsiMethodCallExpression.class) != null);
     }
 
     /**
      * Returns if this intention should be available for the provided method call.
      */
     public abstract boolean isAvailableFor(PsiMethodCallExpression methodCall);
+
+    /**
+     * Returns whether the argument qualifier expression has the correct type. The qualifier may be a local variable
+     * (in case of e.g. InOrder), or a class (in case of Mockito or BDDMockito).
+     */
+    protected abstract boolean isQualifierHaveCorrectType(PsiExpression qualifier);
 
     //Invocation
 
@@ -88,20 +152,6 @@ public abstract class ConvertVerificationIntentionBase implements IntentionActio
      */
     public List<AnAction> actionSelectionOptions(Editor editor, PsiFile file) {
         return Collections.singletonList(NoActionAvailableAction.INSTANCE);
-    }
-
-    /**
-     * It checks if the selection start is at whitespaces preceding a call chain, to improve user experience,
-     * since the first expression doesn't have to be selected precisely.
-     */
-    @Nullable
-    public static PsiExpressionStatement findFirstSelectedStatement(PsiFile file, int selectionStart) {
-        var elementAtStart = file.findElementAt(selectionStart);
-        if (elementAtStart instanceof PsiIdentifier)
-            return getParentOfType(elementAtStart, PsiExpressionStatement.class);
-        else if (elementAtStart instanceof PsiWhiteSpace)
-            return getNextSiblingOfType(elementAtStart, PsiExpressionStatement.class);
-        return null;
     }
 
     @Override

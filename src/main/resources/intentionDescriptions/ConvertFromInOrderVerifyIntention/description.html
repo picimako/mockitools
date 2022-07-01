@@ -1,25 +1,17 @@
 <html>
 <body>
 <!-- tooltip end -->
-Can perform conversion of <code>InOrder.verify()</code> call chains to the following approaches:
+Can perform conversion of one or more <code>InOrder.verify()</code> call chains to the following approaches:
 <ul>
     <li>to <code>Mockito.verify()</code>,</li>
-    <li>to an InOrder specific <code>BDDMockito.then()</code> using a newly created an <code>InOrder</code> local
-        variable,
-    </li>
-    <li>to <code>BDDMockito.then()</code> without an InOrder, practically omitting the source InOrder variable.</li>
+    <li>to <code>BDDMockito.then()</code> using a newly created an <code>InOrder</code> local variable,</li>
+    <li>to <code>BDDMockito.then()</code> without an InOrder, omitting the source InOrder variable.</li>
 </ul>
 <p>
-    The intention is available on <code>InOrder.verify()</code> when it is followed by a method call on the mock object,
-    when the user wants to convert only a single verification call, and also available when the users select one or more
-    <code>InOrder.verify()</code> call chains that they want to convert.
+    The intention is available on <code>InOrder.verify()</code> when it is followed by a method call on the mock object.
 <p>
-    Call chains when there is no separate <code>InOrder</code> local variable is created, but <code>
+    In call chains where there is no separate <code>InOrder</code> local variable is created, but <code>
     Mockito.inOrder(mockObject)</code> is called inline, is not supported at the moment.
-<p>
-    Conversion to <code>Mockito.verify()</code> is available only when the <strong>Enforce
-    conventions</strong> inspection is disabled, or it enforces <code>org.mockito.Mockito</code>,
-    otherwise the two <code>BDDMockito.then()</code> specific conversions are available.
 <p>
     In any other case, the option list displays a <strong>No action available</strong> message.
 </body>

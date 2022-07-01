@@ -5,8 +5,11 @@ package com.picimako.mockitools;
 import java.util.List;
 import java.util.Optional;
 
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.search.ProjectScope;
@@ -41,6 +44,19 @@ public final class PsiClassUtil {
     public static void importClass(String fqn, PsiElement context) {
         PsiClass collectionClass = JavaPsiFacade.getInstance(context.getProject()).findClass(fqn, ProjectScope.getAllScope(context.getProject()));
         ImportUtils.addImportIfNeeded(collectionClass, context);
+    }
+
+    /**
+     * Imports the class the stubbing call chain starts with: either {@code org.mockito.Mockito} or {@code org.mockito.BDDMockito}.
+     */
+    public static void importClassAndCommit(String fqn, Project project, PsiElement context, Document document) {
+        PsiClass mockitoClass = JavaPsiFacade.getInstance(project).findClass(fqn, ProjectScope.getLibrariesScope(project));
+        if (mockitoClass != null) {
+            var documentManager = PsiDocumentManager.getInstance(project);
+            ImportUtils.addImportIfNeeded(mockitoClass, context);
+            documentManager.commitDocument(document);
+            documentManager.doPostponedOperationsAndUnblockDocument(document);
+        }
     }
 
     private PsiClassUtil() {

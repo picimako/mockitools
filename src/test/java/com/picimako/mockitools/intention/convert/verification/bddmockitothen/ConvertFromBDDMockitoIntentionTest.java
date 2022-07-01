@@ -184,6 +184,24 @@ public class ConvertFromBDDMockitoIntentionTest extends EnforceConventionAwareIn
         assertThat(actions).containsExactly(NoActionAvailableAction.class);
     }
 
+    public void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedWithoutInOrderInSelection() {
+        addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
+        myFixture.configureByText("Options.java",
+            "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class Options {\n" +
+                "    void testMethod(){\n" +
+                "        <selection>BDDMockito.then(Mockito.mock(Object.class)).should().doSomething();\n" +
+                "        BDDMockito.then(Mockito.mock(Object.class)).should().doSomething();</selection>\n" +
+                "    }\n" +
+                "}");
+        List<Class<?>> actions = new ConvertFromBDDMockitoIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+            .stream().map(Object::getClass).collect(toList());
+
+        assertThat(actions).containsExactly(AddInOrderToBDDMockitoAction.class);
+    }
+
     public void testReturnsAvailableActionsWhenMockitoIsEnforcedWithoutInOrder() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.MOCKITO);
         myFixture.configureByText("Options.java",
@@ -261,6 +279,27 @@ public class ConvertFromBDDMockitoIntentionTest extends EnforceConventionAwareIn
         assertThat(actions).containsExactly(
             ConvertBDDMockitoThenToMockitoVerifyAction.class,
             ConvertBDDMockitoThenToInOrderVerifyAction.class
+        );
+    }
+
+    public void testReturnsAvailableActionsWhenNothingIsEnforcedWithoutInOrderInSelection() {
+        myFixture.configureByText("Options.java",
+            "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "class Options {\n" +
+                "    void testMethod(){\n" +
+                "        <selection>BDDMockito.then(Mockito.mock(Object.class)).should().doSomething();\n" +
+                "        BDDMockito.then(Mockito.mock(Object.class)).should().doSomething();</selection>\n" +
+                "    }\n" +
+                "}");
+        List<Class<?>> actions = new ConvertFromBDDMockitoIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+            .stream().map(Object::getClass).collect(toList());
+
+        assertThat(actions).containsExactly(
+            ConvertBDDMockitoThenToMockitoVerifyAction.class,
+            ConvertBDDMockitoThenToInOrderVerifyAction.class,
+            AddInOrderToBDDMockitoAction.class
         );
     }
 }

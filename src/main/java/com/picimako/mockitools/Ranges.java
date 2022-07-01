@@ -3,9 +3,9 @@
 package com.picimako.mockitools;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Utility for working with {@link com.intellij.openapi.util.TextRange}s.
@@ -19,12 +19,12 @@ public final class Ranges {
         return element.getTextRange().getEndOffset();
     }
 
-    public static int selectionLengthIn(SelectionModel model) {
-        return model.getSelectionEnd() - model.getSelectionStart();
-    }
-
     public static CharSequence charSequenceInRange(Editor editor, int start, int end) {
         return editor.getDocument().getCharsSequence().subSequence(start, end);
+    }
+
+    public static boolean isWithinSelection(@Nullable PsiElement element, Editor editor) {
+        return element != null && endOffsetOf(element) <= editor.getSelectionModel().getSelectionEnd();
     }
 
     private Ranges() {

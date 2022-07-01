@@ -8,29 +8,28 @@ import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.PsiMethodUtil.hasTwoArguments;
 import static com.picimako.mockitools.Ranges.endOffsetOf;
 
-import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.picimako.mockitools.MockitoQualifiedNames;
-import com.picimako.mockitools.intention.convert.verification.BaseConvertVerificationAction;
+import com.picimako.mockitools.intention.convert.verification.ConvertVerificationActionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 
 /**
- * Converts {@code InOrder.verify()} call chains to the {@code BDDMockito.then()}, omitting the InOrder
+ * Converts {@code InOrder.verify()} call chains to {@code BDDMockito.then()}, omitting the InOrder
  * variable altogether in the resulting call chain.
  * <p>
- * It keeps the original InOrder object, even if it is not used anymore.
+ * It keeps the original InOrder variable, even if it is not used anymore.
  *
  * @since 0.5.0
  */
-public class ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderAction extends BaseConvertVerificationAction {
+public class ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderAction extends ConvertVerificationActionBase {
 
-    public ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderAction(Editor editor, boolean isBulkMode) {
-        super(editor, MockitoolsBundle.message("intention.convert.verification.bddmockito.without.inorder"), isBulkMode);
+    public ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderAction(boolean isBulkMode) {
+        super(MockitoolsBundle.message("intention.convert.verification.bddmockito.without.inorder"), isBulkMode);
     }
 
     @Override
-    protected void perform(PsiMethodCallExpression inOrderVerify, Project project, Editor editor) {
+    protected void perform(PsiMethodCallExpression inOrderVerify, Project project) {
         var calls = collectCallsInChainFromFirst(inOrderVerify, true);
 
         //Replace '<inorder>.verify' with 'BDDMockito.then'
@@ -39,7 +38,7 @@ public class ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderAction extends Ba
         //E.g. 'inOrder.verify(mock)' becomes 'BDDMockito.then(mock).should()'
         //E.g. 'inOrder.verify(mock, times(2))' becomes 'BDDMockito.then(mock).should(times(2))'
         int endOffsetOfMockArgument = endOffsetOf(getFirstArgument(inOrderVerify));
-        document.replaceString(
+        editor.getDocument().replaceString(
             endOffsetOfMockArgument,
             hasTwoArguments(inOrderVerify) ? get2ndArgument(inOrderVerify).getTextOffset() : endOffsetOfMockArgument,
             ").should(");
