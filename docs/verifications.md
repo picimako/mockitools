@@ -84,6 +84,7 @@ void testMethod() {
 ## InOrder with a single verification
 
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.5.0-blue)
+[![](https://img.shields.io/badge/impl-SingleInOrderVerificationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/verification/SingleInOrderVerificationInspection.java)
 
 This inspection reports `InOrder` local variables on which only one verification is called in the form of either
 an `InOrder.verify()` or a `BDDMockito.then().should(InOrder)` call.
@@ -96,6 +97,28 @@ and also cases when:
 ```java
 InOrder inOrder = Mockito.inOrder(mock); //the variable name is highlighted
 inOrder.verify(mock).doSomething();
+```
+
+## Misconfigured InOrder verifications
+
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.5.0-blue)
+[![](https://img.shields.io/badge/impl-UnusedOrUnconfiguredMockInInOrderVerificationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/verification/UnusedOrUnconfiguredMockInInOrderVerificationInspection.java)
+
+This inspection reports mock objects in `InOrder` verifications in the following cases:
+
+- The mock is added to the arguments of `Mockito.inOrder()` but is not used in any verification performed via that `InOrder` object.
+- The mock is used in an `InOrder` verification, but it is not added to the arguments of `Mockito.inOrder()`.
+
+It can report mocks both in `InOrder.verify()` and `BDDMockito.then().should(InOrder)`.
+
+```java
+InOrder unusedMock = Mockito.inOrder(mock, mock2); //mock2 is reported since it is not used in any of the verifications
+unusedMock.verify(mock).doSomething();
+unusedMock.verify(mock, Mockito.times(2)).doSomething();
+
+InOrder unconfiguredMock = Mockito.inOrder(mock);
+unconfiguredMock.verify(mock).doSomething();
+unconfiguredMock.verify(mock2).doSomething(); //mock2 is reported since it is not added to 'Mockito.inOrder()'
 ```
 
 ## Convert between various verification approaches

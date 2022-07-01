@@ -87,6 +87,11 @@
                 id="mockitools.single.inorder.reference" language="JAVA"
                 displayName="InOrder variable is used only once" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.verification.UnusedOrUnconfiguredMockInInOrderVerificationInspection"
+                id="mockitools.unused.inorder.mock" language="JAVA"
+                displayName="Unused or unconfigured mock objects in InOrder verifications" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="WARNING"/>
 
         <!-- v4 migration aids -->
         <localInspection

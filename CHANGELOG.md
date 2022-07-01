@@ -19,6 +19,7 @@ Details are available in the [Verifications](https://github.com/picimako/mockito
 when they are specified in the stubbing, but not in the mentioned `throws` clause.
 - [#24](https://github.com/picimako/mockitools/issues/24): Strictness configuration is now supported by the conversion between `@Mock` and `Mockito.mock(Class, MockSettings)` in both directions.
 - `EnforceConventionInspection` can now report `InOrder.verify()` calls too, as part of enforcing `BDDMockito.then()` verification.
+- [#27](https://github.com/picimako/mockitools/issues/27): Added an inspection that can report mock objects used in misconfigured `InOrder` verifications.
 
 ### Changed
 - Removed support for IJ2021.1. From now on 2021.2 is the earliest version supported.
