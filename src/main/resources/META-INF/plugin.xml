@@ -23,7 +23,7 @@
                 displayName="Inconsistent argument matcher usage" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.VerificationModeValuesBetweenLimitsInspection"
+                implementationClass="com.picimako.mockitools.inspection.verification.VerificationModeValuesBetweenLimitsInspection"
                 id="mockitools.verificationModeValuesBetweenLimits" language="JAVA"
                 displayName="Verification mode values are out of bounds" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
@@ -38,7 +38,7 @@
                 displayName="@Captor field is not of the type ArgumentCaptor" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.TimesVerificationModeInspection"
+                implementationClass="com.picimako.mockitools.inspection.verification.TimesVerificationModeInspection"
                 id="mockitools.timesVerificationMode" language="JAVA"
                 displayName="Mockito.times() argument validations" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="WARNING"/>
@@ -82,6 +82,11 @@
                 id="mockitools.enforce.convention" language="JAVA"
                 displayName="Enforce conventions" groupPath="Java"
                 groupName="Mockito" enabledByDefault="false" level="ERROR"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.verification.SingleInOrderVerificationInspection"
+                id="mockitools.single.inorder.reference" language="JAVA"
+                displayName="InOrder variable is used only once" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="WARNING"/>
 
         <!-- v4 migration aids -->
         <localInspection

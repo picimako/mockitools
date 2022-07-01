@@ -1,6 +1,6 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2022 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.picimako.mockitools.inspection;
+package com.picimako.mockitools.inspection.verification;
 
 import static com.picimako.mockitools.MockitoolsPsiUtil.MOCKITO_OCCURRENCE_BASED_VERIFICATION_MODES;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isAfter;
@@ -18,6 +18,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.util.PsiLiteralUtil;
+import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.siyeh.ig.psiutils.MethodCallUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

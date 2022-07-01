@@ -16,6 +16,7 @@ import static com.picimako.mockitools.PsiMethodUtil.getSubsequentMethodCall;
 import static com.picimako.mockitools.PsiMethodUtil.hasSubsequentMethodCall;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isBDDMockitoEnforced;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isMockitoEnforced;
+import static com.siyeh.ig.callMatcher.CallMatcher.anyOf;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 import static java.util.stream.Collectors.toList;
@@ -55,14 +56,14 @@ import java.util.List;
  */
 public class ConvertFromBDDMockitoIntention extends ConvertVerificationIntentionBase {
     private static final CallMatcher.Simple SHOULD = instanceCall(ORG_MOCKITO_BDDMOCKITO_THEN, "should");
-    static final CallMatcher THEN_SHOULD_WITHOUT_INORDER = CallMatcher.anyOf(
+    static final CallMatcher THEN_SHOULD_WITHOUT_INORDER = anyOf(
         SHOULD.parameterCount(0),
         SHOULD.parameterTypes(ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE));
-    private static final CallMatcher THEN_SHOULD = CallMatcher.anyOf(
-        THEN_SHOULD_WITHOUT_INORDER,
+    public static final CallMatcher THEN_SHOULD_WITH_INORDER = anyOf(
         SHOULD.parameterTypes(ORG_MOCKITO_INORDER),
         SHOULD.parameterTypes(ORG_MOCKITO_INORDER, ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE)
     );
+    private static final CallMatcher THEN_SHOULD = anyOf(THEN_SHOULD_WITHOUT_INORDER, THEN_SHOULD_WITH_INORDER);
 
     public ConvertFromBDDMockitoIntention() {
         super("BDDMockito.then()");

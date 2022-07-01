@@ -81,6 +81,23 @@ void testMethod() {
 }
 ```
 
+## InOrder with a single verification
+
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.5.0-blue)
+
+This inspection reports `InOrder` local variables on which only one verification is called in the form of either
+an `InOrder.verify()` or a `BDDMockito.then().should(InOrder)` call.
+
+The report can be useful when someone starts implementing an `InOrder` verification to remind them that further verifications need to be implemented,
+and also cases when:
+- the user forgot to add further verification calls,
+- a verification started out as `InOrder` but was forgotten to be converted to simple verification when he/she changed his/her mind
+
+```java
+InOrder inOrder = Mockito.inOrder(mock); //the variable name is highlighted
+inOrder.verify(mock).doSomething();
+```
+
 ## Convert between various verification approaches
 
 ![](https://img.shields.io/badge/intention-orange) ![](https://img.shields.io/badge/since-0.4.0-blue) ![](https://img.shields.io/badge/since-0.5.0-blue)
