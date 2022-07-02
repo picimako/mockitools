@@ -6,13 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
-
-import com.picimako.mockitools.inspection.MockitoolsV4InspectionTestBase;
+import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
 
 /**
  * Functional test for {@link SimplifyConsecutiveThrowCallsInspection};
  */
-public class SimplifyConsecutiveThrowCallsInspectionTest extends MockitoolsV4InspectionTestBase {
+public class SimplifyConsecutiveThrowCallsInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
 
     private static final Map<String, String> DO_THROW_WHEN_CASES = new HashMap<>();
 

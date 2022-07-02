@@ -5,13 +5,12 @@ package com.picimako.mockitools.inspection.consecutive;
 import java.util.Map;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
-
-import com.picimako.mockitools.inspection.MockitoolsV4InspectionTestBase;
+import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
 
 /**
  * Functional test for {@link SimplifyConsecutiveReturnCallsInspection}.
  */
-public class SimplifyConsecutiveReturnCallsInspectionTest extends MockitoolsV4InspectionTestBase {
+public class SimplifyConsecutiveReturnCallsInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
 
     private static final String MOCK_OBJECT_CLASS =
         "    private static class MockObject {\n" +

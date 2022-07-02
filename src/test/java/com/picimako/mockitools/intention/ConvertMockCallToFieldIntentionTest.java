@@ -1,6 +1,4 @@
-/*
- * Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
- */
+//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention;
 
@@ -436,6 +434,32 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "\n" +
                 "    public void testMethod() {\n" +
                 "    }\n" +
+                "}");
+    }
+
+    public void testConvertsMockitoMockWithSettingsStrictness() {
+        checkIntentionRun(
+            "import org.mockito.Mockito;\n" +
+                "import org.mockito.quality.Strictness;\n" +
+                "\n" +
+                "public class ConversionTest {\n" +
+                "    public void testMethod() {\n" +
+                "        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().strictness(Strictness.WARN)));\n" +
+                "    }\n" +
+                "    public void aMethod(Object object) { }\n" +
+                "}",
+            "import org.mockito.Mock;\n" +
+                "import org.mockito.Mockito;\n" +
+                "import org.mockito.quality.Strictness;\n" +
+                "\n" +
+                "public class ConversionTest {\n" +
+                "    @Mock(strictness = Mock.Strictness.WARN)\n" +
+                "    Object object;\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "        aMethod(object);\n" +
+                "    }\n" +
+                "    public void aMethod(Object object) { }\n" +
                 "}");
     }
 

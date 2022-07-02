@@ -11,21 +11,17 @@ import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoSpy;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.PsiMethodUtil.hasAtLeastOneArgument;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
-import static com.picimako.mockitools.inspection.ClassObjectAccessUtil.getOperandType;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.psi.PsiNewExpression;
 import com.intellij.psi.PsiType;
-import org.jetbrains.annotations.NotNull;
-
+import com.picimako.mockitools.PsiTypesUtil;
 import com.picimako.mockitools.resources.MockitoolsBundle;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Reports {@code @Mock} and {@code @Spy} annotated fields' types and the types specified as the arguments of
@@ -58,13 +54,8 @@ public class MockTypeInspection extends MockitoolsBaseInspection {
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         //Mockito.spy method has overloads only with single arguments
         if ((isMockitoMock(expression) && hasAtLeastOneArgument(expression)) || isMockitoSpy(expression)) {
-            PsiExpression typeToMock = getFirstArgument(expression);
-            PsiType type = null;
-            if (typeToMock instanceof PsiClassObjectAccessExpression) {
-                type = getOperandType(typeToMock);
-            } else if (typeToMock instanceof PsiNewExpression) {
-                type = typeToMock.getType();
-            }
+            var typeToMock = getFirstArgument(expression);
+            var type = PsiTypesUtil.evaluateClassObjectOrNewExpressionType(typeToMock);
             if (type != null) {
                 if (!isMockableType(type)) {
                     holder.registerProblem(typeToMock, MockitoolsBundle.inspection("non.mockable.type"));

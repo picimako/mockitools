@@ -10,7 +10,7 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethodCallExpression;
 
 /**
- * Unit test for {@link MockitoolsPsiUtil}.
+ * Functional test for {@link MockitoolsPsiUtil}.
  */
 public class MockitoolsPsiUtilTest extends MockitoolsTestBase {
 

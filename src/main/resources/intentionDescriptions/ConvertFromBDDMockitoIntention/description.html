@@ -1,0 +1,18 @@
+<html>
+<body>
+<!-- tooltip end -->
+Can perform conversion of one or more <code>BDDMockito.then().should()</code> call chains to the following approaches:
+<ul>
+    <li>to <code>Mockito.verify()</code> (omits the <code>InOrder</code> arguments),</li>
+    <li>to <code>BDDMockito.then()</code> using a newly created an <code>InOrder</code> local
+        variable, if there is none specified in the <code>should()</code> call(s) yet,
+    </li>
+    <li>to <code>InOrder.verify()</code> by either creating a new InOrder variable, or reusing the one specified
+        in the <code>should()</code> call
+    </li>
+</ul>
+<p>
+    The intention is available on <code>BDDMockito.then()</code> when it is followed by <code>should()</code> and a
+    method call on the mock object.
+</body>
+</html>

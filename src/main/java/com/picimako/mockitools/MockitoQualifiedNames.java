@@ -27,6 +27,7 @@ public final class MockitoQualifiedNames {
     public static final String ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE = "org.mockito.verification.VerificationMode";
     public static final String ORG_MOCKITO_MOCKED_STATIC_VERIFICATION = "org.mockito.MockedStatic.Verification";
     public static final String ORG_MOCKITO_MOCK_SERIALIZABLE_MODE = "org.mockito.mock.SerializableMode";
+    public static final String ORG_MOCKITO_INORDER = "org.mockito.InOrder";
 
     //Plugin classes
     public static final String ORG_MOCKITO_CONFIGURATION_ANNOTATION_ENGINE = "org.mockito.configuration.AnnotationEngine";

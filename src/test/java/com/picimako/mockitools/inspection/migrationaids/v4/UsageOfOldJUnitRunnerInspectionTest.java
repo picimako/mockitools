@@ -5,13 +5,12 @@ package com.picimako.mockitools.inspection.migrationaids.v4;
 import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadJUnit4;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
-
-import com.picimako.mockitools.inspection.MockitoolsV3InspectionTestBase;
+import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
 
 /**
  * Functional test for {@link UsageOfOldJUnitRunnerInspection}.
  */
-public class UsageOfOldJUnitRunnerInspectionTest extends MockitoolsV3InspectionTestBase {
+public class UsageOfOldJUnitRunnerInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {

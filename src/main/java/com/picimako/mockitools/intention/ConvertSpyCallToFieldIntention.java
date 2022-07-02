@@ -8,7 +8,7 @@ import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoSpy;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.PsiMethodUtil.hasOneArgument;
 import static com.picimako.mockitools.PsiMethodUtil.isIdentifierOfMethodCall;
-import static com.picimako.mockitools.inspection.ClassObjectAccessUtil.getOperandType;
+import static com.picimako.mockitools.ClassObjectAccessUtil.getOperandType;
 
 import java.util.Arrays;
 import java.util.Optional;

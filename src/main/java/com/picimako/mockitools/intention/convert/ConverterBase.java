@@ -7,11 +7,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.ProjectScope;
 import com.siyeh.ig.psiutils.ImportUtils;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Base class for converting between different stubbing, verification and other approaches.
@@ -44,9 +42,5 @@ public abstract class ConverterBase {
     protected final void performAndCommitDocument(Runnable runnable) {
         runnable.run();
         documentManager.commitDocument(document);
-    }
-
-    protected final int endOffsetOf(@NotNull PsiElement element) {
-        return element.getTextRange().getEndOffset();
     }
 }

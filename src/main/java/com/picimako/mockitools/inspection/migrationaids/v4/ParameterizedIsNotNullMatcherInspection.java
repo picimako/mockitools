@@ -10,6 +10,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MATCHERS;
 import static com.picimako.mockitools.PsiMethodUtil.deleteArguments;
 import static com.picimako.mockitools.PsiMethodUtil.getParentCall;
+import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import com.intellij.codeInspection.ProblemDescriptor;
@@ -46,7 +47,7 @@ public class ParameterizedIsNotNullMatcherInspection extends MigrationAidBase.V2
                 ? MockitoolsBundle.quickFix("migration.aid.v4.replace.with", methodName)
                 : MockitoolsBundle.quickFix("migration.aid.v4.use.non.parameterized.null.matcher");
             holder.registerProblem(
-                expression.getMethodExpression().getReferenceNameElement(), //referenceName null value is already checked by the CallMatcher
+                getReferenceNameElement(expression), //referenceName null value is already checked by the CallMatcher
                 MockitoolsBundle.inspection("migration.aid.v4.use.non.parameterized.null.matcher", methodName),
                 new ReplaceNullMatcherWithNonParameterizedVariantQuickfix(quickFixName));
         }

@@ -6,6 +6,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
+import static com.picimako.mockitools.Ranges.endOffsetOf;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import java.util.List;

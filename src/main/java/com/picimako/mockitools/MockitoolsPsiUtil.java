@@ -14,6 +14,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ADDITION
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT_CAPTOR;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT_MATCHERS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MATCHERS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK_SETTINGS;
@@ -66,7 +67,7 @@ public final class MockitoolsPsiUtil {
      */
     private static final Set<String> NON_MOCKABLE_TYPES = Set.of(CommonClassNames.JAVA_LANG_CLASS, CommonClassNames.JAVA_LANG_STRING);
 
-    private static final CallMatcher MOCKITO_MOCK = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, MOCK);
+    public static final CallMatcher.Simple MOCKITO_MOCK = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, MOCK);
     private static final CallMatcher MOCKITO_SPY = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, SPY).parameterCount(1);
     private static final CallMatcher BDDMOCKITO_GIVEN = CallMatcher.staticCall(ORG_MOCKITO_BDDMOCKITO, GIVEN).parameterCount(1);
     private static final CallMatcher BDDMOCKITO_WILL_X =
@@ -82,7 +83,8 @@ public final class MockitoolsPsiUtil {
     private static final CallMatcher MOCKITO_TIMEOUT = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, TIMEOUT).parameterCount(1);
     private static final CallMatcher MOCKITO_RESET = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, RESET);
     private static final CallMatcher MOCKITO_IGNORE_STUBS = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, IGNORE_STUBS);
-    private static final CallMatcher MOCKITO_VERIFY = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, VERIFY);
+    public static final CallMatcher.Simple MOCKITO_VERIFY = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, VERIFY);
+    public static final CallMatcher.Simple INORDER_VERIFY = CallMatcher.instanceCall(ORG_MOCKITO_INORDER, VERIFY);
     private static final CallMatcher MOCK_SETTING_EXTRA_INTERFACES = CallMatcher.instanceCall(ORG_MOCKITO_MOCK_SETTINGS, EXTRA_INTERFACES);
 
     /**
@@ -123,6 +125,16 @@ public final class MockitoolsPsiUtil {
      */
     public static boolean isMockitoVerify(PsiMethodCallExpression expression) {
         return MOCKITO_VERIFY.matches(expression);
+    }
+
+    /**
+     * Gets whether the argument expression is an {@code org.mockito.InOrder.verify} method call.
+     *
+     * @param expression the method call expression
+     * @return true if the method is a InOrder.verify, false otherwise
+     */
+    public static boolean isInOrderVerify(PsiMethodCallExpression expression) {
+        return INORDER_VERIFY.matches(expression);
     }
 
     /**

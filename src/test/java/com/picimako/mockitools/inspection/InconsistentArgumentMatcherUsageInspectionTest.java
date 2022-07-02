@@ -5,9 +5,9 @@ package com.picimako.mockitools.inspection;
 import com.intellij.codeInspection.InspectionProfileEntry;
 
 /**
- * Unit test for {@link InconsistentArgumentMatcherUsageInspection}.
+ * Functional test for {@link InconsistentArgumentMatcherUsageInspection}.
  */
-public class InconsistentArgumentMatcherUsageInspectionTest extends MockitoolsV3InspectionTestBase {
+public class InconsistentArgumentMatcherUsageInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {

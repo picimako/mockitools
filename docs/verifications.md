@@ -81,23 +81,72 @@ void testMethod() {
 }
 ```
 
+## InOrder with a single verification
+
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.5.0-blue)
+[![](https://img.shields.io/badge/impl-SingleInOrderVerificationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/verification/SingleInOrderVerificationInspection.java)
+
+This inspection reports `InOrder` local variables on which only one verification is called in the form of either
+an `InOrder.verify()` or a `BDDMockito.then().should(InOrder)` call.
+
+The report can be useful when someone starts implementing an `InOrder` verification to remind them that further verifications need to be implemented,
+and also cases when:
+- the user forgot to add further verification calls,
+- a verification started out as `InOrder` but was forgotten to be converted to simple verification when he/she changed his/her mind
+
+```java
+InOrder inOrder = Mockito.inOrder(mock); //the variable name is highlighted
+inOrder.verify(mock).doSomething();
+```
+
+## Misconfigured InOrder verifications
+
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.5.0-blue)
+[![](https://img.shields.io/badge/impl-UnusedOrUnconfiguredMockInInOrderVerificationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/verification/UnusedOrUnconfiguredMockInInOrderVerificationInspection.java)
+
+This inspection reports mock objects in `InOrder` verifications in the following cases:
+
+- The mock is added to the arguments of `Mockito.inOrder()` but is not used in any verification performed via that `InOrder` object.
+- The mock is used in an `InOrder` verification, but it is not added to the arguments of `Mockito.inOrder()`.
+
+It can report mocks both in `InOrder.verify()` and `BDDMockito.then().should(InOrder)`.
+
+```java
+InOrder unusedMock = Mockito.inOrder(mock, mock2); //mock2 is reported since it is not used in any of the verifications
+unusedMock.verify(mock).doSomething();
+unusedMock.verify(mock, Mockito.times(2)).doSomething();
+
+InOrder unconfiguredMock = Mockito.inOrder(mock);
+unconfiguredMock.verify(mock).doSomething();
+unconfiguredMock.verify(mock2).doSomething(); //mock2 is reported since it is not added to 'Mockito.inOrder()'
+```
+
 ## Convert between various verification approaches
 
-![](https://img.shields.io/badge/intention-orange) ![](https://img.shields.io/badge/since-0.4.0-blue)
-[![](https://img.shields.io/badge/impl-ConvertMockitoVerifyToBDDMockitoThenIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/verification/ConvertMockitoVerifyToBDDMockitoThenIntention.java)
-[![](https://img.shields.io/badge/impl-ConvertBDDMockitoThenToMockitoVerifyIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/verification/ConvertBDDMockitoThenToMockitoVerifyIntention.java)
+![](https://img.shields.io/badge/intention-orange) ![](https://img.shields.io/badge/since-0.4.0-blue) ![](https://img.shields.io/badge/since-0.5.0-blue)
+[![](https://img.shields.io/badge/impl-ConvertMockitoVerifyToBDDMockitoThenIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/verification/mockitoverify/ConvertFromMockitoVerifyIntention.java)
+[![](https://img.shields.io/badge/impl-ConvertBDDMockitoThenToMockitoVerifyIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/verification/bddmockitothen/ConvertFromBDDMockitoIntention.java)
+[![](https://img.shields.io/badge/impl-ConvertBDDMockitoThenToMockitoVerifyIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/verification/inorderverify/ConvertFromInOrderVerifyIntention.java)
 
-There are a couple of ways one can approach verification in Mockito: via `org.mockito.Mockito` and `org.mockito.BDDMockito`.
+There are a couple of ways one can approach verification in Mockito: via `org.mockito.Mockito`, `org.mockito.BDDMockito`, `org.mockito.InOrder`.
 
-These intentions can convert between the `Mockito.verify()` and `BDDMockito.then()` call chains if they satisfy the following criteria:
-- if the ['Enforce conventions' inspection](conventions.md#enforce-orgmockitomockito-over-orgmockitobddmockito-and-vice-versa) doesn't enforce
-the verification the user converts from,
-- in case of `Mockito.verify()`, a call on the mock object after `verify()` must be present,
+These intentions can convert between those approaches if they satisfy some preconditions:
+- in case of `Mockito.verify()` and `InOrder.verify()`, a call must be present on the mock object after `verify()` ,
 - while in case of `BDDMockito.then()`, both the `should()` call and a call on the mock object after that must be present.
 
-Conversion of `InOrder` verification is not supported at the moment.
+Below you can see the details of the conversion directions when converting single verifications. Bulk conversions are handled and detailed separately.
 
-**Examples for Mockito.verify() -> BDDMockito.then() direction:**
+Also, reusing an existing `InOrder` instance is not possible when converting to an `InOrder` specific approach,
+it always creates a new `InOrder` local variable.
+
+| Conversion from                     | Options by default                                                                 | Options when `org.mockito.Mockito` is enforced | Options when `org.mockito.BDDMockito` is enforced           |
+|-------------------------------------|------------------------------------------------------------------------------------|------------------------------------------------|-------------------------------------------------------------|
+| `Mockito.verify()`                  | `InOrder.verify()`<br/>`BDDMockito.then()`<br/>`BDDMockito.then().should(InOrder)` | `InOrder.verify()`                             | `BDDMockito.then()`<br/>`BDDMockito.then().should(InOrder)` |
+| `BDDMockito.then()`                 | `Mockito.verify()`<br/>`InOrder.verify()`<br/>`BDDMockito.then().should(InOrder)`  | `Mockito.verify()`<br/>`InOrder.verify()`      | `BDDMockito.then().should(InOrder)`                         |
+| `BDDMockito.then().should(InOrder)` | `Mockito.verify()`<br/>`InOrder.verify()`                                          | `Mockito.verify()`<br/>`InOrder.verify()`      | No action is available.                                     |
+| `InOrder.verify()`                  | `Mockito.verify()`<br/>`BDDMockito.then()`<br/>`BDDMockito.then().should(InOrder)` | `Mockito.verify()`                             | `BDDMockito.then()`<br/>`BDDMockito.then().should(InOrder)` |
+
+**Example (Mockito.verify() -> BDDMockito.then()):**
 
 ```java
 //Without verification mode
@@ -107,4 +156,56 @@ From: Mockito.verify(mock).doSomething();
 //With verification mode
 From: Mockito.verify(mock, times(2)).doSomething();
   to: BDDMockito.then(mock).should(times(2)).doSomething();
+```
+
+**Example (BDDMockito.then() -> InOrder.verify()):**
+
+```java
+From: BDDMockito.then(mock).should().doSomething();
+to:
+      InOrder inOrder = Mockito.inOrder(mock);
+      inOrder.verify(mock).doSomething();
+```
+
+### Selection based conversion
+
+![](https://img.shields.io/badge/since-0.5.0-blue)
+
+Conversion of one or more verification call chains is also available via selection in the editor.
+It can convert between `org.mockito.Mockito`, `org.mockito.BDDMockito` and `org.mockito.InOrder` in any direction, with some nuances that should be taken into consideration.
+
+The availability is the same, while the conversion logic is mostly the same, as for the single conversion options:
+- when converting from `BDDMockito.then()`
+  - `InOrder.verify()` as a target is available only when **all** `BDDMockito.then()` chains in the selection use an `InOrder` variable, and they use the same one,
+  - adding an `InOrder` to the `should()` call is available only when **none** of the `BDDMockito.then()` chains use an `InOrder` variable.
+- when a new `InOrder` local variable is created, it is used in all selected and converted verifications. If you want to use different ones for different verifications,
+you can convert them one by one.
+
+#### Examples
+
+Selections are between [\[ and ]].
+
+**InOrder.verify() -> BDDMockito.then()**
+
+```java
+From:
+      InOrder inOrder = Mockito.inOrder(mock, mock2);
+      [[inOrder.verify(mock).doSomething();
+      inOrder.verify(mock2, times(2)).doSomething();]]
+to:
+      InOrder inOrder = Mockito.inOrder(mock, mock2);
+      BDDMockito.then(mock).should().doSomething();
+      BDDMockito.then(mock2).should(times(2)).doSomething();
+```
+
+**Mockito.verify() -> InOrder.verify()**
+
+```java
+From:
+      [[Mockito.verify(mock).doSomething();
+      Mockito.verify(mock2, times(2)).doSomething();]]
+to:
+      InOrder inOrder = Mockito.inOrder(mock, mock2);
+      inOrder.verify(mock).doSomething();
+      inOrder.verify(mock2, times(2)).doSomething();
 ```

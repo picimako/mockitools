@@ -11,6 +11,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_NO_MORE_INTER
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_ZERO_INTERACTIONS;
 import static com.picimako.mockitools.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.PsiMethodUtil.getParentCall;
+import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
 
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemsHolder;
@@ -49,14 +50,14 @@ public class UsageOfDeprecatedVerifyInspection extends MigrationAidBase.V3ToV4Ba
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         if (MOCKITO_VERIFY_ZERO_INTERACTIONS.matches(expression)) {
             holder.registerProblem(
-                expression.getMethodExpression().getReferenceNameElement(), //referenceName null value is already checked by the CallMatcher
+                getReferenceNameElement(expression), //referenceName null value is already checked by the CallMatcher
                 MockitoolsBundle.inspection("migration.aid.v4.use.no.more.interactions"),
                 new ReplaceZeroInteractionsWithNoMoreInteractionsQuickFix());
             return;
         }
         if (MOCKED_STATIC_VERIFY.matches(expression)) {
             holder.registerProblem(
-                expression.getMethodExpression().getReferenceNameElement(), //referenceName null value is already checked by the CallMatcher
+                getReferenceNameElement(expression), //referenceName null value is already checked by the CallMatcher
                 MockitoolsBundle.inspection("migration.aid.v4.mocked.static.verify"),
                 new SwitchMockedStaticVerifyArgumentsQuickFix());
         }

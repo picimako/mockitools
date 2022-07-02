@@ -3,13 +3,13 @@
     <id>mockitools</id>
     <name>Mockitools</name>
     <vendor url="https://github.com/picimako/mockitools">Tamás Balog</vendor>
-    <version>0.4.1</version>
+    <version>0.5.0</version>
     <resource-bundle>messages.MockitoolsBundle</resource-bundle>
 
     <description>Provides integration for the Mockito framework for Java.</description>
 
     <!-- https://jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html -->
-    <idea-version since-build="211"/>
+    <idea-version since-build="212"/>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
@@ -23,22 +23,22 @@
                 displayName="Inconsistent argument matcher usage" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.VerificationModeValuesBetweenLimitsInspection"
+                implementationClass="com.picimako.mockitools.inspection.verification.VerificationModeValuesBetweenLimitsInspection"
                 id="mockitools.verificationModeValuesBetweenLimits" language="JAVA"
                 displayName="Verification mode values are out of bounds" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.CaptorFieldInitializationInspection"
+                implementationClass="com.picimako.mockitools.inspection.captor.CaptorFieldInitializationInspection"
                 id="mockitools.captorFieldInitialization" language="JAVA"
                 displayName="@Captor field is explicitly initialized" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="WARNING"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.CaptorFieldOfTypeArgumentCaptorInspection"
+                implementationClass="com.picimako.mockitools.inspection.captor.CaptorFieldOfTypeArgumentCaptorInspection"
                 id="mockitools.captorFieldOfTypeArgumentCaptor" language="JAVA"
                 displayName="@Captor field is not of the type ArgumentCaptor" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.TimesVerificationModeInspection"
+                implementationClass="com.picimako.mockitools.inspection.verification.TimesVerificationModeInspection"
                 id="mockitools.timesVerificationMode" language="JAVA"
                 displayName="Mockito.times() argument validations" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="WARNING"/>
@@ -82,6 +82,16 @@
                 id="mockitools.enforce.convention" language="JAVA"
                 displayName="Enforce conventions" groupPath="Java"
                 groupName="Mockito" enabledByDefault="false" level="ERROR"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.verification.SingleInOrderVerificationInspection"
+                id="mockitools.single.inorder.reference" language="JAVA"
+                displayName="InOrder variable is used only once" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.verification.UnusedOrUnconfiguredMockInInOrderVerificationInspection"
+                id="mockitools.unused.inorder.mock" language="JAVA"
+                displayName="Unused or unconfigured mock objects in InOrder verifications" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="WARNING"/>
 
         <!-- v4 migration aids -->
         <localInspection
@@ -121,7 +131,7 @@
                 id="mockitools.framework.notExtensibleClass" language="JAVA"
                 displayName="Class extends @NotExtensible class" groupPath="Java,Mockito"
                 groupName="Framework" enabledByDefault="false" level="WARNING"/>
-        
+
         <!-- Intentions - Convert @Mock/@Spy fields to mock()/spy() calls and vice versa. -->
         <intentionAction>
             <categoryKey>mockito.intention.category</categoryKey>
@@ -160,11 +170,18 @@
         <!-- Intentions - Convert verification approaches -->
         <intentionAction>
             <categoryKey>mockito.intention.category</categoryKey>
-            <className>com.picimako.mockitools.intention.convert.verification.ConvertMockitoVerifyToBDDMockitoThenIntention</className>
+            <className>com.picimako.mockitools.intention.convert.verification.mockitoverify.ConvertFromMockitoVerifyIntention
+            </className>
         </intentionAction>
         <intentionAction>
             <categoryKey>mockito.intention.category</categoryKey>
-            <className>com.picimako.mockitools.intention.convert.verification.ConvertBDDMockitoThenToMockitoVerifyIntention</className>
+            <className>com.picimako.mockitools.intention.convert.verification.bddmockitothen.ConvertFromBDDMockitoIntention
+            </className>
+        </intentionAction>
+        <intentionAction>
+            <categoryKey>mockito.intention.category</categoryKey>
+            <className>com.picimako.mockitools.intention.convert.verification.inorderverify.ConvertFromInOrderVerifyIntention
+            </className>
         </intentionAction>
     </extensions>
 </idea-plugin>

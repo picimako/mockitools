@@ -2,13 +2,12 @@
 package com.picimako.mockitools.inspection.migrationaids.v4;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
-
-import com.picimako.mockitools.inspection.MockitoolsV3InspectionTestBase;
+import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
 
 /**
  * Functional test for {@link UsageOfAnyMatchersInspection}.
  */
-public class UsageOfAnyMatchersInspectionAnyTest extends MockitoolsV3InspectionTestBase {
+public class UsageOfAnyMatchersInspectionAnyTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {

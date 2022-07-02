@@ -11,6 +11,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ANY_SET_OF;
 import static com.picimako.mockitools.MockitoQualifiedNames.ANY_VARARG;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT_MATCHERS;
 import static com.picimako.mockitools.PsiMethodUtil.getParentCall;
+import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import java.util.regex.Matcher;
@@ -53,14 +54,14 @@ public class UsageOfAnyMatchersInspection extends MigrationAidBase.V23ToV4BaseIn
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         if (ANY_OBJECT_OR_ANY_VARARG.matches(expression)) {
             holder.registerProblem(
-                expression.getMethodExpression().getReferenceNameElement(), //referenceName null value is already checked by the CallMatcher
+                getReferenceNameElement(expression), //referenceName null value is already checked by the CallMatcher
                 MockitoolsBundle.inspection("migration.aid.v4.use.any", getMethodName(expression)),
                 new ReplaceAnyObjectOrAnyVarargWithAnyQuickFix());
             return;
         }
         if (ANY_COLLECTION.matches(expression)) {
             holder.registerProblem(
-                expression.getMethodExpression().getReferenceNameElement(), //referenceName null value is already checked by the CallMatcher
+                getReferenceNameElement(expression), //referenceName null value is already checked by the CallMatcher
                 MockitoolsBundle.inspection("migration.aid.v4.use.any.collection.type", getMethodName(expression)),
                 new ReplaceAnyXOfWithAnyXQuickFix(getMethodName(expression)));
         }

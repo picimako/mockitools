@@ -12,7 +12,7 @@ import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Base test class for non-inspection unit tests.
+ * Base test class for non-inspection integration tests.
  * <p>
  * Configures the Java 11 JDK and loads the Mockito binary.
  */
@@ -40,9 +40,6 @@ public abstract class MockitoolsTestBase extends LightJavaCodeInsightFixtureTest
      * JAVA_HOME based JDK is used mainly in CI/CD environment.
      */
     public static LightProjectDescriptor getRealJdkHomeOrCommunityMockJdk() {
-        if (System.getProperty("idea.home.path") != null) {
-            return JAVA_11;
-        }
         return new ProjectDescriptor(LanguageLevel.JDK_11) {
             @Override
             public Sdk getSdk() {

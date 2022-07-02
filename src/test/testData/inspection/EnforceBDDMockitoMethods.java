@@ -1,5 +1,6 @@
 import org.mockito.Answers;
 import org.mockito.BDDMockito;
+import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.mockito.Mock;
 
@@ -21,6 +22,10 @@ public class EnforceBDDMockitoMethods {
         Mockito.<error descr="Stubbing/verification must be performed via org.mockito.BDDMockito">verify</error>(mockObject, Mockito.times(2)).doSomething();
         Mockito.<error descr="Stubbing/verification must be performed via org.mockito.BDDMockito">verifyNoMoreInteractions</error>(mockObject);
         Mockito.<error descr="Stubbing/verification must be performed via org.mockito.BDDMockito">verifyNoInteractions</error>(mockObject);
+
+        InOrder inOrder = Mockito.inOrder(mockObject);
+        inOrder.<error descr="Stubbing/verification must be performed via org.mockito.BDDMockito">verify</error>(mockObject).doSomething();
+        inOrder.<error descr="Stubbing/verification must be performed via org.mockito.BDDMockito">verify</error>(mockObject, Mockito.times(2)).doSomething();
     }
 
     public void dontEnforceBDDMockitoMethod() {
@@ -34,6 +39,10 @@ public class EnforceBDDMockitoMethods {
         BDDMockito.then(mockObject).should(Mockito.times(2)).doSomething();
         BDDMockito.then(mockObject).shouldHaveNoMoreInteractions();
         BDDMockito.then(mockObject).shouldHaveNoInteractions();
+
+        InOrder inOrderBDD = Mockito.inOrder(mockObject);
+        BDDMockito.then(mockObject).should(inOrderBDD).doSomething();
+        BDDMockito.then(mockObject).should(inOrderBDD, Mockito.times(2)).doSomething();
     }
 
     private static class MockObject {

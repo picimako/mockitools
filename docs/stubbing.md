@@ -4,7 +4,7 @@
 
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.3.0-blue) [![](https://img.shields.io/badge/implementation-ThrowsCheckedExceptionStubbingInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/ThrowsCheckedExceptionStubbingInspection.java)
 
-Reports exception references in <code>*Throw()</code> stubbing methods based on Mockito's rule on checked exceptions
+Reports exception references in `*Throw()` stubbing methods based on Mockito's rule on checked exceptions
 
 > If [the specified exception types] contain checked exceptions then they have to match one of the checked exceptions in the method signature.
    
@@ -14,17 +14,20 @@ The following constructs are supported:
 - `Mockito.doThrow(...).when()`
 - `BDDMockito.willThrow(...).given()`
    
-In case of each way of stubbing, further chained <code>*Throw()</code> calls are supported too. In case of an empty list, no problem is reported.
+In case of each way of stubbing, further chained `*Throw()` calls are supported too. In case of an empty list, no problem is reported.
+
+A quick fix is also available that adds the reported exception to the `throws` clause of the stubbed method.
 
 **Example:**
 
 ```java
 void testMethod() {
     MockObject mock = new MockObject();
-    // IOException is NOT reported because it is in MockObject#doSomething()'s throws list
-    // IllegalArgumentException is NOT reported because it is not a checked exception
-    // SqlException IS reported because it is not is in the throws list
-    Mockito.doThrow(IOException.class, IllegalArgumentException.class, SqlException.class).when(mock).doSomething();
+    Mockito.doThrow(
+        IOException.class, //NOT reported because it is in MockObject#doSomething()'s throws list
+        IllegalArgumentException.class, //NOT reported because it is not a checked exception
+        SqlException.class) //reported because it is not in the throws list
+    .when(mock).doSomething();
 }
 
 class MockObject {

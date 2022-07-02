@@ -5,12 +5,11 @@ package com.picimako.mockitools;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 import static java.util.stream.Collectors.toList;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiExpressionList;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNewExpression;
@@ -20,6 +19,9 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Utility for handling PsiMethods.
@@ -36,7 +38,7 @@ public final class PsiMethodUtil {
     public static boolean hasArgument(@NotNull PsiMethodCallExpression methodCall) {
         return methodCall.getArgumentList() != null && methodCall.getArgumentList().getExpressionCount() > 0;
     }
-    
+
     /**
      * Returns whether the argument method call has only one argument.
      */
@@ -56,6 +58,21 @@ public final class PsiMethodUtil {
      */
     public static boolean hasAtLeastOneArgument(@NotNull PsiMethodCallExpression methodCall) {
         return methodCall.getArgumentList() != null && methodCall.getArgumentList().getExpressionCount() >= 1;
+    }
+
+    @NotNull
+    public static PsiMethodCallExpression getMethodCallAtCaret(PsiFile file, Editor editor) {
+        final PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
+        return (PsiMethodCallExpression) element.getParent().getParent();
+    }
+
+    /**
+     * Returns the {@link PsiMethodCallExpression} for the argument element, which is checked prior that it is an actual
+     * identifier.
+     */
+    @Nullable
+    public static PsiMethodCallExpression getMethodCallForIdentifier(PsiElement identifier) {
+        return (PsiMethodCallExpression) identifier.getParent().getParent();
     }
 
     /**
@@ -122,7 +139,7 @@ public final class PsiMethodUtil {
     public static PsiExpression getQualifier(@NotNull PsiMethodCallExpression methodCall) {
         return methodCall.getMethodExpression().getQualifierExpression();
     }
-    
+
     @Nullable
     public static PsiElement getReferenceNameElement(PsiMethodCallExpression methodCall) {
         return methodCall.getMethodExpression().getReferenceNameElement();
@@ -218,7 +235,7 @@ public final class PsiMethodUtil {
         }
         return calls.stream().map(PsiMethodCallExpression.class::cast).collect(toList());
     }
-    
+
     public static List<PsiMethodCallExpression> collectCallsInChainFromFirst(PsiMethodCallExpression expression, boolean includeMySelf) {
         return PsiTreeUtil.collectParents(expression,
             PsiMethodCallExpression.class, includeMySelf, e -> e instanceof PsiExpressionList || e instanceof PsiStatement);

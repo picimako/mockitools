@@ -5,9 +5,9 @@ package com.picimako.mockitools.inspection;
 import com.intellij.codeInspection.InspectionProfileEntry;
 
 /**
- * Unit test for {@link NoMethodCallArgumentSpecifiedInspection}.
+ * Functional test for {@link NoMethodCallArgumentSpecifiedInspection}.
  */
-public class NoMethodCallArgumentSpecifiedInspectionTest extends MockitoolsV3InspectionTestBase {
+public class NoMethodCallArgumentSpecifiedInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {

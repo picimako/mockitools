@@ -9,8 +9,6 @@ import com.intellij.psi.PsiType;
 import com.intellij.psi.util.InheritanceUtil;
 import org.jetbrains.annotations.Nullable;
 
-import com.picimako.mockitools.inspection.ClassObjectAccessUtil;
-
 /**
  * Utility for exceptions.
  */

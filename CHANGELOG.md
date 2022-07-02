@@ -4,6 +4,29 @@
 
 ## [Unreleased]
 
+## [0.5.0]
+### Added
+- [#19](https://github.com/picimako/mockitools/issues/19): Added bulk options to convert verifications from `BDDMockito.then()` and `Mockito.verify()` by selecting one or more
+  verifications in the editor.
+- [#20](https://github.com/picimako/mockitools/issues/20): Extended the conversion of `InOrder.verify()` call chains with a bulk mode,
+so that if multiple (or just a single) such call chain is selected/highlighted in the editor, they all can be converted to the same approach at once.
+- [#21](https://github.com/picimako/mockitools/issues/21): Added an inspection to report InOrder local variables that are used in only one verification call.
+Besides `MockedStatic`, it can report for both `InOrder.verify()` and `BDDMockito.then().should(InOrder)` verifications.
+- [#22](https://github.com/picimako/mockitools/issues/22): Added a new action to convert from and to `InOrder.verify()` based verification.
+Along with it, extended the possible conversion options from and to `Mockito.verify()` and `BDDMockito.then()` as well.
+Details are available in the [Verifications](https://github.com/picimako/mockitools/blob/main/docs/verifications.md) document.
+- [#23](https://github.com/picimako/mockitools/issues/23): Added a quick fix, so that checked exceptions can be added to the stubbed method's `throws` clause 
+when they are specified in the stubbing, but not in the mentioned `throws` clause.
+- [#24](https://github.com/picimako/mockitools/issues/24): Strictness configuration is now supported by the conversion between `@Mock` and `Mockito.mock(Class, MockSettings)` in both directions.
+- `EnforceConventionInspection` can now report `InOrder.verify()` calls too, as part of enforcing `BDDMockito.then()` verification.
+- [#27](https://github.com/picimako/mockitools/issues/27): Added an inspection that can report mock objects used in misconfigured `InOrder` verifications.
+
+### Changed
+- Removed support for IJ2021.1. From now on 2021.2 is the earliest version supported.
+
+### Fixed
+- Fixed an issue that when converting from `BDDMockito.then().should(InOrder)` to `Mockito.verify()` the InOrder variable remained.
+
 ## [0.4.1]
 ### Changed
 - Added support for IJ2022.2.
