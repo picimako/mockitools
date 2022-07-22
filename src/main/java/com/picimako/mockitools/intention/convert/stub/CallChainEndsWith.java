@@ -25,6 +25,6 @@ public final class CallChainEndsWith implements CallChainAnalyzer {
 
     @Override
     public boolean analyze(List<PsiMethodCallExpression> calls) {
-        return calls.size() >= 3 && stubbingCallName.equals(getMethodName(calls.get(calls.size() - 2)));
+        return calls.size() >= 2 && stubbingCallName.equals(getMethodName(calls.get(calls.size() - 2)));
     }
 }

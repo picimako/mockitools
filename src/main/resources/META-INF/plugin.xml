@@ -153,19 +153,25 @@
         <!-- Intentions - Convert stubbing approaches -->
         <intentionAction>
             <categoryKey>mockito.intention.category</categoryKey>
-            <className>com.picimako.mockitools.intention.convert.stub.ConvertStubbingToMockitoWhenIntention</className>
+            <className>com.picimako.mockitools.intention.convert.stub.ConvertFromMockitoDoIntention
+            </className>
         </intentionAction>
         <intentionAction>
             <categoryKey>mockito.intention.category</categoryKey>
-            <className>com.picimako.mockitools.intention.convert.stub.ConvertStubbingToMockitoDoIntention</className>
+            <className>
+                com.picimako.mockitools.intention.convert.stub.ConvertFromBDDMockitoGivenIntention
+            </className>
         </intentionAction>
         <intentionAction>
             <categoryKey>mockito.intention.category</categoryKey>
-            <className>com.picimako.mockitools.intention.convert.stub.ConvertStubbingToBDDMockitoGivenIntention</className>
+            <className>
+                com.picimako.mockitools.intention.convert.stub.ConvertFromBDDMockitoWillIntention
+            </className>
         </intentionAction>
         <intentionAction>
             <categoryKey>mockito.intention.category</categoryKey>
-            <className>com.picimako.mockitools.intention.convert.stub.ConvertStubbingToBDDMockitoWillIntention</className>
+            <className>com.picimako.mockitools.intention.convert.stub.ConvertFromMockitoWhenIntention
+            </className>
         </intentionAction>
         <!-- Intentions - Convert verification approaches -->
         <intentionAction>
@@ -175,7 +181,7 @@
         </intentionAction>
         <intentionAction>
             <categoryKey>mockito.intention.category</categoryKey>
-            <className>com.picimako.mockitools.intention.convert.verification.bddmockitothen.ConvertFromBDDMockitoIntention
+            <className>com.picimako.mockitools.intention.convert.verification.bddmockitothen.ConvertFromBDDMockitoThenIntention
             </className>
         </intentionAction>
         <intentionAction>

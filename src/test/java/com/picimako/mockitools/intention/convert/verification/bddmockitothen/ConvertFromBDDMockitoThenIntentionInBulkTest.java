@@ -12,13 +12,13 @@ import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntention
 import java.util.List;
 
 /**
- * Integration test for {@link ConvertFromBDDMockitoIntention}.
+ * Integration test for {@link ConvertFromBDDMockitoThenIntention}.
  */
-public class ConvertFromBDDMockitoIntentionInBulkTest extends EnforceConventionAwareIntentionTestBase {
+public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConventionAwareIntentionTestBase {
 
     @Override
     protected IntentionAction getIntention() {
-        return new ConvertFromBDDMockitoIntention();
+        return new ConvertFromBDDMockitoThenIntention();
     }
 
     //Availability
@@ -230,7 +230,7 @@ public class ConvertFromBDDMockitoIntentionInBulkTest extends EnforceConventionA
                 "        }\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(
@@ -257,7 +257,7 @@ public class ConvertFromBDDMockitoIntentionInBulkTest extends EnforceConventionA
                 "        }\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(
@@ -283,7 +283,7 @@ public class ConvertFromBDDMockitoIntentionInBulkTest extends EnforceConventionA
                 "        }\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(ConvertBDDMockitoThenToMockitoVerifyAction.class);
@@ -308,7 +308,7 @@ public class ConvertFromBDDMockitoIntentionInBulkTest extends EnforceConventionA
                 "        }\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(ConvertBDDMockitoThenToMockitoVerifyAction.class);

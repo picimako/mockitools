@@ -142,19 +142,19 @@ From: Mockito.when(mockObject.doSomething()).thenThrow(IOException.class, Illega
 
 ## Convert between various stubbing approaches
 
-![](https://img.shields.io/badge/intention-orange) ![](https://img.shields.io/badge/since-0.4.0-blue)
+![](https://img.shields.io/badge/intention-orange) ![](https://img.shields.io/badge/since-0.4.0-blue) ![](https://img.shields.io/badge/since-0.6.0-blue)
 
-[![](https://img.shields.io/badge/impl-ConvertStubbingToBDDMockitoGivenIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/stub/ConvertStubbingToBDDMockitoGivenIntention.java)
-[![](https://img.shields.io/badge/impl-ConvertStubbingToBDDMockitoWillIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/stub/ConvertStubbingToBDDMockitoWillIntention.java)
-[![](https://img.shields.io/badge/impl-ConvertStubbingToMockitoDoIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/stub/ConvertStubbingToMockitoDoIntention.java)
-[![](https://img.shields.io/badge/impl-ConvertStubbingToMockitoWhenIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/stub/ConvertStubbingToMockitoWhenIntention.java)
+[![](https://img.shields.io/badge/impl-ConvertFromBDDMockitoGivenIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/stub/ConvertFromBDDMockitoGivenIntention.java)
+[![](https://img.shields.io/badge/impl-ConvertFromBDDMockitoWillIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/stub/ConvertFromBDDMockitoWillIntention.java)
+[![](https://img.shields.io/badge/impl-ConvertFromMockitoDoIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/stub/ConvertFromMockitoDoIntention.java)
+[![](https://img.shields.io/badge/impl-ConvertFromMockitoWhenIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/stub/ConvertFromMockitoWhenIntention.java)
 
 There are a couple of ways one can approach stubbing in Mockito, including ways via `org.mockito.Mockito` and `org.mockito.BDDMockito`.
 
 These intentions can convert between each approach if they satisfy the following criteria:
 - if the conversion is between `org.mockito.Mockito` and `org.mockito.BDDMockito` stubbings,
-and the ['Enforce conventions' inspection](conventions.md#enforce-orgmockitomockito-over-orgmockitobddmockito-and-vice-versa) doesn't enforce
-the stubbing the user converts from,
+  and the ['Enforce conventions' inspection](conventions.md#enforce-orgmockitomockito-over-orgmockitobddmockito-and-vice-versa) doesn't enforce
+  the stubbing the user converts from,
 - call chains containing `then()`/`will()` or `doNothing()`/`willDoNothing()` calls can be converted only to approaches that support these methods,
 - when converting from `Mockito.do*().when()` or `BDDMockito.will*().given()` the `when()`/`given()` calls and the sequent method calls have to be present.
 
@@ -170,9 +170,41 @@ Below you can see which approaches support which methods and where their respect
 |                        | `doNothing`           |                         | `willDoNothing`         |
 | available at: `when()` | available at: `do*()` | available at: `given()` | available at: `will*()` |
 
-**Example:**
+Below you can see the details of the conversion directions when converting single stubbings. Bulk conversions are handled and detailed separately.
+
+| Conversion from              | Options by default                                                 | Options when `org.mockito.Mockito` is enforced | Options when `org.mockito.BDDMockito` is enforced |
+|------------------------------|--------------------------------------------------------------------|------------------------------------------------|---------------------------------------------------|
+| `Mockito.when()`             | `Mockito.when()`<br/>`BDDMockito.given()`<br/>`BDDMockito.will*()` | `Mockito.do*()`                                | `BDDMockito.given()`<br/>`BDDMockito.will*()`     |
+| `Mockito.do*().when()`       | `Mockito.when()`<br/>`BDDMockito.given()`<br/>`BDDMockito.will*()` | `Mockito.when()`                               | `BDDMockito.given()`<br/>`BDDMockito.will*()`     |
+| `BDDMockito.given().will*()` | `Mockito.when()`<br/>`BDDMockito.given()`<br/>`BDDMockito.will*()` | `Mockito.when()`<br/>`Mockito.do*()`           | `BDDMockito.will*()`                              |
+| `BDDMockito.will*().given()` | `Mockito.when()`<br/>`BDDMockito.given()`<br/>`BDDMockito.will*()` | `Mockito.when()`<br/>`Mockito.do*()`           | `BDDMockito.given()`                              |
+
+**Example (Mockito.when() -> BDDMockito.will\*()):**
 
 ```java
 From: Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new IllegalArgumentException()).thenReturn(20);
   to: BDDMockito.willThrow(new IOException(), new IllegalArgumentException()).willReturn(20).given(mockObject).doSomething();
+```
+
+### Selection based conversion
+
+![](https://img.shields.io/badge/since-0.6.0-blue)
+
+Conversion of one or more stubbing call chains is also available via selection in the editor. It can convert between `org.mockito.Mockito`, `org.mockito.BDDMockito` in any direction.
+
+The availability and the conversion logic is the same as for the single conversion options, with the only difference that all selected stubbings must be of the same approach.
+
+#### Examples
+
+Selections are between [\[ and ]].
+
+**Mockito.do*() -> BDDMockito.given()**
+
+```java
+From:
+      [[Mockito.doReturn(30).when(mock).doSomething();
+        Mockito.doThrow(IllegalArgumentException.class).when(mock).doSomethingElse();]]
+to:
+      BDDMockito.given(mock.doSomething()).willReturn(30);
+      BDDMockito.given(mock.doSomethingElse()).willThrow(IllegalArgumentException.class);
 ```

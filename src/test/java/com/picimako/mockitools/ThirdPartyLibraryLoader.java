@@ -12,7 +12,7 @@ import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Loads third-party libraries for unit testing.
+ * Loads third-party libraries for integration testing.
  */
 public final class ThirdPartyLibraryLoader {
 

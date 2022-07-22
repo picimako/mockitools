@@ -9,7 +9,7 @@ import static com.picimako.mockitools.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.IN_ORDER_VERIFY;
-import static com.picimako.mockitools.intention.convert.verification.bddmockitothen.ConvertFromBDDMockitoIntention.THEN_SHOULD_WITH_INORDER;
+import static com.picimako.mockitools.intention.convert.verification.bddmockitothen.ConvertFromBDDMockitoThenIntention.THEN_SHOULD_WITH_INORDER;
 import static com.siyeh.ig.psiutils.TypeUtils.typeEquals;
 import static java.util.stream.Collectors.toList;
 

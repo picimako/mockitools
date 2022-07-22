@@ -1,0 +1,4 @@
+<spot>Mockito
+    .when(mockObject.doSomething())
+    .thenReturn(10)
+    .thenThrow(IllegalArgumentException.class);</spot>

@@ -4,6 +4,14 @@
 
 ## [Unreleased]
 
+## [0.6.0]
+### Added
+- [#33](https://github.com/picimako/mockitools/issues/33): Added bulk conversion for stubbing call chains. It works the same way as bulk conversion works for verifications.
+
+### Changed
+- [#33](https://github.com/picimako/mockitools/issues/33): Reorganized the stubbing conversion intention actions.
+Now, only the **Convert stubbing(s) to...** intention is displayed, and after selecting it, the actual target options become visible.
+
 ## [0.5.0]
 ### Added
 - [#19](https://github.com/picimako/mockitools/issues/19): Added bulk options to convert verifications from `BDDMockito.then()` and `Mockito.verify()` by selecting one or more
