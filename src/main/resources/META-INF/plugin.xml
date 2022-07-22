@@ -3,7 +3,7 @@
     <id>mockitools</id>
     <name>Mockitools</name>
     <vendor url="https://github.com/picimako/mockitools">Tamás Balog</vendor>
-    <version>0.5.0</version>
+    <version>0.6.0</version>
     <resource-bundle>messages.MockitoolsBundle</resource-bundle>
 
     <description>Provides integration for the Mockito framework for Java.</description>
