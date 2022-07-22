@@ -16,6 +16,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MATCHERS;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_STATIC;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK_SETTINGS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_STUBBING_STUBBER;
@@ -82,6 +83,7 @@ public final class MockitoolsPsiUtil {
     private static final CallMatcher MOCKITO_AFTER = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, AFTER).parameterCount(1);
     private static final CallMatcher MOCKITO_TIMEOUT = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, TIMEOUT).parameterCount(1);
     private static final CallMatcher MOCKITO_RESET = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, RESET);
+    private static final CallMatcher MOCKED_STATIC_RESET = CallMatcher.instanceCall(ORG_MOCKITO_MOCKED_STATIC, RESET);
     private static final CallMatcher MOCKITO_IGNORE_STUBS = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, IGNORE_STUBS);
     public static final CallMatcher.Simple MOCKITO_VERIFY = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, VERIFY);
     public static final CallMatcher.Simple INORDER_VERIFY = CallMatcher.instanceCall(ORG_MOCKITO_INORDER, VERIFY);
@@ -270,13 +272,28 @@ public final class MockitoolsPsiUtil {
     }
 
     /**
-     * Gets whether the argument expression is an {@code org.mockito.Mockito.reset} method call.
+     * Gets whether the argument expression is a {@code org.mockito.Mockito.reset} method call.
      *
      * @param methodCall the method call expression
-     * @return true if the method is a Mockito.isReset, false otherwise
+     * @return true if the method is a Mockito.reset, false otherwise
      */
     public static boolean isReset(PsiMethodCallExpression methodCall) {
         return MOCKITO_RESET.matches(methodCall);
+    }
+
+    /**
+     * Gets whether the argument expression is a {@code org.mockito.MockedStatic.reset} method call.
+     *
+     * @param methodCall the method call expression
+     * @return true if the method is a Mockito.isReset, false otherwise
+     */    /**
+     * Gets whether the argument expression is a {@code org.mockito.MockedStatic.reset} method call.
+     *
+     * @param methodCall the method call expression
+     * @return true if the method is a MockedStatic.reset, false otherwise
+     */
+    public static boolean isMockedStaticReset(PsiMethodCallExpression methodCall) {
+        return MOCKED_STATIC_RESET.matches(methodCall);
     }
 
     /**
