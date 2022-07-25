@@ -28,11 +28,9 @@ import static com.picimako.mockitools.MockitoQualifiedNames.TIMES;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY;
 import static com.picimako.mockitools.MockitoQualifiedNames.WHEN;
 import static com.picimako.mockitools.PsiMethodUtil.getQualifier;
+import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
+import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
-
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Set;
 
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.openapi.util.Pair;
@@ -51,13 +49,17 @@ import com.intellij.psi.util.TypeConversionUtil;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.Set;
+
 /**
  * Utilities for working with Mockito PSI.
  */
 public final class MockitoolsPsiUtil {
 
-    public static final CallMatcher MOCKITO_OCCURRENCE_BASED_VERIFICATION_MODES = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, TIMES, AT_LEAST, AT_MOST).parameterCount(1);
-    public static final CallMatcher MOCKITO_WITH_SETTINGS = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, "withSettings");
+    public static final CallMatcher MOCKITO_OCCURRENCE_BASED_VERIFICATION_MODES = staticCall(ORG_MOCKITO_MOCKITO, TIMES, AT_LEAST, AT_MOST).parameterCount(1);
+    public static final CallMatcher MOCKITO_WITH_SETTINGS = staticCall(ORG_MOCKITO_MOCKITO, "withSettings");
 
     /**
      * The original logic and set of non-mockable types can be found in Mockito's
@@ -68,26 +70,27 @@ public final class MockitoolsPsiUtil {
      */
     private static final Set<String> NON_MOCKABLE_TYPES = Set.of(CommonClassNames.JAVA_LANG_CLASS, CommonClassNames.JAVA_LANG_STRING);
 
-    public static final CallMatcher.Simple MOCKITO_MOCK = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, MOCK);
-    private static final CallMatcher MOCKITO_SPY = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, SPY).parameterCount(1);
-    private static final CallMatcher BDDMOCKITO_GIVEN = CallMatcher.staticCall(ORG_MOCKITO_BDDMOCKITO, GIVEN).parameterCount(1);
+    public static final CallMatcher.Simple MOCKITO_MOCK = staticCall(ORG_MOCKITO_MOCKITO, MOCK);
+    private static final CallMatcher MOCKITO_SPY = staticCall(ORG_MOCKITO_MOCKITO, SPY).parameterCount(1);
+    private static final CallMatcher BDDMOCKITO_GIVEN = staticCall(ORG_MOCKITO_BDDMOCKITO, GIVEN).parameterCount(1);
     private static final CallMatcher BDDMOCKITO_WILL_X =
-        CallMatcher.staticCall(ORG_MOCKITO_BDDMOCKITO, "will", "willReturn", "willThrow", "willAnswer", "willCallRealMethod");
-    private static final CallMatcher BDDMOCKITO_THEN = CallMatcher.staticCall(ORG_MOCKITO_BDDMOCKITO, THEN).parameterCount(1);
-    private static final CallMatcher MOCKITO_WHEN = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, WHEN).parameterCount(1);
-    private static final CallMatcher MOCKITO_DO_X_WHEN = CallMatcher.instanceCall(ORG_MOCKITO_STUBBING_STUBBER, WHEN);
+        staticCall(ORG_MOCKITO_BDDMOCKITO, "will", "willReturn", "willThrow", "willAnswer", "willCallRealMethod");
+    private static final CallMatcher BDDMOCKITO_THEN = staticCall(ORG_MOCKITO_BDDMOCKITO, THEN).parameterCount(1);
+    private static final CallMatcher MOCKITO_WHEN = staticCall(ORG_MOCKITO_MOCKITO, WHEN).parameterCount(1);
+    private static final CallMatcher MOCKITO_DO_X_WHEN = instanceCall(ORG_MOCKITO_STUBBING_STUBBER, WHEN);
     private static final CallMatcher MOCKITO_DO_X =
-        CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, "doReturn", "doThrow", "doAnswer", "doCallRealMethod", "doNothing");
-    private static final CallMatcher MOCKITO_TIMES = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, TIMES).parameterCount(1);
-    private static final CallMatcher MOCKITO_CALLS = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, CALLS).parameterCount(1);
-    private static final CallMatcher MOCKITO_AFTER = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, AFTER).parameterCount(1);
-    private static final CallMatcher MOCKITO_TIMEOUT = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, TIMEOUT).parameterCount(1);
-    private static final CallMatcher MOCKITO_RESET = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, RESET);
-    private static final CallMatcher MOCKED_STATIC_RESET = CallMatcher.instanceCall(ORG_MOCKITO_MOCKED_STATIC, RESET);
-    private static final CallMatcher MOCKITO_IGNORE_STUBS = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, IGNORE_STUBS);
-    public static final CallMatcher.Simple MOCKITO_VERIFY = CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, VERIFY);
-    public static final CallMatcher.Simple INORDER_VERIFY = CallMatcher.instanceCall(ORG_MOCKITO_INORDER, VERIFY);
-    private static final CallMatcher MOCK_SETTING_EXTRA_INTERFACES = CallMatcher.instanceCall(ORG_MOCKITO_MOCK_SETTINGS, EXTRA_INTERFACES);
+        staticCall(ORG_MOCKITO_MOCKITO, "doReturn", "doThrow", "doAnswer", "doCallRealMethod", "doNothing");
+    private static final CallMatcher MOCKITO_TIMES = staticCall(ORG_MOCKITO_MOCKITO, TIMES).parameterCount(1);
+    private static final CallMatcher MOCKITO_CALLS = staticCall(ORG_MOCKITO_MOCKITO, CALLS).parameterCount(1);
+    private static final CallMatcher MOCKITO_AFTER = staticCall(ORG_MOCKITO_MOCKITO, AFTER).parameterCount(1);
+    private static final CallMatcher MOCKITO_TIMEOUT = staticCall(ORG_MOCKITO_MOCKITO, TIMEOUT).parameterCount(1);
+    private static final CallMatcher MOCKITO_RESET = staticCall(ORG_MOCKITO_MOCKITO, RESET);
+    private static final CallMatcher MOCKED_STATIC_RESET = instanceCall(ORG_MOCKITO_MOCKED_STATIC, RESET);
+    private static final CallMatcher MOCKITO_IGNORE_STUBS = staticCall(ORG_MOCKITO_MOCKITO, IGNORE_STUBS);
+    public static final CallMatcher.Simple MOCKITO_VERIFY = staticCall(ORG_MOCKITO_MOCKITO, VERIFY);
+    public static final CallMatcher.Simple INORDER_VERIFY = instanceCall(ORG_MOCKITO_INORDER, VERIFY);
+    public static final CallMatcher.Simple MOCKED_STATIC_VERIFY = instanceCall(ORG_MOCKITO_MOCKED_STATIC, VERIFY);
+    private static final CallMatcher MOCK_SETTING_EXTRA_INTERFACES = instanceCall(ORG_MOCKITO_MOCK_SETTINGS, EXTRA_INTERFACES);
 
     /**
      * Gets whether the argument expression is an {@code org.mockito.Mockito.mock} method call.
@@ -127,16 +130,6 @@ public final class MockitoolsPsiUtil {
      */
     public static boolean isMockitoVerify(PsiMethodCallExpression expression) {
         return MOCKITO_VERIFY.matches(expression);
-    }
-
-    /**
-     * Gets whether the argument expression is an {@code org.mockito.InOrder.verify} method call.
-     *
-     * @param expression the method call expression
-     * @return true if the method is a InOrder.verify, false otherwise
-     */
-    public static boolean isInOrderVerify(PsiMethodCallExpression expression) {
-        return INORDER_VERIFY.matches(expression);
     }
 
     /**
@@ -194,7 +187,7 @@ public final class MockitoolsPsiUtil {
     }
 
     private static boolean matchesAnyMethodIn(String methodFqn, PsiMethodCallExpression expression) {
-        return CallMatcher.staticCall(methodFqn, getMethodName(expression))
+        return staticCall(methodFqn, getMethodName(expression))
             .parameterCount(expression.getArgumentList().getExpressionCount()) //matchers can have various numbers of arguments, so lets match with the current call's parameter count
             .matches(expression);
     }
@@ -282,11 +275,6 @@ public final class MockitoolsPsiUtil {
     }
 
     /**
-     * Gets whether the argument expression is a {@code org.mockito.MockedStatic.reset} method call.
-     *
-     * @param methodCall the method call expression
-     * @return true if the method is a Mockito.isReset, false otherwise
-     */    /**
      * Gets whether the argument expression is a {@code org.mockito.MockedStatic.reset} method call.
      *
      * @param methodCall the method call expression

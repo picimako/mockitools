@@ -12,6 +12,8 @@
 ### Changed
 - [#33](https://github.com/picimako/mockitools/issues/33): Reorganized the stubbing conversion intention actions.
 Now, only the **Convert stubbing(s) to...** intention is displayed, and after selecting it, the actual target options become visible.
+- [#31](https://github.com/picimako/mockitools/issues/31): Modified the analysis process of `times(1)` calls to specifically check for the verification methods they are used at.
+Also optimized the whole `times(X)` analysis.
 
 ## [0.5.0]
 ### Added
