@@ -6,7 +6,8 @@
 
 ## [0.6.0]
 ### Added
-- [#30](https://github.com/picimako/mockitools/issues/30): Added inspection reporting for usages for `MockedStatic.reset()`.
+- [#30](https://github.com/picimako/mockitools/issues/30): Added inspection reporting for usages of `MockedStatic.reset()`.
+- [#32](https://github.com/picimako/mockitools/issues/32): Added support for `MockedStatic` stubbing to report mergeable `*Return()` and `*Throw()` method calls.
 - [#33](https://github.com/picimako/mockitools/issues/33): Added bulk conversion for stubbing call chains. It works the same way as bulk conversion works for verifications.
 
 ### Changed

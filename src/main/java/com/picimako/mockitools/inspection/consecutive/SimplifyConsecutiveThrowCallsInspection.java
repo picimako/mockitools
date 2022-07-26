@@ -6,6 +6,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.DO_RETURN;
 import static com.picimako.mockitools.MockitoQualifiedNames.DO_THROW;
 import static com.picimako.mockitools.MockitoQualifiedNames.GIVEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_STATIC;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.THEN_THROW;
 import static com.picimako.mockitools.MockitoQualifiedNames.WHEN;
@@ -18,20 +19,19 @@ import static com.picimako.mockitools.inspection.ThrowStubDescriptors.GIVEN_WILL
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.WHEN_THEN_THROW;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.WILL_THROW_GIVEN;
 
-import java.util.List;
-import java.util.function.Predicate;
-
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.picimako.mockitools.PsiMethodUtil;
 import org.jetbrains.annotations.NotNull;
 
-import com.picimako.mockitools.PsiMethodUtil;
+import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Reports multiple consecutive calls to {@code *Throw()} methods, so that they may be merged into a single call.
  * <p>
- * Both {@code org.mockito.Mockito} and {@code org.mockito.BDDMockito} based stubbing chains are supported,
- * including calls to {@code doThrow()}, {@code thenThrow()} and {@code willThrow()}.
+ * {@code org.mockito.Mockito}, {@code org.mockito.BDDMockito} and {@code org.mockito.MockedStatic} based stubbings
+ * are supported, including calls to {@code doThrow()}, {@code thenThrow()} and {@code willThrow()}.
  * <p>
  * If there are multiple sections of consecutive calls within the same call chain, they are reported separately for better notification,
  * and can be merged separately.
@@ -64,7 +64,12 @@ public class SimplifyConsecutiveThrowCallsInspection extends SimplifyConsecutive
             .consecutiveMethodName(THEN_THROW)
             .throwDescriptor(WHEN_THEN_THROW)
             .indexToStartInspectionAt(1)
-            .chainStarterMethodNames(WHEN).build()
+            .chainStarterMethodNames(WHEN).build(),
+        new ConsecutiveCallAnalysisDescriptor.Builder(ORG_MOCKITO_MOCKED_STATIC)
+            .consecutiveMethodName(THEN_THROW)
+            .throwDescriptor(WHEN_THEN_THROW)
+            .indexToStartInspectionAt(1)
+            .chainStarterMethodNamesInstance(WHEN).build()
     );
 
     @Override

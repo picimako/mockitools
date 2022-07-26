@@ -44,9 +44,9 @@ class MockObject {
 
 Reports multiple consecutive calls to `*Return()` and `*Throw()` methods, respectively, so that they may be merged into a single call.
    
-Both `org.mockito.Mockito` and `org.mockito.BDDMockito` based stubbing chains are supported, including calls to
+`org.mockito.Mockito`, `org.mockito.BDDMockito` and `org.mockito.MockedStatic` based stubbings are supported, including calls to
 - `doReturn()`, `thenReturn()` and `willReturn()`,
-- `doThrow`, `thenThrow()` and `willThrow()`.
+- `doThrow()`, `thenThrow()` and `willThrow()`.
 
 If there are multiple sections of consecutive calls within the same call chain, they are reported separately for better notification,
 and all sections can be merged separately, depending on the section the quick fix is invoked on. It is always the last consecutive call that is registered.
@@ -93,8 +93,8 @@ From: Mockito.when(mockObject.invoke()).thenThrow(new IllegalArgumentException()
   to: Mockito.when(mockObject.invoke()).thenThrow(new IllegalArgumentException(), new IOException());
 
 From: Mockito.when(mockObject.invoke()).thenThrow(IllegalArgumentException.class).thenThrow(new IOException());
-  to (when selecting conversion to Classes):    Mockito.when(mockObject.invoke()).thenThrow(IllegalArgumentException.class, IOException.class);
-  to (when selecting conversion to Throwables): Mockito.when(mockObject.invoke()).thenThrow(new IllegalArgumentException(), new IOException());
+  to (conversion to Classes):    Mockito.when(mockObject.invoke()).thenThrow(IllegalArgumentException.class, IOException.class);
+  to (conversion to Throwables): Mockito.when(mockObject.invoke()).thenThrow(new IllegalArgumentException(), new IOException());
 
 From: Mockito.when(mockObject.invoke())
         .thenThrow(IllegalArgumentException.class).thenThrow(new IOException("reason")) //caret is here
