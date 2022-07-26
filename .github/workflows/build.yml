@@ -106,6 +106,7 @@ jobs:
           unzip "$FILENAME" -d content
 
           echo "::set-output name=filename::${FILENAME:0:-4}"
+
       # Store already-built plugin as an artifact for downloading
       - name: Upload artifact
         uses: actions/upload-artifact@v3
