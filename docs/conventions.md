@@ -16,7 +16,7 @@ Notes:
 - There are no dedicated quick fixes, since separate intention actions are available to convert between these approaches:
   - [conversion of stubbing](stubbing.md#convert-between-various-stubbing-approaches)
   - [conversion of verification](verifications.md#convert-between-various-verification-approaches)
-- It doesn't support `InOrder` verification at the moment.
+- `MockedStatic` specific InOrder.verify() methods are excluded from the enforcement, since BDDMockito has no way of verifying MockedStatic.
 
 **Example:**
 

@@ -3,6 +3,9 @@ import org.mockito.BDDMockito;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+
+import java.util.List;
 
 public class EnforceMockitoMethods {
 
@@ -43,6 +46,13 @@ public class EnforceMockitoMethods {
         InOrder inOrder = Mockito.inOrder(mockObject);
         inOrder.verify(mockObject).doSomething();
         inOrder.verify(mockObject, Mockito.times(2)).doSomething();
+    }
+
+    public void dontEnforceAnyMethod() {
+        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {
+            mock.verify(List::of);
+            mock.verify(List::of, Mockito.times(2));
+        }
     }
 
     private static class MockObject {

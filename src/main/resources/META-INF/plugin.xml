@@ -189,5 +189,11 @@
             <className>com.picimako.mockitools.intention.convert.verification.inorderverify.ConvertFromInOrderVerifyIntention
             </className>
         </intentionAction>
+        <intentionAction>
+            <categoryKey>mockito.intention.category</categoryKey>
+            <className>
+                com.picimako.mockitools.intention.convert.verification.mockedstaticverify.ConvertFromMockedStaticVerifyIntention
+            </className>
+        </intentionAction>
     </extensions>
 </idea-plugin>

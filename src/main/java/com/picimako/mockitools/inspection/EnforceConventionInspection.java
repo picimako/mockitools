@@ -5,9 +5,11 @@ package com.picimako.mockitools.inspection;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE;
 import static com.picimako.mockitools.MockitoolsPsiUtil.INORDER_VERIFY;
 import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
+import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInspection.LocalInspectionToolSession;
@@ -41,21 +43,24 @@ import java.util.Optional;
  * There are no dedicated quick fixes since separate intention actions are available to convert between these approaches.
  * See subclasses of {@link com.picimako.mockitools.intention.convert.stub.ConvertStubbingIntentionBase}
  * and {@link ConvertVerificationIntentionBase}.
+ * <p>
+ * {@code MockedStatic} specific InOrder.verify() methods are excluded from the enforcement.
  *
  * @since 0.4.0
  */
 public class EnforceConventionInspection extends MockitoolsBaseInspection {
     public static final String SHORT_NAME = "EnforceConvention";
+    //MockedStatic specific verify() methods are excluded, since BDDMockito has no way to verify MockedStatic
     public static final CallMatcher IN_ORDER_VERIFY = CallMatcher.anyOf(
-        INORDER_VERIFY.parameterCount(1),
-        INORDER_VERIFY.parameterCount(2));
+        INORDER_VERIFY.parameterTypes("T"),
+        INORDER_VERIFY.parameterTypes("T", ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE));
     private static final CallMatcher MOCKITO_MATCHER = CallMatcher.anyOf(
-        CallMatcher.staticCall(ORG_MOCKITO_MOCKITO,
+        staticCall(ORG_MOCKITO_MOCKITO,
             "when", "doReturn", "doThrow", "doAnswer", "doCallRealMethod", "doNothing", //stubbing
             "verify", "verifyNoMoreInteractions", "verifyNoInteractions", //verification
             "verifyZeroInteractions" //to support Mockito 3.x
         ), IN_ORDER_VERIFY);
-    private static final CallMatcher BDDMOCKITO_MATCHER = CallMatcher.staticCall(ORG_MOCKITO_BDDMOCKITO,
+    private static final CallMatcher BDDMOCKITO_MATCHER = staticCall(ORG_MOCKITO_BDDMOCKITO,
         "given", "will", "willReturn", "willThrow", "willAnswer", "willCallRealMethod", "willDoNothing", //stubbing
         "then" //verification
     );
