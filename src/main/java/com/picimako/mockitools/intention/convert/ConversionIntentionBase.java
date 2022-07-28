@@ -9,6 +9,7 @@ import static com.intellij.util.text.CharArrayUtil.containsOnlyWhiteSpaces;
 import static com.picimako.mockitools.FromSelectionDataRetriever.collectStatementsInSelection;
 import static com.picimako.mockitools.FromSelectionDataRetriever.selectionLengthIn;
 import static com.picimako.mockitools.PsiMethodUtil.getMethodCallForIdentifier;
+import static com.picimako.mockitools.PsiMethodUtil.getQualifier;
 import static com.picimako.mockitools.PsiMethodUtil.isIdentifierOfMethodCall;
 import static com.picimako.mockitools.Ranges.charSequenceInRange;
 import static com.picimako.mockitools.TokenTypes.isTokenType;
@@ -97,7 +98,7 @@ public abstract class ConversionIntentionBase implements IntentionAction {
      * and that the call chain has the proper type of qualifier expression.
      */
     private boolean isCorrectIdentifier(@NotNull PsiElement identifier, @NotNull PsiMethodCallExpression verificationCall) {
-        var qualifier = verificationCall.getMethodExpression().getQualifierExpression();
+        var qualifier = getQualifier(verificationCall);
         return PsiManager.getInstance(identifier.getProject()).areElementsEquivalent(identifier.getParent(), qualifier)
             && isQualifierHaveCorrectType(qualifier);
     }

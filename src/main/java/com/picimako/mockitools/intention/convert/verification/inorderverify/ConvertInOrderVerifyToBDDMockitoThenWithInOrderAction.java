@@ -5,6 +5,7 @@ package com.picimako.mockitools.intention.convert.verification.inorderverify;
 import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.PsiMethodUtil.get2ndArgument;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.PsiMethodUtil.getQualifier;
 import static com.picimako.mockitools.PsiMethodUtil.hasTwoArguments;
 import static com.picimako.mockitools.Ranges.endOffsetOf;
 
@@ -31,7 +32,7 @@ public class ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction extends Conve
     @Override
     protected void perform(PsiMethodCallExpression inOrderVerify, Project project) {
         var calls = collectCallsInChainFromFirst(inOrderVerify, true);
-        var inOrderVariableName = inOrderVerify.getMethodExpression().getQualifierExpression().getText();
+        var inOrderVariableName = getQualifier(inOrderVerify).getText();
 
         //Replace '<inorder>.verify' with 'BDDMockito.then'
         replaceBeginningOfChain(calls, "BDDMockito.then", MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO);

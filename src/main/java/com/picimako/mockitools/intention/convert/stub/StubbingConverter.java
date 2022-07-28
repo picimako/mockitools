@@ -5,6 +5,7 @@ package com.picimako.mockitools.intention.convert.stub;
 import static com.google.common.collect.Iterables.getLast;
 import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.PsiMethodUtil.getQualifier;
 import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
 import static com.picimako.mockitools.Ranges.endOffsetOf;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
@@ -67,7 +68,7 @@ public final class StubbingConverter extends ConverterBase {
      * </pre>
      */
     private void convertSameType(List<PsiMethodCallExpression> calls, StubbingDescriptor from, StubbingDescriptor to) {
-        doBaseConversion(from, to, calls, endOffsetOf(calls.get(0).getMethodExpression().getQualifierExpression()), to.getBeginningOfStubbing(from));
+        doBaseConversion(from, to, calls, endOffsetOf(getQualifier(calls.get(0))), to.getBeginningOfStubbing(from));
     }
 
     /**
@@ -83,7 +84,7 @@ public final class StubbingConverter extends ConverterBase {
     private void convertToStubber(List<PsiMethodCallExpression> calls, StubbingDescriptor from, StubbingDescriptor to) {
         //These have to be saved before the base conversion, so their values are kept properly
         var stubbedCall = ((PsiMethodCallExpression) getFirstArgument(calls.get(0))); //mock.doSomething()
-        String stubbedCallQualifier = stubbedCall.getMethodExpression().getQualifierExpression().getText(); //"mock"
+        String stubbedCallQualifier = getQualifier(stubbedCall).getText(); //"mock"
         String stubbedCallText = stubbedCall.getText(); //"mock.doSomething()"
 
         //At this point the example chain becomes 'Mockito.do*();'
@@ -107,7 +108,7 @@ public final class StubbingConverter extends ConverterBase {
      */
     private void convertToStubbing(List<PsiMethodCallExpression> calls, StubbingDescriptor from, StubbingDescriptor to) {
         var stubbingMethod = calls.get(calls.size() - 2); //when(mock)
-        int endOffset = endOffsetOf(calls.get(0).getMethodExpression().getQualifierExpression()); //end offset of Mockito
+        int endOffset = endOffsetOf(getQualifier(calls.get(0))); //end offset of Mockito
 
         //BDDMockito.given + ( + mock + .doSomething() + )
         String replacement = to.getBeginningOfStubbing(from) + "(" + getFirstArgument(stubbingMethod).getText() + getLast(calls).getText().replace(stubbingMethod.getText(), "") + ")";
