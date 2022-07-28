@@ -1,0 +1,4 @@
+try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {
+    <spot>InOrder inOrder = Mockito.inOrder(List.class);
+    inOrder.verify(mock, List::of, times(2))</spot>;
+}

@@ -123,12 +123,16 @@ unconfiguredMock.verify(mock2).doSomething(); //mock2 is reported since it is no
 
 ## Convert between various verification approaches
 
-![](https://img.shields.io/badge/intention-orange) ![](https://img.shields.io/badge/since-0.4.0-blue) ![](https://img.shields.io/badge/since-0.5.0-blue)
+![](https://img.shields.io/badge/intention-orange)
+
+![](https://img.shields.io/badge/since-0.4.0/0.5.0-blue)
 [![](https://img.shields.io/badge/impl-ConvertMockitoVerifyToBDDMockitoThenIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/verification/mockitoverify/ConvertFromMockitoVerifyIntention.java)
-[![](https://img.shields.io/badge/impl-ConvertBDDMockitoThenToMockitoVerifyIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/verification/bddmockitothen/ConvertFromBDDMockitoIntention.java)
+[![](https://img.shields.io/badge/impl-ConvertBDDMockitoThenToMockitoVerifyIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/verification/bddmockitothen/ConvertFromBDDMockitoThenIntention.java)
 [![](https://img.shields.io/badge/impl-ConvertBDDMockitoThenToMockitoVerifyIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/verification/inorderverify/ConvertFromInOrderVerifyIntention.java)
 
-There are a couple of ways one can approach verification in Mockito: via `org.mockito.Mockito`, `org.mockito.BDDMockito`, `org.mockito.InOrder`.
+![](https://img.shields.io/badge/since-0.6.0-blue) [![](https://img.shields.io/badge/impl-ConvertMockedStaticVerifyToInOrderVerifyAction-blue)](../src/main/java/com/picimako/mockitools/intention/convert/verification/mockedstaticverify/ConvertMockedStaticVerifyToInOrderVerifyAction.java)
+
+There are a couple of ways one can approach verification in Mockito: via `org.mockito.Mockito`, `org.mockito.BDDMockito`, `org.mockito.InOrder`, `org.mockito.MockedStatic`
 
 These intentions can convert between those approaches if they satisfy some preconditions:
 - in case of `Mockito.verify()` and `InOrder.verify()`, a call must be present on the mock object after `verify()` ,
@@ -145,6 +149,7 @@ it always creates a new `InOrder` local variable.
 | `BDDMockito.then()`                 | `Mockito.verify()`<br/>`InOrder.verify()`<br/>`BDDMockito.then().should(InOrder)`  | `Mockito.verify()`<br/>`InOrder.verify()`      | `BDDMockito.then().should(InOrder)`                         |
 | `BDDMockito.then().should(InOrder)` | `Mockito.verify()`<br/>`InOrder.verify()`                                          | `Mockito.verify()`<br/>`InOrder.verify()`      | No action is available.                                     |
 | `InOrder.verify()`                  | `Mockito.verify()`<br/>`BDDMockito.then()`<br/>`BDDMockito.then().should(InOrder)` | `Mockito.verify()`                             | `BDDMockito.then()`<br/>`BDDMockito.then().should(InOrder)` |
+| `MockedStatic.verify()`             | `InOrder.verify()`                                                                 | `InOrder.verify()`                             | `InOrder.verify()`                                          |
 
 **Example (Mockito.verify() -> BDDMockito.then()):**
 

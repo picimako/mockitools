@@ -18,6 +18,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class ConvertVerificationIntentionBase extends ConversionIntentionBase {
 
+    protected ConvertVerificationIntentionBase(String sourceApproachName, int minSelectionLength) {
+        super(sourceApproachName, minSelectionLength);
+    }
+
     protected ConvertVerificationIntentionBase(String sourceApproachName) {
         super(sourceApproachName, 14);
     }

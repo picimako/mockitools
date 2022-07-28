@@ -23,6 +23,7 @@ import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.picimako.mockitools.MemberInplaceRenameHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -139,5 +140,11 @@ public abstract class ConvertVerificationActionBase extends AnAction {
 
     protected PsiElement createAndAddInOrderVariable(PsiMethodCallExpression verificationCall, List<PsiMethodCallExpression> calls, String mockObjectsArgs) {
         return inOrderCreator.createAndAddInOrderVariable(verificationCall, calls, mockObjectsArgs);
+    }
+
+    //Variable renaming
+
+    protected void rename(@NotNull PsiElement variable) {
+        MemberInplaceRenameHelper.rename(variable.getFirstChild(), editor);
     }
 }
