@@ -2,6 +2,9 @@ import org.mockito.BDDMockito;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockedStatic;
+
+import java.util.List;
 
 public class UnusedOrUnconfiguredMockInInOrderVerification {
 
@@ -62,6 +65,11 @@ public class UnusedOrUnconfiguredMockInInOrderVerification {
         InOrder inOrderBDD2 = Mockito.inOrder(mockObject, mockObject2);
         BDDMockito.then(mockObject).should(inOrderBDD2).doSomething();
         BDDMockito.then(mockObject2).should(inOrderBDD2, Mockito.times(2)).doSomething();
+
+        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {
+            InOrder order = Mockito.inOrder(List.class);
+            order.verify(mock, () -> List.of());
+        }
     }
 
     private static class MockObject {

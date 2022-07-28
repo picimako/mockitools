@@ -107,6 +107,7 @@ inOrder.verify(mock).doSomething();
 This inspection reports mock objects in `InOrder` verifications in the following cases:
 
 - The mock is added to the arguments of `Mockito.inOrder()` but is not used in any verification performed via that `InOrder` object.
+  - `Type.class`-type arguments are excluded for MockedStatic verifications
 - The mock is used in an `InOrder` verification, but it is not added to the arguments of `Mockito.inOrder()`.
 
 It can report mocks both in `InOrder.verify()` and `BDDMockito.then().should(InOrder)`.

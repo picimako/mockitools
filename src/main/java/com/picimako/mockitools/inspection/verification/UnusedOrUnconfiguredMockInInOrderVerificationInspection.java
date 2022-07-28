@@ -17,6 +17,7 @@ import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.JavaElementVisitor;
+import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
@@ -63,8 +64,10 @@ public class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loc
 
                         //The mock arguments from each 'InOrder.verify()' and 'BDDMockito.then().should(InOrder)' call
                         var mockInVerificationsAsString = mocksInVerifications.stream().map(PsiElement::getText).collect(toList());
-                        //Report all mocks in 'Mockito.inOrder()' that are don't use in a verification
+                        //Report all mocks in 'Mockito.inOrder()' that are not used in a verification
                         for (var mockInInOrder : mocksInMockitoInOrder) {
+                            //Exclude Type.class-type arguments that are (most probably) used in MockedStatic verifications
+                            if (mockInInOrder instanceof PsiClassObjectAccessExpression) continue;
                             if (!mockInVerificationsAsString.contains(mockInInOrder.getText()))
                                 holder.registerProblem(mockInInOrder, MockitoolsBundle.inspection("no.in.order.verification.for.mock"));
                         }
