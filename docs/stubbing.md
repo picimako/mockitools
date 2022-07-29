@@ -1,5 +1,12 @@
 # Stubbing
 
+<!-- TOC -->
+* [Invalid checked exception is passed into *Throw() methods](#invalid-checked-exception-is-passed-into-throw-methods)
+* [Consecutive `*Return()` and `*Throw()` calls can be merged](#consecutive-return-and-throw-calls-can-be-merged)
+* [Convert arguments of `*Throw()` stubbing methods](#convert-arguments-of-throw-stubbing-methods)
+* [Convert between various stubbing approaches](#convert-between-various-stubbing-approaches)
+<!-- TOC -->
+
 ## Invalid checked exception is passed into *Throw() methods
 
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.3.0-blue) [![](https://img.shields.io/badge/implementation-ThrowsCheckedExceptionStubbingInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/ThrowsCheckedExceptionStubbingInspection.java)

@@ -1,5 +1,14 @@
 # Mockito verifications
 
+<!-- TOC -->
+* [Verification mode arguments must be between limits](#verification-mode-arguments-must-be-between-limits)
+* [Mockito.times(0) and Mockito.times(1) calls may be optimized or removed](#mockitotimes0-and-mockitotimes1-calls-may-be-optimized-or-removed)
+* [No method call argument is provided](#no-method-call-argument-is-provided)
+* [InOrder with a single verification](#inorder-with-a-single-verification)
+* [Misconfigured InOrder verifications](#misconfigured-inorder-verifications)
+* [Convert between various verification approaches](#convert-between-various-verification-approaches)
+<!-- TOC -->
+
 ## Verification mode arguments must be between limits
 
 ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-VerificationModeValuesBetweenLimitsInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/VerificationModeValuesBetweenLimitsInspection.java)

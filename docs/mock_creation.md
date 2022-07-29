@@ -1,11 +1,16 @@
 # Mock creation
 
-- [Non-interface type(s) passed into extraInterfaces](#non-interface-types-passed-into-extrainterfaces)
-- [No argument is provided for the extraInterfaces() call](#no-argument-is-provided-for-the-extrainterfaces-call)
-- [Mockito cannot mock certain types](#mockito-cannot-mock-certain-types)
-- [Mockito.reset() is used](#mockitoreset-is-used)
-- [Convert @Mock/@Spy fields to Mockito.mock()/spy() calls](#convert-mockspy-fields-to-mockitomockspy-calls)
-- [Convert Mockito.mock()/spy() calls to @Mock/@Spy fields](#convert-mockitomockspy-calls-to-mockspy-fields)
+<!-- TOC -->
+* [Non-interface type(s) passed into extraInterfaces](#non-interface-types-passed-into-extrainterfaces)
+* [No argument is provided for the extraInterfaces() call](#no-argument-is-provided-for-the-extrainterfaces-call)
+* [Mockito cannot mock certain types](#mockito-cannot-mock-certain-types)
+  * [Non-annotation based validation](#non-annotation-based-validation)
+  * [@DoNotMock annotated types](#donotmock-annotated-types)
+* [Mockito/MockedStatic.reset() is used](#mockitomockedstaticreset-is-used)
+* [Convert @Mock/@Spy fields to Mockito.mock()/spy() calls](#convert-mockspy-fields-to-mockitomockspy-calls)
+    * [Determining the target method](#determining-the-target-method)
+* [Convert Mockito.mock()/spy() calls to @Mock/@Spy fields](#convert-mockitomockspy-calls-to-mockspy-fields)
+<!-- TOC -->
 
 ## Non-interface type(s) passed into extraInterfaces
 

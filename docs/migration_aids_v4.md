@@ -1,5 +1,14 @@
 # Mockito v4 migration aids
 
+<!-- TOC -->
+* [Argument matchers are called via org.mockito.Matchers instead of org.mockito.ArgumentMatchers](#argument-matchers-are-called-via-orgmockitomatchers-instead-of-orgmockitoargumentmatchers)
+* [Usage of deprecated anyX() matchers](#usage-of-deprecated-anyx-matchers)
+* [Usage of parameterized variants of isNull(), isNotNull() and notNull()](#usage-of-parameterized-variants-of-isnull-isnotnull-and-notnull)
+* [Usage of deprecated verify methods](#usage-of-deprecated-verify-methods)
+* [Usage of deprecated plugins classes](#usage-of-deprecated-plugins-classes)
+* [Usage of deprecated JUnit runners](#usage-of-deprecated-junit-runners)
+<!-- TOC -->
+
 Similarly to how IntelliJ provides inspections for **Java language level migration aids**, Mockitools also provides
 some inspections to help migrate from one version to another; in the context of this document, to 4.0.0.
 

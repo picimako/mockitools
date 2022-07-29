@@ -1,5 +1,11 @@
 # Argument matching and capture
 
+<!-- TOC -->
+* [Inconsistent argument matcher usage](#inconsistent-argument-matcher-usage)
+* [Explicit initialization of @Captor field is not required](#explicit-initialization-of-captor-field-is-not-required)
+* [@Captor field must be of the type ArgumentCaptor](#captor-field-must-be-of-the-type-argumentcaptor)
+<!-- TOC -->
+
 ## Inconsistent argument matcher usage
 
 ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-InconsistentArgumentMatcherUsageInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/InconsistentArgumentMatcherUsageInspection.java)
