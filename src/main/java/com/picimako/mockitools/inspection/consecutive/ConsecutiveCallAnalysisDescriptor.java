@@ -81,9 +81,21 @@ class ConsecutiveCallAnalysisDescriptor {
             this.mockitoClass = mockitoClass;
         }
 
+        /**
+         * Configures the method names as static methods in {@link #mockitoClass}.
+         */
         Builder chainStarterMethodNames(String... chainStarterMethodNames) {
             this.chainStarterMethodNames = Arrays.asList(chainStarterMethodNames);
             this.chainStarterMethodMatcher = CallMatcher.staticCall(mockitoClass, chainStarterMethodNames);
+            return this;
+        }
+
+        /**
+         * Configures the method names as instance methods in {@link #mockitoClass}.
+         */
+        Builder chainStarterMethodNamesInstance(String... chainStarterMethodNames) {
+            this.chainStarterMethodNames = Arrays.asList(chainStarterMethodNames);
+            this.chainStarterMethodMatcher = CallMatcher.instanceCall(mockitoClass, chainStarterMethodNames);
             return this;
         }
 

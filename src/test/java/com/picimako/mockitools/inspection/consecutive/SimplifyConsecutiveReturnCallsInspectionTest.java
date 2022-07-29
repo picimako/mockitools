@@ -2,10 +2,10 @@
 
 package com.picimako.mockitools.inspection.consecutive;
 
-import java.util.Map;
-
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+
+import java.util.Map;
 
 /**
  * Functional test for {@link SimplifyConsecutiveReturnCallsInspection}.
@@ -212,6 +212,52 @@ public class SimplifyConsecutiveReturnCallsInspectionTest extends MockitoolsInsp
             "           .willReturn(6, 7).given(mockObject).didSomething();"
     );
 
+    private static final Map<String, String> MOCKED_STATIC_WHEN_THEN_RETURN_CASES = Map.of(
+        "       mock.when(List::of).thenReturn(List.of()).then<caret>Return(Collections.emptyList());",
+        "       mock.when(List::of).thenReturn(List.of(), Collections.emptyList());",
+        "       mock.when(List::of).thenReturn(List.of())\n" +
+            "           .thenCallRealMethod()\n" +
+            "           .thenReturn(Collections.emptyList())\n" +
+            "           .thenR<caret>eturn(Collections.EMPTY_LIST);",
+        "       mock.when(List::of).thenReturn(List.of())\n" +
+            "           .thenCallRealMethod()\n" +
+            "           .thenReturn(Collections.emptyList(), Collections.EMPTY_LIST);",
+        "       mock.when(List::of).thenReturn(List.of())\n" +
+            "           .thenRet<caret>urn(Collections.emptyList())\n" +
+            "           .thenCallRealMethod()\n" +
+            "           .thenReturn(Collections.EMPTY_LIST);",
+        "       mock.when(List::of).thenReturn(List.of(), Collections.emptyList())\n" +
+            "           .thenCallRealMethod()\n" +
+            "           .thenReturn(Collections.EMPTY_LIST);",
+        "       mock.when(List::of).thenReturn(List.of())\n" +
+            "           .thenR<caret>eturn(Collections.emptyList())\n" +
+            "           .thenCallRealMethod()\n" +
+            "           .thenReturn(Collections.EMPTY_LIST)\n" +
+            "           .thenReturn(null);",
+        "       mock.when(List::of).thenReturn(List.of(), Collections.emptyList())\n" +
+            "           .thenCallRealMethod()\n" +
+            "           .thenReturn(Collections.EMPTY_LIST)\n" +
+            "           .thenReturn(null);",
+        "       mock.when(List::of).thenReturn(List.of())\n" +
+            "           .thenReturn(Collections.emptyList())\n" +
+            "           .thenCallRealMethod()\n" +
+            "           .thenReturn(Collections.EMPTY_LIST)\n" +
+            "           .thenRe<caret>turn(null);",
+        "       mock.when(List::of).thenReturn(List.of())\n" +
+            "           .thenReturn(Collections.emptyList())\n" +
+            "           .thenCallRealMethod()\n" +
+            "           .thenReturn(Collections.EMPTY_LIST, null);",
+        "       mock.when(List::of).thenReturn(List.of(), Collections.emptyList(), Collections.EMPTY_LIST)\n" +
+            "           .thenRe<caret>turn(null)\n" +
+            "           .thenCallRealMethod()\n" +
+            "           .thenReturn(List.of())\n" +
+            "           .thenReturn(Collections.emptyList(), Collections.EMPTY_LIST);",
+        "       mock.when(List::of).thenReturn(List.of(), Collections.emptyList(), Collections.EMPTY_LIST, null)\n" +
+            "           .thenCallRealMethod()\n" +
+            "           .thenReturn(List.of())\n" +
+            "           .thenReturn(Collections.emptyList(), Collections.EMPTY_LIST);"
+    );
+
     @Override
     protected InspectionProfileEntry getInspection() {
         return new SimplifyConsecutiveReturnCallsInspection();
@@ -249,6 +295,12 @@ public class SimplifyConsecutiveReturnCallsInspectionTest extends MockitoolsInsp
                 createClassText(before), createClassText(after)));
     }
 
+    public void testReplacesMockedStaticWhenThenReturns() {
+        MOCKED_STATIC_WHEN_THEN_RETURN_CASES.forEach((before, after) ->
+            doQuickFixTest("Merge thenReturn calls", "QuickFix.java",
+                createMockedStaticClassText(before), createMockedStaticClassText(after)));
+    }
+
     private String createClassText(String beforeOrAfter) {
         return "import org.mockito.Mockito;\n" +
             "import org.mockito.BDDMockito;\n" +
@@ -259,6 +311,21 @@ public class SimplifyConsecutiveReturnCallsInspectionTest extends MockitoolsInsp
             "   }\n" +
             "\n" +
             MOCK_OBJECT_CLASS +
+            "}";
+    }
+
+    private String createMockedStaticClassText(String beforeOrAfter) {
+        return "import org.mockito.Mockito;\n" +
+            "import org.mockito.MockedStatic;\n" +
+            "import java.util.Collections;\n" +
+            "import java.util.List;\n" +
+            "\n" +
+            "class QuickFix {\n" +
+            "   void testMethod() {\n" +
+            "       try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {\n" +
+            beforeOrAfter + "\n" +
+            "       }\n" +
+            "   }\n" +
             "}";
     }
 }

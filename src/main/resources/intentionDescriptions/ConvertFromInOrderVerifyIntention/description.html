@@ -6,9 +6,11 @@ Can perform conversion of one or more <code>InOrder.verify()</code> call chains 
     <li>to <code>Mockito.verify()</code>,</li>
     <li>to <code>BDDMockito.then()</code> using a newly created an <code>InOrder</code> local variable,</li>
     <li>to <code>BDDMockito.then()</code> without an InOrder, omitting the source InOrder variable.</li>
+    <li>to <code>MockedStatic.verify()</code></li>
 </ul>
 <p>
-    The intention is available on <code>InOrder.verify()</code> when it is followed by a method call on the mock object.
+    The intention is available on <code>InOrder.verify()</code> when it is followed by a method call (only in case of
+    non-MockedStatic) on the mock object.
 <p>
     In call chains where there is no separate <code>InOrder</code> local variable is created, but <code>
     Mockito.inOrder(mockObject)</code> is called inline, is not supported at the moment.

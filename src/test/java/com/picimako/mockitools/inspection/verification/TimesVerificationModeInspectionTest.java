@@ -32,6 +32,22 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
         doJavaTest(inspection);
     }
 
+    public void testTimesOneDeletionBDDMockitoShouldIsNotAvailableWithFurtherSettings() {
+        doJavaTest("TimesOneDeletionTest.java",
+            "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class TimesOneDeletionTest {\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "        Object mockObject = Mockito.mock(Object.class);\n" +
+                "        BDDMockito.then(mockObject).should(<caret>times(1).description(\"description\")).toString();\n" +
+                "    }\n" +
+                "}");
+    }
+
     //Mockito.verify
 
     public void testTimesZeroReplacement() {
@@ -114,7 +130,7 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
                 "    public void testMethod() {\n" +
                 "        Object mockObject = Mockito.mock(Object.class);\n" +
                 "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
-                "        inOrder.verify(mockObject, <caret>times(0));\n" +
+                "        inOrder.verify(mockObject, <caret>times(0)).toString();\n" +
                 "    }\n" +
                 "}",
             "import static org.mockito.Mockito.times;\n" +
@@ -127,7 +143,7 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
                 "    public void testMethod() {\n" +
                 "        Object mockObject = Mockito.mock(Object.class);\n" +
                 "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
-                "        inOrder.verify(mockObject, Mockito.never());\n" +
+                "        inOrder.verify(mockObject, Mockito.never()).toString();\n" +
                 "    }\n" +
                 "}");
     }
@@ -144,7 +160,7 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
                 "    public void testMethod() {\n" +
                 "        Object mockObject = Mockito.mock(Object.class);\n" +
                 "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
-                "        inOrder.verify(mockObject, <caret>times(0).description(\"message\"));\n" +
+                "        inOrder.verify(mockObject, <caret>times(0).description(\"message\")).toString();\n" +
                 "    }\n" +
                 "}",
             "import static org.mockito.Mockito.times;\n" +
@@ -157,7 +173,7 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
                 "    public void testMethod() {\n" +
                 "        Object mockObject = Mockito.mock(Object.class);\n" +
                 "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
-                "        inOrder.verify(mockObject, Mockito.never().description(\"message\"));\n" +
+                "        inOrder.verify(mockObject, Mockito.never().description(\"message\")).toString();\n" +
                 "    }\n" +
                 "}");
     }
@@ -169,12 +185,12 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
                 "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
-                "public class TimesOneInOrder {\n" +
+                "public class TimesOneDeletionTest {\n" +
                 "\n" +
                 "    public void testMethod() {\n" +
                 "        Object mockObject = Mockito.mock(Object.class);\n" +
                 "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
-                "        inOrder.verify(mockObject, <caret>times(1));\n" +
+                "        inOrder.verify(mockObject, <caret>times(1)).toString();\n" +
                 "    }\n" +
                 "}",
             "import static org.mockito.Mockito.times;\n" +
@@ -182,12 +198,292 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
                 "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
-                "public class TimesOneInOrder {\n" +
+                "public class TimesOneDeletionTest {\n" +
                 "\n" +
                 "    public void testMethod() {\n" +
                 "        Object mockObject = Mockito.mock(Object.class);\n" +
                 "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
-                "        inOrder.verify(mockObject);\n" +
+                "        inOrder.verify(mockObject).toString();\n" +
+                "    }\n" +
+                "}");
+    }
+
+    //BDDMockito.should()
+
+    public void testTimesZeroReplacementBDDMockitoShould() {
+        doQuickFixTest("Replace with Mockito.never()", "TimesZeroWithoutSettingsReplacementBDDMockitoShouldTest.java",
+            "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class TimesZeroWithoutSettingsReplacementBDDMockitoShouldTest {\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "        Object mockObject = Mockito.mock(Object.class);\n" +
+                "        BDDMockito.then(mockObject).should(<caret>times(0)).toString();\n" +
+                "    }\n" +
+                "}",
+            "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class TimesZeroWithoutSettingsReplacementBDDMockitoShouldTest {\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "        Object mockObject = Mockito.mock(Object.class);\n" +
+                "        BDDMockito.then(mockObject).should(Mockito.never()).toString();\n" +
+                "    }\n" +
+                "}");
+    }
+
+    public void testTimesZeroWithSettingsReplacementBDDMockitoShould() {
+        doQuickFixTest("Replace with Mockito.never()", "TimesZeroWithSettingsReplacementBDDMockitoShouldTest.java",
+            "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class TimesZeroWithSettingsReplacementBDDMockitoShouldTest {\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "        Object mockObject = Mockito.mock(Object.class);\n" +
+                "        BDDMockito.then(mockObject).should(<caret>times(0).description(\"description\")).toString();\n" +
+                "    }\n" +
+                "}",
+            "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class TimesZeroWithSettingsReplacementBDDMockitoShouldTest {\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "        Object mockObject = Mockito.mock(Object.class);\n" +
+                "        BDDMockito.then(mockObject).should(Mockito.never().description(\"description\")).toString();\n" +
+                "    }\n" +
+                "}");
+    }
+
+    public void testTimesOneDeletionBDDMockitoShould() {
+        doQuickFixTest("Delete call to Mockito.times(1)", "TimesOneDeletionTest.java",
+            "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class TimesOneDeletionTest {\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "        Object mockObject = Mockito.mock(Object.class);\n" +
+                "        BDDMockito.then(mockObject).should(<caret>times(1)).toString();\n" +
+                "    }\n" +
+                "}",
+            "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class TimesOneDeletionTest {\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "        Object mockObject = Mockito.mock(Object.class);\n" +
+                "        BDDMockito.then(mockObject).should().toString();\n" +
+                "    }\n" +
+                "}");
+    }
+
+    public void testTimesZeroReplacementBDDMockitoShouldInOrder() {
+        doQuickFixTest("Replace with Mockito.never()", "TimesZeroWithoutSettingsReplacementBDDMockitoShouldTest.java",
+            "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.InOrder;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class TimesZeroWithoutSettingsReplacementBDDMockitoShouldTest {\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "        Object mockObject = Mockito.mock(Object.class);\n" +
+                "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
+                "        BDDMockito.then(mockObject).should(inOrder, <caret>times(0)).toString();\n" +
+                "    }\n" +
+                "}",
+            "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.InOrder;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class TimesZeroWithoutSettingsReplacementBDDMockitoShouldTest {\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "        Object mockObject = Mockito.mock(Object.class);\n" +
+                "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
+                "        BDDMockito.then(mockObject).should(inOrder, Mockito.never()).toString();\n" +
+                "    }\n" +
+                "}");
+    }
+
+    public void testTimesZeroWithSettingsReplacementBDDMockitoShouldInOrder() {
+        doQuickFixTest("Replace with Mockito.never()", "TimesZeroWithSettingsReplacementBDDMockitoShouldTest.java",
+            "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.InOrder;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class TimesZeroWithSettingsReplacementBDDMockitoShouldTest {\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "        Object mockObject = Mockito.mock(Object.class);\n" +
+                "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
+                "        BDDMockito.then(mockObject).should(inOrder, <caret>times(0).description(\"description\")).toString();\n" +
+                "    }\n" +
+                "}",
+            "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.InOrder;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class TimesZeroWithSettingsReplacementBDDMockitoShouldTest {\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "        Object mockObject = Mockito.mock(Object.class);\n" +
+                "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
+                "        BDDMockito.then(mockObject).should(inOrder, Mockito.never().description(\"description\")).toString();\n" +
+                "    }\n" +
+                "}");
+    }
+
+    public void testTimesOneDeletionBDDMockitoShouldInOrder() {
+        doQuickFixTest("Delete call to Mockito.times(1)", "TimesOneDeletionTest.java",
+            "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.InOrder;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class TimesOneDeletionTest {\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "        Object mockObject = Mockito.mock(Object.class);\n" +
+                "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
+                "        BDDMockito.then(mockObject).should(inOrder, <caret>times(1)).toString();\n" +
+                "    }\n" +
+                "}",
+            "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "import org.mockito.BDDMockito;\n" +
+                "import org.mockito.InOrder;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class TimesOneDeletionTest {\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "        Object mockObject = Mockito.mock(Object.class);\n" +
+                "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
+                "        BDDMockito.then(mockObject).should(inOrder).toString();\n" +
+                "    }\n" +
+                "}");
+    }
+
+    //MockedStatic.verify()
+
+    public void testTimesZeroReplacementMockedStaticVerify() {
+        doQuickFixTest("Replace with Mockito.never()", "TimesZeroWithoutSettingsReplacementBDDMockitoShouldTest.java",
+            "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "import org.mockito.MockedStatic;\n" +
+                "import org.mockito.Mockito;\n" +
+                "import java.util.List;\n" +
+                "\n" +
+                "public class TimesZeroWithoutSettingsReplacementBDDMockitoShouldTest {\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "       try (MockedStatic<List> listMockedStatic = Mockito.mockStatic(List.class)) {\n" +
+                "            listMockedStatic.verify(List::of, <caret>times(0));\n" +
+                "        }\n" +
+                "    }\n" +
+                "}",
+            "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "import org.mockito.MockedStatic;\n" +
+                "import org.mockito.Mockito;\n" +
+                "import java.util.List;\n" +
+                "\n" +
+                "public class TimesZeroWithoutSettingsReplacementBDDMockitoShouldTest {\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "       try (MockedStatic<List> listMockedStatic = Mockito.mockStatic(List.class)) {\n" +
+                "            listMockedStatic.verify(List::of, Mockito.never());\n" +
+                "        }\n" +
+                "    }\n" +
+                "}");
+    }
+
+    public void testTimesZeroWithSettingsReplacementMockedStaticVerify() {
+        doQuickFixTest("Replace with Mockito.never()", "TimesZeroWithSettingsReplacementBDDMockitoShouldTest.java",
+            "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "import org.mockito.MockedStatic;\n" +
+                "import org.mockito.Mockito;\n" +
+                "import java.util.List;\n" +
+                "\n" +
+                "public class TimesZeroWithSettingsReplacementBDDMockitoShouldTest {\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "       try (MockedStatic<List> listMockedStatic = Mockito.mockStatic(List.class)) {\n" +
+                "            listMockedStatic.verify(List::of, <caret>times(0).description(\"description\"));\n" +
+                "        }\n" +
+                "    }\n" +
+                "}",
+            "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "import org.mockito.MockedStatic;\n" +
+                "import org.mockito.Mockito;\n" +
+                "import java.util.List;\n" +
+                "\n" +
+                "public class TimesZeroWithSettingsReplacementBDDMockitoShouldTest {\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "       try (MockedStatic<List> listMockedStatic = Mockito.mockStatic(List.class)) {\n" +
+                "            listMockedStatic.verify(List::of, Mockito.never().description(\"description\"));\n" +
+                "        }\n" +
+                "    }\n" +
+                "}");
+    }
+
+    public void testTimesOneDeletionMockedStaticVerify() {
+        doQuickFixTest("Delete call to Mockito.times(1)", "TimesOneDeletionTest.java",
+            "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "import org.mockito.MockedStatic;\n" +
+                "import org.mockito.Mockito;\n" +
+                "import java.util.List;\n" +
+                "\n" +
+                "public class TimesOneDeletionTest {\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "       try (MockedStatic<List> listMockedStatic = Mockito.mockStatic(List.class)) {\n" +
+                "            listMockedStatic.verify(List::of, <caret>times(1));\n" +
+                "        }\n" +
+                "    }\n" +
+                "}",
+            "import static org.mockito.Mockito.times;\n" +
+                "\n" +
+                "import org.mockito.MockedStatic;\n" +
+                "import org.mockito.Mockito;\n" +
+                "import java.util.List;\n" +
+                "\n" +
+                "public class TimesOneDeletionTest {\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "       try (MockedStatic<List> listMockedStatic = Mockito.mockStatic(List.class)) {\n" +
+                "            listMockedStatic.verify(List::of);\n" +
+                "        }\n" +
                 "    }\n" +
                 "}");
     }

@@ -54,7 +54,7 @@ import java.util.List;
  * @see NoActionAvailableAction
  * @since 0.5.0
  */
-public class ConvertFromBDDMockitoIntention extends ConvertVerificationIntentionBase {
+public class ConvertFromBDDMockitoThenIntention extends ConvertVerificationIntentionBase {
     private static final CallMatcher.Simple SHOULD = instanceCall(ORG_MOCKITO_BDDMOCKITO_THEN, "should");
     static final CallMatcher THEN_SHOULD_WITHOUT_INORDER = anyOf(
         SHOULD.parameterCount(0),
@@ -65,7 +65,7 @@ public class ConvertFromBDDMockitoIntention extends ConvertVerificationIntention
     );
     private static final CallMatcher THEN_SHOULD = anyOf(THEN_SHOULD_WITHOUT_INORDER, THEN_SHOULD_WITH_INORDER);
 
-    public ConvertFromBDDMockitoIntention() {
+    public ConvertFromBDDMockitoThenIntention() {
         super("BDDMockito.then()");
     }
 

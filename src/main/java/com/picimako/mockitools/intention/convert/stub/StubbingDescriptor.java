@@ -11,18 +11,27 @@ import com.picimako.mockitools.StubType;
  */
 public final class StubbingDescriptor {
 
+    /**
+     * Text to display in {@link ConvertStubbingAction}s.
+     */
+    private final String actionText;
     private final String stubStarterClassFqn;
     private final String stubStarterClassName;
     private final String prefix;
     private final String stubTargetSpecifierMethodName;
     private final StubType stubType;
 
-    public StubbingDescriptor(String stubStarter, String stubStarterClassName, String prefix, String stubTargetSpecifierMethodName, StubType stubType) {
+    public StubbingDescriptor(String actionText, String stubStarter, String stubStarterClassName, String prefix, String stubTargetSpecifierMethodName, StubType stubType) {
+        this.actionText = actionText;
         this.stubStarterClassFqn = stubStarter;
         this.stubStarterClassName = stubStarterClassName;
         this.prefix = prefix;
         this.stubTargetSpecifierMethodName = stubTargetSpecifierMethodName;
         this.stubType = stubType;
+    }
+
+    public String getActionText() {
+        return actionText;
     }
 
     public String getStubStarterClassFqn() {

@@ -183,6 +183,31 @@ public class SimplifyConsecutiveThrowCallsInspectionTest extends MockitoolsInspe
         "      Mockito.doThrow(new IOException(), new IllegalArgumentException()).when(mockObject).doSomething();"
     );
 
+    private static final Map<String, String> MOCKED_STATIC_WHEN_THEN_THROWS_CASES = Map.of(
+        "       mock.when(List::of).thenThrow(IOException.class).then<caret>Throw(NoSuchMethodException.class);",
+        "       mock.when(List::of).thenThrow(IOException.class, NoSuchMethodException.class);",
+        "       mock.when(List::of).thenThrow(IOException.class, NoSuchMethodException.class).thenT<caret>hrow(IllegalArgumentException.class);",
+        "       mock.when(List::of).thenThrow(IOException.class, NoSuchMethodException.class, IllegalArgumentException.class);",
+        "       mock.when(List::of).thenThrow(IllegalArgumentException.class).then<caret>Throw(IOException.class, NoSuchMethodException.class);",
+        "       mock.when(List::of).thenThrow(IllegalArgumentException.class, IOException.class, NoSuchMethodException.class);",
+        "       mock.when(List::of).thenThrow(new IOException()).then<caret>Throw(new IllegalArgumentException(\"message\"));",
+        "       mock.when(List::of).thenThrow(new IOException(), new IllegalArgumentException(\"message\"));",
+        "       mock.when(List::of).thenThrow(IOException.class).then<caret>Throw(new IllegalArgumentException(\"message\"));",
+        "       mock.when(List::of).thenThrow(new IOException(), new IllegalArgumentException(\"message\"));",
+        "       mock.when(List::of).thenThrow(new IOException(), new IllegalArgumentException(\"message\")).then<caret>Throw(NoSuchMethodException.class)\n" +
+            "           .thenReturn(List.of())\n" +
+            "           .thenThrow(new IOException(), new IllegalArgumentException()).thenThrow(NoSuchMethodException.class);",
+        "       mock.when(List::of).thenThrow(new IOException(), new IllegalArgumentException(\"message\"), new NoSuchMethodException())\n" +
+            "           .thenReturn(List.of())\n" +
+            "           .thenThrow(new IOException(), new IllegalArgumentException()).thenThrow(NoSuchMethodException.class);",
+        "       mock.when(List::of).thenThrow(new IllegalArgumentException(\"message\")).th<caret>enThrow(NoSuchMethodException.class)\n" +
+            "           .thenReturn(List.of())\n" +
+            "           .thenThrow(new IOException(), new IllegalArgumentException()).thenThrow(NoSuchMethodException.class);",
+        "       mock.when(List::of).thenThrow(new IllegalArgumentException(\"message\"), new NoSuchMethodException())\n" +
+            "           .thenReturn(List.of())\n" +
+            "           .thenThrow(new IOException(), new IllegalArgumentException()).thenThrow(NoSuchMethodException.class);"
+    );
+
     static {
         DO_THROW_WHEN_CASES.put(
             "       Mockito.doThrow(IllegalArgumentException.class).doTh<caret>row(NoSuchMethodException.class).when(mockObject).doSomething();",
@@ -311,6 +336,12 @@ public class SimplifyConsecutiveThrowCallsInspectionTest extends MockitoolsInspe
             doQuickFixTest("Merge calls, convert parameters to Throwables", "QuickFix.java", createClassText(before), createClassText(after)));
     }
 
+    public void testReplacesMockedStaticWhenThenThrows() {
+        MOCKED_STATIC_WHEN_THEN_THROWS_CASES.forEach((before, after) ->
+            doQuickFixTest("Merge thenThrow calls", "QuickFix.java",
+                createMockedStaticClassText(before), createMockedStaticClassText(after)));
+    }
+
     private String createClassText(String beforeOrAfter) {
         return "import org.mockito.Mockito;\n" +
             "import org.mockito.BDDMockito;\n" +
@@ -323,6 +354,22 @@ public class SimplifyConsecutiveThrowCallsInspectionTest extends MockitoolsInspe
             "   }\n" +
             "\n" +
             MOCK_OBJECT_CLASS +
+            "}";
+    }
+
+    private String createMockedStaticClassText(String beforeOrAfter) {
+        return "import org.mockito.Mockito;\n" +
+            "import org.mockito.MockedStatic;\n" +
+            "import java.util.Collections;\n" +
+            "import java.util.List;\n" +
+            "import java.io.IOException;\n" +
+            "\n" +
+            "class QuickFix {\n" +
+            "   void testMethod() {\n" +
+            "       try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {\n" +
+            beforeOrAfter + "\n" +
+            "       }\n" +
+            "   }\n" +
             "}";
     }
 }

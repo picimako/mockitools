@@ -30,16 +30,13 @@ public abstract class MockitoolsTestBase extends LightJavaCodeInsightFixtureTest
 
     @Override
     protected @NotNull LightProjectDescriptor getProjectDescriptor() {
-        return getRealJdkHomeOrCommunityMockJdk();
+        return getJdkHome();
     }
 
     /**
-     * Returns a descriptor with Java 11 Mock JDK from intellij-community if the {@code idea.home.path} system property is defined,
-     * otherwise uses the JAVA_HOME environment variable to identify the JDK to use.
-     * <p>
-     * JAVA_HOME based JDK is used mainly in CI/CD environment.
+     * Returns a descriptor with a real JDK defined by the JAVA_HOME environment variable.
      */
-    public static LightProjectDescriptor getRealJdkHomeOrCommunityMockJdk() {
+    public static LightProjectDescriptor getJdkHome() {
         return new ProjectDescriptor(LanguageLevel.JDK_11) {
             @Override
             public Sdk getSdk() {

@@ -6,6 +6,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.DO_RETURN;
 import static com.picimako.mockitools.MockitoQualifiedNames.DO_THROW;
 import static com.picimako.mockitools.MockitoQualifiedNames.GIVEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_STATIC;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.THEN_RETURN;
 import static com.picimako.mockitools.MockitoQualifiedNames.WHEN;
@@ -20,8 +21,8 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Reports multiple consecutive calls to {@code *Return()} methods, so that they may be merged into a single call.
  * <p>
- * Both {@code org.mockito.Mockito} and {@code org.mockito.BDDMockito} based stubbing chains are supported,
- * including calls to {@code doReturn()}, {@code thenReturn()} and {@code willReturn()}.
+ * {@code org.mockito.Mockito}, {@code org.mockito.BDDMockito} and {@code org.mockito.MockedStatic }based stubbings
+ * are supported, including calls to {@code doReturn()}, {@code thenReturn()} and {@code willReturn()}.
  * <p>
  * If there are multiple sections of consecutive calls within the same call chain, they are reported separately for better notification,
  * and can be merged separately.
@@ -39,7 +40,11 @@ public class SimplifyConsecutiveReturnCallsInspection extends SimplifyConsecutiv
         new ConsecutiveCallAnalysisDescriptor.Builder(ORG_MOCKITO_MOCKITO)
             .consecutiveMethodName(THEN_RETURN)
             .indexToStartInspectionAt(1)
-            .chainStarterMethodNames(WHEN).build()
+            .chainStarterMethodNames(WHEN).build(),
+        new ConsecutiveCallAnalysisDescriptor.Builder(ORG_MOCKITO_MOCKED_STATIC)
+            .consecutiveMethodName(THEN_RETURN)
+            .indexToStartInspectionAt(1)
+            .chainStarterMethodNamesInstance(WHEN).build()
     );
 
     @Override

@@ -1,0 +1,3 @@
+try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {
+    <spot>mock.verify(List::of, times(2))</spot>;
+}

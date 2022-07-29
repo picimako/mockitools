@@ -2,12 +2,19 @@
 
 package com.picimako.mockitools.inspection.verification;
 
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO_THEN;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_STATIC_VERIFICATION;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO_NEVER;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isTimes;
+import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromLast;
+import static com.picimako.mockitools.PsiMethodUtil.get2ndArgument;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.PsiMethodUtil.hasSubsequentMethodCall;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
+import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 
+import com.google.common.collect.Iterables;
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
@@ -17,18 +24,23 @@ import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.util.PsiLiteralUtil;
+import com.picimako.mockitools.MockitoolsPsiUtil;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.InspectionGadgetsFix;
+import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Inspects {@code Mockito.times()} calls whether they can be optimized or deleted based on their argument values.
@@ -41,13 +53,23 @@ import javax.swing.*;
  * <p>
  * {@code Mockito.times(1)} calls are reported only when they have no subsequent calls on them, e.g.
  * {@code Mockito.times(1).description("message")}.
- * <p>
- * TODO: it is a further possible improvement to figure out what calls remain after deleting times(1) and static import those calls.
  *
  * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#exact_verification">Mockito exact verification documentation</a>
  * @since 0.1.0
  */
 public class TimesVerificationModeInspection extends MockitoolsBaseInspection {
+
+    private static final CallMatcher MOCKITO_VERIFY = MockitoolsPsiUtil.MOCKITO_VERIFY.parameterTypes("T", ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE);
+    private static final CallMatcher INORDER_VERIFY = MockitoolsPsiUtil.INORDER_VERIFY.parameterTypes("T", ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE);
+    private static final CallMatcher MOCKED_STATIC_VERIFY =
+        MockitoolsPsiUtil.MOCKED_STATIC_VERIFY.parameterTypes(ORG_MOCKITO_MOCKED_STATIC_VERIFICATION, ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE);
+    private static final CallMatcher BDDMOCKITO_SHOULD =
+        instanceCall(ORG_MOCKITO_BDDMOCKITO_THEN, "should").parameterTypes(ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE);
+    private static final CallMatcher BDDMOCKITO_SHOULD_INORDER =
+        instanceCall(ORG_MOCKITO_BDDMOCKITO_THEN, "should").parameterTypes(ORG_MOCKITO_INORDER, ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE);
+
+    private static final CallMatcher VERIFICATION = CallMatcher.anyOf(
+        MOCKITO_VERIFY, INORDER_VERIFY, MOCKED_STATIC_VERIFY, BDDMOCKITO_SHOULD_INORDER);
 
     @SuppressWarnings("PublicField")
     public boolean reportTimesZeroToNever = true;
@@ -70,18 +92,39 @@ public class TimesVerificationModeInspection extends MockitoolsBaseInspection {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
-        if (isTimes(expression)) {
-            Integer timesValue = PsiLiteralUtil.parseInteger(getFirstArgument(expression).getText());
-
-            if (timesValue != null) {
-                if (reportTimesZeroToNever && timesValue == 0) {
-                    holder.registerProblem(expression, MockitoolsBundle.inspection("times.zero.can.be.replaced.with.never"), new ReplaceTimesZeroWithNeverQuickFix());
-                }
-                if (reportTimesOneCanBeOmitted && timesValue == 1 && !hasSubsequentMethodCall(expression)) {
-                    holder.registerProblem(expression, MockitoolsBundle.inspection("times.one.can.be.omitted"), ProblemHighlightType.LIKE_UNUSED_SYMBOL, new DeleteTimesOneQuickFix());
-                }
+        //times(0) can be replaced with never() wherever it is used
+        if (isTimes(expression) && reportTimesZeroToNever) {
+            if (isTimesValueEqualTo(expression, 0)) {
+                holder.registerProblem(expression, MockitoolsBundle.inspection("times.zero.can.be.replaced.with.never"), ReplaceTimesZeroWithNeverQuickFix.INSTANCE);
             }
+            return;
         }
+
+        //times(1) is allowed to be removed only when it is used in the Mockito-provided verification methods
+        var verificationModeCalls = getCallsInVerificationModeArgument(expression);
+        if (verificationModeCalls.isEmpty()) return;
+
+        var timesMode = Iterables.getLast(verificationModeCalls);
+        //times(1) without a sequent method call
+        if (isTimes(timesMode) && reportTimesOneCanBeOmitted && isTimesValueEqualTo(timesMode, 1) && verificationModeCalls.size() == 1) {
+            holder.registerProblem(timesMode, MockitoolsBundle.inspection("times.one.can.be.omitted"), ProblemHighlightType.LIKE_UNUSED_SYMBOL, DeleteTimesOneQuickFix.INSTANCE);
+        }
+    }
+
+    private boolean isTimesValueEqualTo(PsiMethodCallExpression timesMode, Integer value) {
+        Integer timesValue = PsiLiteralUtil.parseInteger(getFirstArgument(timesMode).getText());
+        return Objects.equals(timesValue, value);
+    }
+
+    private List<PsiMethodCallExpression> getCallsInVerificationModeArgument(PsiMethodCallExpression verification) {
+        PsiExpression verificationMode = null;
+        if (VERIFICATION.matches(verification)) {
+            verificationMode = get2ndArgument(verification);
+        } else if (BDDMOCKITO_SHOULD.matches(verification)) {
+            verificationMode = getFirstArgument(verification);
+        }
+
+        return verificationMode instanceof PsiMethodCallExpression ? collectCallsInChainFromLast(verificationMode) : Collections.emptyList();
     }
 
     /**
@@ -91,10 +134,12 @@ public class TimesVerificationModeInspection extends MockitoolsBaseInspection {
      * At least for now, static import of {@code Mockito.never()} is not applied.
      */
     private static final class ReplaceTimesZeroWithNeverQuickFix extends TimesQuickFix {
+        private static final ReplaceTimesZeroWithNeverQuickFix INSTANCE = new ReplaceTimesZeroWithNeverQuickFix();
+
         @Override
         protected void doFix(Project project, ProblemDescriptor descriptor) {
-            PsiMethodCallExpression methodCall = (PsiMethodCallExpression) descriptor.getPsiElement();
-            PsiElement replaced = methodCall.replace(
+            var methodCall = (PsiMethodCallExpression) descriptor.getPsiElement();
+            var replaced = methodCall.replace(
                 JavaPsiFacade.getElementFactory(project).createExpressionFromText(ORG_MOCKITO_MOCKITO_NEVER + "()", methodCall));
             JavaCodeStyleManager.getInstance(project).shortenClassReferences(replaced);
         }
@@ -111,6 +156,8 @@ public class TimesVerificationModeInspection extends MockitoolsBaseInspection {
      * When applied, code snippets like {@code Mockito.verify(mock, times(1))} become {@code Mockito.verify(mock)}.
      */
     private static final class DeleteTimesOneQuickFix extends TimesQuickFix {
+        private static final DeleteTimesOneQuickFix INSTANCE = new DeleteTimesOneQuickFix();
+
         @Override
         protected void doFix(Project project, ProblemDescriptor descriptor) {
             descriptor.getPsiElement().delete();

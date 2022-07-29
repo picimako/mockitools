@@ -110,7 +110,7 @@ Additional resources:
 - [@DoNotMock javadoc](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/DoNotMock.html)
 - [Mockito pull request: Add annotation to mark a type as DoNotMock](https://github.com/mockito/mockito/pull/1833/files)
 
-## Mockito.reset() is used
+## Mockito/MockedStatic.reset() is used
 
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-CallOnMockitoResetInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/CallOnMockitoResetInspection.java)
 
@@ -118,7 +118,7 @@ Based on Mockito's documentation on [resetting mocks](https://javadoc.io/doc/org
 
 > Smart Mockito users hardly use this feature because they know it could be a sign of poor tests. Normally, you don't need to reset your mocks, just create new mocks for each test method.
 
-This inspection will report any call to `Mockito.reset()`, regardless of its location in the test method.
+This inspection will report any call to `Mockito.reset()` and `MockedStatic.reset()` (since 0.6.0), regardless of its location in the test method.
 Although there may be cases when calling `reset()` is acceptable or even necessary, this inspection doesn't take into account those cases.
 
 ```java
