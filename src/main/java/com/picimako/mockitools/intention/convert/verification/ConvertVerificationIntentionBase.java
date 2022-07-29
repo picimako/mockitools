@@ -22,6 +22,7 @@ public abstract class ConvertVerificationIntentionBase extends ConversionIntenti
         super(sourceApproachName, minSelectionLength);
     }
 
+    //The shortest option is selecting 'verify(y).z();'.
     protected ConvertVerificationIntentionBase(String sourceApproachName) {
         super(sourceApproachName, 14);
     }

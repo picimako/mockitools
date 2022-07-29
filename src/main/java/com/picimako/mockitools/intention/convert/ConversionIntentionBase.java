@@ -66,14 +66,14 @@ public abstract class ConversionIntentionBase implements IntentionAction {
     /**
      * Returns whether this intention will be available for selection based conversion.
      * <p>
-     * Selections shorter than 14 characters, and ones containing only whitespaces, are not considered a suitable selection.
+     * Selections shorter than {@code minSelectionLength}, and ones containing only whitespaces, are not considered a suitable selection.
      */
     private boolean isAvailableForBulkConversion(Editor editor, PsiFile file) {
         var model = editor.getSelectionModel();
         int selectionStart = model.getSelectionStart();
         int selectionEnd = model.getSelectionEnd();
 
-        //The shortest option is selecting 'verify(y).z();'. This is to prevent executing further logic for unnecessarily short selections.
+        //This is to prevent executing further logic for unnecessarily short selections.
         if (selectionLengthIn(model) < minSelectionLength
             || containsOnlyWhiteSpaces(charSequenceInRange(editor, selectionStart, selectionEnd))
             || !isSymbolAfterMethodCallChain(file.findElementAt(selectionEnd)))
