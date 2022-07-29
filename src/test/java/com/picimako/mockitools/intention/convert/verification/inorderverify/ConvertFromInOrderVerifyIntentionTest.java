@@ -132,7 +132,7 @@ public class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwar
                 "}");
     }
 
-    //Action selection options
+    //Action selection options - non-MockedStatic
 
     public void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedMockitoIsNotEnforced() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
@@ -144,7 +144,7 @@ public class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwar
                 "    void testMethod(){\n" +
                 "        Object mock = Mockito.mock(Object.class);\n" +
                 "        InOrder inOrder = Mockito.inOrder(mock);\n" +
-                "        inorder.ve<caret>rify(mock).doSomething();\n" +
+                "        inOrder.ve<caret>rify(mock).doSomething();\n" +
                 "    }\n" +
                 "}");
         List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
@@ -166,7 +166,7 @@ public class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwar
                 "    void testMethod(){\n" +
                 "        Object mock = Mockito.mock(Object.class);\n" +
                 "        InOrder inOrder = Mockito.inOrder(mock);\n" +
-                "        inorder.ve<caret>rify(mock).doSomething();\n" +
+                "        inOrder.ve<caret>rify(mock).doSomething();\n" +
                 "    }\n" +
                 "}");
         List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
@@ -184,7 +184,7 @@ public class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwar
                 "    void testMethod(){\n" +
                 "        Object mock = Mockito.mock(Object.class);\n" +
                 "        InOrder inOrder = Mockito.inOrder(mock);\n" +
-                "        inorder.ve<caret>rify(mock).doSomething();\n" +
+                "        inOrder.ve<caret>rify(mock).doSomething();\n" +
                 "    }\n" +
                 "}");
         List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
@@ -195,5 +195,45 @@ public class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwar
             ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderAction.class,
             ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction.class
         );
+    }
+
+    //Action selection options - MockedStatic
+
+    public void testReturnsAvailableActionsForMockedStatic() {
+        myFixture.configureByText("Options.java",
+            "import org.mockito.Mockito;\n" +
+                "import org.mockito.MockedStatic;\n" +
+                "import java.util.List;\n" +
+                "\n" +
+                "class Options {\n" +
+                "    void testMethod(){\n" +
+                "        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {\n" +
+                "            mock.ve<caret>rify(List::of);\n" +
+                "        }" +
+                "    }\n" +
+                "}");
+        List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+            .stream().map(Object::getClass).collect(toList());
+
+        assertThat(actions).containsExactly(ConvertInOrderVerifyToMockedStaticVerifyAction.class);
+    }
+
+    public void testReturnsAvailableActionsForMockedStaticWithVerificationMode() {
+        myFixture.configureByText("Options.java",
+            "import org.mockito.Mockito;\n" +
+                "import org.mockito.MockedStatic;\n" +
+                "import java.util.List;\n" +
+                "\n" +
+                "class Options {\n" +
+                "    void testMethod(){\n" +
+                "        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {\n" +
+                "            mock.ver<caret>ify(List::copyOf, Mockito.times(3));\n" +
+                "        }" +
+                "    }\n" +
+                "}");
+        List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+            .stream().map(Object::getClass).collect(toList());
+
+        assertThat(actions).containsExactly(ConvertInOrderVerifyToMockedStaticVerifyAction.class);
     }
 }

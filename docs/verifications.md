@@ -126,12 +126,12 @@ unconfiguredMock.verify(mock2).doSomething(); //mock2 is reported since it is no
 
 ![](https://img.shields.io/badge/intention-orange)
 
-![](https://img.shields.io/badge/since-0.4.0/0.5.0-blue)
+![](https://img.shields.io/badge/since-0.4.0/0.5.0/0.6.0-blue)
 [![](https://img.shields.io/badge/impl-ConvertMockitoVerifyToBDDMockitoThenIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/verification/mockitoverify/ConvertFromMockitoVerifyIntention.java)
 [![](https://img.shields.io/badge/impl-ConvertBDDMockitoThenToMockitoVerifyIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/verification/bddmockitothen/ConvertFromBDDMockitoThenIntention.java)
 [![](https://img.shields.io/badge/impl-ConvertBDDMockitoThenToMockitoVerifyIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/verification/inorderverify/ConvertFromInOrderVerifyIntention.java)
 
-![](https://img.shields.io/badge/since-0.6.0-blue) [![](https://img.shields.io/badge/impl-ConvertMockedStaticVerifyToInOrderVerifyAction-blue)](../src/main/java/com/picimako/mockitools/intention/convert/verification/mockedstaticverify/ConvertMockedStaticVerifyToInOrderVerifyAction.java)
+![](https://img.shields.io/badge/since-0.6.0-blue) [![](https://img.shields.io/badge/impl-ConvertFromMockedStaticVerifyIntention-blue)](../src/main/java/com/picimako/mockitools/intention/convert/verification/mockedstaticverify/ConvertFromMockedStaticVerifyIntention.java)
 
 There are a couple of ways one can approach verification in Mockito: via `org.mockito.Mockito`, `org.mockito.BDDMockito`, `org.mockito.InOrder`, `org.mockito.MockedStatic`
 
@@ -144,13 +144,14 @@ Below you can see the details of the conversion directions when converting singl
 Also, reusing an existing `InOrder` instance is not possible when converting to an `InOrder` specific approach,
 it always creates a new `InOrder` local variable.
 
-| Conversion from                     | Options by default                                                                 | Options when `org.mockito.Mockito` is enforced | Options when `org.mockito.BDDMockito` is enforced           |
-|-------------------------------------|------------------------------------------------------------------------------------|------------------------------------------------|-------------------------------------------------------------|
-| `Mockito.verify()`                  | `InOrder.verify()`<br/>`BDDMockito.then()`<br/>`BDDMockito.then().should(InOrder)` | `InOrder.verify()`                             | `BDDMockito.then()`<br/>`BDDMockito.then().should(InOrder)` |
-| `BDDMockito.then()`                 | `Mockito.verify()`<br/>`InOrder.verify()`<br/>`BDDMockito.then().should(InOrder)`  | `Mockito.verify()`<br/>`InOrder.verify()`      | `BDDMockito.then().should(InOrder)`                         |
-| `BDDMockito.then().should(InOrder)` | `Mockito.verify()`<br/>`InOrder.verify()`                                          | `Mockito.verify()`<br/>`InOrder.verify()`      | No action is available.                                     |
-| `InOrder.verify()`                  | `Mockito.verify()`<br/>`BDDMockito.then()`<br/>`BDDMockito.then().should(InOrder)` | `Mockito.verify()`                             | `BDDMockito.then()`<br/>`BDDMockito.then().should(InOrder)` |
-| `MockedStatic.verify()`             | `InOrder.verify()`                                                                 | `InOrder.verify()`                             | `InOrder.verify()`                                          |
+| Conversion from                       | Options by default                                                                 | Options when `org.mockito.Mockito` is enforced | Options when `org.mockito.BDDMockito` is enforced           |
+|---------------------------------------|------------------------------------------------------------------------------------|------------------------------------------------|-------------------------------------------------------------|
+| `Mockito.verify()`                    | `InOrder.verify()`<br/>`BDDMockito.then()`<br/>`BDDMockito.then().should(InOrder)` | `InOrder.verify()`                             | `BDDMockito.then()`<br/>`BDDMockito.then().should(InOrder)` |
+| `BDDMockito.then()`                   | `Mockito.verify()`<br/>`InOrder.verify()`<br/>`BDDMockito.then().should(InOrder)`  | `Mockito.verify()`<br/>`InOrder.verify()`      | `BDDMockito.then().should(InOrder)`                         |
+| `BDDMockito.then().should(InOrder)`   | `Mockito.verify()`<br/>`InOrder.verify()`                                          | `Mockito.verify()`<br/>`InOrder.verify()`      | No action is available.                                     |
+| `InOrder.verify()` (non-MockedStatic) | `Mockito.verify()`<br/>`BDDMockito.then()`<br/>`BDDMockito.then().should(InOrder)` | `Mockito.verify()`                             | `BDDMockito.then()`<br/>`BDDMockito.then().should(InOrder)` |
+| `InOrder.verify()` (MockedStatic)     | `MockedStatic.verify()`                                                            | `MockedStatic.verify()`                        | `MockedStatic.verify()`                                     |
+| `MockedStatic.verify()`               | `InOrder.verify()`                                                                 | `InOrder.verify()`                             | `InOrder.verify()`                                          |
 
 **Example (Mockito.verify() -> BDDMockito.then()):**
 

@@ -51,7 +51,7 @@ import java.util.Optional;
 public class EnforceConventionInspection extends MockitoolsBaseInspection {
     public static final String SHORT_NAME = "EnforceConvention";
     //MockedStatic specific verify() methods are excluded, since BDDMockito has no way to verify MockedStatic
-    public static final CallMatcher IN_ORDER_VERIFY = CallMatcher.anyOf(
+    public static final CallMatcher IN_ORDER_VERIFY_NON_MOCKED_STATIC = CallMatcher.anyOf(
         INORDER_VERIFY.parameterTypes("T"),
         INORDER_VERIFY.parameterTypes("T", ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE));
     private static final CallMatcher MOCKITO_MATCHER = CallMatcher.anyOf(
@@ -59,7 +59,7 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
             "when", "doReturn", "doThrow", "doAnswer", "doCallRealMethod", "doNothing", //stubbing
             "verify", "verifyNoMoreInteractions", "verifyNoInteractions", //verification
             "verifyZeroInteractions" //to support Mockito 3.x
-        ), IN_ORDER_VERIFY);
+        ), IN_ORDER_VERIFY_NON_MOCKED_STATIC);
     private static final CallMatcher BDDMOCKITO_MATCHER = staticCall(ORG_MOCKITO_BDDMOCKITO,
         "given", "will", "willReturn", "willThrow", "willAnswer", "willCallRealMethod", "willDoNothing", //stubbing
         "then" //verification

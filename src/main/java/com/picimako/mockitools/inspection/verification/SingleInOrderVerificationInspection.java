@@ -5,7 +5,7 @@ package com.picimako.mockitools.inspection.verification;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
-import static com.picimako.mockitools.inspection.EnforceConventionInspection.IN_ORDER_VERIFY;
+import static com.picimako.mockitools.inspection.EnforceConventionInspection.IN_ORDER_VERIFY_NON_MOCKED_STATIC;
 import static com.picimako.mockitools.intention.convert.verification.bddmockitothen.ConvertFromBDDMockitoThenIntention.THEN_SHOULD_WITH_INORDER;
 import static com.siyeh.ig.psiutils.TypeUtils.typeEquals;
 
@@ -42,7 +42,7 @@ public class SingleInOrderVerificationInspection extends LocalInspectionTool {
                         var ref = inOrderRefs.iterator().next();
                         if (ref instanceof PsiReferenceExpression) {
                             var verifyOrShould = getParentOfType((PsiReferenceExpression) ref, PsiMethodCallExpression.class);
-                            if (IN_ORDER_VERIFY.matches(verifyOrShould) || THEN_SHOULD_WITH_INORDER.matches(verifyOrShould))
+                            if (IN_ORDER_VERIFY_NON_MOCKED_STATIC.matches(verifyOrShould) || THEN_SHOULD_WITH_INORDER.matches(verifyOrShould))
                                 holder.registerProblem(variable.getNameIdentifier(), MockitoolsBundle.inspection("in.order.is.used.only.once"));
                         }
                     }
