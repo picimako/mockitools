@@ -79,7 +79,11 @@ public abstract class ConversionIntentionBase implements IntentionAction {
             || !isSymbolAfterMethodCallChain(file.findElementAt(selectionEnd)))
             return false;
 
-        for (var statement : collectStatementsInSelection(editor, file)) {
+        var statementsInSelection = collectStatementsInSelection(editor, file);
+        //If the selection is suitable enough, but it is considered as containing no statement, then the intention won't be available
+        if (statementsInSelection.isEmpty()) return false;
+
+        for (var statement : statementsInSelection) {
             var identifier = findChildOfType(statement, PsiIdentifier.class);
             if (identifier == null) return false;
             var verificationCall = getParentOfType(identifier, PsiMethodCallExpression.class);

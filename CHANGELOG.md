@@ -17,6 +17,10 @@
 - [#33](https://github.com/picimako/mockitools/issues/33): Reorganized the stubbing conversion intention actions.
   Now, only the **Convert stubbing(s) to...** intention is displayed, and after selecting it, the actual target options become visible.
 
+### Fixed
+- Fixed an issue when the editor selection was suitable enough, but it didn't actually contain a statement, the stubbing and verification
+  intentions were still available.
+
 ## [0.5.0]
 ### Added
 - [#19](https://github.com/picimako/mockitools/issues/19): Added bulk options to convert verifications from `BDDMockito.then()` and `Mockito.verify()` by selecting one or more
