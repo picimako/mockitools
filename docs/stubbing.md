@@ -136,7 +136,7 @@ All stubbing approaches are supported:
 - `BDDMockito.given().willThrow()`
 - `Mockito.doThrow().when()`
 - `Mockito.do*().doThrow().when()`
-- `BDDMockito.willl*).willThrow().given()`
+- `BDDMockito.will*().willThrow().given()`
 - `BDDMockito.willThrow().given()`
 
 ```java

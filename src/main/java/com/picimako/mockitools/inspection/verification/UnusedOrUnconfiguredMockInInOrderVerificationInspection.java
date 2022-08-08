@@ -75,6 +75,8 @@ public class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loc
                         //The mock arguments as Strings from 'Mockito.inOrder()'
                         var mocksInMockitoInOrderAsString = Arrays.stream(mocksInMockitoInOrder).map(PsiElement::getText).collect(toList());
                         //Report all mocks in verifications that are not configured in 'Mockito.inOrder()'
+                        //This corresponds to the 'inOrderRequiresFamiliarMock()' method in
+                        // https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java
                         for (var mockInVerification : mocksInVerifications) {
                             if (!mocksInMockitoInOrderAsString.contains(mockInVerification.getText()))
                                 holder.registerProblem(mockInVerification, MockitoolsBundle.inspection("mock.is.not.configured.in.in.order"));
