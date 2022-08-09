@@ -14,6 +14,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_SPY;
 import static com.picimako.mockitools.MockitoQualifiedNames.SPY;
 import static com.picimako.mockitools.MockitoolsPsiUtil.MOCKITO_WITH_SETTINGS;
 import static com.picimako.mockitools.intention.ConvertMockCallToFieldIntention.isDefaultAnswer;
+import static com.picimako.mockitools.intention.MethodRearranger.reOrder;
 import static java.util.stream.Collectors.joining;
 
 import com.intellij.codeInsight.AnnotationUtil;
@@ -21,7 +22,6 @@ import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.ide.highlighter.JavaFileType;
-import com.intellij.ide.util.MethodCellRenderer;
 import com.intellij.lang.jvm.annotation.JvmAnnotationAttribute;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
@@ -46,6 +46,7 @@ import com.intellij.psi.PsiTypeElement;
 import com.intellij.util.IncorrectOperationException;
 import com.picimako.mockitools.MockitoQualifiedNames;
 import com.picimako.mockitools.PsiClassUtil;
+import com.picimako.mockitools.intention.MethodRearranger.ClassMethodCellRenderer;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
@@ -86,6 +87,7 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
         "name", value -> !isBlank(value)
     );
     private static final Set<String> BOOLEAN_ATTRIBUTES = Set.of("stubOnly", "serializable", "lenient");
+    private static final ClassMethodCellRenderer METHOD_CELL_RENDERER = new ClassMethodCellRenderer();
 
     @IntentionName
     private String mockingCall;
@@ -132,7 +134,7 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
         PsiMethod[] methodsInClass = ((PsiClass) field.getParent()).getMethods();
         if (methodsInClass.length > 1) {
             selectItemAndRun(MockitoolsBundle.message("intention.convert.mocking.field.to.call.select.method"),
-                Arrays.asList(methodsInClass), selectedMethod -> introduceMockitoMockingCall(field, selectedMethod, file), () -> new MethodCellRenderer(true), editor, project);
+                reOrder(methodsInClass), selectedMethod -> introduceMockitoMockingCall(field, selectedMethod, file), () -> METHOD_CELL_RENDERER, editor, project);
         } else if (methodsInClass.length == 1) {
             introduceMockitoMockingCall(field, methodsInClass[0], file);
         }
@@ -183,7 +185,8 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
                     if (MOCK_OVERLOAD_ARGS.get(NAME).test(value)) appendSetting(mockSettings, NAME, value.getText());
                 });
                 valueOf(mockAnnotation.findAttribute(ANSWER)).ifPresent(value -> {
-                    if (MOCK_OVERLOAD_ARGS.get(ANSWER).test(value)) appendSetting(mockSettings, DEFAULT_ANSWER, value.getText());
+                    if (MOCK_OVERLOAD_ARGS.get(ANSWER).test(value))
+                        appendSetting(mockSettings, DEFAULT_ANSWER, value.getText());
                 });
 
                 //Handle extraInterfaces attribute.

@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+## [0.7.0]
+### Changed
+- [#41](https://github.com/picimako/mockitools/issues/41): Cleaned up the class and package name, and modified the icons in the target method selection
+  popup during mock field conversion. The new icons can help distinguish between before hooks, test methods, and the rest of the methods.
+
 ## [0.6.0]
 ### Added
 - [#29](https://github.com/picimako/mockitools/issues/29): Added intentions to convert verifications between `InOrder.verify()` and `MockedStatic.verify()`.
