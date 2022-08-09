@@ -93,9 +93,9 @@
                 displayName="Unused or unconfigured mock objects in InOrder verifications" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="WARNING"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.OnlyVoidMethodCanDoNothingInspection"
-                id="mockitools.only.void.method.can.do.nothing" language="JAVA"
-                displayName="Non-void method is stubbed to do nothing" groupPath="Java"
+                implementationClass="com.picimako.mockitools.inspection.StubbingAndMethodReturnTypeMismatchInspection"
+                id="mockitools.stubbing.method.return.type.mismatch" language="JAVA"
+                displayName="Stubbing calls and stubbed method's return type don't match" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
 
         <!-- v4 migration aids -->

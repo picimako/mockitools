@@ -26,41 +26,50 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Reports {@code doNothing()} and {@code willDoNothing()} calls when the stubbed method's return type is void.
+ * Reports {@code doNothing()} and {@code willDoNothing()} calls when the stubbed method's return type is not void.
  * <p>
  * Based on Mockito's <a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java#L568">corresponding error handling</a>,
  * <i>Only void methods can doNothing()</i>.
  * <p>
- * It highlights every instance of {@code doNothing()} and {@code willDoNothing()} calls in the affected call chains.
+ * Also reports {@code *Return()} calls when the stubbed method's return type is void,
+ * which is based on Mockito's <a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java#L546">corresponding error handling</a>,
+ * <p>
+ * It highlights every instance of {@code doNothing()}, {@code willDoNothing()} and {@code *Return()} calls in the affected call chains.
  *
  * @since 0.7.0
  */
-public class OnlyVoidMethodCanDoNothingInspection extends MockitoolsBaseInspection {
+public class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBaseInspection {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
-        if (isMockitoDoX(expression)) checkAndRegister("doNothing", ENDS_WITH_WHEN, expression, holder);
-        else if (isBDDMockitoWillX(expression)) checkAndRegister("willDoNothing", ENDS_WITH_GIVEN, expression, holder);
+        if (isMockitoDoX(expression)) checkAndRegister("doNothing", "doReturn", ENDS_WITH_WHEN, expression, holder);
+        else if (isBDDMockitoWillX(expression))
+            checkAndRegister("willDoNothing", "willReturn", ENDS_WITH_GIVEN, expression, holder);
     }
 
-    private void checkAndRegister(@NotNull String doNothingMethod, CallChainEndsWith endsWith,
+    private void checkAndRegister(@NotNull String doNothingMethod, @NotNull String doReturnMethod,
+                                  CallChainEndsWith endsWith,
                                   PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         var calls = collectCallsInChainFromFirst(expression, true);
         if (endsWith.analyze(calls)) {
-            var doNothingMethodCalls = findDoNothingMethodCalls(doNothingMethod, calls);
+            var doNothingMethodCalls = findMethodCalls(doNothingMethod, calls);
             if (!doNothingMethodCalls.isEmpty())
                 registerIfStubbedMethodsReturnTypeIsNotVoid(getLast(calls), doNothingMethodCalls, holder);
+
+            var doReturnMethodCalls = findMethodCalls(doReturnMethod, calls);
+            if (!doReturnMethodCalls.isEmpty())
+                registerIfStubbedMethodsReturnTypeIsVoid(getLast(calls), doReturnMethodCalls, holder);
         }
     }
 
     /**
      * Returns all {@code doNothing()} or {@code willDoNothing()} calls from the provided call chain.
      *
-     * @param doNothingMethod either {@code doNothing()} or {@code willDoNothing()}
-     * @param calls           the stubbing call chain
+     * @param methodName {@code doNothing} or {@code willDoNothing}, or {@code doReturn}, {@code thenReturn} or {@code willReturn}
+     * @param calls      the stubbing call chain
      */
-    private static Set<PsiMethodCallExpression> findDoNothingMethodCalls(@NotNull String doNothingMethod, List<PsiMethodCallExpression> calls) {
-        return calls.stream().filter(call -> doNothingMethod.equals(getMethodName(call))).collect(toSet());
+    private static Set<PsiMethodCallExpression> findMethodCalls(@NotNull String methodName, List<PsiMethodCallExpression> calls) {
+        return calls.stream().filter(call -> methodName.equals(getMethodName(call))).collect(toSet());
     }
 
     /**
@@ -69,14 +78,33 @@ public class OnlyVoidMethodCanDoNothingInspection extends MockitoolsBaseInspecti
      * @param stubbedMethod the stubbed method called sequent to {@code given(mock)} or {@code when(mock)}
      */
     private void registerIfStubbedMethodsReturnTypeIsNotVoid(PsiMethodCallExpression stubbedMethod, Set<PsiMethodCallExpression> doNothingMethodCalls, @NotNull ProblemsHolder holder) {
-        Optional.ofNullable(stubbedMethod)
-            .map(PsiCall::resolveMethod)
-            .map(PsiMethod::getReturnType)
+        getReturnTypeOf(stubbedMethod)
             .filter(type -> !type.equals(PsiType.VOID))
-            .ifPresent(type -> {
+            .ifPresent(__ -> {
                 for (var doNothing : doNothingMethodCalls) {
                     holder.registerProblem(getReferenceNameElement(doNothing), MockitoolsBundle.inspection("void.method.is.stubbed.to.do.nothing", getMethodName(stubbedMethod)));
                 }
             });
+    }
+
+    /**
+     * Registers all {@code doNothing()} and {@code willDoNothing()} calls if the {@code stubbedMethod}'s return type is not void.
+     *
+     * @param stubbedMethod the stubbed method called sequent to {@code given(mock)} or {@code when(mock)}
+     */
+    private void registerIfStubbedMethodsReturnTypeIsVoid(PsiMethodCallExpression stubbedMethod, Set<PsiMethodCallExpression> doReturnMethodCalls, @NotNull ProblemsHolder holder) {
+        getReturnTypeOf(stubbedMethod)
+            .filter(type -> type.equals(PsiType.VOID))
+            .ifPresent(__ -> {
+                for (var doReturn : doReturnMethodCalls) {
+                    holder.registerProblem(getReferenceNameElement(doReturn), MockitoolsBundle.inspection("non.void.method.is.stubbed.with.return.value", getMethodName(stubbedMethod)));
+                }
+            });
+    }
+
+    private Optional<PsiType> getReturnTypeOf(PsiMethodCallExpression stubbedMethod) {
+        return Optional.ofNullable(stubbedMethod)
+            .map(PsiCall::resolveMethod)
+            .map(PsiMethod::getReturnType);
     }
 }

@@ -6,7 +6,8 @@
 
 ## [0.7.0]
 ### Added
-- [#41](https://github.com/picimako/mockitools/issues/41): Added inspection to report `doNothing()` and `willDoNothing()` stubbing calls,
+- [#39](https://github.com/picimako/mockitools/issues/39): Added inspection to report `*Return()` stubbing calls, if the stubbed method's return type is void.
+- [#40](https://github.com/picimako/mockitools/issues/40): Added inspection to report `doNothing()` and `willDoNothing()` stubbing calls,
   if the stubbed method's return type is not void.
 
 ### Changed

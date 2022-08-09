@@ -122,26 +122,36 @@ From: Mockito.when(mockObject.invoke())
         .thenThrow(IllegalArgumentException.class, IOException.class);
 ```
 
-## Only void methods can do nothing
+## Stubbing calls and method return type mismatch
 
-![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.7.0-blue) [![](https://img.shields.io/badge/implementation-OnlyVoidMethodCanDoNothingInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/OnlyVoidMethodCanDoNothingInspection.java)
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.7.0-blue) [![](https://img.shields.io/badge/implementation-StubbingAndMethodReturnTypeMismatchInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/StubbingAndMethodReturnTypeMismatchInspection.java)
 
-Reports `doNothing()` and `willDoNothing()` calls when the stubbed method's return type is void.
+There are two parts to this inspection:
+- it reports `doNothing()` and `willDoNothing()` calls when the stubbed method's return type is not void. Mockito's [corresponding error handling](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java#L568)
+- it reports `*Return()` calls when the stubbed method's return type is void. Mockito's [corresponding error handling](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java#L546)
 
-Based on Mockito's [corresponding error handling](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java#L568),
-> Only void methods can doNothing()
+It highlights every instance of `doNothing()`, `willDoNothing()` and `*Return()` calls in the affected call chains.
 
-It highlights every instance of `doNothing()` and `willDoNothing()` calls in the affected call chains.
+**doNothing() + not void**
 
 ```java
 Mockito.doNothing()   //reported
   .doThrow(IllegalArgumentException.class)
   .doNothing()        //reported
-  .when(mock).doSomething();
+  .when(mock).notVoidMethod();
 
 BDDMockito.willThrow(IllegalArgumentException.class)
   .willDoNothing()    //reported
-  .given(mock).doSomething();
+  .given(mock).notVoidMethod();
+```
+
+**doReturn() + void**
+
+```java
+Mockito.doReturn(10)    //reported
+  .doThrow(IllegalArgumentException.class)
+  .doReturn(10)         //reported
+  .when(mock).voidMethod();
 ```
 
 ## Convert arguments of `*Throw()` stubbing methods

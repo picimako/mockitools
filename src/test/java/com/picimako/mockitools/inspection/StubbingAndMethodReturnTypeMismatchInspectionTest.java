@@ -5,16 +5,16 @@ package com.picimako.mockitools.inspection;
 import com.intellij.codeInspection.InspectionProfileEntry;
 
 /**
- * Integration test for {@link OnlyVoidMethodCanDoNothingInspection}.
+ * Integration test for {@link StubbingAndMethodReturnTypeMismatchInspection}.
  */
-public class OnlyVoidMethodCanDoNothingInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
+public class StubbingAndMethodReturnTypeMismatchInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
-        return new OnlyVoidMethodCanDoNothingInspection();
+        return new StubbingAndMethodReturnTypeMismatchInspection();
     }
 
-    public void testDoNothingStubbing() {
+    public void testStubbingAndMethodReturnTypeMismatch() {
         doJavaTest();
     }
 }
