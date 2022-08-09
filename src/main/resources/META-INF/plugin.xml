@@ -92,6 +92,11 @@
                 id="mockitools.unused.inorder.mock" language="JAVA"
                 displayName="Unused or unconfigured mock objects in InOrder verifications" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.OnlyVoidMethodCanDoNothingInspection"
+                id="mockitools.only.void.method.can.do.nothing" language="JAVA"
+                displayName="Non-void method is stubbed to do nothing" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
 
         <!-- v4 migration aids -->
         <localInspection

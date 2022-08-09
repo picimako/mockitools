@@ -5,6 +5,10 @@
 ## [Unreleased]
 
 ## [0.7.0]
+### Added
+- [#41](https://github.com/picimako/mockitools/issues/41): Added inspection to report `doNothing()` and `willDoNothing()` stubbing calls,
+  if the stubbed method's return type is not void.
+
 ### Changed
 - [#41](https://github.com/picimako/mockitools/issues/41): Cleaned up the class and package name, and modified the icons in the target method selection
   popup during mock field conversion. The new icons can help distinguish between before hooks, test methods, and the rest of the methods.

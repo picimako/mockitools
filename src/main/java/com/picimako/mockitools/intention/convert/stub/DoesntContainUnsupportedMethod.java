@@ -7,6 +7,7 @@ import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 import java.util.List;
 
 import com.intellij.psi.PsiMethodCallExpression;
+import com.picimako.mockitools.CallChainAnalyzer;
 
 /**
  * Analyzes a call chain whether it contains a call to the method with a predefined name.

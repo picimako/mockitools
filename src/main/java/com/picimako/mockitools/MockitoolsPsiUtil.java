@@ -74,7 +74,7 @@ public final class MockitoolsPsiUtil {
     private static final CallMatcher MOCKITO_SPY = staticCall(ORG_MOCKITO_MOCKITO, SPY).parameterCount(1);
     private static final CallMatcher BDDMOCKITO_GIVEN = staticCall(ORG_MOCKITO_BDDMOCKITO, GIVEN).parameterCount(1);
     private static final CallMatcher BDDMOCKITO_WILL_X =
-        staticCall(ORG_MOCKITO_BDDMOCKITO, "will", "willReturn", "willThrow", "willAnswer", "willCallRealMethod");
+        staticCall(ORG_MOCKITO_BDDMOCKITO, "will", "willReturn", "willThrow", "willAnswer", "willCallRealMethod", "willDoNothing");
     private static final CallMatcher BDDMOCKITO_THEN = staticCall(ORG_MOCKITO_BDDMOCKITO, THEN).parameterCount(1);
     private static final CallMatcher MOCKITO_WHEN = staticCall(ORG_MOCKITO_MOCKITO, WHEN).parameterCount(1);
     private static final CallMatcher MOCKITO_DO_X_WHEN = instanceCall(ORG_MOCKITO_STUBBING_STUBBER, WHEN);

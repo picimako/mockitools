@@ -7,7 +7,7 @@ import static com.picimako.mockitools.MockitoolsPsiUtil.isBDDMockitoWillX;
 import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isBDDMockitoEnforced;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isMockitoEnforced;
-import static com.picimako.mockitools.intention.convert.stub.CallChainEndsWith.ENDS_WITH_GIVEN;
+import static com.picimako.mockitools.CallChainEndsWith.ENDS_WITH_GIVEN;
 import static com.picimako.mockitools.intention.convert.stub.ConvertStubbingAction.BDDMOCKITO_GIVEN;
 import static com.picimako.mockitools.intention.convert.stub.ConvertStubbingAction.MOCKITO_DO;
 import static com.picimako.mockitools.intention.convert.stub.ConvertStubbingAction.MOCKITO_WHEN;

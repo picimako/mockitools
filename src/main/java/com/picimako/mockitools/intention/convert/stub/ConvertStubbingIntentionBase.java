@@ -14,6 +14,7 @@ import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
+import com.picimako.mockitools.CallChainAnalyzer;
 import com.picimako.mockitools.intention.convert.ConversionIntentionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
