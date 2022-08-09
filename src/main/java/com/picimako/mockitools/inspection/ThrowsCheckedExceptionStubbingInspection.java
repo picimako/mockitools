@@ -10,14 +10,12 @@ import static com.picimako.mockitools.PointersUtil.toPointer;
 import static com.picimako.mockitools.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.PsiMethodUtil.getSubsequentMethodCall;
 import static com.picimako.mockitools.PsiTypesUtil.evaluateType;
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.DO_THROW_WHEN;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.GIVEN_WILL_THROW;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.WHEN_THEN_THROW;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.WILL_THROW_GIVEN;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
-import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.util.IntentionFamilyName;
@@ -25,7 +23,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiCall;
 import com.intellij.psi.PsiClassType;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiMethodCallExpression;
@@ -62,11 +59,6 @@ import java.util.Optional;
  * @since 0.3.0
  */
 public class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInspection {
-
-    @Override
-    public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-        return isInTestSourceContent(session.getFile()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
-    }
 
     /**
      * String-based method name validation is put in place to increase performance by avoiding executing CallMatcher validation logic unnecessarily.

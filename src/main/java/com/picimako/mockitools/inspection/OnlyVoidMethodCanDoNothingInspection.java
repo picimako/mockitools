@@ -9,14 +9,11 @@ import static com.picimako.mockitools.MockitoolsPsiUtil.isBDDMockitoWillX;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoDoX;
 import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 import static java.util.stream.Collectors.toSet;
 
-import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiCall;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiType;
@@ -39,11 +36,6 @@ import java.util.Set;
  * @since 0.7.0
  */
 public class OnlyVoidMethodCanDoNothingInspection extends MockitoolsBaseInspection {
-
-    @Override
-    public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-        return isInTestSourceContent(session.getFile()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
-    }
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

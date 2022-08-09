@@ -5,11 +5,8 @@ package com.picimako.mockitools.inspection;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockedStaticReset;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isReset;
 import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 
-import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethodCallExpression;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,11 +19,6 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  * @since 0.1.0
  */
 public class CallOnMockitoResetInspection extends MockitoolsBaseInspection {
-
-    @Override
-    public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-        return isInTestSourceContent(session.getFile()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
-    }
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

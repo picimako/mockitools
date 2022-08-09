@@ -8,16 +8,13 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE;
 import static com.picimako.mockitools.MockitoolsPsiUtil.INORDER_VERIFY;
 import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
-import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.util.ui.JBUI;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase;
@@ -84,11 +81,6 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
         }
 
         return panel;
-    }
-
-    @Override
-    public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-        return isInTestSourceContent(session.getFile()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
     }
 
     @Override

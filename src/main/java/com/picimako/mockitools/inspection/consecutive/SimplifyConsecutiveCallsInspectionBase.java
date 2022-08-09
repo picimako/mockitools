@@ -4,15 +4,12 @@ package com.picimako.mockitools.inspection.consecutive;
 
 import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import java.util.List;
 import java.util.function.Predicate;
 
-import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.util.SmartList;
 import com.siyeh.ig.InspectionGadgetsFix;
@@ -35,11 +32,6 @@ public abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsB
 
     //Analysis workflow
     
-    @Override
-    public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-        return isInTestSourceContent(session.getFile()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
-    }
-
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         analysisDescriptors().stream()

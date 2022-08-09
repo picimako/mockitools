@@ -7,14 +7,11 @@ import static com.picimako.mockitools.MockitoolsPsiUtil.isAfter;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isCalls;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isTimeout;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 
 import javax.swing.*;
 
-import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.ui.SingleIntegerFieldOptionsPanel;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.util.PsiLiteralUtil;
@@ -54,11 +51,6 @@ public class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBas
     @Override
     public @Nullable JComponent createOptionsPanel() {
         return new SingleIntegerFieldOptionsPanel(MockitoolsBundle.inspection("timeout.max.threshold.config.title"), this, "timeoutMaxThreshold");
-    }
-
-    @Override
-    public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-        return isInTestSourceContent(session.getFile()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
     }
 
     @Override

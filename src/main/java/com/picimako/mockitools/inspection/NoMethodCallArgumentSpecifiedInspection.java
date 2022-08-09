@@ -10,16 +10,13 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isExtraInterfaces;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isIgnoreStubs;
 import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import java.util.Optional;
 
-import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
@@ -37,11 +34,6 @@ public class NoMethodCallArgumentSpecifiedInspection extends MockitoolsBaseInspe
 
     private static final CallMatcher VERIFY_CALLS =
         CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, VERIFY_NO_INTERACTIONS, VERIFY_NO_MORE_INTERACTION, VERIFY_ZERO_INTERACTIONS, IN_ORDER);
-
-    @Override
-    public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-        return isInTestSourceContent(session.getFile()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
-    }
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

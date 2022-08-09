@@ -10,11 +10,8 @@ import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoDoXWhen;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoWhen;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.PsiMethodUtil.hasSubsequentMethodCall;
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 
-import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiExpressionList;
 import com.intellij.psi.PsiMethodCallExpression;
@@ -48,11 +45,6 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  */
 @HasSonarLintAlternative("https://rules.sonarsource.com/java/tag/mockito/RSPEC-6073")
 public class InconsistentArgumentMatcherUsageInspection extends MockitoolsBaseInspection {
-
-    @Override
-    public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-        return isInTestSourceContent(session.getFile()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
-    }
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
