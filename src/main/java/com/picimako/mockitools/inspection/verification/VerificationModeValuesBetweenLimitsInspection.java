@@ -67,7 +67,7 @@ public class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBas
     }
 
     private void checkIntegerArgumentValue(int upperLimit, PsiMethodCallExpression methodCall, @NotNull ProblemsHolder holder) {
-        PsiExpression verificationModeArgument = getFirstArgument(methodCall);
+        var verificationModeArgument = getFirstArgument(methodCall);
         Integer argValue = PsiLiteralUtil.parseInteger(verificationModeArgument.getText());
 
         if (argValue != null && argValue < upperLimit) {
@@ -77,7 +77,7 @@ public class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBas
     }
 
     private void checkLongArgumentValue(int upperLimit, PsiMethodCallExpression methodCall, boolean isTimeout, @NotNull ProblemsHolder holder) {
-        PsiExpression verificationModeArgument = getFirstArgument(methodCall);
+        var verificationModeArgument = getFirstArgument(methodCall);
         Long argValue = PsiLiteralUtil.parseLong(verificationModeArgument.getText());
 
         if (argValue != null) {

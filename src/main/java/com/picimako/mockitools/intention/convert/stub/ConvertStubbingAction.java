@@ -24,6 +24,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.picimako.mockitools.StubType;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -54,6 +55,8 @@ public class ConvertStubbingAction extends AnAction {
     private StubbingConverter converter;
     private final StubbingDescriptor from;
 
+    @Getter
+    @TestOnly
     private final StubbingDescriptor to;
     /**
      * Whether the conversion is caret- (single call chain) or selection-based (one or more call chains).
@@ -65,11 +68,6 @@ public class ConvertStubbingAction extends AnAction {
         this.from = from;
         this.to = to;
         this.isBulkMode = isBulkMode;
-    }
-
-    @TestOnly
-    public StubbingDescriptor getTo() {
-        return to;
     }
 
     //Perform action

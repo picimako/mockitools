@@ -14,19 +14,17 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.picimako.mockitools.MockitoQualifiedNames;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 /**
  * Creates {@code InOrder} type local variables in the form of an {@code InOrder inOrder = Mockito.inOrder([mock objects])} call.
  */
+@RequiredArgsConstructor
 public class InOrderVariableCreator {
 
     private final Document document;
-
-    public InOrderVariableCreator(Document document) {
-        this.document = document;
-    }
 
     /**
      * Creates an {@code org.mockito.InOrder} type local variable and inserts it right before the verification call

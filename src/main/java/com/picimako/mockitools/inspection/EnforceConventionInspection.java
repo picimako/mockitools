@@ -20,7 +20,8 @@ import com.intellij.util.ui.JBUI;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.callMatcher.CallMatcher;
-import org.jetbrains.annotations.Nls;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -73,7 +74,7 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
 
         var group = new ButtonGroup();
         for (var convention : Convention.values()) {
-            var radioButton = new JRadioButton(convention.getMessage(), convention == conventionToEnforce);
+            var radioButton = new JRadioButton(convention.getClassFqn(), convention == conventionToEnforce);
             radioButton.setBorder(JBUI.Borders.emptyLeft(20));
             radioButton.addActionListener(e -> conventionToEnforce = convention);
             panel.add(radioButton);
@@ -93,7 +94,7 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
 
     private void register(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         holder.registerProblem(Optional.ofNullable(getReferenceNameElement(expression)).orElse(expression),
-            MockitoolsBundle.inspection("stubbing.and.verification.must.be.performed.via.x", conventionToEnforce.getMessage()));
+            MockitoolsBundle.inspection("stubbing.and.verification.must.be.performed.via.x", conventionToEnforce.getClassFqn()));
     }
 
     // Static helpers
@@ -129,18 +130,12 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
 
     //Convention type
 
+    @Getter
+    @RequiredArgsConstructor
     public enum Convention {
         MOCKITO(ORG_MOCKITO_MOCKITO + " / " + ORG_MOCKITO_INORDER),
         BDD_MOCKITO(ORG_MOCKITO_BDDMOCKITO);
 
         private final String classFqn;
-
-        Convention(String classFqn) {
-            this.classFqn = classFqn;
-        }
-
-        public @Nls String getMessage() {
-            return classFqn;
-        }
     }
 }

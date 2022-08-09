@@ -10,6 +10,7 @@ import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoDoXWhen;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoWhen;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.PsiMethodUtil.hasSubsequentMethodCall;
+import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiExpression;
@@ -94,8 +95,8 @@ public class InconsistentArgumentMatcherUsageInspection extends MockitoolsBaseIn
 
     private boolean isArgumentMatcher(PsiExpression arg, String methodName) {
         return CallMatcher.anyOf(
-            CallMatcher.staticCall(ORG_MOCKITO_ARGUMENT_MATCHERS, methodName),
-            CallMatcher.staticCall(ORG_MOCKITO_ADDITIONAL_MATCHERS, methodName)
+            staticCall(ORG_MOCKITO_ARGUMENT_MATCHERS, methodName),
+            staticCall(ORG_MOCKITO_ADDITIONAL_MATCHERS, methodName)
         ).matches(arg);
     }
 }

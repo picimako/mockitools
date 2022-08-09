@@ -13,6 +13,8 @@ plugins {
     id("org.jetbrains.changelog") version "1.3.1"
     // Gradle Qodana Plugin
     id("org.jetbrains.qodana") version "0.1.13"
+    //Lombok
+    id("io.freefair.lombok") version "6.5.0.3"
 }
 
 group = properties("pluginGroup")

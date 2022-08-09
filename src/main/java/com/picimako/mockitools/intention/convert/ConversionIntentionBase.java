@@ -32,6 +32,8 @@ import com.intellij.util.IncorrectOperationException;
 import com.picimako.mockitools.ListPopupHelper;
 import com.picimako.mockitools.intention.convert.verification.NoActionAvailableAction;
 import com.picimako.mockitools.resources.MockitoolsBundle;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -43,15 +45,11 @@ import java.util.List;
  * @see com.picimako.mockitools.intention.convert.stub.ConvertStubbingIntentionBase
  * @see com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase
  */
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class ConversionIntentionBase implements IntentionAction {
     protected static final List<AnAction> NO_ACTION_AVAILABLE = Collections.singletonList(NoActionAvailableAction.INSTANCE);
     protected final String sourceApproachName;
     private final int minSelectionLength;
-
-    protected ConversionIntentionBase(String sourceApproachName, int minSelectionLength) {
-        this.sourceApproachName = sourceApproachName;
-        this.minSelectionLength = minSelectionLength;
-    }
 
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {

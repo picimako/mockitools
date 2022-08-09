@@ -41,6 +41,8 @@ import com.intellij.refactoring.rename.inplace.MemberInplaceRenamer;
 import com.intellij.refactoring.rename.inplace.VariableInplaceRenamer;
 import com.intellij.util.Consumer;
 import com.intellij.util.IncorrectOperationException;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.mockitools.resources.MockitoolsBundle;
@@ -51,16 +53,12 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  * @see ConvertMockCallToFieldIntention
  * @see ConvertSpyCallToFieldIntention
  */
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
 
     protected static final Supplier<String> NO_INITIALIZER = null;
     private final String mockitoCallName;
     private final String annotationName;
-
-    protected ConvertCallToFieldIntentionBase(String mockitoCallName, String annotationName) {
-        this.mockitoCallName = mockitoCallName;
-        this.annotationName = annotationName;
-    }
 
     //Intention name
 

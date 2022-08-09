@@ -3,12 +3,16 @@
 package com.picimako.mockitools.intention.convert.stub;
 
 import com.picimako.mockitools.StubType;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * Represents a stubbing approach.
  * <p>
  * See subclasses of {@link ConvertStubbingIntentionBase}.
  */
+@Getter
+@AllArgsConstructor
 public final class StubbingDescriptor {
 
     /**
@@ -20,35 +24,6 @@ public final class StubbingDescriptor {
     private final String prefix;
     private final String stubTargetSpecifierMethodName;
     private final StubType stubType;
-
-    public StubbingDescriptor(String actionText, String stubStarter, String stubStarterClassName, String prefix, String stubTargetSpecifierMethodName, StubType stubType) {
-        this.actionText = actionText;
-        this.stubStarterClassFqn = stubStarter;
-        this.stubStarterClassName = stubStarterClassName;
-        this.prefix = prefix;
-        this.stubTargetSpecifierMethodName = stubTargetSpecifierMethodName;
-        this.stubType = stubType;
-    }
-
-    public String getActionText() {
-        return actionText;
-    }
-
-    public String getStubStarterClassFqn() {
-        return stubStarterClassFqn;
-    }
-
-    public String getPrefix() {
-        return prefix;
-    }
-
-    public String getStubTargetSpecifierMethodName() {
-        return stubTargetSpecifierMethodName;
-    }
-
-    public StubType getStubType() {
-        return stubType;
-    }
 
     /**
      * Returns whether this and the provided descriptors have the same stub type.

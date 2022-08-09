@@ -15,7 +15,6 @@ import com.siyeh.ig.psiutils.ImportUtils;
  * Base class for converting between different stubbing, verification and other approaches.
  */
 public abstract class ConverterBase {
-
     protected final Project project;
     protected final Document document;
     protected final PsiFile file;
