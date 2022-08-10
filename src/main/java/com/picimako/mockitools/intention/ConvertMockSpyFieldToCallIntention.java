@@ -107,7 +107,7 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
         if (file.getFileType().equals(JavaFileType.INSTANCE)) {
-            final PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
+            final var element = file.findElementAt(editor.getCaretModel().getOffset());
             if (isIdentifierOfField(element) && ((PsiClass) element.getParent().getParent()).getMethods().length > 0) {
                 PsiField field = (PsiField) element.getParent();
                 boolean hasMock;
@@ -129,7 +129,7 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        final PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
+        final var element = file.findElementAt(editor.getCaretModel().getOffset());
         PsiField field = (PsiField) element.getParent();
         PsiMethod[] methodsInClass = ((PsiClass) field.getParent()).getMethods();
         if (methodsInClass.length > 1) {

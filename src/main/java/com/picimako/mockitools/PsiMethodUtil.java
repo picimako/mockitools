@@ -62,7 +62,7 @@ public final class PsiMethodUtil {
 
     @NotNull
     public static PsiMethodCallExpression getMethodCallAtCaret(PsiFile file, Editor editor) {
-        final PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
+        final var element = file.findElementAt(editor.getCaretModel().getOffset());
         return (PsiMethodCallExpression) element.getParent().getParent();
     }
 

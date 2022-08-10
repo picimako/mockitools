@@ -43,6 +43,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.IncorrectOperationException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.mockitools.resources.MockitoolsBundle;
@@ -76,15 +78,15 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        final PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
+        final var element = file.findElementAt(editor.getCaretModel().getOffset());
         var ctx = new ConversionContext((PsiMethodCallExpression) element.getParent().getParent(), editor, project);
 
         if (ctx.mockTypeOrObject instanceof PsiClassObjectAccessExpression) {
-            selectTargetClassAndIntroduceField(getParentClasses(ctx.mockTypeOrObject), project, editor, targetClass -> introduceFieldForClassObjectAccess(ctx.withTargetClass(targetClass)));
+            selectTargetClassAndIntroduceField(getParentClasses(ctx.mockTypeOrObject), project, editor, targetClass -> introduceFieldForClassObjectAccess(ctx.targetClass(targetClass)));
         }
         //This branch is valid only in case of ConvertSpyCallToFieldIntention
         else if (ctx.mockTypeOrObject instanceof PsiNewExpression) {
-            selectTargetClassAndIntroduceField(getParentClasses(ctx.mockTypeOrObject), project, editor, targetClass -> introduceFieldForNewExpression(ctx.withTargetClass(targetClass)));
+            selectTargetClassAndIntroduceField(getParentClasses(ctx.mockTypeOrObject), project, editor, targetClass -> introduceFieldForNewExpression(ctx.targetClass(targetClass)));
         }
     }
 
@@ -234,6 +236,7 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
         final PsiExpression mockTypeOrObject;
         final Editor editor;
         final Project project;
+        @Accessors(fluent = true) @Setter
         PsiClass targetClass;
 
         ConversionContext(PsiMethodCallExpression spyOrMockCall, Editor editor, Project project) {
@@ -241,11 +244,6 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
             this.mockTypeOrObject = getFirstArgument(spyOrMockCall);
             this.editor = editor;
             this.project = project;
-        }
-
-        ConversionContext withTargetClass(PsiClass targetClass) {
-            this.targetClass = targetClass;
-            return this;
         }
     }
 }

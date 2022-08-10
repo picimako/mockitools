@@ -118,7 +118,7 @@ public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntention
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
         if (!file.getFileType().equals(JavaFileType.INSTANCE)) return false;
 
-        final PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
+        final var element = file.findElementAt(editor.getCaretModel().getOffset());
         if (isIdentifierOfMethodCall(element)) {
             var methodCall = (PsiMethodCallExpression) element.getParent().getParent();
             if (!MockitoQualifiedNames.MOCK.equals(getMethodName(methodCall))) return false;

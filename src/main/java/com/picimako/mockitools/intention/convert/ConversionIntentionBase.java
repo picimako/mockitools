@@ -56,7 +56,7 @@ public abstract class ConversionIntentionBase implements IntentionAction {
         if (!file.getFileType().equals(JavaFileType.INSTANCE)) return false;
 
         if (!editor.getSelectionModel().hasSelection()) {
-            final PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
+            final var element = file.findElementAt(editor.getCaretModel().getOffset());
             return isIdentifierOfMethodCall(element) && isAvailableFor(getMethodCallForIdentifier(element));
         } else return isAvailableForBulkConversion(editor, file);
     }

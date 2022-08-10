@@ -69,7 +69,7 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
     @Nullable
     @Override
     public JComponent createOptionsPanel() {
-        final JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 5, true, false));
+        final var panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 5, true, false));
         panel.add(new JLabel(MockitoolsBundle.inspectionOption("enforce.stubbing.and.verification.label")));
 
         var group = new ButtonGroup();
