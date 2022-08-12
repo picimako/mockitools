@@ -4,10 +4,10 @@ package com.picimako.mockitools;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.function.Supplier;
-
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethodCallExpression;
+
+import java.util.function.Supplier;
 
 /**
  * Functional test for {@link MockitoolsPsiUtil}.
@@ -387,44 +387,6 @@ public class MockitoolsPsiUtilTest extends MockitoolsTestBase {
                 "}\n");
 
         assertThat(MockitoolsPsiUtil.isOfTypeArgumentCaptor(getField())).isFalse();
-    }
-
-    //isMockableType
-
-    public void testIsMockableType() {
-        myFixture.configureByText("IsMockableTypeTest.java",
-            "import org.mockito.Mock;\n" +
-                "\n" +
-                "public class IsMockableTypeTest {\n" +
-                "    @Mock\n" +
-                "    public List<String> <caret>mock;\n" +
-                "}\n");
-
-        assertThat(MockitoolsPsiUtil.isMockableType(getField().getTypeElement().getType())).isTrue();
-    }
-
-    public void testIsNotMockableTypePrimitive() {
-        myFixture.configureByText("IsNotMockableTypePrimitiveTest.java",
-            "import org.mockito.Mock;\n" +
-                "\n" +
-                "public class IsNotMockableTypePrimitiveTest {\n" +
-                "    @Mock\n" +
-                "    public int <caret>mock;\n" +
-                "}\n");
-
-        assertThat(MockitoolsPsiUtil.isMockableType(getField().getTypeElement().getType())).isFalse();
-    }
-
-    public void testIsNotMockableTypeWrapper() {
-        myFixture.configureByText("IsNotMockableTypeWrapperTest.java",
-            "import org.mockito.Mock;\n" +
-                "\n" +
-                "public class IsNotMockableTypeWrapperTest {\n" +
-                "    @Mock\n" +
-                "    public String <caret>mock;\n" +
-                "}\n");
-
-        assertThat(MockitoolsPsiUtil.isMockableType(getField().getTypeElement().getType())).isFalse();
     }
 
     //isMatchers

@@ -2,12 +2,13 @@
 
 package com.picimako.mockitools;
 
+import static com.picimako.mockitools.MockableTypesUtil.getDoNotMockTypeInHierarchy;
 import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito4Latest;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
+
+import java.util.Optional;
 
 /**
  * Functional test for {@link com.picimako.mockitools.MockitoolsPsiUtil}.
@@ -40,9 +41,8 @@ public class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 "    private static class NotMockable {}\n" +
                 "}\n");
 
-        Pair<PsiClass, String> doNotMock = MockitoolsPsiUtil.getDoNotMockAnnotatedTypeAndReasonInHierarchy(getField().getTypeElement().getType());
-        assertThat(doNotMock.first.getQualifiedName()).isEqualTo("DoNotMockTest.NotMockable");
-        assertThat(doNotMock.second).isEqualTo("Create a real instance instead.");
+        Optional<MockableTypesUtil.DoNotMockType> doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
+        assertThat(doNotMock.get().reason).isEqualTo("Create a real instance instead.");
     }
 
     public void testReturnsDoNotMockedClassWithCustomReason() {
@@ -59,9 +59,8 @@ public class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 "    private static class NotMockable {}\n" +
                 "}\n");
 
-        Pair<PsiClass, String> doNotMock = MockitoolsPsiUtil.getDoNotMockAnnotatedTypeAndReasonInHierarchy(getField().getTypeElement().getType());
-        assertThat(doNotMock.first.getQualifiedName()).isEqualTo("DoNotMockTest.NotMockable");
-        assertThat(doNotMock.second).isEqualTo("A custom reason");
+        Optional<MockableTypesUtil.DoNotMockType> doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
+        assertThat(doNotMock.get().reason).isEqualTo("A custom reason");
     }
 
     public void testReturnsDoNotMockedClassWithEmptyReason() {
@@ -78,9 +77,8 @@ public class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 "    private static class NotMockable {}\n" +
                 "}\n");
 
-        Pair<PsiClass, String> doNotMock = MockitoolsPsiUtil.getDoNotMockAnnotatedTypeAndReasonInHierarchy(getField().getTypeElement().getType());
-        assertThat(doNotMock.first.getQualifiedName()).isEqualTo("DoNotMockTest.NotMockable");
-        assertThat(doNotMock.second).isEmpty();
+        Optional<MockableTypesUtil.DoNotMockType> doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
+        assertThat(doNotMock.get().reason).isEmpty();
     }
 
     public void testReturnsCustomDoNotMockedClassWithDefaultReason() {
@@ -98,9 +96,8 @@ public class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 "    private static class NotMockable {}\n" +
                 "}\n");
 
-        Pair<PsiClass, String> doNotMock = MockitoolsPsiUtil.getDoNotMockAnnotatedTypeAndReasonInHierarchy(getField().getTypeElement().getType());
-        assertThat(doNotMock.first.getQualifiedName()).isEqualTo("DoNotMockTest.NotMockable");
-        assertThat(doNotMock.second).isEqualTo("Default reason");
+        Optional<MockableTypesUtil.DoNotMockType> doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
+        assertThat(doNotMock.get().reason).isEqualTo("Default reason");
     }
 
     public void testReturnsCustomDoNotMockedClassWithCustomReason() {
@@ -118,9 +115,8 @@ public class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 "    private static class NotMockable {}\n" +
                 "}\n");
 
-        Pair<PsiClass, String> doNotMock = MockitoolsPsiUtil.getDoNotMockAnnotatedTypeAndReasonInHierarchy(getField().getTypeElement().getType());
-        assertThat(doNotMock.first.getQualifiedName()).isEqualTo("DoNotMockTest.NotMockable");
-        assertThat(doNotMock.second).isEqualTo("Custom reason");
+        Optional<MockableTypesUtil.DoNotMockType> doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
+        assertThat(doNotMock.get().reason).isEqualTo("Custom reason");
     }
 
     public void testReturnsCustomDoNotMockedClassWithEmptyReason() {
@@ -138,9 +134,8 @@ public class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 "    private static class NotMockable {}\n" +
                 "}\n");
 
-        Pair<PsiClass, String> doNotMock = MockitoolsPsiUtil.getDoNotMockAnnotatedTypeAndReasonInHierarchy(getField().getTypeElement().getType());
-        assertThat(doNotMock.first.getQualifiedName()).isEqualTo("DoNotMockTest.NotMockable");
-        assertThat(doNotMock.second).isEmpty();
+        Optional<MockableTypesUtil.DoNotMockType> doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
+        assertThat(doNotMock.get().reason).isEmpty();
     }
 
     //isMockableTypeInAnyWay
@@ -160,7 +155,7 @@ public class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 "    private static class NotMockable {}\n" +
                 "}\n");
 
-        assertThat(MockitoolsPsiUtil.isMockableTypeInAnyWay(getField().getTypeElement().getType())).isFalse();
+        assertThat(MockableTypesUtil.isMockableTypeInAnyWay(getField().getTypeElement().getType())).isFalse();
     }
 
     public void testIsNotMockableTypeInAnyWay() {
@@ -173,7 +168,7 @@ public class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 "    String <caret>notMockable;\n" +
                 "}\n");
 
-        assertThat(MockitoolsPsiUtil.isMockableTypeInAnyWay(getField().getTypeElement().getType())).isFalse();
+        assertThat(MockableTypesUtil.isMockableTypeInAnyWay(getField().getTypeElement().getType())).isFalse();
     }
 
     private PsiField getField() {

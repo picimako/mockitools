@@ -3,7 +3,7 @@
 package com.picimako.mockitools.intention;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.SPY;
-import static com.picimako.mockitools.MockitoolsPsiUtil.isMockableTypeInAnyWay;
+import static com.picimako.mockitools.MockableTypesUtil.isMockableTypeInAnyWay;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoSpy;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.PsiMethodUtil.hasOneArgument;

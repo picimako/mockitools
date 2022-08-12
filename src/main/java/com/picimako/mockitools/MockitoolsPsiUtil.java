@@ -3,8 +3,6 @@
 package com.picimako.mockitools;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.AFTER;
-import static com.picimako.mockitools.MockitoQualifiedNames.AT_LEAST;
-import static com.picimako.mockitools.MockitoQualifiedNames.AT_MOST;
 import static com.picimako.mockitools.MockitoQualifiedNames.CALLS;
 import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
 import static com.picimako.mockitools.MockitoQualifiedNames.GIVEN;
@@ -32,26 +30,15 @@ import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
-import com.intellij.codeInsight.AnnotationUtil;
-import com.intellij.openapi.util.Pair;
-import com.intellij.psi.CommonClassNames;
-import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
-import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
-import com.intellij.psi.util.InheritanceUtil;
-import com.intellij.psi.util.TypeConversionUtil;
 import com.siyeh.ig.callMatcher.CallMatcher;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Utilities for working with Mockito PSI.
@@ -59,15 +46,6 @@ import java.util.Set;
 public final class MockitoolsPsiUtil {
 
     public static final CallMatcher MOCKITO_WITH_SETTINGS = staticCall(ORG_MOCKITO_MOCKITO, "withSettings");
-
-    /**
-     * The original logic and set of non-mockable types can be found in Mockito's
-     * <ul>
-     *     <li><a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java">InlineDelegateByteBuddyMockMaker#isTypeMockable(Class) method</a>,</li>
-     *     <li><a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineBytecodeGenerator.java">InlineBytecodeGenerator#EXCLUDES set</a>.</li>
-     * </ul>
-     */
-    private static final Set<String> NON_MOCKABLE_TYPES = Set.of(CommonClassNames.JAVA_LANG_CLASS, CommonClassNames.JAVA_LANG_STRING);
 
     public static final CallMatcher.Simple MOCKITO_MOCK = staticCall(ORG_MOCKITO_MOCKITO, MOCK);
     private static final CallMatcher MOCKITO_SPY = staticCall(ORG_MOCKITO_MOCKITO, SPY).parameterCount(1);
@@ -307,80 +285,6 @@ public final class MockitoolsPsiUtil {
         return typeElement != null
             && typeElement.getType() instanceof PsiClassReferenceType
             && ORG_MOCKITO_ARGUMENT_CAPTOR.equals(((PsiClassReferenceType) typeElement.getType()).rawType().getCanonicalText());
-    }
-
-    /**
-     * Finds the first @DoNotMock annotated type in the class hierarchy, and returns it with the optional reason provided.
-     *
-     * @param type the type to check the type hierarchy of for the @DoNotMock annotation
-     * @return the class annotated as @DoNotMock or null if not found, and the reason provided if any if the class is annotated as @DoNotMock
-     */
-    public static Pair<PsiClass, String> getDoNotMockAnnotatedTypeAndReasonInHierarchy(@Nullable PsiType type) {
-        if (type instanceof PsiClassType) {
-            PsiClass referencedClass = ((PsiClassType) type).resolve();
-            if (referencedClass != null) {
-                var doNotMock = getDoNotMockAnnotationOn(referencedClass);
-                if (doNotMock.isPresent()) {
-                    return Pair.create(referencedClass, AnnotationUtil.getStringAttributeValue(doNotMock.get(), "reason"));
-                }
-                for (PsiClass cls : InheritanceUtil.getSuperClasses(referencedClass)) {
-                    var doNotMockInHierarchy = getDoNotMockAnnotationOn(cls);
-                    if (doNotMockInHierarchy.isPresent()) {
-                        return Pair.create(cls, AnnotationUtil.getStringAttributeValue(doNotMockInHierarchy.get(), "reason"));
-                    }
-                }
-            }
-        }
-        return Pair.empty();
-    }
-
-    /**
-     * This is a simplified version {@link #getDoNotMockAnnotatedTypeAndReasonInHierarchy(PsiType)} that returns a boolean whether any of
-     * the types in the type hierarchy is annotated with @DoNotMock.
-     *
-     * @param type the type to check the type hierarchy of for the @DoNotMock annotation
-     * @since 0.2.0
-     */
-    private static boolean isDoNotMockAnnotatedInHierarchy(@Nullable PsiType type) {
-        if (type instanceof PsiClassType) {
-            PsiClass referencedClass = ((PsiClassType) type).resolve();
-            if (referencedClass != null) {
-                return getDoNotMockAnnotationOn(referencedClass).isPresent()
-                    || InheritanceUtil.getSuperClasses(referencedClass).stream().anyMatch(cls -> getDoNotMockAnnotationOn(cls).isPresent());
-            }
-        }
-        return false;
-    }
-
-    private static Optional<PsiAnnotation> getDoNotMockAnnotationOn(PsiClass clazz) {
-        return !CommonClassNames.JAVA_LANG_OBJECT.equals(clazz.getQualifiedName())
-            ? Arrays.stream(clazz.getAnnotations())
-            .filter(annotation -> annotation.getQualifiedName().endsWith(MockitoQualifiedNames.ORG_MOCKITO_DO_NOT_MOCK))
-            .findFirst()
-            : Optional.empty();
-    }
-
-    /**
-     * Returns whether the argument type is mockable, be it not restricted by Mockito itself, or by a @DoNotMock annotation.
-     *
-     * @since 0.2.0
-     */
-    public static boolean isMockableTypeInAnyWay(@Nullable PsiType type) {
-        return isMockableType(type) && !isDoNotMockAnnotatedInHierarchy(type);
-    }
-
-    /**
-     * Gets whether the argument type is mockable by Mockito.
-     *
-     * @param type the type to validate
-     * @return true if the type is mockable, false otherwise
-     * @see #NON_MOCKABLE_TYPES
-     */
-    public static boolean isMockableType(@Nullable PsiType type) {
-        return type != null
-            && !TypeConversionUtil.isPrimitiveWrapper(type)
-            && !TypeConversionUtil.isPrimitive(type.getCanonicalText())
-            && !NON_MOCKABLE_TYPES.contains(type.getCanonicalText());
     }
 
     private MockitoolsPsiUtil() {

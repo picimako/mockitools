@@ -2,14 +2,15 @@
 
 package com.picimako.mockitools.inspection;
 
+import static com.picimako.mockitools.MockableTypesUtil.getDoNotMockTypeInHierarchy;
+import static com.picimako.mockitools.MockableTypesUtil.isMockableType;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_SPY;
-import static com.picimako.mockitools.MockitoolsPsiUtil.getDoNotMockAnnotatedTypeAndReasonInHierarchy;
-import static com.picimako.mockitools.MockitoolsPsiUtil.isMockableType;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoMock;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoSpy;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.PsiMethodUtil.hasAtLeastOneArgument;
+import static com.picimako.mockitools.PsiTypesUtil.evaluateClassObjectOrNewExpressionType;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
@@ -19,7 +20,6 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiType;
-import com.picimako.mockitools.PsiTypesUtil;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,28 +53,24 @@ public class MockTypeInspection extends MockitoolsBaseInspection {
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         //Mockito.spy method has overloads only with single arguments
-        if ((isMockitoMock(expression) && hasAtLeastOneArgument(expression)) || isMockitoSpy(expression)) {
+        if (isMockitoSpy(expression) || (isMockitoMock(expression) && hasAtLeastOneArgument(expression))) {
             var typeToMock = getFirstArgument(expression);
-            var type = PsiTypesUtil.evaluateClassObjectOrNewExpressionType(typeToMock);
-            if (type != null) {
-                if (!isMockableType(type)) {
-                    holder.registerProblem(typeToMock, MockitoolsBundle.inspection("non.mockable.type"));
-                } else {
-                    checkForDoNotMockType(type, holder, typeToMock);
-                }
-            }
+            var type = evaluateClassObjectOrNewExpressionType(typeToMock);
+            if (type != null) registerIfNotMockable(type, typeToMock, holder);
         }
     }
 
     @Override
     protected void checkField(PsiField field, @NotNull ProblemsHolder holder) {
         if ((field.hasAnnotation(ORG_MOCKITO_MOCK) || field.hasAnnotation(ORG_MOCKITO_SPY)) && field.getTypeElement() != null) {
-            if (!isMockableType(field.getTypeElement().getType())) {
-                holder.registerProblem(getPartToHighLight(field), MockitoolsBundle.inspection("non.mockable.type"));
-            } else {
-                checkForDoNotMockType(field.getTypeElement().getType(), holder, getPartToHighLight(field));
-            }
+            registerIfNotMockable(field.getTypeElement().getType(), getPartToHighLight(field), holder);
         }
+    }
+
+    private void registerIfNotMockable(PsiType type, PsiElement toHighlight, @NotNull ProblemsHolder holder) {
+        if (!isMockableType(type))
+            holder.registerProblem(toHighlight, MockitoolsBundle.inspection("non.mockable.type"));
+        else checkForDoNotMockType(type, holder, toHighlight);
     }
 
     private PsiElement getPartToHighLight(PsiField field) {
@@ -82,13 +78,9 @@ public class MockTypeInspection extends MockitoolsBaseInspection {
     }
 
     private void checkForDoNotMockType(PsiType type, @NotNull ProblemsHolder holder, PsiElement toHighlight) {
-        var doNotMockAnnotated = getDoNotMockAnnotatedTypeAndReasonInHierarchy(type);
-        if (doNotMockAnnotated.first != null) {
-            if (doNotMockAnnotated.second == null || doNotMockAnnotated.second.isBlank()) {
-                holder.registerProblem(toHighlight, MockitoolsBundle.inspection("non.mockable.type.do.not.mock.no.reason"));
-            } else {
-                holder.registerProblem(toHighlight, MockitoolsBundle.inspection("non.mockable.type.do.not.mock.reason", doNotMockAnnotated.second));
-            }
-        }
+        getDoNotMockTypeInHierarchy(type).ifPresent(doNotMockType ->
+            holder.registerProblem(toHighlight, doNotMockType.hasReason()
+                ? MockitoolsBundle.inspection("non.mockable.type.do.not.mock.reason", doNotMockType.reason)
+                : MockitoolsBundle.inspection("non.mockable.type.do.not.mock.no.reason")));
     }
 }

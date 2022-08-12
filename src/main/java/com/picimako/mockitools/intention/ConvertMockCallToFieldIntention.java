@@ -17,7 +17,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK_SET
 import static com.picimako.mockitools.MockitoQualifiedNames.SERIALIZABLE;
 import static com.picimako.mockitools.MockitoQualifiedNames.STUB_ONLY;
 import static com.picimako.mockitools.MockitoolsPsiUtil.MOCKITO_MOCK;
-import static com.picimako.mockitools.MockitoolsPsiUtil.isMockableTypeInAnyWay;
+import static com.picimako.mockitools.MockableTypesUtil.isMockableTypeInAnyWay;
 import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromLast;
 import static com.picimako.mockitools.PsiMethodUtil.get2ndArgument;
 import static com.picimako.mockitools.PsiMethodUtil.getArguments;
