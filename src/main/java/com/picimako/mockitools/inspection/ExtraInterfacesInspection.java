@@ -2,27 +2,26 @@
 
 package com.picimako.mockitools.inspection;
 
+import static com.intellij.codeInsight.AnnotationUtil.arrayAttributeValues;
+import static com.intellij.psi.impl.PsiImplUtil.findAttributeValue;
+import static com.picimako.mockitools.ClassObjectAccessUtil.getOperandType;
 import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isExtraInterfaces;
 import static com.picimako.mockitools.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
-import static com.picimako.mockitools.ClassObjectAccessUtil.getOperandType;
 
-import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiAnnotation;
-import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.psi.PsiType;
-import com.intellij.psi.impl.PsiImplUtil;
+import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
-import com.picimako.mockitools.resources.MockitoolsBundle;
+import java.util.Optional;
 
 /**
  * Verifies the {@code @Mock} annotation's {@code extraInterfaces} attribute, as well as the arguments of
@@ -50,9 +49,8 @@ public class ExtraInterfacesInspection extends MockitoolsBaseInspection {
     @Override
     protected void checkAnnotation(PsiAnnotation annotation, @NotNull ProblemsHolder holder) {
         if (annotation.hasQualifiedName(ORG_MOCKITO_MOCK)) {
-            var extraInterfaces = PsiImplUtil.findAttributeValue(annotation, EXTRA_INTERFACES);
             //e.g. @Mock(extraInterfaces = {Set.class, Object.class}), or @Mock(extraInterfaces = Set.class)
-            for (var initializer : AnnotationUtil.arrayAttributeValues(extraInterfaces)) {
+            for (var initializer : arrayAttributeValues(findAttributeValue(annotation, EXTRA_INTERFACES))) {
                 checkAndReportNonInterfaceArgument(initializer, "annotation.extra.interfaces.not.interface", holder);
             }
         }
@@ -60,7 +58,7 @@ public class ExtraInterfacesInspection extends MockitoolsBaseInspection {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
-        if (isExtraInterfaces(expression) && !expression.getArgumentList().isEmpty()) {
+        if (isExtraInterfaces(expression)) {
             for (var argument : getArguments(expression)) {
                 checkAndReportNonInterfaceArgument(argument, "extra.interfaces.not.interface", holder);
             }
@@ -69,12 +67,11 @@ public class ExtraInterfacesInspection extends MockitoolsBaseInspection {
 
     private void checkAndReportNonInterfaceArgument(PsiElement argument, String inspectionMessageKey, @NotNull ProblemsHolder holder) {
         //e.g. argument: List.class, operandType: List
-        PsiType operandType = getOperandType(argument);
-        if (operandType instanceof PsiClassType) {
-            PsiClass psiClass = ((PsiClassType) operandType).resolve();
-            if (psiClass != null && !psiClass.isInterface()) {
-                holder.registerProblem(argument, MockitoolsBundle.inspection(inspectionMessageKey));
-            }
-        }
+        Optional.ofNullable(getOperandType(argument))
+            .filter(PsiClassType.class::isInstance)
+            .map(PsiClassType.class::cast)
+            .map(PsiClassType::resolve)
+            .filter(psiClass -> !psiClass.isInterface())
+            .ifPresent(__ -> holder.registerProblem(argument, MockitoolsBundle.inspection(inspectionMessageKey)));
     }
 }

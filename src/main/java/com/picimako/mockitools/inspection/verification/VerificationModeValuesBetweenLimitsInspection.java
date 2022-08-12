@@ -2,21 +2,25 @@
 
 package com.picimako.mockitools.inspection.verification;
 
-import static com.picimako.mockitools.MockitoolsPsiUtil.MOCKITO_OCCURRENCE_BASED_VERIFICATION_MODES;
+import static com.picimako.mockitools.MockitoQualifiedNames.AT_LEAST;
+import static com.picimako.mockitools.MockitoQualifiedNames.AT_MOST;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
+import static com.picimako.mockitools.MockitoQualifiedNames.TIMES;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isAfter;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isCalls;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isTimeout;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
+import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
+import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import javax.swing.*;
 
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.ui.SingleIntegerFieldOptionsPanel;
-import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.util.PsiLiteralUtil;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
-import com.siyeh.ig.psiutils.MethodCallUtils;
+import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,6 +49,8 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  */
 public class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBaseInspection {
 
+    private static final CallMatcher MOCKITO_OCCURRENCE_BASED_VERIFICATION_MODES = staticCall(ORG_MOCKITO_MOCKITO, TIMES, AT_LEAST, AT_MOST).parameterCount(1);
+
     @SuppressWarnings("PublicField")
     public int timeoutMaxThreshold = 5000;
 
@@ -55,15 +61,14 @@ public class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBas
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
-        if (MOCKITO_OCCURRENCE_BASED_VERIFICATION_MODES.matches(expression)) {
+        if (MOCKITO_OCCURRENCE_BASED_VERIFICATION_MODES.matches(expression))
             checkIntegerArgumentValue(0, expression, holder);
-        } else if (isCalls(expression)) {
+        else if (isCalls(expression))
             checkIntegerArgumentValue(1, expression, holder);
-        } else if (isAfter(expression)) {
-            checkLongArgumentValue(0, expression, false, holder);
-        } else if (isTimeout(expression)) {
-            checkLongArgumentValue(0, expression, true, holder);
-        }
+        else if (isAfter(expression))
+            checkLongArgumentValue(0L, expression, false, holder);
+        else if (isTimeout(expression))
+            checkLongArgumentValue(0L, expression, true, holder);
     }
 
     private void checkIntegerArgumentValue(int upperLimit, PsiMethodCallExpression methodCall, @NotNull ProblemsHolder holder) {
@@ -72,18 +77,18 @@ public class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBas
 
         if (argValue != null && argValue < upperLimit) {
             holder.registerProblem(verificationModeArgument,
-                MockitoolsBundle.inspection("verification.mode.value.less.than.allowed", MethodCallUtils.getMethodName(methodCall), upperLimit));
+                MockitoolsBundle.inspection("verification.mode.value.less.than.allowed", getMethodName(methodCall), upperLimit));
         }
     }
 
-    private void checkLongArgumentValue(int upperLimit, PsiMethodCallExpression methodCall, boolean isTimeout, @NotNull ProblemsHolder holder) {
+    private void checkLongArgumentValue(long upperLimit, PsiMethodCallExpression methodCall, boolean isTimeout, @NotNull ProblemsHolder holder) {
         var verificationModeArgument = getFirstArgument(methodCall);
         Long argValue = PsiLiteralUtil.parseLong(verificationModeArgument.getText());
 
         if (argValue != null) {
             if (argValue < upperLimit) {
                 holder.registerProblem(verificationModeArgument,
-                    MockitoolsBundle.inspection("verification.mode.value.less.than.allowed", MethodCallUtils.getMethodName(methodCall), upperLimit));
+                    MockitoolsBundle.inspection("verification.mode.value.less.than.allowed", getMethodName(methodCall), upperLimit));
             }
             if (isTimeout && argValue > timeoutMaxThreshold) {
                 holder.registerProblem(verificationModeArgument, MockitoolsBundle.inspection("timeout.value.more.than.allowed", timeoutMaxThreshold));
