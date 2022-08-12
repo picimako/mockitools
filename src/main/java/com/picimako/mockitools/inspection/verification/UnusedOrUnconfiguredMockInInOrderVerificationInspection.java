@@ -31,6 +31,7 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -51,9 +52,7 @@ public class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loc
             return new JavaElementVisitor() {
                 @Override
                 public void visitLocalVariable(PsiLocalVariable variable) {
-                    if (!typeEquals(ORG_MOCKITO_INORDER, variable.getType())
-                        || !variable.hasInitializer()
-                        || !(variable.getInitializer() instanceof PsiMethodCallExpression)) return;
+                    if (!typeEquals(ORG_MOCKITO_INORDER, variable.getType()) || !(variable.getInitializer() instanceof PsiMethodCallExpression)) return;
 
                     var inOrderRefs = ReferencesSearch.search(variable).toArray(PsiReference.EMPTY_ARRAY);
                     if (inOrderRefs.length > 0 && areAllVerifications(inOrderRefs)) {
@@ -63,12 +62,12 @@ public class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loc
                         var mocksInMockitoInOrder = getArguments(mockitoInOrder);
 
                         //The mock arguments from each 'InOrder.verify()' and 'BDDMockito.then().should(InOrder)' call
-                        var mockInVerificationsAsString = mocksInVerifications.stream().map(PsiElement::getText).collect(toList());
+                        var mocksInVerificationsAsString = mocksInVerifications.stream().map(PsiElement::getText).collect(toList());
                         //Report all mocks in 'Mockito.inOrder()' that are not used in a verification
                         for (var mockInInOrder : mocksInMockitoInOrder) {
                             //Exclude Type.class-type arguments that are (most probably) used in MockedStatic verifications
                             if (mockInInOrder instanceof PsiClassObjectAccessExpression) continue;
-                            if (!mockInVerificationsAsString.contains(mockInInOrder.getText()))
+                            if (!mocksInVerificationsAsString.contains(mockInInOrder.getText()))
                                 holder.registerProblem(mockInInOrder, MockitoolsBundle.inspection("no.in.order.verification.for.mock"));
                         }
 
@@ -106,25 +105,27 @@ public class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loc
                  * Collects all mock object expressions from the argument InOrder verifications.
                  */
                 private List<PsiExpression> collectMocksInVerifications(PsiReference[] inOrderRefs) {
-                    var mocksUsed = new SmartList<PsiExpression>();
+                    List<PsiExpression> mocksUsed = null;
 
                     for (var ref : inOrderRefs) {
                         if (ref instanceof PsiReferenceExpression) {
                             var verifyOrShould = getParentOfType((PsiReferenceExpression) ref, PsiMethodCallExpression.class);
                             if (IN_ORDER_VERIFY_NON_MOCKED_STATIC.matches(verifyOrShould)) {
+                                if (mocksUsed == null) mocksUsed = new SmartList<>();
                                 saveMockFrom(verifyOrShould, mocksUsed);
                             } else if (THEN_SHOULD_WITH_INORDER.matches(verifyOrShould)) {
+                                if (mocksUsed == null) mocksUsed = new SmartList<>();
                                 saveMockFrom(/*then*/findChildOfType(verifyOrShould, PsiMethodCallExpression.class), mocksUsed);
                             }
                         }
                     }
-                    return mocksUsed;
+                    return mocksUsed != null ? mocksUsed : Collections.emptyList();
                 }
 
                 /**
                  * Stores the mock object used in the argument verification call, for later comparison.
                  */
-                private void saveMockFrom(PsiMethodCallExpression verifyOrThen, List<PsiExpression> mocksUsed) {
+                private void saveMockFrom(PsiMethodCallExpression verifyOrThen, @NotNull List<PsiExpression> mocksUsed) {
                     var mock = getFirstArgument(verifyOrThen);
                     if (!mocksUsed.contains(mock)) mocksUsed.add(mock);
                 }
