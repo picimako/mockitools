@@ -75,7 +75,7 @@ public class UsageOfAnyMatchersInspection extends MigrationAidBase.V23ToV4BaseIn
 
         @Override
         protected void doFix(Project project, ProblemDescriptor descriptor) {
-            PsiMethodCallExpression parentCall = getParentCall(descriptor.getPsiElement());
+            var parentCall = getParentCall(descriptor.getPsiElement());
             if (parentCall != null) {
                 PsiElement elementAfterReplace = descriptor.getPsiElement().replace(PsiElementFactory.getInstance(project).createIdentifier(ANY));
                 replaceMatchersQualifierAndStaticImportMatcher(parentCall, ANY, elementAfterReplace);
@@ -98,7 +98,7 @@ public class UsageOfAnyMatchersInspection extends MigrationAidBase.V23ToV4BaseIn
 
         @Override
         protected void doFix(Project project, ProblemDescriptor descriptor) {
-            PsiMethodCallExpression parentCall = getParentCall(descriptor.getPsiElement());
+            var parentCall = getParentCall(descriptor.getPsiElement());
             if (parentCall != null) {
                 PsiElement elementAfterReplace = descriptor.getPsiElement().replace(PsiElementFactory.getInstance(project).createIdentifier(anyX));
                 PsiMethodUtil.deleteArguments(parentCall); //delete all matcher call arguments, since any<collectionType>() methods don't have arguments

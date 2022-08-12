@@ -47,14 +47,14 @@ public class NameCollisionAwareReferenceReplacerQuickFix extends MigrationAidV4B
     protected void doFix(Project project, ProblemDescriptor descriptor) {
         var element = (PsiJavaCodeReferenceElement) descriptor.getPsiElement();
         Module module = ModuleUtilCore.findModuleForFile(element.getContainingFile().getVirtualFile(), project);
-        if (module != null) {
-            if (element.isQualified()) {
-                element.replace(getElementFactory(project).createReferenceElementByFQClassName(replacementClassFqn, moduleWithLibrariesScope(module)));
-            } else {
-                PsiJavaFile containingFile = (PsiJavaFile) element.getContainingFile();
-                Optional.ofNullable(containingFile.findImportReferenceTo((PsiClass) element.resolve()))
-                    .ifPresent(importStmt -> importStmt.replace(getElementFactory(project).createFQClassNameReferenceElement(replacementClassFqn, moduleWithLibrariesScope(module))));
-            }
+        if (module == null) return;
+
+        if (element.isQualified()) {
+            element.replace(getElementFactory(project).createReferenceElementByFQClassName(replacementClassFqn, moduleWithLibrariesScope(module)));
+        } else {
+            var containingFile = (PsiJavaFile) element.getContainingFile();
+            Optional.ofNullable(containingFile.findImportReferenceTo((PsiClass) element.resolve()))
+                .ifPresent(importStmt -> importStmt.replace(getElementFactory(project).createFQClassNameReferenceElement(replacementClassFqn, moduleWithLibrariesScope(module))));
         }
     }
 

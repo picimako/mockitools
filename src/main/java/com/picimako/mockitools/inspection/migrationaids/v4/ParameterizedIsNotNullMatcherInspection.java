@@ -17,7 +17,6 @@ import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +40,7 @@ public class ParameterizedIsNotNullMatcherInspection extends MigrationAidBase.V2
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         if (ANY_OF_PARAMETERIZED_NULL_MATCHERS.matches(expression)) {
-            PsiExpression qualifier = PsiMethodUtil.getQualifier(expression);
+            var qualifier = PsiMethodUtil.getQualifier(expression);
             String methodName = getMethodName(expression);
             String quickFixName = qualifier != null && (qualifier.textMatches(ORG_MOCKITO_MATCHERS) || qualifier.textMatches(MATCHERS))
                 ? MockitoolsBundle.quickFix("migration.aid.v4.replace.with", methodName)
@@ -67,7 +66,7 @@ public class ParameterizedIsNotNullMatcherInspection extends MigrationAidBase.V2
 
         @Override
         protected void doFix(Project project, ProblemDescriptor descriptor) {
-            PsiMethodCallExpression parentCall = getParentCall(descriptor.getPsiElement());
+            var parentCall = getParentCall(descriptor.getPsiElement());
             if (parentCall != null) {
                 deleteArguments(parentCall);
                 replaceMatchersQualifier(parentCall);

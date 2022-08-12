@@ -30,6 +30,7 @@ public class UsageOfDeprecatedPluginClassesInspection extends MigrationAidBase.V
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
+        //Whether the file contains JUnit test classes is not validated, since runners may be referenced in non-unittest (i.e. util) classes.
         if (!isInTestSourceContent(session.getFile()) || !isMockitoCore2xOr3xAvailableInModuleOf(session.getFile(), holder.getProject())) {
             return PsiElementVisitor.EMPTY_VISITOR;
         }
