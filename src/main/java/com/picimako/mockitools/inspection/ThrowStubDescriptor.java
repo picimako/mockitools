@@ -5,20 +5,19 @@ package com.picimako.mockitools.inspection;
 import static com.picimako.mockitools.PsiMethodUtil.findCallDownwardsInChain;
 import static com.picimako.mockitools.PsiMethodUtil.findCallUpwardsInChain;
 import static com.picimako.mockitools.PsiMethodUtil.isMethodCall;
+import static com.siyeh.ig.callMatcher.CallMatcher.anyOf;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
-import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
-
-import java.util.ArrayList;
-import java.util.Optional;
 
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
+import com.picimako.mockitools.StubType;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.Nullable;
 
-import com.picimako.mockitools.StubType;
+import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * Descriptor for holding *Throw() call related information.
@@ -33,17 +32,17 @@ public final class ThrowStubDescriptor {
      * The method name that accepts the mock object or the call on a mock object. Usually {@code given} or {@code when}.
      */
     private final String stubberCallName;
-    private final String methodName;
     public final StubType stubType;
-    public final CallMatcher matcher;
-    public CallMatcher classMatcher;
-    public CallMatcher throwablesMatcher;
+    private final CallMatcher matcher;
+    public final CallMatcher classMatcher;
+    public final CallMatcher throwablesMatcher;
 
-    public ThrowStubDescriptor(String stubberCallName, StubType stubType, String methodName, String instanceName, @Nullable String staticName) {
+    public ThrowStubDescriptor(String stubberCallName, StubType stubType, String methodName, String instanceClassName, @Nullable String staticClassName) {
         this.stubberCallName = stubberCallName;
         this.stubType = stubType;
-        this.methodName = methodName;
-        this.matcher = createMatcher(methodName, instanceName, staticName);
+        this.classMatcher = createClassMatcher(methodName, instanceClassName, staticClassName);
+        this.throwablesMatcher = createThrowablesMatcher(methodName, instanceClassName, staticClassName);
+        this.matcher = anyOf(classMatcher, throwablesMatcher);
     }
 
     boolean isValidStubbingArgument(PsiExpression stub) {
@@ -55,39 +54,39 @@ public final class ThrowStubDescriptor {
             ? findCallUpwardsInChain(expression, stubberCallName)
             : findCallDownwardsInChain(expression, stubberCallName);
     }
-    
+
     public boolean isApplicableTo(PsiMethodCallExpression call) {
-        return methodName.equals(getMethodName(call)) && matcher.matches(call);
+        return matcher.matches(call);
     }
 
     /**
-     * Creates {@link CallMatcher}s for the provided method name in the provided classes for the method signatures with
+     * Creates a {@link CallMatcher} for the provided method name in the provided classes for the method signatures with
      * {@code Class} and {@code Class, Class...} parameter lists.
      * <p>
      * If {@code staticClassName} is specified as well (so there are both static and instance calls available for the method name),
      * then call matchers for that static method are created too.
-     * <p>
-     * It behaves similarly to the Throwables based parameterization.
      */
-    private CallMatcher createMatcher(String methodName, String instanceName, @Nullable String staticName) {
-        var matchers = new ArrayList<CallMatcher>(4);
-        var classMatchers = new ArrayList<CallMatcher>(2);
-        var throwablesMatchers = new ArrayList<CallMatcher>(2);
-        
-        classMatchers.add(instanceCall(instanceName, methodName).parameterTypes(CLASS_THROWABLE));
-        classMatchers.add(instanceCall(instanceName, methodName).parameterTypes(CLASS_THROWABLE, CLASS_THROWABLES));
-        throwablesMatchers.add(instanceCall(instanceName, methodName).parameterTypes(JAVA_LANG_THROWABLES));
-
-        if (staticName != null) {
-            classMatchers.add(staticCall(staticName, methodName).parameterTypes(CLASS_THROWABLE));
-            classMatchers.add(staticCall(staticName, methodName).parameterTypes(CLASS_THROWABLE, CLASS_THROWABLES));
-            throwablesMatchers.add(staticCall(staticName, methodName).parameterTypes(JAVA_LANG_THROWABLES));
+    private CallMatcher createClassMatcher(String methodName, String instanceClassName, @Nullable String staticClassName) {
+        var classMatchers = new ArrayList<CallMatcher>(staticClassName != null ? 4 : 2);
+        classMatchers.add(instanceCall(instanceClassName, methodName).parameterTypes(CLASS_THROWABLE));
+        classMatchers.add(instanceCall(instanceClassName, methodName).parameterTypes(CLASS_THROWABLE, CLASS_THROWABLES));
+        if (staticClassName != null) {
+            classMatchers.add(staticCall(staticClassName, methodName).parameterTypes(CLASS_THROWABLE));
+            classMatchers.add(staticCall(staticClassName, methodName).parameterTypes(CLASS_THROWABLE, CLASS_THROWABLES));
         }
-        matchers.addAll(classMatchers);
-        matchers.addAll(throwablesMatchers);
+        return anyOf(classMatchers.toArray(CALL_MATCHER_EMPTY));
+    }
 
-        classMatcher = CallMatcher.anyOf(classMatchers.toArray(CALL_MATCHER_EMPTY));
-        throwablesMatcher = CallMatcher.anyOf(throwablesMatchers.toArray(CALL_MATCHER_EMPTY));
-        return CallMatcher.anyOf(matchers.toArray(CALL_MATCHER_EMPTY));
+    /**
+     * Similar to {@link #createClassMatcher(String, String, String)}, but creates the matcher for the {@code java.lang.Throwable...}
+     * specific parametization.
+     */
+    private CallMatcher createThrowablesMatcher(String methodName, String instanceClassName, @Nullable String staticClassName) {
+        var throwablesMatchers = new ArrayList<CallMatcher>(2);
+        throwablesMatchers.add(instanceCall(instanceClassName, methodName).parameterTypes(JAVA_LANG_THROWABLES));
+        if (staticClassName != null) {
+            throwablesMatchers.add(staticCall(staticClassName, methodName).parameterTypes(JAVA_LANG_THROWABLES));
+        }
+        return anyOf(throwablesMatchers.toArray(CALL_MATCHER_EMPTY));
     }
 }
