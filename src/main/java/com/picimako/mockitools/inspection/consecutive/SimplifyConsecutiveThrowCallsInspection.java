@@ -5,9 +5,6 @@ package com.picimako.mockitools.inspection.consecutive;
 import static com.picimako.mockitools.MockitoQualifiedNames.DO_RETURN;
 import static com.picimako.mockitools.MockitoQualifiedNames.DO_THROW;
 import static com.picimako.mockitools.MockitoQualifiedNames.GIVEN;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_STATIC;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.THEN_THROW;
 import static com.picimako.mockitools.MockitoQualifiedNames.WHEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.WILL_RETURN;
@@ -18,10 +15,12 @@ import static com.picimako.mockitools.inspection.ThrowStubDescriptors.DO_THROW_W
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.GIVEN_WILL_THROW;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.WHEN_THEN_THROW;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.WILL_THROW_GIVEN;
+import static com.picimako.mockitools.inspection.consecutive.ConsecutiveCallAnalysisDescriptor.MethodType.INSTANCE;
 
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.picimako.mockitools.PsiMethodUtil;
+import com.picimako.mockitools.inspection.consecutive.ConsecutiveCallAnalysisDescriptor.Builder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -48,28 +47,23 @@ import java.util.function.Predicate;
  */
 public class SimplifyConsecutiveThrowCallsInspection extends SimplifyConsecutiveCallsInspectionBase {
     private static final List<ConsecutiveCallAnalysisDescriptor> THROW_CALL_DESCRIPTORS = List.of(
-        new ConsecutiveCallAnalysisDescriptor.Builder(ORG_MOCKITO_MOCKITO)
-            .consecutiveMethodName(DO_THROW)
-            .throwDescriptor(DO_THROW_WHEN)
-            .chainStarterMethodNames(DO_RETURN, DO_THROW, "doNothing", "doAnswer", "doCallRealMethod").build(),
-        new ConsecutiveCallAnalysisDescriptor.Builder(ORG_MOCKITO_BDDMOCKITO)
-            .consecutiveMethodName(WILL_THROW)
-            .throwDescriptor(WILL_THROW_GIVEN)
-            .chainStarterMethodNames(WILL_THROW).build(),
-        new ConsecutiveCallAnalysisDescriptor.Builder(ORG_MOCKITO_BDDMOCKITO)
-            .consecutiveMethodName(WILL_THROW)
-            .throwDescriptor(GIVEN_WILL_THROW)
-            .chainStarterMethodNames(GIVEN, WILL_RETURN, "will", "willDoNothing", "willAnswer", "willCallRealMethod").build(),
-        new ConsecutiveCallAnalysisDescriptor.Builder(ORG_MOCKITO_MOCKITO)
-            .consecutiveMethodName(THEN_THROW)
-            .throwDescriptor(WHEN_THEN_THROW)
+        Builder.forMockito(DO_THROW)
+            .exceptionStubbingVia(DO_THROW_WHEN)
+            .inCallChainsBeginningWith(DO_RETURN, DO_THROW, "doNothing", "doAnswer", "doCallRealMethod").build(),
+        Builder.forBDDMockito(WILL_THROW)
+            .exceptionStubbingVia(WILL_THROW_GIVEN)
+            .inCallChainsBeginningWith(WILL_THROW).build(),
+        Builder.forBDDMockito(WILL_THROW)
+            .exceptionStubbingVia(GIVEN_WILL_THROW)
+            .inCallChainsBeginningWith(GIVEN, WILL_RETURN, "will", "willDoNothing", "willAnswer", "willCallRealMethod").build(),
+        Builder.forMockito(THEN_THROW)
+            .exceptionStubbingVia(WHEN_THEN_THROW)
             .indexToStartInspectionAt(1)
-            .chainStarterMethodNames(WHEN).build(),
-        new ConsecutiveCallAnalysisDescriptor.Builder(ORG_MOCKITO_MOCKED_STATIC)
-            .consecutiveMethodName(THEN_THROW)
-            .throwDescriptor(WHEN_THEN_THROW)
+            .inCallChainsBeginningWith(WHEN).build(),
+        Builder.forMockedStatic(THEN_THROW)
+            .exceptionStubbingVia(WHEN_THEN_THROW)
             .indexToStartInspectionAt(1)
-            .chainStarterMethodNamesInstance(WHEN).build()
+            .inCallChainsBeginningWith(INSTANCE, WHEN).build()
     );
 
     @Override

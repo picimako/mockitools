@@ -6,17 +6,16 @@ import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst
 import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
-import java.util.List;
-import java.util.function.Predicate;
-
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.util.SmartList;
+import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.InspectionGadgetsFix;
 import org.jetbrains.annotations.NotNull;
 
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
-import com.picimako.mockitools.resources.MockitoolsBundle;
+import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Base class for reporting simplifiable consecutive calls.
@@ -31,7 +30,7 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
 public abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsBaseInspection {
 
     //Analysis workflow
-    
+
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         analysisDescriptors().stream()
@@ -43,7 +42,7 @@ public abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsB
     /**
      * Goes through a stubbing call chain, and
      * <ul>
-     *     <li>if it encounters a method that we are looking for the consecutiveness of (e.g. {@code thenReturn()}, or {@code willThrow()), saves its index,</li>
+     *     <li>if it encounters a method that we are looking for the consecutiveness of (e.g. {@code thenReturn()}, or {@code willThrow()}), saves its index,</li>
      *     <li>if it encounters a different method (e.g. {@code given()}), or there is no more call in the chain,
      *     but there were multiple consecutive calls before, it registers the last method in the consecutive chain.
      *     This separate registration is to provide better notification for users, and in the future, to be able to merge different consecutive calls separately.</li>
@@ -76,7 +75,7 @@ public abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsB
     }
 
     protected abstract List<ConsecutiveCallAnalysisDescriptor> analysisDescriptors();
-    
+
     //Registration workflow
 
     private void registerMultiple(ConsecutiveCallAnalysisDescriptor analyzer, List<PsiMethodCallExpression> callsInWholeChain,

@@ -10,7 +10,6 @@ import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiManager;
 import com.siyeh.ig.InspectionGadgetsFix;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,8 +47,7 @@ public class MergeConsecutiveStubbingCallsQuickFix extends InspectionGadgetsFix 
     @Override
     protected void doFix(Project project, ProblemDescriptor descriptor) {
         var firstConsecutiveCall = context.getFirstConsecutiveCall();
-        PsiManager manager = firstConsecutiveCall.getManager();
-        var viewProvider = manager.findViewProvider(context.getContainingFile());
+        var viewProvider = firstConsecutiveCall.getManager().findViewProvider(context.getContainingFile());
         if (viewProvider == null) return;
         Document document = viewProvider.getDocument();
         if (document == null) return;
