@@ -10,21 +10,17 @@ import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
 import static com.picimako.mockitools.Ranges.endOffsetOf;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
-import java.util.List;
-
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
-
-import com.intellij.psi.search.ProjectScope;
+import com.picimako.mockitools.PsiClassUtil;
 import com.picimako.mockitools.StubType;
-import com.siyeh.ig.psiutils.ImportUtils;
+
+import java.util.List;
 
 /**
  * Converts stubbing call chains between the different approaches.
@@ -134,7 +130,7 @@ public final class StubbingConverter {
 
     private void doBaseConversion(StubbingDescriptor from, StubbingDescriptor to, List<PsiMethodCallExpression> calls, int endOffset, String replacement) {
         replaceBeginningOfChain(calls, endOffset, replacement);
-        importClass(to.getStubStarterClassFqn(), calls.get(0).getProject());
+        PsiClassUtil.importClassAndCommit(to.getStubStarterClassFqn(), calls.get(0).getProject(), file, document);
         convertMethodNames(calls, from, to);
     }
 
@@ -154,7 +150,7 @@ public final class StubbingConverter {
      * @param replacement the replacement text
      */
     private void replaceBeginningOfChain(List<PsiMethodCallExpression> calls, int endOffset, String replacement) {
-        performAndCommitDocument(() -> document.replaceString(calls.get(0).getTextOffset(), endOffset, replacement));
+        replaceString(calls.get(0).getTextOffset(), endOffset, replacement);
     }
 
     /**
@@ -186,23 +182,12 @@ public final class StubbingConverter {
 
             TextRange textRange = getReferenceNameElement(calls.get(i)).getTextRange();
 
-            performAndCommitDocument(() -> document.replaceString(textRange.getStartOffset(), textRange.getEndOffset(), newMethodName));
+            replaceString(textRange.getStartOffset(), textRange.getEndOffset(), newMethodName);
         }
     }
 
-    /**
-     * Imports the class the stubbing call chain starts with: either {@code org.mockito.Mockito} or {@code org.mockito.BDDMockito}.
-     */
-    private void importClass(String fqn, Project project) {
-        PsiClass mockitoClass = JavaPsiFacade.getInstance(project).findClass(fqn, ProjectScope.getLibrariesScope(project));
-        if (mockitoClass != null) {
-            performAndCommitDocument(() -> ImportUtils.addImportIfNeeded(mockitoClass, file));
-            documentManager.doPostponedOperationsAndUnblockDocument(document);
-        }
-    }
-
-    private void performAndCommitDocument(Runnable runnable) {
-        runnable.run();
+    private void replaceString(int startOffset, int endOffset, String replacement) {
+        document.replaceString(startOffset, endOffset, replacement);
         documentManager.commitDocument(document);
     }
 }
