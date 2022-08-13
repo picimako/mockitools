@@ -108,8 +108,11 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
         if (file.getFileType().equals(JavaFileType.INSTANCE)) {
             final var element = file.findElementAt(editor.getCaretModel().getOffset());
-            if (isIdentifierOfField(element) && ((PsiClass) element.getParent().getParent()).getMethods().length > 0) {
+            //If the caret is at a field identifier and the parent class has at least one method
+            if (isIdentifierOfField(element)) {
                 PsiField field = (PsiField) element.getParent();
+                if (field.getContainingClass().getMethods().length == 0) return false;
+
                 boolean hasMock;
                 if ((hasMock = field.hasAnnotation(ORG_MOCKITO_MOCK)) && field.hasAnnotation(ORG_MOCKITO_SPY)) {
                     return false;

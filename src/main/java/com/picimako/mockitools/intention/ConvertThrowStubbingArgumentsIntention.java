@@ -4,7 +4,8 @@ package com.picimako.mockitools.intention;
 
 import static com.picimako.mockitools.PsiMethodUtil.containsCallToNonDefaultConstructor;
 import static com.picimako.mockitools.PsiMethodUtil.getArguments;
-import static com.picimako.mockitools.PsiMethodUtil.isIdentifierOfMethodCall;
+import static com.picimako.mockitools.PsiMethodUtil.getMethodCallAtCaret;
+import static com.picimako.mockitools.PsiMethodUtil.getMethodCallAtCaretOrEmpty;
 import static com.picimako.mockitools.inspection.consecutive.TypeConversionMethod.TO_CLASSES;
 import static com.picimako.mockitools.inspection.consecutive.TypeConversionMethod.TO_THROWABLES;
 
@@ -16,7 +17,6 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClassObjectAccessExpression;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
@@ -68,18 +68,15 @@ public class ConvertThrowStubbingArgumentsIntention implements IntentionAction {
 
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-        if (file.getFileType().equals(JavaFileType.INSTANCE)) {
-            PsiElement elementAtCaret = file.findElementAt(editor.getCaretModel().getOffset());
-            if (!isIdentifierOfMethodCall(elementAtCaret)) return false;
-            final var call = (PsiMethodCallExpression) elementAtCaret.getParent().getParent();
-            return ThrowStubDescriptors.ALL_DESCRIPTORS.stream()
+        if (!file.getFileType().equals(JavaFileType.INSTANCE)) return false;
+
+        return getMethodCallAtCaretOrEmpty(file, editor)
+            .map(call -> ThrowStubDescriptors.ALL_DESCRIPTORS.stream()
                 .filter(descriptor -> descriptor.isApplicableTo(call))
                 .map(descriptor -> isArgumentListConvertible(call, descriptor))
                 .findFirst()
-                .orElse(false);
-        }
-
-        return false;
+                .orElse(false))
+            .orElse(false);
     }
 
     private boolean isArgumentListConvertible(PsiMethodCallExpression call, ThrowStubDescriptor descriptor) {
@@ -89,7 +86,7 @@ public class ConvertThrowStubbingArgumentsIntention implements IntentionAction {
                 return true;
             }
         } else if (descriptor.throwablesMatcher.matches(call)) {
-            var arguments = call.getArgumentList().getExpressions();
+            var arguments = getArguments(call);
             if (areAllNewExpressions(arguments) && !containsCallToNonDefaultConstructor(arguments)) {
                 message = TO_CLASSES.message;
                 return true;
@@ -102,11 +99,8 @@ public class ConvertThrowStubbingArgumentsIntention implements IntentionAction {
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        final PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
-        var call = (PsiMethodCallExpression) element.getParent().getParent();
-
         WriteCommandAction.runWriteCommandAction(project, () -> {
-            var arguments = getArguments(call);
+            var arguments = getArguments(getMethodCallAtCaret(file, editor));
             if (areAllClassObjectAccessExpressions(arguments)) convert(arguments, TO_THROWABLES);
             else if (areAllNewExpressions(arguments)) convert(arguments, TO_CLASSES);
         });

@@ -60,10 +60,20 @@ public final class PsiMethodUtil {
         return methodCall.getArgumentList() != null && methodCall.getArgumentList().getExpressionCount() >= 1;
     }
 
+    /**
+     * Use this instead of {@link #getMethodCallAtCaretOrEmpty(PsiFile, Editor)}, when you are sure
+     * (you've probably made sure beforehand), that the caret is at a method call identifier.
+     */
     @NotNull
     public static PsiMethodCallExpression getMethodCallAtCaret(PsiFile file, Editor editor) {
-        final var element = file.findElementAt(editor.getCaretModel().getOffset());
-        return (PsiMethodCallExpression) element.getParent().getParent();
+        return getMethodCallForIdentifier(file.findElementAt(editor.getCaretModel().getOffset()));
+    }
+
+    public static Optional<PsiMethodCallExpression> getMethodCallAtCaretOrEmpty(PsiFile file, Editor editor) {
+        var elementAtCaret = file.findElementAt(editor.getCaretModel().getOffset());
+        return isIdentifierOfMethodCall(elementAtCaret)
+            ? Optional.ofNullable(getMethodCallForIdentifier(elementAtCaret))
+            : Optional.empty();
     }
 
     /**

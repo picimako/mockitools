@@ -2,16 +2,12 @@
 
 package com.picimako.mockitools.intention;
 
+import static com.picimako.mockitools.ClassObjectAccessUtil.resolveOperandType;
 import static com.picimako.mockitools.ListPopupHelper.selectItemAndRun;
 import static com.picimako.mockitools.PsiClassUtil.getParentClasses;
 import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.ClassObjectAccessUtil.resolveOperandType;
+import static com.picimako.mockitools.Ranges.endOffsetOf;
 import static java.util.stream.Collectors.joining;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
 
 import com.google.common.base.CaseFormat;
 import com.intellij.codeInsight.intention.IntentionAction;
@@ -20,6 +16,7 @@ import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.ide.util.PsiClassListCellRenderer;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -41,13 +38,17 @@ import com.intellij.refactoring.rename.inplace.MemberInplaceRenamer;
 import com.intellij.refactoring.rename.inplace.VariableInplaceRenamer;
 import com.intellij.util.Consumer;
 import com.intellij.util.IncorrectOperationException;
+import com.picimako.mockitools.resources.MockitoolsBundle;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
-import com.picimako.mockitools.resources.MockitoolsBundle;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * Base class for intention converting mocking calls to fields annotated with various Mockito annotations.
@@ -82,11 +83,17 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
         var ctx = new ConversionContext((PsiMethodCallExpression) element.getParent().getParent(), editor, project);
 
         if (ctx.mockTypeOrObject instanceof PsiClassObjectAccessExpression) {
-            selectTargetClassAndIntroduceField(getParentClasses(ctx.mockTypeOrObject), project, editor, targetClass -> introduceFieldForClassObjectAccess(ctx.targetClass(targetClass)));
+            selectTargetClassAndIntroduceField(getParentClasses(ctx.mockTypeOrObject),
+                project,
+                editor,
+                targetClass -> introduceFieldForClassObjectAccess(ctx.targetClass(targetClass)));
         }
         //This branch is valid only in case of ConvertSpyCallToFieldIntention
         else if (ctx.mockTypeOrObject instanceof PsiNewExpression) {
-            selectTargetClassAndIntroduceField(getParentClasses(ctx.mockTypeOrObject), project, editor, targetClass -> introduceFieldForNewExpression(ctx.targetClass(targetClass)));
+            selectTargetClassAndIntroduceField(getParentClasses(ctx.mockTypeOrObject),
+                project,
+                editor,
+                targetClass -> introduceFieldForNewExpression(ctx.targetClass(targetClass)));
         }
     }
 
@@ -105,7 +112,11 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
      * are constructed properly.
      */
     protected void introduceFieldForClassObjectAccess(ConversionContext ctx) {
-        introduceField(ctx, () -> Pair.create(resolveOperandType(ctx.mockTypeOrObject).getName(), toLowerCamel(resolveOperandType(ctx.mockTypeOrObject).getName())), NO_INITIALIZER);
+        introduceField(ctx,
+            () -> Pair.create(
+                resolveOperandType(ctx.mockTypeOrObject).getName(),
+                toLowerCamel(resolveOperandType(ctx.mockTypeOrObject).getName())),
+            NO_INITIALIZER);
     }
 
     /**
@@ -122,11 +133,11 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
     protected void introduceField(ConversionContext ctx, Supplier<Pair<String, String>> typeAndFieldName, Supplier<String> initializer) {
         if (ctx.spyOrMockCall.getParent() instanceof PsiLocalVariable) {
             var variable = (PsiLocalVariable) ctx.spyOrMockCall.getParent();
-            PsiElement field = createField(variable.getType().getCanonicalText(), getLocalVariableName(ctx.spyOrMockCall.getParent()), initializer, ctx);
+            var field = createField(variable.getType().getCanonicalText(), getLocalVariableName(ctx.spyOrMockCall.getParent()), initializer, ctx);
             doIntroduceFieldForLocalVariable(ctx, field, variable);
         } else {
             var typeAndField = typeAndFieldName.get();
-            PsiElement field = createField(typeAndField.first, typeAndField.second, initializer, ctx);
+            var field = createField(typeAndField.first, typeAndField.second, initializer, ctx);
             doIntroduceFieldForStandaloneMethodCall(ctx, field);
         }
     }
@@ -143,30 +154,30 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
      */
     private void doIntroduceFieldForLocalVariable(ConversionContext ctx, PsiElement fieldToAdd, PsiLocalVariable variableDeclaration) {
         boolean hasFieldWithSameNameAlready = Arrays.stream(ctx.targetClass.getFields()).anyMatch(f -> ((PsiField) fieldToAdd).getName().equals(f.getName()));
-        if (!ApplicationManager.getApplication().isUnitTestMode() && hasFieldWithSameNameAlready) {
-            //Moving the caret to the identifier is needed, so that the rename doesn't run in an underlying NPE
+        if (hasFieldWithSameNameAlready && !ApplicationManager.getApplication().isUnitTestMode()) {
+            //Moving the caret to the identifier is needed, so that rename doesn't run into an underlying NPE
             ctx.editor.getCaretModel().moveToOffset(variableDeclaration.getNameIdentifier().getTextOffset());
             new VariableInplaceRenamer(variableDeclaration, ctx.editor, ctx.project) {
                 @Override
                 protected void moveOffsetAfter(boolean success) {
                     super.moveOffsetAfter(success);
-                    if (success) {
-                        Optional.ofNullable(getVariable())
-                            .filter(renamedVariable -> Arrays.stream(ctx.targetClass.getFields()).noneMatch(f -> renamedVariable.getName().equals(f.getName())))
-                            .ifPresentOrElse(renamedVariable ->
-                                    WriteCommandAction.runWriteCommandAction(ctx.project, () -> {
-                                        PsiDocumentManager.getInstance(ctx.project).commitAllDocuments();
-                                        //set the name of the field to be introduced, so that it is created with the name specified by the user
-                                        if (renamedVariable.getName() != null) {
-                                            ((PsiField) fieldToAdd).setName(renamedVariable.getName());
-                                        }
-                                        ctx.targetClass.add(fieldToAdd);
-                                        renamedVariable.delete(); //remove local variable declaration
-                                    }),
-                                () -> Messages.showErrorDialog(
-                                    MockitoolsBundle.message("intention.convert.x.call.to.field.conversion.cannot.happen.message", "@Spy", getVariable().getName()),
-                                    MockitoolsBundle.message("intention.convert.x.call.to.field.conversion.cannot.happen.title")));
-                    }
+                    if (!success) return;
+
+                    Optional.ofNullable(getVariable())
+                        .filter(renamedVariable -> Arrays.stream(ctx.targetClass.getFields()).noneMatch(f -> renamedVariable.getName().equals(f.getName())))
+                        .ifPresentOrElse(renamedVariable ->
+                                WriteCommandAction.runWriteCommandAction(ctx.project, () -> {
+                                    PsiDocumentManager.getInstance(ctx.project).commitAllDocuments();
+                                    //set the name of the field to be introduced, so that it is created with the name specified by the user
+                                    if (renamedVariable.getName() != null) {
+                                        ((PsiField) fieldToAdd).setName(renamedVariable.getName());
+                                    }
+                                    ctx.targetClass.add(fieldToAdd);
+                                    renamedVariable.delete(); //remove local variable declaration
+                                }),
+                            () -> Messages.showErrorDialog(
+                                MockitoolsBundle.message("intention.convert.x.call.to.field.conversion.cannot.happen.message", "@Spy", getVariable().getName()),
+                                MockitoolsBundle.message("intention.convert.x.call.to.field.conversion.cannot.happen.title")));
                 }
             }.performInplaceRename();
         } else {
@@ -187,16 +198,16 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
         var addedField = new Ref<PsiField>();
         WriteCommandAction.runWriteCommandAction(ctx.project, () -> {
             addedField.set((PsiField) ctx.targetClass.add(field));
-            manager.commitDocument(ctx.editor.getDocument());
+            manager.commitDocument(ctx.getDocument());
         });
         WriteCommandAction.runWriteCommandAction(ctx.project, () -> {
             //replace standalone spy() call with the name of the new field.
-            ctx.editor.getDocument().replaceString(ctx.spyOrMockCall.getTextOffset(), ctx.spyOrMockCall.getTextRange().getEndOffset(), addedField.get().getName());
-            manager.commitDocument(ctx.editor.getDocument());
+            ctx.getDocument().replaceString(ctx.spyOrMockCall.getTextOffset(), endOffsetOf(ctx.spyOrMockCall), addedField.get().getName());
+            manager.commitDocument(ctx.getDocument());
         });
         //This is separated, because running this in the previous WriteCommandAction the added field's position and formatting is not proper.
-        if (!ApplicationManager.getApplication().isUnitTestMode() && !addedField.isNull()) {
-            //Moving the caret to the identifier is needed, so that the rename doesn't run in an underlying NPE
+        if (!addedField.isNull() && !ApplicationManager.getApplication().isUnitTestMode()) {
+            //Moving the caret to the identifier is needed, so that rename doesn't run into an underlying NPE
             ctx.editor.getCaretModel().moveToOffset(addedField.get().getNameIdentifier().getTextOffset());
             new MemberInplaceRenamer(addedField.get(), null, ctx.editor).performInplaceRename();
         }
@@ -236,7 +247,8 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
         final PsiExpression mockTypeOrObject;
         final Editor editor;
         final Project project;
-        @Accessors(fluent = true) @Setter
+        @Accessors(fluent = true)
+        @Setter
         PsiClass targetClass;
 
         ConversionContext(PsiMethodCallExpression spyOrMockCall, Editor editor, Project project) {
@@ -244,6 +256,10 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
             this.mockTypeOrObject = getFirstArgument(spyOrMockCall);
             this.editor = editor;
             this.project = project;
+        }
+
+        Document getDocument() {
+            return editor.getDocument();
         }
     }
 }

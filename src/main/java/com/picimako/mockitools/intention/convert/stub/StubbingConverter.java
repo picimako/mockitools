@@ -16,21 +16,31 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
 
+import com.intellij.psi.search.ProjectScope;
 import com.picimako.mockitools.StubType;
-import com.picimako.mockitools.intention.convert.ConverterBase;
+import com.siyeh.ig.psiutils.ImportUtils;
 
 /**
  * Converts stubbing call chains between the different approaches.
  * <p>
  * {@code Mockito.lenient()} is not supported at the moment.
  */
-public final class StubbingConverter extends ConverterBase {
+public final class StubbingConverter {
+
+    private final Document document;
+    private final PsiFile file;
+    private final PsiDocumentManager documentManager;
 
     public StubbingConverter(Project project, Document document, PsiFile file) {
-        super(project, document, file);
+        this.document = document;
+        this.file = file;
+        documentManager = PsiDocumentManager.getInstance(project);
     }
 
     /**
@@ -45,7 +55,7 @@ public final class StubbingConverter extends ConverterBase {
         if (from.hasSameStubTypeAs(to) && from.getStubTargetSpecifierMethodName().equals(to.getStubTargetSpecifierMethodName()))
             return;
 
-        WriteCommandAction.runWriteCommandAction(project, () -> {
+        WriteCommandAction.runWriteCommandAction(firstCallInChain.getProject(), () -> {
             var calls = collectCallsInChainFromFirst(firstCallInChain, true);
 
             if (from.hasSameStubTypeAs(to)) convertSameType(calls, from, to);
@@ -124,7 +134,7 @@ public final class StubbingConverter extends ConverterBase {
 
     private void doBaseConversion(StubbingDescriptor from, StubbingDescriptor to, List<PsiMethodCallExpression> calls, int endOffset, String replacement) {
         replaceBeginningOfChain(calls, endOffset, replacement);
-        importClass(to.getStubStarterClassFqn());
+        importClass(to.getStubStarterClassFqn(), calls.get(0).getProject());
         convertMethodNames(calls, from, to);
     }
 
@@ -178,5 +188,21 @@ public final class StubbingConverter extends ConverterBase {
 
             performAndCommitDocument(() -> document.replaceString(textRange.getStartOffset(), textRange.getEndOffset(), newMethodName));
         }
+    }
+
+    /**
+     * Imports the class the stubbing call chain starts with: either {@code org.mockito.Mockito} or {@code org.mockito.BDDMockito}.
+     */
+    private void importClass(String fqn, Project project) {
+        PsiClass mockitoClass = JavaPsiFacade.getInstance(project).findClass(fqn, ProjectScope.getLibrariesScope(project));
+        if (mockitoClass != null) {
+            performAndCommitDocument(() -> ImportUtils.addImportIfNeeded(mockitoClass, file));
+            documentManager.doPostponedOperationsAndUnblockDocument(document);
+        }
+    }
+
+    private void performAndCommitDocument(Runnable runnable) {
+        runnable.run();
+        documentManager.commitDocument(document);
     }
 }

@@ -2,35 +2,32 @@
 
 package com.picimako.mockitools.intention;
 
-import static com.picimako.mockitools.MockitoQualifiedNames.SPY;
-import static com.picimako.mockitools.MockableTypesUtil.isMockableTypeInAnyWay;
-import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoSpy;
-import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.PsiMethodUtil.hasOneArgument;
-import static com.picimako.mockitools.PsiMethodUtil.isIdentifierOfMethodCall;
 import static com.picimako.mockitools.ClassObjectAccessUtil.getOperandType;
-
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.function.Supplier;
+import static com.picimako.mockitools.MockableTypesUtil.isMockableTypeInAnyWay;
+import static com.picimako.mockitools.MockitoQualifiedNames.SPY;
+import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoSpy;
+import static com.picimako.mockitools.PsiMethodUtil.getMethodCallAtCaretOrEmpty;
+import static com.picimako.mockitools.PsiMethodUtil.hasOneArgument;
 
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiNewExpression;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
+import com.picimako.mockitools.MockitoQualifiedNames;
+import com.picimako.mockitools.PsiMethodUtil;
 import org.jetbrains.annotations.NotNull;
 
-import com.picimako.mockitools.MockitoQualifiedNames;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * Converts {@code Mockito.spy()} calls to {@code @Spy} annotated fields.
@@ -85,17 +82,13 @@ public class ConvertSpyCallToFieldIntention extends ConvertCallToFieldIntentionB
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
         if (!file.getFileType().equals(JavaFileType.INSTANCE)) return false;
 
-        final PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
-        if (isIdentifierOfMethodCall(element)) {
-            var methodCall = (PsiMethodCallExpression) element.getParent().getParent();
-            if (isMockitoSpy(methodCall) && hasOneArgument(methodCall)) {
-                var firstArg = getFirstArgument(methodCall);
-                return firstArg instanceof PsiNewExpression
-                    ? !((PsiNewExpression) firstArg).isArrayCreation() && isMockableTypeInAnyWay(firstArg.getType())
-                    : firstArg instanceof PsiClassObjectAccessExpression && isMockableTypeInAnyWay(getOperandType(firstArg));
-            }
-        }
-        return false;
+        return getMethodCallAtCaretOrEmpty(file, editor)
+            .filter(call -> isMockitoSpy(call) && hasOneArgument(call))
+            .map(PsiMethodUtil::getFirstArgument)
+            .map(spiedType -> spiedType instanceof PsiNewExpression
+                ? !((PsiNewExpression) spiedType).isArrayCreation() && isMockableTypeInAnyWay(spiedType.getType())
+                : isMockableTypeInAnyWay(getOperandType(spiedType)))
+            .orElse(false);
     }
     
     //Conversion

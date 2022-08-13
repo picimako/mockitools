@@ -52,9 +52,7 @@ public class ConvertStubbingAction extends AnAction {
     public static final StubbingDescriptor BDDMOCKITO_WILL =
         new StubbingDescriptor("BDDMockito.will*()", ORG_MOCKITO_BDDMOCKITO, "BDDMockito", "will", GIVEN, StubType.STUBBER);
 
-    private StubbingConverter converter;
     private final StubbingDescriptor from;
-
     @Getter
     @TestOnly
     private final StubbingDescriptor to;
@@ -62,6 +60,7 @@ public class ConvertStubbingAction extends AnAction {
      * Whether the conversion is caret- (single call chain) or selection-based (one or more call chains).
      */
     private final boolean isBulkMode;
+    private StubbingConverter converter;
 
     public ConvertStubbingAction(StubbingDescriptor from, StubbingDescriptor to, boolean isBulkMode) {
         super(to.getActionText());
