@@ -8,10 +8,10 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_SPY;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoMock;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoSpy;
-import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.PsiMethodUtil.hasAtLeastOneArgument;
-import static com.picimako.mockitools.PsiTypesUtil.evaluateClassObjectOrNewExpressionType;
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.hasAtLeastOneArgument;
+import static com.picimako.mockitools.util.EvaluationHelper.evaluateClassObjectOrNewExpressionType;
+import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;

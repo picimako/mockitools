@@ -9,7 +9,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_ZERO_INTERACT
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isExtraInterfaces;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isIgnoreStubs;
-import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
+import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import java.util.Optional;

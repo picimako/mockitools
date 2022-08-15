@@ -1,8 +1,10 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+/*
+ * Copyright 2022 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+ */
 
-package com.picimako.mockitools;
+package com.picimako.mockitools.util;
 
-import static com.picimako.mockitools.ClassObjectAccessUtil.getOperandType;
+import static com.picimako.mockitools.util.ClassObjectAccessUtil.getOperandType;
 
 import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiElement;
@@ -14,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Utility to work with PSI types.
  */
-public final class PsiTypesUtil {
+public final class EvaluationHelper {
 
     /**
      * Returns the type of the element.
@@ -49,7 +51,7 @@ public final class PsiTypesUtil {
         return expression instanceof PsiClassObjectAccessExpression ? ClassObjectAccessUtil.getOperandType(expression) : expression.getType();
     }
 
-    private PsiTypesUtil() {
+    private EvaluationHelper() {
         //Utility class
     }
 }

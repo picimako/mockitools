@@ -2,10 +2,10 @@
 
 package com.picimako.mockitools.intention;
 
-import static com.picimako.mockitools.PsiMethodUtil.containsCallToNonDefaultConstructor;
-import static com.picimako.mockitools.PsiMethodUtil.getArguments;
-import static com.picimako.mockitools.PsiMethodUtil.getMethodCallAtCaret;
-import static com.picimako.mockitools.PsiMethodUtil.getMethodCallAtCaretOrEmpty;
+import static com.picimako.mockitools.util.PsiMethodUtil.containsCallToNonDefaultConstructor;
+import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
+import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;
+import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaretOrEmpty;
 import static com.picimako.mockitools.inspection.consecutive.TypeConversionMethod.TO_CLASSES;
 import static com.picimako.mockitools.inspection.consecutive.TypeConversionMethod.TO_THROWABLES;
 

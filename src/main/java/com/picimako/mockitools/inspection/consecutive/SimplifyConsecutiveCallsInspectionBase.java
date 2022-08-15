@@ -2,8 +2,8 @@
 
 package com.picimako.mockitools.inspection.consecutive;
 
-import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
-import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
+import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
+import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import com.intellij.codeInspection.ProblemsHolder;

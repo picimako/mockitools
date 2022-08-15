@@ -5,7 +5,7 @@ package com.picimako.mockitools.intention.convert.verification.mockitoverify;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoVerify;
-import static com.picimako.mockitools.PsiMethodUtil.hasSubsequentMethodCall;
+import static com.picimako.mockitools.util.PsiMethodUtil.hasSubsequentMethodCall;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isBDDMockitoEnforced;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isMockitoEnforced;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;

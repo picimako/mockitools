@@ -4,7 +4,7 @@ package com.picimako.mockitools.inspection;
 
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockedStaticReset;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isReset;
-import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
+import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
 
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiMethodCallExpression;

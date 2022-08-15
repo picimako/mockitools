@@ -5,11 +5,11 @@ package com.picimako.mockitools.intention.convert.verification.mockitoverify;
 import static com.google.common.collect.Iterables.getLast;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
 import static com.picimako.mockitools.MockitoolsPsiUtil.MOCKITO_VERIFY;
-import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
-import static com.picimako.mockitools.PsiMethodUtil.get2ndArgument;
-import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
-import static com.picimako.mockitools.Ranges.endOffsetOf;
+import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
+import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
+import static com.picimako.mockitools.util.Ranges.endOffsetOf;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiExpressionStatement;

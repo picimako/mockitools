@@ -25,7 +25,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.TIMEOUT;
 import static com.picimako.mockitools.MockitoQualifiedNames.TIMES;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY;
 import static com.picimako.mockitools.MockitoQualifiedNames.WHEN;
-import static com.picimako.mockitools.PsiMethodUtil.getQualifier;
+import static com.picimako.mockitools.util.PsiMethodUtil.getQualifier;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;

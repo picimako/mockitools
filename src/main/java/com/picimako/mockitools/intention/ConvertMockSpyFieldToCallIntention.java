@@ -2,7 +2,7 @@
 
 package com.picimako.mockitools.intention;
 
-import static com.picimako.mockitools.ListPopupHelper.selectItemAndRun;
+import static com.picimako.mockitools.util.ListPopupHelper.selectItemAndRun;
 import static com.picimako.mockitools.MockitoQualifiedNames.ANSWER;
 import static com.picimako.mockitools.MockitoQualifiedNames.DEFAULT_ANSWER;
 import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
@@ -45,7 +45,7 @@ import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.util.IncorrectOperationException;
 import com.picimako.mockitools.MockitoQualifiedNames;
-import com.picimako.mockitools.PsiClassUtil;
+import com.picimako.mockitools.util.PsiClassUtil;
 import com.picimako.mockitools.intention.MethodRearranger.ClassMethodCellRenderer;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;

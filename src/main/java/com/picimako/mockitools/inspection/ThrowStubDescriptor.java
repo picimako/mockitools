@@ -2,9 +2,9 @@
 
 package com.picimako.mockitools.inspection;
 
-import static com.picimako.mockitools.PsiMethodUtil.findCallDownwardsInChain;
-import static com.picimako.mockitools.PsiMethodUtil.findCallUpwardsInChain;
-import static com.picimako.mockitools.PsiMethodUtil.isMethodCall;
+import static com.picimako.mockitools.util.PsiMethodUtil.findCallDownwardsInChain;
+import static com.picimako.mockitools.util.PsiMethodUtil.findCallUpwardsInChain;
+import static com.picimako.mockitools.util.PsiMethodUtil.isMethodCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.anyOf;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;

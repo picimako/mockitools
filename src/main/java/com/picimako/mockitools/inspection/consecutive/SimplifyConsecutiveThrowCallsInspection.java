@@ -9,8 +9,8 @@ import static com.picimako.mockitools.MockitoQualifiedNames.THEN_THROW;
 import static com.picimako.mockitools.MockitoQualifiedNames.WHEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.WILL_RETURN;
 import static com.picimako.mockitools.MockitoQualifiedNames.WILL_THROW;
-import static com.picimako.mockitools.PsiMethodUtil.containsCallToNonDefaultConstructor;
-import static com.picimako.mockitools.PsiMethodUtil.getArguments;
+import static com.picimako.mockitools.util.PsiMethodUtil.containsCallToNonDefaultConstructor;
+import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.DO_THROW_WHEN;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.GIVEN_WILL_THROW;
 import static com.picimako.mockitools.inspection.ThrowStubDescriptors.WHEN_THEN_THROW;
@@ -19,7 +19,7 @@ import static com.picimako.mockitools.inspection.consecutive.ConsecutiveCallAnal
 
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.PsiMethodUtil;
+import com.picimako.mockitools.util.PsiMethodUtil;
 import com.picimako.mockitools.inspection.consecutive.ConsecutiveCallAnalysisDescriptor.Builder;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,12 +1,16 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+/*
+ * Copyright 2022 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+ */
 
-package com.picimako.mockitools;
+package com.picimako.mockitools.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.picimako.mockitools.MockitoolsTestBase;
+import com.picimako.mockitools.util.PsiMethodUtil;
 
 /**
  * Functional test for {@link PsiMethodUtil}.

@@ -5,13 +5,13 @@ package com.picimako.mockitools.intention.convert.stub;
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
-import static com.picimako.mockitools.FromSelectionDataRetriever.collectStatementsInSelection;
+import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
 import static com.picimako.mockitools.MockitoQualifiedNames.GIVEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.THEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.WHEN;
-import static com.picimako.mockitools.PsiMethodUtil.getMethodCallAtCaret;
+import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;

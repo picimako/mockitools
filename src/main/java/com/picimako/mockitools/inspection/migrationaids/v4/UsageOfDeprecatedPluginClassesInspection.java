@@ -6,8 +6,8 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_CONFIGUR
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_PLUGINS_ANNOTATION_ENGINE;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_PLUGINS_INSTANTIATOR_PROVIDER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_PLUGINS_INSTANTIATOR_PROVIDER_2;
-import static com.picimako.mockitools.ModuleDependencyHelper.isMockitoCore2xOr3xAvailableInModuleOf;
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.util.ModuleDependencyHelper.isMockitoCore2xOr3xAvailableInModuleOf;
+import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;

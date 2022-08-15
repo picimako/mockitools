@@ -1,12 +1,14 @@
-//Copyright 2022 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+/*
+ * Copyright 2022 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+ */
 
-package com.picimako.mockitools;
+package com.picimako.mockitools.intention.convert;
 
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getNextSiblingOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
-import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.Ranges.isWithinSelection;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.util.Ranges.isWithinSelection;
 import static java.util.stream.Collectors.joining;
 
 import com.intellij.openapi.editor.Editor;

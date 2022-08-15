@@ -4,14 +4,14 @@ package com.picimako.mockitools.intention.convert.verification.inorderverify;
 
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
-import static com.picimako.mockitools.FromSelectionDataRetriever.collectStatementsInSelection;
+import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_STATIC;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_STATIC_VERIFICATION;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY;
 import static com.picimako.mockitools.MockitoolsPsiUtil.INORDER_VERIFY;
-import static com.picimako.mockitools.PsiMethodUtil.getMethodCallForIdentifier;
-import static com.picimako.mockitools.PsiMethodUtil.hasSubsequentMethodCall;
+import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallForIdentifier;
+import static com.picimako.mockitools.util.PsiMethodUtil.hasSubsequentMethodCall;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.IN_ORDER_VERIFY_NON_MOCKED_STATIC;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isBDDMockitoEnforced;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isMockitoEnforced;

@@ -2,11 +2,11 @@
 
 package com.picimako.mockitools.intention;
 
-import static com.picimako.mockitools.ClassObjectAccessUtil.resolveOperandType;
-import static com.picimako.mockitools.ListPopupHelper.selectItemAndRun;
-import static com.picimako.mockitools.PsiClassUtil.getParentClasses;
-import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.Ranges.endOffsetOf;
+import static com.picimako.mockitools.util.ClassObjectAccessUtil.resolveOperandType;
+import static com.picimako.mockitools.util.ListPopupHelper.selectItemAndRun;
+import static com.picimako.mockitools.util.PsiClassUtil.getParentClasses;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.util.Ranges.endOffsetOf;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.base.CaseFormat;

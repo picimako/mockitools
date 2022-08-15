@@ -2,7 +2,7 @@
 
 package com.picimako.mockitools.inspection;
 
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.LocalInspectionToolSession;

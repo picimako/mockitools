@@ -1,6 +1,8 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+/*
+ * Copyright 2022 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+ */
 
-package com.picimako.mockitools;
+package com.picimako.mockitools.util;
 
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 import static java.util.stream.Collectors.toList;

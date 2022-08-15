@@ -9,9 +9,9 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_VERIFICA
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_NO_MORE_INTERACTION;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_ZERO_INTERACTIONS;
-import static com.picimako.mockitools.PsiMethodUtil.getArguments;
-import static com.picimako.mockitools.PsiMethodUtil.getParentCall;
-import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
+import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
+import static com.picimako.mockitools.util.PsiMethodUtil.getParentCall;
+import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
 
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemsHolder;

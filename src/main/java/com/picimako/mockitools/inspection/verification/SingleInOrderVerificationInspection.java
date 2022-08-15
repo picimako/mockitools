@@ -4,7 +4,7 @@ package com.picimako.mockitools.inspection.verification;
 
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.IN_ORDER_VERIFY_NON_MOCKED_STATIC;
 import static com.picimako.mockitools.intention.convert.verification.bddmockitothen.ConvertFromBDDMockitoThenIntention.THEN_SHOULD_WITH_INORDER;
 import static com.siyeh.ig.psiutils.TypeUtils.typeEquals;

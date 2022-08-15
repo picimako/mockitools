@@ -2,7 +2,7 @@
 package com.picimako.mockitools.inspection.migrationaids.v4;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT_MATCHERS;
-import static com.picimako.mockitools.PsiMethodUtil.getQualifier;
+import static com.picimako.mockitools.util.PsiMethodUtil.getQualifier;
 import static com.siyeh.ig.psiutils.ImportUtils.addStaticImport;
 import static com.siyeh.ig.psiutils.ImportUtils.isAlreadyStaticallyImported;
 

@@ -4,7 +4,7 @@ package com.picimako.mockitools.intention.convert.stub;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoDoX;
-import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
+import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isBDDMockitoEnforced;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isMockitoEnforced;
 import static com.picimako.mockitools.CallChainEndsWith.ENDS_WITH_WHEN;

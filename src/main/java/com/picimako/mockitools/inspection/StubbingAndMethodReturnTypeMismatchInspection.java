@@ -7,8 +7,8 @@ import static com.picimako.mockitools.CallChainEndsWith.ENDS_WITH_GIVEN;
 import static com.picimako.mockitools.CallChainEndsWith.ENDS_WITH_WHEN;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isBDDMockitoWillX;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoDoX;
-import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
-import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
+import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
+import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 import static java.util.stream.Collectors.toSet;
 

@@ -2,9 +2,9 @@
 
 package com.picimako.mockitools.intention.convert.stub;
 
-import static com.picimako.mockitools.FromSelectionDataRetriever.collectStatementsInSelection;
-import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
-import static com.picimako.mockitools.PsiMethodUtil.getMethodCallAtCaret;
+import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
+import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
+import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;
 
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;

@@ -7,7 +7,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE;
 import static com.picimako.mockitools.MockitoolsPsiUtil.INORDER_VERIFY;
-import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
+import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;

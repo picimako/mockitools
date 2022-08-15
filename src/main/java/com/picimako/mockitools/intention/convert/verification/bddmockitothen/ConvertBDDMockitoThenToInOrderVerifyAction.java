@@ -2,13 +2,13 @@
 
 package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 
-import static com.picimako.mockitools.FromSelectionDataRetriever.collectMockObjects;
-import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
-import static com.picimako.mockitools.PsiMethodUtil.get2ndArgument;
-import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.PsiMethodUtil.hasArgument;
-import static com.picimako.mockitools.PsiMethodUtil.hasTwoArguments;
-import static com.picimako.mockitools.Ranges.endOffsetOf;
+import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectMockObjects;
+import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
+import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.hasArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.hasTwoArguments;
+import static com.picimako.mockitools.util.Ranges.endOffsetOf;
 import static com.picimako.mockitools.intention.convert.verification.bddmockitothen.ConvertFromBDDMockitoThenIntention.THEN_SHOULD_WITHOUT_INORDER;
 
 import com.intellij.openapi.project.Project;

@@ -4,12 +4,12 @@ package com.picimako.mockitools.inspection;
 
 import static com.intellij.codeInsight.AnnotationUtil.arrayAttributeValues;
 import static com.intellij.psi.impl.PsiImplUtil.findAttributeValue;
-import static com.picimako.mockitools.ClassObjectAccessUtil.getOperandType;
+import static com.picimako.mockitools.util.ClassObjectAccessUtil.getOperandType;
 import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isExtraInterfaces;
-import static com.picimako.mockitools.PsiMethodUtil.getArguments;
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
+import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;

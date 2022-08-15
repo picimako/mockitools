@@ -9,7 +9,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.TIMES;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isAfter;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isCalls;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isTimeout;
-import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 

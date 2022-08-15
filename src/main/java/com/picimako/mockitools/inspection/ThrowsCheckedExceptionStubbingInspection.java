@@ -2,12 +2,12 @@
 
 package com.picimako.mockitools.inspection;
 
-import static com.picimako.mockitools.ExceptionUtil.isCheckedException;
-import static com.picimako.mockitools.PointersUtil.toPointer;
-import static com.picimako.mockitools.PsiMethodUtil.getArguments;
-import static com.picimako.mockitools.PsiMethodUtil.getSubsequentMethodCall;
-import static com.picimako.mockitools.PsiTypesUtil.evaluateClassObjectOrNewExpressionType;
-import static com.picimako.mockitools.PsiTypesUtil.evaluateType;
+import static com.picimako.mockitools.util.ExceptionUtil.isCheckedException;
+import static com.picimako.mockitools.util.PointersUtil.toPointer;
+import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
+import static com.picimako.mockitools.util.PsiMethodUtil.getSubsequentMethodCall;
+import static com.picimako.mockitools.util.EvaluationHelper.evaluateClassObjectOrNewExpressionType;
+import static com.picimako.mockitools.util.EvaluationHelper.evaluateType;
 
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemsHolder;
@@ -22,7 +22,7 @@ import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.picimako.mockitools.PsiMethodUtil;
+import com.picimako.mockitools.util.PsiMethodUtil;
 import com.picimako.mockitools.StubType;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.InspectionGadgetsFix;

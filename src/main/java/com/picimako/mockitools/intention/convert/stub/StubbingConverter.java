@@ -3,11 +3,11 @@
 package com.picimako.mockitools.intention.convert.stub;
 
 import static com.google.common.collect.Iterables.getLast;
-import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
-import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.PsiMethodUtil.getQualifier;
-import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
-import static com.picimako.mockitools.Ranges.endOffsetOf;
+import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.getQualifier;
+import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
+import static com.picimako.mockitools.util.Ranges.endOffsetOf;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import com.intellij.openapi.command.WriteCommandAction;
@@ -17,7 +17,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.PsiClassUtil;
+import com.picimako.mockitools.util.PsiClassUtil;
 import com.picimako.mockitools.StubType;
 
 import java.util.List;

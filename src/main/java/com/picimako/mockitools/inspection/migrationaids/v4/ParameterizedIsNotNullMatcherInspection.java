@@ -8,9 +8,9 @@ import static com.picimako.mockitools.MockitoQualifiedNames.MATCHERS;
 import static com.picimako.mockitools.MockitoQualifiedNames.NOT_NULL;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT_MATCHERS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MATCHERS;
-import static com.picimako.mockitools.PsiMethodUtil.deleteArguments;
-import static com.picimako.mockitools.PsiMethodUtil.getParentCall;
-import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
+import static com.picimako.mockitools.util.PsiMethodUtil.deleteArguments;
+import static com.picimako.mockitools.util.PsiMethodUtil.getParentCall;
+import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import com.intellij.codeInspection.ProblemDescriptor;
@@ -21,7 +21,7 @@ import com.intellij.psi.PsiMethodCallExpression;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
 
-import com.picimako.mockitools.PsiMethodUtil;
+import com.picimako.mockitools.util.PsiMethodUtil;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 
 /**

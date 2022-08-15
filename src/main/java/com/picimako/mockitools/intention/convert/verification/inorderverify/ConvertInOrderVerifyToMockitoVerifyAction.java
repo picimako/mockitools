@@ -3,11 +3,11 @@
 package com.picimako.mockitools.intention.convert.verification.inorderverify;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
-import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
+import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.PsiClassUtil;
+import com.picimako.mockitools.util.PsiClassUtil;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationActionBase;
 
 /**

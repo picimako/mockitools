@@ -4,7 +4,7 @@ package com.picimako.mockitools.inspection.captor;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_CAPTOR;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isOfTypeArgumentCaptor;
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemDescriptor;

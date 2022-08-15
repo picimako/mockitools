@@ -8,10 +8,10 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_S
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO_NEVER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isTimes;
-import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromLast;
-import static com.picimako.mockitools.PsiMethodUtil.get2ndArgument;
-import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromLast;
+import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;

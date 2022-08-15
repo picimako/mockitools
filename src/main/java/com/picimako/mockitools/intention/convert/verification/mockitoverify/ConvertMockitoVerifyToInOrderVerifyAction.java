@@ -2,8 +2,8 @@
 
 package com.picimako.mockitools.intention.convert.verification.mockitoverify;
 
-import static com.picimako.mockitools.FromSelectionDataRetriever.collectMockObjects;
-import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
+import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectMockObjects;
+import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiExpressionStatement;

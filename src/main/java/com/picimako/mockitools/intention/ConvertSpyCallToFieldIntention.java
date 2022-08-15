@@ -2,12 +2,12 @@
 
 package com.picimako.mockitools.intention;
 
-import static com.picimako.mockitools.ClassObjectAccessUtil.getOperandType;
+import static com.picimako.mockitools.util.ClassObjectAccessUtil.getOperandType;
 import static com.picimako.mockitools.MockableTypesUtil.isMockableTypeInAnyWay;
 import static com.picimako.mockitools.MockitoQualifiedNames.SPY;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoSpy;
-import static com.picimako.mockitools.PsiMethodUtil.getMethodCallAtCaretOrEmpty;
-import static com.picimako.mockitools.PsiMethodUtil.hasOneArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaretOrEmpty;
+import static com.picimako.mockitools.util.PsiMethodUtil.hasOneArgument;
 
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.editor.Editor;
@@ -22,7 +22,7 @@ import com.intellij.psi.PsiNewExpression;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.picimako.mockitools.MockitoQualifiedNames;
-import com.picimako.mockitools.PsiMethodUtil;
+import com.picimako.mockitools.util.PsiMethodUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;

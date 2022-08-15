@@ -8,8 +8,8 @@ import static com.picimako.mockitools.MockitoolsPsiUtil.isAdditionalMatchers;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isBDDMockitoGiven;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoDoXWhen;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoWhen;
-import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.PsiMethodUtil.hasSubsequentMethodCall;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.hasSubsequentMethodCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 
 import com.intellij.codeInspection.ProblemsHolder;

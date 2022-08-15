@@ -3,7 +3,7 @@
 package com.picimako.mockitools.intention;
 
 import static com.google.common.collect.Iterables.getLast;
-import static com.picimako.mockitools.ClassObjectAccessUtil.getOperandType;
+import static com.picimako.mockitools.util.ClassObjectAccessUtil.getOperandType;
 import static com.picimako.mockitools.MockableTypesUtil.isMockableTypeInAnyWay;
 import static com.picimako.mockitools.MockitoQualifiedNames.ANSWER;
 import static com.picimako.mockitools.MockitoQualifiedNames.DEFAULT_ANSWER;
@@ -19,13 +19,13 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK_SET
 import static com.picimako.mockitools.MockitoQualifiedNames.SERIALIZABLE;
 import static com.picimako.mockitools.MockitoQualifiedNames.STUB_ONLY;
 import static com.picimako.mockitools.MockitoolsPsiUtil.MOCKITO_MOCK;
-import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromLast;
-import static com.picimako.mockitools.PsiMethodUtil.get2ndArgument;
-import static com.picimako.mockitools.PsiMethodUtil.getArguments;
-import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.PsiMethodUtil.getMethodCallAtCaretOrEmpty;
-import static com.picimako.mockitools.PsiMethodUtil.hasOneArgument;
-import static com.picimako.mockitools.PsiMethodUtil.hasTwoArguments;
+import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromLast;
+import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaretOrEmpty;
+import static com.picimako.mockitools.util.PsiMethodUtil.hasOneArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.hasTwoArguments;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
@@ -46,7 +46,7 @@ import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.picimako.mockitools.MockitoQualifiedNames;
-import com.picimako.mockitools.PsiClassUtil;
+import com.picimako.mockitools.util.PsiClassUtil;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
 
