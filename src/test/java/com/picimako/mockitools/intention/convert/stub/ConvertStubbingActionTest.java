@@ -3,6 +3,7 @@
 package com.picimako.mockitools.intention.convert.stub;
 
 import com.picimako.mockitools.MockitoolsActionTestBase;
+import com.picimako.mockitools.StubbingApproach;
 
 /**
  * Integration test for {@link ConvertStubbingAction}.
@@ -10,7 +11,7 @@ import com.picimako.mockitools.MockitoolsActionTestBase;
 public class ConvertStubbingActionTest extends MockitoolsActionTestBase {
 
     public void testConvertsFromMockitoWhen() {
-        checkAction(() -> new ConvertStubbingAction(ConvertStubbingAction.MOCKITO_WHEN, ConvertStubbingAction.MOCKITO_DO, false),
+        checkAction(() -> new ConvertStubbingAction(StubbingApproach.MOCKITO_WHEN, StubbingApproach.MOCKITO_DO_X, false),
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class ConversionTest {\n" +
@@ -40,7 +41,7 @@ public class ConvertStubbingActionTest extends MockitoolsActionTestBase {
     }
 
     public void testConvertsFromMockitoWhenInBulk() {
-        checkAction(() -> new ConvertStubbingAction(ConvertStubbingAction.MOCKITO_WHEN, ConvertStubbingAction.MOCKITO_DO, true),
+        checkAction(() -> new ConvertStubbingAction(StubbingApproach.MOCKITO_WHEN, StubbingApproach.MOCKITO_DO_X, true),
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class ConversionTest {\n" +
@@ -72,7 +73,7 @@ public class ConvertStubbingActionTest extends MockitoolsActionTestBase {
     }
 
     public void testConvertsFromBDDMockitoGiven() {
-        checkAction(() -> new ConvertStubbingAction(ConvertStubbingAction.BDDMOCKITO_GIVEN, ConvertStubbingAction.MOCKITO_DO, false),
+        checkAction(() -> new ConvertStubbingAction(StubbingApproach.BDDMOCKITO_GIVEN, StubbingApproach.MOCKITO_DO_X, false),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -104,7 +105,7 @@ public class ConvertStubbingActionTest extends MockitoolsActionTestBase {
     }
 
     public void testConvertsFromBDDMockitoGiveninBulk() {
-        checkAction(() -> new ConvertStubbingAction(ConvertStubbingAction.BDDMOCKITO_GIVEN, ConvertStubbingAction.MOCKITO_DO, true),
+        checkAction(() -> new ConvertStubbingAction(StubbingApproach.BDDMOCKITO_GIVEN, StubbingApproach.MOCKITO_DO_X, true),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -138,7 +139,7 @@ public class ConvertStubbingActionTest extends MockitoolsActionTestBase {
     }
 
     public void testConvertsFromBDDMockitoWillX() {
-        checkAction(() -> new ConvertStubbingAction(ConvertStubbingAction.BDDMOCKITO_WILL, ConvertStubbingAction.MOCKITO_DO, false),
+        checkAction(() -> new ConvertStubbingAction(StubbingApproach.BDDMOCKITO_WILL_X, StubbingApproach.MOCKITO_DO_X, false),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -170,7 +171,7 @@ public class ConvertStubbingActionTest extends MockitoolsActionTestBase {
     }
 
     public void testConvertsFromBDDMockitoWillXInBulk() {
-        checkAction(() -> new ConvertStubbingAction(ConvertStubbingAction.BDDMOCKITO_WILL, ConvertStubbingAction.MOCKITO_DO, true),
+        checkAction(() -> new ConvertStubbingAction(StubbingApproach.BDDMOCKITO_WILL_X, StubbingApproach.MOCKITO_DO_X, true),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +

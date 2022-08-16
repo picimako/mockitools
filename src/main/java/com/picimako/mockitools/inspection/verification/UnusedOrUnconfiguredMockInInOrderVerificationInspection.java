@@ -84,53 +84,53 @@ public class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loc
 
                     super.visitLocalVariable(variable);
                 }
-
-                /**
-                 * Returns whether all InOrder references in the argument areInOrder verifications, and not references
-                 * passed into method arguments, or something else.
-                 * <p>
-                 * This is needed, so that we only take into consideration actual verifications when determining where
-                 * the related mock objects are used.
-                 */
-                private boolean areAllVerifications(PsiReference[] inOrderRefs) {
-                    return Arrays.stream(inOrderRefs).allMatch(ref -> {
-                        if (ref instanceof PsiReferenceExpression) {
-                            var verifyOrShould = getParentOfType((PsiReferenceExpression) ref, PsiMethodCallExpression.class);
-                            return IN_ORDER_VERIFY_NON_MOCKED_STATIC.matches(verifyOrShould) || THEN_SHOULD_WITH_INORDER.matches(verifyOrShould);
-                        } else return false;
-                    });
-                }
-
-                /**
-                 * Collects all mock object expressions from the argument InOrder verifications.
-                 */
-                private List<PsiExpression> collectMocksInVerifications(PsiReference[] inOrderRefs) {
-                    List<PsiExpression> mocksUsed = null;
-
-                    for (var ref : inOrderRefs) {
-                        if (ref instanceof PsiReferenceExpression) {
-                            var verifyOrShould = getParentOfType((PsiReferenceExpression) ref, PsiMethodCallExpression.class);
-                            if (IN_ORDER_VERIFY_NON_MOCKED_STATIC.matches(verifyOrShould)) {
-                                if (mocksUsed == null) mocksUsed = new SmartList<>();
-                                saveMockFrom(verifyOrShould, mocksUsed);
-                            } else if (THEN_SHOULD_WITH_INORDER.matches(verifyOrShould)) {
-                                if (mocksUsed == null) mocksUsed = new SmartList<>();
-                                saveMockFrom(/*then*/findChildOfType(verifyOrShould, PsiMethodCallExpression.class), mocksUsed);
-                            }
-                        }
-                    }
-                    return mocksUsed != null ? mocksUsed : Collections.emptyList();
-                }
-
-                /**
-                 * Stores the mock object used in the argument verification call, for later comparison.
-                 */
-                private void saveMockFrom(PsiMethodCallExpression verifyOrThen, @NotNull List<PsiExpression> mocksUsed) {
-                    var mock = getFirstArgument(verifyOrThen);
-                    if (!mocksUsed.contains(mock)) mocksUsed.add(mock);
-                }
             };
         }
         return PsiElementVisitor.EMPTY_VISITOR;
+    }
+
+    /**
+     * Returns whether all InOrder references in the argument areInOrder verifications, and not references
+     * passed into method arguments, or something else.
+     * <p>
+     * This is needed, so that we only take into consideration actual verifications when determining where
+     * the related mock objects are used.
+     */
+    private boolean areAllVerifications(PsiReference[] inOrderRefs) {
+        return Arrays.stream(inOrderRefs).allMatch(ref -> {
+            if (ref instanceof PsiReferenceExpression) {
+                var verifyOrShould = getParentOfType((PsiReferenceExpression) ref, PsiMethodCallExpression.class);
+                return IN_ORDER_VERIFY_NON_MOCKED_STATIC.matches(verifyOrShould) || THEN_SHOULD_WITH_INORDER.matches(verifyOrShould);
+            } else return false;
+        });
+    }
+
+    /**
+     * Collects all mock object expressions from the argument InOrder verifications.
+     */
+    private List<PsiExpression> collectMocksInVerifications(PsiReference[] inOrderRefs) {
+        List<PsiExpression> mocksUsed = null;
+
+        for (var ref : inOrderRefs) {
+            if (ref instanceof PsiReferenceExpression) {
+                var verifyOrShould = getParentOfType((PsiReferenceExpression) ref, PsiMethodCallExpression.class);
+                if (IN_ORDER_VERIFY_NON_MOCKED_STATIC.matches(verifyOrShould)) {
+                    if (mocksUsed == null) mocksUsed = new SmartList<>();
+                    saveMockFrom(verifyOrShould, mocksUsed);
+                } else if (THEN_SHOULD_WITH_INORDER.matches(verifyOrShould)) {
+                    if (mocksUsed == null) mocksUsed = new SmartList<>();
+                    saveMockFrom(/*then*/findChildOfType(verifyOrShould, PsiMethodCallExpression.class), mocksUsed);
+                }
+            }
+        }
+        return mocksUsed != null ? mocksUsed : Collections.emptyList();
+    }
+
+    /**
+     * Stores the mock object used in the argument verification call, for later comparison.
+     */
+    private void saveMockFrom(PsiMethodCallExpression verifyOrThen, @NotNull List<PsiExpression> mocksUsed) {
+        var mock = getFirstArgument(verifyOrThen);
+        if (!mocksUsed.contains(mock)) mocksUsed.add(mock);
     }
 }

@@ -22,7 +22,7 @@ import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.picimako.mockitools.util.PsiMethodUtil;
+import com.picimako.mockitools.StubbingApproach;
 import com.picimako.mockitools.StubType;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.InspectionGadgetsFix;
@@ -54,10 +54,10 @@ public class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInsp
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
-        ThrowStubDescriptors.ALL_DESCRIPTORS.stream()
-            .filter(descriptor -> descriptor.isApplicableTo(expression))
+        Arrays.stream(StubbingApproach.values())
+            .filter(approach -> approach.getExceptionStubber().isApplicableTo(expression))
             .findFirst()
-            .ifPresent(descriptor -> checkAndRegister(descriptor, expression, holder));
+            .ifPresent(approach -> checkAndRegister(approach, expression, holder));
     }
 
     /**
@@ -70,14 +70,13 @@ public class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInsp
      * The return value signals whether the descriptor matched the current method call expression.
      * It helps shorten the code in {@link #checkMethodCallExpression(PsiMethodCallExpression, ProblemsHolder)}.
      */
-    private void checkAndRegister(ThrowStubDescriptor descriptor, PsiMethodCallExpression expression, ProblemsHolder holder) {
+    private void checkAndRegister(StubbingApproach approach, PsiMethodCallExpression expression, ProblemsHolder holder) {
         var stubbedExceptions = getArguments(expression);
         if (stubbedExceptions.length == 0) return;
 
-        descriptor.findStubbingCallInChain(expression) //e.g. when(mockObject.doSomething()) / given(mockObject).doSomething()
-            .map(PsiMethodUtil::getFirstArgument) //mockObject.doSomething() / mockObject
-            .filter(descriptor::isValidStubbingArgument)
-            .map(stub -> resolveStubbedMethod(stub, descriptor.stubType)) //doSomething()
+        //e.g. 'mockObject.doSomething()' from either of 'when(mockObject.doSomething())' or 'given(mockObject).doSomething()'
+        approach.getStubbedMethodCallAnywhere(expression)
+            .map(stub -> resolveStubbedMethod(stub, approach.stubType)) //doSomething()
             .ifPresent(stubbedMethod -> {
                 var exceptionTypesInThrowsClause = stubbedMethod.getThrowsList().getReferencedTypes();
                 for (var stubbedException : stubbedExceptions) {

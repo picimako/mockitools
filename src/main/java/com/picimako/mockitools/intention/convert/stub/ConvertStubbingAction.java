@@ -6,11 +6,6 @@ import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAct
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
-import static com.picimako.mockitools.MockitoQualifiedNames.GIVEN;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
-import static com.picimako.mockitools.MockitoQualifiedNames.THEN;
-import static com.picimako.mockitools.MockitoQualifiedNames.WHEN;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;
 
 import com.intellij.openapi.actionSystem.AnAction;
@@ -23,7 +18,7 @@ import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.StubType;
+import com.picimako.mockitools.StubbingApproach;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,35 +30,25 @@ import java.util.Optional;
 /**
  * Action to convert between the different stubbing approaches.
  * <p>
- * It takes two {@link StubbingDescriptor}s as the source and target approaches, and converts a single call chain,
+ * It takes two {@link StubbingApproach}es as the source and target approaches, and converts a single call chain,
  * or multiple ones.
  *
  * @see StubbingConverter
  * @since 0.6.0
  */
 public class ConvertStubbingAction extends AnAction {
-    public static final StubbingDescriptor MOCKITO_WHEN =
-        new StubbingDescriptor("Mockito.when()", ORG_MOCKITO_MOCKITO, "Mockito", THEN, WHEN, StubType.STUBBING);
-    public static final StubbingDescriptor MOCKITO_DO =
-        new StubbingDescriptor("Mockito.do*()", ORG_MOCKITO_MOCKITO, "Mockito", "do", WHEN, StubType.STUBBER);
-
-    public static final StubbingDescriptor BDDMOCKITO_GIVEN =
-        new StubbingDescriptor("BDDMockito.given()", ORG_MOCKITO_BDDMOCKITO, "BDDMockito", "will", GIVEN, StubType.STUBBING);
-    public static final StubbingDescriptor BDDMOCKITO_WILL =
-        new StubbingDescriptor("BDDMockito.will*()", ORG_MOCKITO_BDDMOCKITO, "BDDMockito", "will", GIVEN, StubType.STUBBER);
-
-    private final StubbingDescriptor from;
+    private final StubbingApproach from;
     @Getter
     @TestOnly
-    private final StubbingDescriptor to;
+    private final StubbingApproach to;
     /**
      * Whether the conversion is caret- (single call chain) or selection-based (one or more call chains).
      */
     private final boolean isBulkMode;
     private StubbingConverter converter;
 
-    public ConvertStubbingAction(StubbingDescriptor from, StubbingDescriptor to, boolean isBulkMode) {
-        super(to.getActionText());
+    public ConvertStubbingAction(StubbingApproach from, StubbingApproach to, boolean isBulkMode) {
+        super(to.presentableText);
         this.from = from;
         this.to = to;
         this.isBulkMode = isBulkMode;

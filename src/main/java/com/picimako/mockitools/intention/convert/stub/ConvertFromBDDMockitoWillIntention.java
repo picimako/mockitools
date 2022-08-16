@@ -3,21 +3,17 @@
 package com.picimako.mockitools.intention.convert.stub;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
-import static com.picimako.mockitools.MockitoolsPsiUtil.isBDDMockitoWillX;
-import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isBDDMockitoEnforced;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isMockitoEnforced;
-import static com.picimako.mockitools.CallChainEndsWith.ENDS_WITH_GIVEN;
-import static com.picimako.mockitools.intention.convert.stub.ConvertStubbingAction.BDDMOCKITO_GIVEN;
-import static com.picimako.mockitools.intention.convert.stub.ConvertStubbingAction.MOCKITO_DO;
-import static com.picimako.mockitools.intention.convert.stub.ConvertStubbingAction.MOCKITO_WHEN;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_WILL;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_WILL_DO_NOTHING;
+import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.picimako.mockitools.StubbingApproach;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +34,7 @@ public class ConvertFromBDDMockitoWillIntention extends ConvertStubbingIntention
 
     @Override
     public boolean isAvailableFor(PsiMethodCallExpression methodCall) {
-        return isBDDMockitoWillX(methodCall) && ENDS_WITH_GIVEN.analyze(collectCallsInChainFromFirst(methodCall));
+        return StubbingApproach.BDDMOCKITO_WILL_X.isAnyOfStubs(methodCall) && StubbingApproach.BDDMOCKITO_WILL_X.isValid(collectCallsInChainFromFirst(methodCall));
     }
 
     @Override
@@ -47,12 +43,12 @@ public class ConvertFromBDDMockitoWillIntention extends ConvertStubbingIntention
         var actions = new ArrayList<AnAction>(3);
         if (!isBDDMockitoEnforced(file)) {
             if (doAllCallChainsMatch(DOESNT_CONTAIN_WILL, isBulkMode, editor, file))
-                actions.add(new ConvertStubbingAction(ConvertStubbingAction.BDDMOCKITO_WILL, MOCKITO_DO, isBulkMode));
+                actions.add(new ConvertStubbingAction(StubbingApproach.BDDMOCKITO_WILL_X, StubbingApproach.MOCKITO_DO_X, isBulkMode));
             if (doAllCallChainsMatch(DOESNT_CONTAIN_WILL_DO_NOTHING, isBulkMode, editor, file))
-                actions.add(new ConvertStubbingAction(ConvertStubbingAction.BDDMOCKITO_WILL, MOCKITO_WHEN, isBulkMode));
+                actions.add(new ConvertStubbingAction(StubbingApproach.BDDMOCKITO_WILL_X, StubbingApproach.MOCKITO_WHEN, isBulkMode));
         }
         if (!isMockitoEnforced(file) && doAllCallChainsMatch(DOESNT_CONTAIN_WILL_DO_NOTHING, isBulkMode, editor, file)) {
-            actions.add(new ConvertStubbingAction(ConvertStubbingAction.BDDMOCKITO_WILL, BDDMOCKITO_GIVEN, isBulkMode));
+            actions.add(new ConvertStubbingAction(StubbingApproach.BDDMOCKITO_WILL_X, StubbingApproach.BDDMOCKITO_GIVEN, isBulkMode));
         }
         return !actions.isEmpty() ? actions : NO_ACTION_AVAILABLE;
     }

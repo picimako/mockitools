@@ -5,7 +5,6 @@ package com.picimako.mockitools;
 import static com.picimako.mockitools.MockitoQualifiedNames.AFTER;
 import static com.picimako.mockitools.MockitoQualifiedNames.CALLS;
 import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
-import static com.picimako.mockitools.MockitoQualifiedNames.GIVEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.IGNORE_STUBS;
 import static com.picimako.mockitools.MockitoQualifiedNames.MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ADDITIONAL_MATCHERS;
@@ -17,14 +16,12 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MATCHERS
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_STATIC;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK_SETTINGS;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_STUBBING_STUBBER;
 import static com.picimako.mockitools.MockitoQualifiedNames.RESET;
 import static com.picimako.mockitools.MockitoQualifiedNames.SPY;
 import static com.picimako.mockitools.MockitoQualifiedNames.THEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.TIMEOUT;
 import static com.picimako.mockitools.MockitoQualifiedNames.TIMES;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY;
-import static com.picimako.mockitools.MockitoQualifiedNames.WHEN;
 import static com.picimako.mockitools.util.PsiMethodUtil.getQualifier;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
@@ -49,14 +46,7 @@ public final class MockitoolsPsiUtil {
 
     public static final CallMatcher.Simple MOCKITO_MOCK = staticCall(ORG_MOCKITO_MOCKITO, MOCK);
     private static final CallMatcher MOCKITO_SPY = staticCall(ORG_MOCKITO_MOCKITO, SPY).parameterCount(1);
-    private static final CallMatcher BDDMOCKITO_GIVEN = staticCall(ORG_MOCKITO_BDDMOCKITO, GIVEN).parameterCount(1);
-    private static final CallMatcher BDDMOCKITO_WILL_X =
-        staticCall(ORG_MOCKITO_BDDMOCKITO, "will", "willReturn", "willThrow", "willAnswer", "willCallRealMethod", "willDoNothing");
     private static final CallMatcher BDDMOCKITO_THEN = staticCall(ORG_MOCKITO_BDDMOCKITO, THEN).parameterCount(1);
-    private static final CallMatcher MOCKITO_WHEN = staticCall(ORG_MOCKITO_MOCKITO, WHEN).parameterCount(1);
-    private static final CallMatcher MOCKITO_DO_X_WHEN = instanceCall(ORG_MOCKITO_STUBBING_STUBBER, WHEN);
-    private static final CallMatcher MOCKITO_DO_X =
-        staticCall(ORG_MOCKITO_MOCKITO, "doReturn", "doThrow", "doAnswer", "doCallRealMethod", "doNothing");
     private static final CallMatcher MOCKITO_TIMES = staticCall(ORG_MOCKITO_MOCKITO, TIMES).parameterCount(1);
     private static final CallMatcher MOCKITO_CALLS = staticCall(ORG_MOCKITO_MOCKITO, CALLS).parameterCount(1);
     private static final CallMatcher MOCKITO_AFTER = staticCall(ORG_MOCKITO_MOCKITO, AFTER).parameterCount(1);
@@ -90,16 +80,6 @@ public final class MockitoolsPsiUtil {
     }
 
     /**
-     * Gets whether the argument expression is an {@code org.mockito.Mockito.when} method call.
-     *
-     * @param expression the method call expression
-     * @return true if the method is a Mockito.when, false otherwise
-     */
-    public static boolean isMockitoWhen(PsiMethodCallExpression expression) {
-        return MOCKITO_WHEN.matches(expression);
-    }
-
-    /**
      * Gets whether the argument expression is an {@code org.mockito.Mockito.verify} method call.
      *
      * @param expression the method call expression
@@ -107,26 +87,6 @@ public final class MockitoolsPsiUtil {
      */
     public static boolean isMockitoVerify(PsiMethodCallExpression expression) {
         return MOCKITO_VERIFY.matches(expression);
-    }
-
-    /**
-     * Gets whether the argument expression is an {@code org.mockito.BDDMockito.given} method call.
-     *
-     * @param expression the method call expression
-     * @return true if the method is a BDDMockito.given, false otherwise
-     */
-    public static boolean isBDDMockitoGiven(PsiMethodCallExpression expression) {
-        return BDDMOCKITO_GIVEN.matches(expression);
-    }
-
-    /**
-     * Gets whether the argument expression is an {@code org.mockito.BDDMockito.will*} method call.
-     *
-     * @param expression the method call expression
-     * @return true if the method is a BDDMockito.will*, false otherwise
-     */
-    public static boolean isBDDMockitoWillX(PsiMethodCallExpression expression) {
-        return BDDMOCKITO_WILL_X.matches(expression);
     }
 
     /**
@@ -167,28 +127,6 @@ public final class MockitoolsPsiUtil {
         return staticCall(methodFqn, getMethodName(expression))
             .parameterCount(expression.getArgumentList().getExpressionCount()) //matchers can have various numbers of arguments, so lets match with the current call's parameter count
             .matches(expression);
-    }
-
-    /**
-     * Gets whether the argument expression is an {@code org.mockito.Mockito.do...().when} method call.
-     * <p>
-     * The corresponding {@code when} method is defined in {@code org.mockito.stubbing.Stubber} which is related to the {@code do...()} family stubbing.
-     *
-     * @param expression the method call expression
-     * @return true if the method is a Mockito.do...().when, false otherwise
-     */
-    public static boolean isMockitoDoXWhen(PsiMethodCallExpression expression) {
-        return MOCKITO_DO_X_WHEN.matches(expression);
-    }
-
-    /**
-     * Gets whether the argument expression is an {@code org.mockito.Mockito.do*} method call.
-     *
-     * @param expression the method call expression
-     * @return true if the method is a Mockito.do*, false otherwise
-     */
-    public static boolean isMockitoDoX(PsiMethodCallExpression expression) {
-        return MOCKITO_DO_X.matches(expression);
     }
 
     /**

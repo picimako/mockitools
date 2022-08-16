@@ -4,20 +4,17 @@ package com.picimako.mockitools.intention.convert.stub;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.GIVEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
-import static com.picimako.mockitools.MockitoolsPsiUtil.isBDDMockitoGiven;
-import static com.picimako.mockitools.util.PsiMethodUtil.hasSubsequentMethodCall;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isBDDMockitoEnforced;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isMockitoEnforced;
-import static com.picimako.mockitools.intention.convert.stub.ConvertStubbingAction.BDDMOCKITO_WILL;
-import static com.picimako.mockitools.intention.convert.stub.ConvertStubbingAction.MOCKITO_DO;
-import static com.picimako.mockitools.intention.convert.stub.ConvertStubbingAction.MOCKITO_WHEN;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_WILL;
+import static com.picimako.mockitools.util.PsiMethodUtil.hasSubsequentMethodCall;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.picimako.mockitools.StubbingApproach;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +37,7 @@ public class ConvertFromBDDMockitoGivenIntention extends ConvertStubbingIntentio
     @Override
     public boolean isAvailableFor(PsiMethodCallExpression methodCall) {
         return GIVEN.equals(getMethodName(methodCall))
-            && isBDDMockitoGiven(methodCall)
+            && StubbingApproach.BDDMOCKITO_GIVEN.isStubbedBy(methodCall)
             && hasSubsequentMethodCall(methodCall);
     }
 
@@ -50,12 +47,12 @@ public class ConvertFromBDDMockitoGivenIntention extends ConvertStubbingIntentio
         var actions = new ArrayList<AnAction>(3);
         if (!isBDDMockitoEnforced(file)) {
             if (doAllCallChainsMatch(DOESNT_CONTAIN_WILL, isBulkMode, editor, file)) {
-                actions.add(new ConvertStubbingAction(ConvertStubbingAction.BDDMOCKITO_GIVEN, MOCKITO_DO, isBulkMode));
+                actions.add(new ConvertStubbingAction(StubbingApproach.BDDMOCKITO_GIVEN, StubbingApproach.MOCKITO_DO_X, isBulkMode));
             }
-            actions.add(new ConvertStubbingAction(ConvertStubbingAction.BDDMOCKITO_GIVEN, MOCKITO_WHEN, isBulkMode));
+            actions.add(new ConvertStubbingAction(StubbingApproach.BDDMOCKITO_GIVEN, StubbingApproach.MOCKITO_WHEN, isBulkMode));
         }
         if (!isMockitoEnforced(file)) {
-            actions.add(new ConvertStubbingAction(ConvertStubbingAction.BDDMOCKITO_GIVEN, BDDMOCKITO_WILL, isBulkMode));
+            actions.add(new ConvertStubbingAction(StubbingApproach.BDDMOCKITO_GIVEN, StubbingApproach.BDDMOCKITO_WILL_X, isBulkMode));
         }
         return actions;
     }

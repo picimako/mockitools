@@ -2,11 +2,8 @@
 
 package com.picimako.mockitools.inspection;
 
-import static com.google.common.collect.Iterables.getLast;
-import static com.picimako.mockitools.CallChainEndsWith.ENDS_WITH_GIVEN;
-import static com.picimako.mockitools.CallChainEndsWith.ENDS_WITH_WHEN;
-import static com.picimako.mockitools.MockitoolsPsiUtil.isBDDMockitoWillX;
-import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoDoX;
+import static com.picimako.mockitools.StubbingApproach.BDDMOCKITO_WILL_X;
+import static com.picimako.mockitools.StubbingApproach.MOCKITO_DO_X;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
@@ -17,7 +14,7 @@ import com.intellij.psi.PsiCall;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiType;
-import com.picimako.mockitools.CallChainEndsWith;
+import com.picimako.mockitools.StubbingApproach;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,23 +39,23 @@ public class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBas
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
-        if (isMockitoDoX(expression)) checkAndRegister("doNothing", "doReturn", ENDS_WITH_WHEN, expression, holder);
-        else if (isBDDMockitoWillX(expression))
-            checkAndRegister("willDoNothing", "willReturn", ENDS_WITH_GIVEN, expression, holder);
+        if (MOCKITO_DO_X.isAnyOfStubs(expression)) checkAndRegister("doNothing", "doReturn", MOCKITO_DO_X, expression, holder);
+        else if (BDDMOCKITO_WILL_X.isAnyOfStubs(expression))
+            checkAndRegister("willDoNothing", "willReturn", BDDMOCKITO_WILL_X, expression, holder);
     }
 
     private void checkAndRegister(@NotNull String doNothingMethod, @NotNull String doReturnMethod,
-                                  CallChainEndsWith endsWith,
+                                  StubbingApproach approach,
                                   PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         var calls = collectCallsInChainFromFirst(expression, true);
-        if (endsWith.analyze(calls)) {
+        if (approach.isValid(calls)) {
             var doNothingMethodCalls = findMethodCalls(doNothingMethod, calls);
             if (!doNothingMethodCalls.isEmpty())
-                registerIfStubbedMethodsReturnTypeIsNotVoid(getLast(calls), doNothingMethodCalls, holder);
+                registerIfStubbedMethodsReturnTypeIsNotVoid(approach.getStubbedMethodCall(calls), doNothingMethodCalls, holder);
 
             var doReturnMethodCalls = findMethodCalls(doReturnMethod, calls);
             if (!doReturnMethodCalls.isEmpty())
-                registerIfStubbedMethodsReturnTypeIsVoid(getLast(calls), doReturnMethodCalls, holder);
+                registerIfStubbedMethodsReturnTypeIsVoid(approach.getStubbedMethodCall(calls), doReturnMethodCalls, holder);
         }
     }
 
@@ -77,12 +74,16 @@ public class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBas
      *
      * @param stubbedMethod the stubbed method called sequent to {@code given(mock)} or {@code when(mock)}
      */
-    private void registerIfStubbedMethodsReturnTypeIsNotVoid(PsiMethodCallExpression stubbedMethod, Set<PsiMethodCallExpression> doNothingMethodCalls, @NotNull ProblemsHolder holder) {
-        getReturnTypeOf(stubbedMethod)
+    private void registerIfStubbedMethodsReturnTypeIsNotVoid(Optional<PsiMethodCallExpression> stubbedMethod,
+                                                             Set<PsiMethodCallExpression> doNothingMethodCalls,
+                                                             @NotNull ProblemsHolder holder) {
+        stubbedMethod
+            .flatMap(this::getReturnTypeOf)
             .filter(type -> !type.equals(PsiType.VOID))
             .ifPresent(__ -> {
                 for (var doNothing : doNothingMethodCalls) {
-                    holder.registerProblem(getReferenceNameElement(doNothing), MockitoolsBundle.inspection("void.method.is.stubbed.to.do.nothing", getMethodName(stubbedMethod)));
+                    holder.registerProblem(getReferenceNameElement(doNothing),
+                        MockitoolsBundle.inspection("void.method.is.stubbed.to.do.nothing", getMethodName(stubbedMethod.get())));
                 }
             });
     }
@@ -92,12 +93,16 @@ public class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBas
      *
      * @param stubbedMethod the stubbed method called sequent to {@code given(mock)} or {@code when(mock)}
      */
-    private void registerIfStubbedMethodsReturnTypeIsVoid(PsiMethodCallExpression stubbedMethod, Set<PsiMethodCallExpression> doReturnMethodCalls, @NotNull ProblemsHolder holder) {
-        getReturnTypeOf(stubbedMethod)
+    private void registerIfStubbedMethodsReturnTypeIsVoid(Optional<PsiMethodCallExpression> stubbedMethod,
+                                                          Set<PsiMethodCallExpression> doReturnMethodCalls,
+                                                          @NotNull ProblemsHolder holder) {
+        stubbedMethod
+            .flatMap(this::getReturnTypeOf)
             .filter(type -> type.equals(PsiType.VOID))
             .ifPresent(__ -> {
                 for (var doReturn : doReturnMethodCalls) {
-                    holder.registerProblem(getReferenceNameElement(doReturn), MockitoolsBundle.inspection("non.void.method.is.stubbed.with.return.value", getMethodName(stubbedMethod)));
+                    holder.registerProblem(getReferenceNameElement(doReturn),
+                        MockitoolsBundle.inspection("non.void.method.is.stubbed.with.return.value", getMethodName(stubbedMethod.get())));
                 }
             });
     }

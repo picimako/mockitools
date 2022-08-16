@@ -7,14 +7,13 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_S
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 
 import com.intellij.psi.PsiMethodCallExpression;
+import com.picimako.mockitools.inspection.ExceptionStubber;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import com.picimako.mockitools.inspection.ThrowStubDescriptor;
 
 /**
  * Data class to be used during the analysis phase.
@@ -36,7 +35,7 @@ class ConsecutiveCallAnalysisDescriptor {
      * Used to identify {@code *Throw()} calls in case of {@link SimplifyConsecutiveThrowCallsInspection}.
      */
     @Nullable
-    final ThrowStubDescriptor throwDescriptor;
+    final ExceptionStubber exceptionStubber;
     /**
      * The call matcher built for {@link Builder#inCallChainsBeginningWith}.
      */
@@ -47,7 +46,7 @@ class ConsecutiveCallAnalysisDescriptor {
         chainStarterMethodMatcher = builder.chainStarterMethodMatcher;
         consecutiveMethodName = builder.consecutiveMethodName;
         indexToStartInspectionAt = builder.indexToStartInspectionAt;
-        throwDescriptor = builder.exceptionStubbingVia;
+        exceptionStubber = builder.exceptionStubbingVia;
     }
 
     boolean matches(PsiMethodCallExpression expression) {
@@ -75,7 +74,7 @@ class ConsecutiveCallAnalysisDescriptor {
         @Nullable
         @Accessors(fluent = true)
         @Setter
-        private ThrowStubDescriptor exceptionStubbingVia;
+        private ExceptionStubber exceptionStubbingVia;
 
         /**
          * Configures the method names as static methods in {@link #mockitoClass}.

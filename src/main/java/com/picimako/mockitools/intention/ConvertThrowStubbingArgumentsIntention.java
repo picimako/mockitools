@@ -22,8 +22,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNewExpression;
 import com.intellij.util.IncorrectOperationException;
-import com.picimako.mockitools.inspection.ThrowStubDescriptor;
-import com.picimako.mockitools.inspection.ThrowStubDescriptors;
+import com.picimako.mockitools.StubbingApproach;
+import com.picimako.mockitools.inspection.ExceptionStubber;
 import com.picimako.mockitools.inspection.consecutive.TypeConversionMethod;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
@@ -71,21 +71,20 @@ public class ConvertThrowStubbingArgumentsIntention implements IntentionAction {
         if (!file.getFileType().equals(JavaFileType.INSTANCE)) return false;
 
         return getMethodCallAtCaretOrEmpty(file, editor)
-            .map(call -> ThrowStubDescriptors.ALL_DESCRIPTORS.stream()
-                .filter(descriptor -> descriptor.isApplicableTo(call))
-                .map(descriptor -> isArgumentListConvertible(call, descriptor))
+            .map(call -> StubbingApproach.findExceptionStubberApplicableTo(call)
+                .map(stubber -> isArgumentListConvertible(call, stubber))
                 .findFirst()
                 .orElse(false))
             .orElse(false);
     }
 
-    private boolean isArgumentListConvertible(PsiMethodCallExpression call, ThrowStubDescriptor descriptor) {
-        if (descriptor.classMatcher.matches(call)) {
+    private boolean isArgumentListConvertible(PsiMethodCallExpression call, ExceptionStubber stubber) {
+        if (stubber.classMatcher.matches(call)) {
             if (areAllClassObjectAccessExpressions(getArguments(call))) {
                 message = TO_THROWABLES.message;
                 return true;
             }
-        } else if (descriptor.throwablesMatcher.matches(call)) {
+        } else if (stubber.throwablesMatcher.matches(call)) {
             var arguments = getArguments(call);
             if (areAllNewExpressions(arguments) && !containsCallToNonDefaultConstructor(arguments)) {
                 message = TO_CLASSES.message;

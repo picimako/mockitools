@@ -2,27 +2,20 @@
 
 package com.picimako.mockitools.inspection;
 
-import static com.picimako.mockitools.util.PsiMethodUtil.findCallDownwardsInChain;
-import static com.picimako.mockitools.util.PsiMethodUtil.findCallUpwardsInChain;
-import static com.picimako.mockitools.util.PsiMethodUtil.isMethodCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.anyOf;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 
-import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.psi.PsiReferenceExpression;
-import com.picimako.mockitools.StubType;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 /**
  * Descriptor for holding *Throw() call related information.
  */
-public final class ThrowStubDescriptor {
+public final class ExceptionStubber {
     private static final CallMatcher[] CALL_MATCHER_EMPTY = new CallMatcher[0];
     private static final String CLASS_THROWABLE = "java.lang.Class<? extends java.lang.Throwable>";
     private static final String CLASS_THROWABLES = CLASS_THROWABLE + "...";
@@ -31,28 +24,14 @@ public final class ThrowStubDescriptor {
     /**
      * The method name that accepts the mock object or the call on a mock object. Usually {@code given} or {@code when}.
      */
-    private final String stubberCallName;
-    public final StubType stubType;
     private final CallMatcher matcher;
     public final CallMatcher classMatcher;
     public final CallMatcher throwablesMatcher;
 
-    public ThrowStubDescriptor(String stubberCallName, StubType stubType, String methodName, String instanceClassName, @Nullable String staticClassName) {
-        this.stubberCallName = stubberCallName;
-        this.stubType = stubType;
+    public ExceptionStubber(String methodName, String instanceClassName, @Nullable String staticClassName) {
         this.classMatcher = createClassMatcher(methodName, instanceClassName, staticClassName);
         this.throwablesMatcher = createThrowablesMatcher(methodName, instanceClassName, staticClassName);
         this.matcher = anyOf(classMatcher, throwablesMatcher);
-    }
-
-    boolean isValidStubbingArgument(PsiExpression stub) {
-        return stubType == StubType.STUBBING ? isMethodCall(stub) : stub instanceof PsiReferenceExpression;
-    }
-
-    Optional<PsiMethodCallExpression> findStubbingCallInChain(PsiMethodCallExpression expression) {
-        return stubType == StubType.STUBBING
-            ? findCallUpwardsInChain(expression, stubberCallName)
-            : findCallDownwardsInChain(expression, stubberCallName);
     }
 
     public boolean isApplicableTo(PsiMethodCallExpression call) {
