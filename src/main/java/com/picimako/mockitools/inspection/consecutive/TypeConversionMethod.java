@@ -9,12 +9,14 @@ import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiNewExpression;
 
 import com.picimako.mockitools.resources.MockitoolsBundle;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Defines the conversion from {@link PsiClassObjectAccessExpression}s to {@link PsiNewExpression}s and vice versa.
  * <p>
  * It is used when users have multiple choices how to merge the *Throw() calls together.
  */
+@RequiredArgsConstructor
 public enum TypeConversionMethod {
     TO_CLASSES(MockitoolsBundle.quickFix("to.class.objects")) {
         @Override
@@ -41,10 +43,6 @@ public enum TypeConversionMethod {
     NO_CONVERSION("");
 
     public final String message;
-
-    TypeConversionMethod(String message) {
-        this.message = message;
-    }
 
     public PsiElement convert(PsiExpression expression) {
         return expression;

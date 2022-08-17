@@ -2,11 +2,11 @@
 
 package com.picimako.mockitools.intention.convert.verification.inorderverify;
 
-import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
-import static com.picimako.mockitools.PsiMethodUtil.get2ndArgument;
-import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.PsiMethodUtil.hasTwoArguments;
-import static com.picimako.mockitools.Ranges.endOffsetOf;
+import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
+import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.hasTwoArguments;
+import static com.picimako.mockitools.util.Ranges.endOffsetOf;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiMethodCallExpression;

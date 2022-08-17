@@ -1,0 +1,9 @@
+<html>
+<body>
+<!-- tooltip end -->
+Report calls to <code>toString()</code> in mock verifications, since Mockito cannot verify toString().
+<p>
+    The inspection doesn't distinguish between <code>toString()</code> calls that come directly as overridden methods
+    from the mock objects' classes, or when they come from a type deeper in the class hierarchy.
+</body>
+</html>

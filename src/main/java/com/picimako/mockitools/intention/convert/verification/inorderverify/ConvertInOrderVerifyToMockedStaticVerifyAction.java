@@ -2,8 +2,8 @@
 
 package com.picimako.mockitools.intention.convert.verification.inorderverify;
 
-import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
-import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiMethodCallExpression;

@@ -2,20 +2,20 @@
 
 package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 
-import static com.picimako.mockitools.FromSelectionDataRetriever.collectMockObjects;
-import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
-import static com.picimako.mockitools.PsiMethodUtil.get2ndArgument;
-import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.PsiMethodUtil.hasArgument;
-import static com.picimako.mockitools.PsiMethodUtil.hasTwoArguments;
-import static com.picimako.mockitools.Ranges.endOffsetOf;
-import static com.picimako.mockitools.intention.convert.verification.bddmockitothen.ConvertFromBDDMockitoThenIntention.THEN_SHOULD_WITHOUT_INORDER;
+import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectMockObjects;
+import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
+import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.hasArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.hasTwoArguments;
+import static com.picimako.mockitools.util.Ranges.endOffsetOf;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.util.TriConsumer;
 import com.picimako.mockitools.MemberInplaceRenameHelper;
+import com.picimako.mockitools.VerificationApproach;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationActionBase;
 
 import java.util.List;
@@ -44,7 +44,7 @@ public class ConvertBDDMockitoThenToInOrderVerifyAction extends ConvertVerificat
         var should = calls.get(1);
 
         //If there is no InOrder argument, then create one, and convert to inOrder.verify
-        if (THEN_SHOULD_WITHOUT_INORDER.matches(should)) {
+        if (!VerificationApproach.BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(should)) {
             //Get verification mode argument from 'should()', or empty string if there's none
             var inOrderVariable = createAndAddInOrderVariable(bddMockitoThen, calls);
             convertWithoutInOrder(bddMockitoThen, calls, should);
@@ -62,7 +62,7 @@ public class ConvertBDDMockitoThenToInOrderVerifyAction extends ConvertVerificat
     protected void performActionInBulk(List<PsiExpressionStatement> statementsInSelection,
                                        PsiMethodCallExpression firstVerification,
                                        List<PsiMethodCallExpression> callsInFirstVerification) {
-        if (THEN_SHOULD_WITHOUT_INORDER.matches(callsInFirstVerification.get(1))) {
+        if (!VerificationApproach.BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(callsInFirstVerification.get(1))) {
             //Create the InOrder variable before converting any of the selected call chains, so that they can use the same InOrder variable.
             var inOrderVariable = createAndAddInOrderVariable(firstVerification, callsInFirstVerification, collectMockObjects(statementsInSelection));
             convertWithinSelection(this::convertWithoutInOrder, statementsInSelection);

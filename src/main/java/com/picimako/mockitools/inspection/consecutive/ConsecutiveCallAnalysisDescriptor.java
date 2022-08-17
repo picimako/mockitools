@@ -2,29 +2,23 @@
 
 package com.picimako.mockitools.inspection.consecutive;
 
-import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
-
-import java.util.Arrays;
-import java.util.List;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_STATIC;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 
 import com.intellij.psi.PsiMethodCallExpression;
+import com.picimako.mockitools.inspection.ExceptionStubber;
 import com.siyeh.ig.callMatcher.CallMatcher;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import com.picimako.mockitools.inspection.ThrowStubDescriptor;
 
 /**
  * Data class to be used during the analysis phase.
  */
 class ConsecutiveCallAnalysisDescriptor {
-    /**
-     * Used in the quick fix as the beginning of the expression that is built for replacement.
-     * <p>
-     * Usually either {@code org.mockito.Mockito} or {@code org.mockito.BDDMockito}.
-     */
-    @NotNull
-    final String mockitoClass;
     /**
      * The method name whose consecutiveness the inspection looks for.
      * <p>
@@ -41,81 +35,88 @@ class ConsecutiveCallAnalysisDescriptor {
      * Used to identify {@code *Throw()} calls in case of {@link SimplifyConsecutiveThrowCallsInspection}.
      */
     @Nullable
-    final ThrowStubDescriptor throwDescriptor;
+    final ExceptionStubber exceptionStubber;
     /**
-     * The first call in a stubbing call chain from where the calls are collected.
-     * <p>
-     * E.g. {@code Mockito.when()}, {@code BDDMockito.willReturn()}, etc.
-     */
-    @NotNull
-    private final List<String> chainStarterMethodNames;
-    /**
-     * The call matcher built for {@link #chainStarterMethodNames}.
+     * The call matcher built for {@link Builder#inCallChainsBeginningWith}.
      */
     @NotNull
     private final CallMatcher chainStarterMethodMatcher;
 
     private ConsecutiveCallAnalysisDescriptor(Builder builder) {
-        mockitoClass = builder.mockitoClass;
-        chainStarterMethodNames = builder.chainStarterMethodNames;
         chainStarterMethodMatcher = builder.chainStarterMethodMatcher;
         consecutiveMethodName = builder.consecutiveMethodName;
         indexToStartInspectionAt = builder.indexToStartInspectionAt;
-        throwDescriptor = builder.throwDescriptor;
+        exceptionStubber = builder.exceptionStubbingVia;
     }
 
     boolean matches(PsiMethodCallExpression expression) {
-        return chainStarterMethodNames.contains(getMethodName(expression)) && chainStarterMethodMatcher.matches(expression);
+        return chainStarterMethodMatcher.matches(expression);
     }
 
+    @RequiredArgsConstructor
     static final class Builder {
+        /**
+         * Used in the quick fix as the beginning of the expression that is built for replacement.
+         * <p>
+         * Usually either {@code org.mockito.Mockito} or {@code org.mockito.BDDMockito}.
+         */
         private final String mockitoClass;
-        private List<String> chainStarterMethodNames;
         private CallMatcher chainStarterMethodMatcher;
+        @Accessors(fluent = true)
+        @Setter
         private String consecutiveMethodName;
+        @Accessors(fluent = true)
+        @Setter
         private int indexToStartInspectionAt = 0;
+        /**
+         * Applicable only in case of {@link SimplifyConsecutiveThrowCallsInspection}.
+         */
         @Nullable
-        private ThrowStubDescriptor throwDescriptor;
-
-        Builder(String mockitoClass) {
-            this.mockitoClass = mockitoClass;
-        }
+        @Accessors(fluent = true)
+        @Setter
+        private ExceptionStubber exceptionStubbingVia;
 
         /**
          * Configures the method names as static methods in {@link #mockitoClass}.
+         *
+         * @param chainStarterMethodNames The first call in a stubbing call chain from where the calls are collected.
+         *                                E.g. {@code Mockito.when()}, {@code BDDMockito.willReturn()}, etc.
          */
-        Builder chainStarterMethodNames(String... chainStarterMethodNames) {
-            this.chainStarterMethodNames = Arrays.asList(chainStarterMethodNames);
-            this.chainStarterMethodMatcher = CallMatcher.staticCall(mockitoClass, chainStarterMethodNames);
-            return this;
+        Builder inCallChainsBeginningWith(String... chainStarterMethodNames) {
+            return inCallChainsBeginningWith(MethodType.STATIC, chainStarterMethodNames);
         }
 
         /**
-         * Configures the method names as instance methods in {@link #mockitoClass}.
+         * Configures the method names as instance or static methods (based on the method type) in {@link #mockitoClass}.
+         *
+         * @param chainStarterMethodNames The first call in a stubbing call chain from where the calls are collected.
+         *                                E.g. {@code Mockito.when()}, {@code BDDMockito.willReturn()}, etc.
          */
-        Builder chainStarterMethodNamesInstance(String... chainStarterMethodNames) {
-            this.chainStarterMethodNames = Arrays.asList(chainStarterMethodNames);
-            this.chainStarterMethodMatcher = CallMatcher.instanceCall(mockitoClass, chainStarterMethodNames);
-            return this;
-        }
-
-        Builder consecutiveMethodName(String consecutiveMethodName) {
-            this.consecutiveMethodName = consecutiveMethodName;
-            return this;
-        }
-
-        Builder indexToStartInspectionAt(int index) {
-            indexToStartInspectionAt = index;
-            return this;
-        }
-
-        Builder throwDescriptor(ThrowStubDescriptor throwDescriptor) {
-            this.throwDescriptor = throwDescriptor;
+        Builder inCallChainsBeginningWith(MethodType methodtype, String... chainStarterMethodNames) {
+            this.chainStarterMethodMatcher = methodtype == MethodType.STATIC
+                ? CallMatcher.staticCall(mockitoClass, chainStarterMethodNames)
+                : CallMatcher.instanceCall(mockitoClass, chainStarterMethodNames);
             return this;
         }
 
         ConsecutiveCallAnalysisDescriptor build() {
             return new ConsecutiveCallAnalysisDescriptor(this);
         }
+
+        static Builder forMockito(String consecutiveMethodName) {
+            return new Builder(ORG_MOCKITO_MOCKITO).consecutiveMethodName(consecutiveMethodName);
+        }
+
+        static Builder forBDDMockito(String consecutiveMethodName) {
+            return new Builder(ORG_MOCKITO_BDDMOCKITO).consecutiveMethodName(consecutiveMethodName);
+        }
+
+        static Builder forMockedStatic(String consecutiveMethodName) {
+            return new Builder(ORG_MOCKITO_MOCKED_STATIC).consecutiveMethodName(consecutiveMethodName);
+        }
+    }
+
+    enum MethodType {
+        STATIC, INSTANCE
     }
 }

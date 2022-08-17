@@ -5,12 +5,12 @@ package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE;
-import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
-import static com.picimako.mockitools.PsiMethodUtil.get2ndArgument;
-import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.PsiMethodUtil.hasOneArgument;
-import static com.picimako.mockitools.PsiMethodUtil.hasTwoArguments;
-import static com.picimako.mockitools.Ranges.endOffsetOf;
+import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
+import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.hasOneArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.hasTwoArguments;
+import static com.picimako.mockitools.util.Ranges.endOffsetOf;
 import static com.siyeh.ig.psiutils.TypeUtils.typeEquals;
 
 import com.intellij.openapi.project.Project;

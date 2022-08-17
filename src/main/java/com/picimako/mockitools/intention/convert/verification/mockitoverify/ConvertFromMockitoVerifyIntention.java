@@ -3,20 +3,16 @@
 package com.picimako.mockitools.intention.convert.verification.mockitoverify;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
-import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY;
-import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoVerify;
-import static com.picimako.mockitools.PsiMethodUtil.hasSubsequentMethodCall;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isBDDMockitoEnforced;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isMockitoEnforced;
-import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
+import com.picimako.mockitools.VerificationApproach;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase;
 
 import java.util.ArrayList;
@@ -39,14 +35,7 @@ import java.util.List;
 public class ConvertFromMockitoVerifyIntention extends ConvertVerificationIntentionBase {
 
     public ConvertFromMockitoVerifyIntention() {
-        super("Mockito.verify()");
-    }
-
-    @Override
-    public boolean isAvailableFor(PsiMethodCallExpression methodCall) {
-        return VERIFY.equals(getMethodName(methodCall))
-            && isMockitoVerify(methodCall)
-            && hasSubsequentMethodCall(methodCall);
+        super(VerificationApproach.MOCKITO_VERIFY);
     }
 
     @Override

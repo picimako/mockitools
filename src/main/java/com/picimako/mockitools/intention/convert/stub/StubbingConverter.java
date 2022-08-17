@@ -3,34 +3,41 @@
 package com.picimako.mockitools.intention.convert.stub;
 
 import static com.google.common.collect.Iterables.getLast;
-import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
-import static com.picimako.mockitools.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.PsiMethodUtil.getQualifier;
-import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
-import static com.picimako.mockitools.Ranges.endOffsetOf;
+import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.getQualifier;
+import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
+import static com.picimako.mockitools.util.Ranges.endOffsetOf;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
-
-import java.util.List;
 
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
-
+import com.picimako.mockitools.StubbingApproach;
+import com.picimako.mockitools.util.PsiClassUtil;
 import com.picimako.mockitools.StubType;
-import com.picimako.mockitools.intention.convert.ConverterBase;
+
+import java.util.List;
 
 /**
  * Converts stubbing call chains between the different approaches.
  * <p>
  * {@code Mockito.lenient()} is not supported at the moment.
  */
-public final class StubbingConverter extends ConverterBase {
+public final class StubbingConverter {
+
+    private final Document document;
+    private final PsiFile file;
+    private final PsiDocumentManager documentManager;
 
     public StubbingConverter(Project project, Document document, PsiFile file) {
-        super(project, document, file);
+        this.document = document;
+        this.file = file;
+        documentManager = PsiDocumentManager.getInstance(project);
     }
 
     /**
@@ -40,12 +47,12 @@ public final class StubbingConverter extends ConverterBase {
      * @param from             the stubbing approach to convert from
      * @param to               the target stubbing approach to convert to
      */
-    public void convert(PsiMethodCallExpression firstCallInChain, StubbingDescriptor from, StubbingDescriptor to) {
+    public void convert(PsiMethodCallExpression firstCallInChain, StubbingApproach from, StubbingApproach to) {
         //To make sure that converting a chain to itself doesn't happen
-        if (from.hasSameStubTypeAs(to) && from.getStubTargetSpecifierMethodName().equals(to.getStubTargetSpecifierMethodName()))
+        if (from.hasSameStubTypeAs(to) && from.methodCallStubber.equals(to.methodCallStubber))
             return;
 
-        WriteCommandAction.runWriteCommandAction(project, () -> {
+        WriteCommandAction.runWriteCommandAction(firstCallInChain.getProject(), () -> {
             var calls = collectCallsInChainFromFirst(firstCallInChain, true);
 
             if (from.hasSameStubTypeAs(to)) convertSameType(calls, from, to);
@@ -67,7 +74,7 @@ public final class StubbingConverter extends ConverterBase {
      * Mockito.when(mock.doSomething()).then*();
      * </pre>
      */
-    private void convertSameType(List<PsiMethodCallExpression> calls, StubbingDescriptor from, StubbingDescriptor to) {
+    private void convertSameType(List<PsiMethodCallExpression> calls, StubbingApproach from, StubbingApproach to) {
         doBaseConversion(from, to, calls, endOffsetOf(getQualifier(calls.get(0))), to.getBeginningOfStubbing(from));
     }
 
@@ -81,7 +88,7 @@ public final class StubbingConverter extends ConverterBase {
      * Mockito.do*().when(mock).doSomething();
      * </pre>
      */
-    private void convertToStubber(List<PsiMethodCallExpression> calls, StubbingDescriptor from, StubbingDescriptor to) {
+    private void convertToStubber(List<PsiMethodCallExpression> calls, StubbingApproach from, StubbingApproach to) {
         //These have to be saved before the base conversion, so their values are kept properly
         var stubbedCall = ((PsiMethodCallExpression) getFirstArgument(calls.get(0))); //mock.doSomething()
         String stubbedCallQualifier = getQualifier(stubbedCall).getText(); //"mock"
@@ -93,7 +100,7 @@ public final class StubbingConverter extends ConverterBase {
         //Adds the '.when(mock).doSomething()' part at the end of the call chain, so the example becomes: 'Mockito.do*().when(mock).doSomething();'
         document.insertString(
             endOffsetOf(getLast(calls)),
-            "." + to.getStubTargetSpecifierMethodName() + "(" + stubbedCallQualifier + ")" + stubbedCallText.replace(stubbedCallQualifier, ""));
+            "." + to.methodCallStubber + "(" + stubbedCallQualifier + ")" + stubbedCallText.replace(stubbedCallQualifier, ""));
     }
 
     /**
@@ -106,7 +113,7 @@ public final class StubbingConverter extends ConverterBase {
      * BDDMockito.given(mock.doSomething()).will*();
      * </pre>
      */
-    private void convertToStubbing(List<PsiMethodCallExpression> calls, StubbingDescriptor from, StubbingDescriptor to) {
+    private void convertToStubbing(List<PsiMethodCallExpression> calls, StubbingApproach from, StubbingApproach to) {
         var stubbingMethod = calls.get(calls.size() - 2); //when(mock)
         int endOffset = endOffsetOf(getQualifier(calls.get(0))); //end offset of Mockito
 
@@ -122,9 +129,9 @@ public final class StubbingConverter extends ConverterBase {
 
     //Low-level conversion logic
 
-    private void doBaseConversion(StubbingDescriptor from, StubbingDescriptor to, List<PsiMethodCallExpression> calls, int endOffset, String replacement) {
+    private void doBaseConversion(StubbingApproach from, StubbingApproach to, List<PsiMethodCallExpression> calls, int endOffset, String replacement) {
         replaceBeginningOfChain(calls, endOffset, replacement);
-        importClass(to.getStubStarterClassFqn());
+        PsiClassUtil.importClassAndCommit(to.getStubStarterClassFqn(), calls.get(0).getProject(), file, document);
         convertMethodNames(calls, from, to);
     }
 
@@ -144,7 +151,7 @@ public final class StubbingConverter extends ConverterBase {
      * @param replacement the replacement text
      */
     private void replaceBeginningOfChain(List<PsiMethodCallExpression> calls, int endOffset, String replacement) {
-        performAndCommitDocument(() -> document.replaceString(calls.get(0).getTextOffset(), endOffset, replacement));
+        replaceString(calls.get(0).getTextOffset(), endOffset, replacement);
     }
 
     /**
@@ -162,7 +169,7 @@ public final class StubbingConverter extends ConverterBase {
      * @param from  the stubbing approach to convert from
      * @param to    the target stubbing approach to convert to
      */
-    private void convertMethodNames(List<PsiMethodCallExpression> calls, StubbingDescriptor from, StubbingDescriptor to) {
+    private void convertMethodNames(List<PsiMethodCallExpression> calls, StubbingApproach from, StubbingApproach to) {
         int startIndex = to.hasSameStubTypeAs(from) || from.getStubType() == StubType.STUBBER ? 0 : 1;
         //Don't rename methods of calls after 'given(mock)' and 'when(mock)' because they are not part of the Mockito framework
         int endIndex = from.getStubType() == StubType.STUBBING ? calls.size() : calls.size() - 1;
@@ -170,13 +177,18 @@ public final class StubbingConverter extends ConverterBase {
             String currentMethodName = getMethodName(calls.get(i));
             //If a method is a stubbing target (given() or when()) then simply replace the method name,
             // otherwise replace the prefix in the method name
-            String newMethodName = currentMethodName.equals(from.getStubTargetSpecifierMethodName())
-                ? to.getStubTargetSpecifierMethodName()
-                : currentMethodName.replace(from.getPrefix(), to.getPrefix());
+            String newMethodName = currentMethodName.equals(from.methodCallStubber)
+                ? to.methodCallStubber
+                : currentMethodName.replace(from.getStubPrefix(), to.getStubPrefix());
 
             TextRange textRange = getReferenceNameElement(calls.get(i)).getTextRange();
 
-            performAndCommitDocument(() -> document.replaceString(textRange.getStartOffset(), textRange.getEndOffset(), newMethodName));
+            replaceString(textRange.getStartOffset(), textRange.getEndOffset(), newMethodName);
         }
+    }
+
+    private void replaceString(int startOffset, int endOffset, String replacement) {
+        document.replaceString(startOffset, endOffset, replacement);
+        documentManager.commitDocument(document);
     }
 }

@@ -4,6 +4,18 @@
 
 ## [Unreleased]
 
+## [0.7.0]
+### Added
+- [#36](https://github.com/picimako/mockitools/issues/36): Added inspection to report `toString()` calls in verifications, since Mockito cannot verify `toString()`.
+- [#39](https://github.com/picimako/mockitools/issues/39): Added inspection to report `*Return()` stubbing calls, if the stubbed method's return type is void.
+- [#40](https://github.com/picimako/mockitools/issues/40): Added inspection to report `doNothing()` and `willDoNothing()` stubbing calls,
+  if the stubbed method's return type is not void.
+
+### Changed
+- [#41](https://github.com/picimako/mockitools/issues/41): Cleaned up the class and package name, and modified the icons in the target method selection
+  popup during mock field conversion. The new icons can help distinguish between before hooks, test methods, and the rest of the methods.
+- Refactorings and housekeeping in the mock stubbing and verification areas.
+
 ## [0.6.0]
 ### Added
 - [#29](https://github.com/picimako/mockitools/issues/29): Added intentions to convert verifications between `InOrder.verify()` and `MockedStatic.verify()`.

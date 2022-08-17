@@ -3,83 +3,47 @@
 package com.picimako.mockitools;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.AFTER;
-import static com.picimako.mockitools.MockitoQualifiedNames.AT_LEAST;
-import static com.picimako.mockitools.MockitoQualifiedNames.AT_MOST;
 import static com.picimako.mockitools.MockitoQualifiedNames.CALLS;
 import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
-import static com.picimako.mockitools.MockitoQualifiedNames.GIVEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.IGNORE_STUBS;
 import static com.picimako.mockitools.MockitoQualifiedNames.MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ADDITIONAL_MATCHERS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT_CAPTOR;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT_MATCHERS;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MATCHERS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_STATIC;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK_SETTINGS;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_STUBBING_STUBBER;
 import static com.picimako.mockitools.MockitoQualifiedNames.RESET;
 import static com.picimako.mockitools.MockitoQualifiedNames.SPY;
-import static com.picimako.mockitools.MockitoQualifiedNames.THEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.TIMEOUT;
 import static com.picimako.mockitools.MockitoQualifiedNames.TIMES;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY;
-import static com.picimako.mockitools.MockitoQualifiedNames.WHEN;
-import static com.picimako.mockitools.PsiMethodUtil.getQualifier;
+import static com.picimako.mockitools.util.PsiMethodUtil.getQualifier;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
-import com.intellij.codeInsight.AnnotationUtil;
-import com.intellij.openapi.util.Pair;
-import com.intellij.psi.CommonClassNames;
-import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
-import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
-import com.intellij.psi.util.InheritanceUtil;
-import com.intellij.psi.util.TypeConversionUtil;
 import com.siyeh.ig.callMatcher.CallMatcher;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Utilities for working with Mockito PSI.
  */
 public final class MockitoolsPsiUtil {
 
-    public static final CallMatcher MOCKITO_OCCURRENCE_BASED_VERIFICATION_MODES = staticCall(ORG_MOCKITO_MOCKITO, TIMES, AT_LEAST, AT_MOST).parameterCount(1);
     public static final CallMatcher MOCKITO_WITH_SETTINGS = staticCall(ORG_MOCKITO_MOCKITO, "withSettings");
-
-    /**
-     * The original logic and set of non-mockable types can be found in Mockito's
-     * <ul>
-     *     <li><a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java">InlineDelegateByteBuddyMockMaker#isTypeMockable(Class) method</a>,</li>
-     *     <li><a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineBytecodeGenerator.java">InlineBytecodeGenerator#EXCLUDES set</a>.</li>
-     * </ul>
-     */
-    private static final Set<String> NON_MOCKABLE_TYPES = Set.of(CommonClassNames.JAVA_LANG_CLASS, CommonClassNames.JAVA_LANG_STRING);
 
     public static final CallMatcher.Simple MOCKITO_MOCK = staticCall(ORG_MOCKITO_MOCKITO, MOCK);
     private static final CallMatcher MOCKITO_SPY = staticCall(ORG_MOCKITO_MOCKITO, SPY).parameterCount(1);
-    private static final CallMatcher BDDMOCKITO_GIVEN = staticCall(ORG_MOCKITO_BDDMOCKITO, GIVEN).parameterCount(1);
-    private static final CallMatcher BDDMOCKITO_WILL_X =
-        staticCall(ORG_MOCKITO_BDDMOCKITO, "will", "willReturn", "willThrow", "willAnswer", "willCallRealMethod");
-    private static final CallMatcher BDDMOCKITO_THEN = staticCall(ORG_MOCKITO_BDDMOCKITO, THEN).parameterCount(1);
-    private static final CallMatcher MOCKITO_WHEN = staticCall(ORG_MOCKITO_MOCKITO, WHEN).parameterCount(1);
-    private static final CallMatcher MOCKITO_DO_X_WHEN = instanceCall(ORG_MOCKITO_STUBBING_STUBBER, WHEN);
-    private static final CallMatcher MOCKITO_DO_X =
-        staticCall(ORG_MOCKITO_MOCKITO, "doReturn", "doThrow", "doAnswer", "doCallRealMethod", "doNothing");
     private static final CallMatcher MOCKITO_TIMES = staticCall(ORG_MOCKITO_MOCKITO, TIMES).parameterCount(1);
     private static final CallMatcher MOCKITO_CALLS = staticCall(ORG_MOCKITO_MOCKITO, CALLS).parameterCount(1);
     private static final CallMatcher MOCKITO_AFTER = staticCall(ORG_MOCKITO_MOCKITO, AFTER).parameterCount(1);
@@ -113,16 +77,6 @@ public final class MockitoolsPsiUtil {
     }
 
     /**
-     * Gets whether the argument expression is an {@code org.mockito.Mockito.when} method call.
-     *
-     * @param expression the method call expression
-     * @return true if the method is a Mockito.when, false otherwise
-     */
-    public static boolean isMockitoWhen(PsiMethodCallExpression expression) {
-        return MOCKITO_WHEN.matches(expression);
-    }
-
-    /**
      * Gets whether the argument expression is an {@code org.mockito.Mockito.verify} method call.
      *
      * @param expression the method call expression
@@ -130,36 +84,6 @@ public final class MockitoolsPsiUtil {
      */
     public static boolean isMockitoVerify(PsiMethodCallExpression expression) {
         return MOCKITO_VERIFY.matches(expression);
-    }
-
-    /**
-     * Gets whether the argument expression is an {@code org.mockito.BDDMockito.given} method call.
-     *
-     * @param expression the method call expression
-     * @return true if the method is a BDDMockito.given, false otherwise
-     */
-    public static boolean isBDDMockitoGiven(PsiMethodCallExpression expression) {
-        return BDDMOCKITO_GIVEN.matches(expression);
-    }
-
-    /**
-     * Gets whether the argument expression is an {@code org.mockito.BDDMockito.will*} method call.
-     *
-     * @param expression the method call expression
-     * @return true if the method is a BDDMockito.will*, false otherwise
-     */
-    public static boolean isBDDMockitoWillX(PsiMethodCallExpression expression) {
-        return BDDMOCKITO_WILL_X.matches(expression);
-    }
-
-    /**
-     * Gets whether the argument expression is an {@code org.mockito.BDDMockito.then} method call.
-     *
-     * @param expression the method call expression
-     * @return true if the method is a BDDMockito.then, false otherwise
-     */
-    public static boolean isBDDMockitoThen(PsiMethodCallExpression expression) {
-        return BDDMOCKITO_THEN.matches(expression);
     }
 
     /**
@@ -190,28 +114,6 @@ public final class MockitoolsPsiUtil {
         return staticCall(methodFqn, getMethodName(expression))
             .parameterCount(expression.getArgumentList().getExpressionCount()) //matchers can have various numbers of arguments, so lets match with the current call's parameter count
             .matches(expression);
-    }
-
-    /**
-     * Gets whether the argument expression is an {@code org.mockito.Mockito.do...().when} method call.
-     * <p>
-     * The corresponding {@code when} method is defined in {@code org.mockito.stubbing.Stubber} which is related to the {@code do...()} family stubbing.
-     *
-     * @param expression the method call expression
-     * @return true if the method is a Mockito.do...().when, false otherwise
-     */
-    public static boolean isMockitoDoXWhen(PsiMethodCallExpression expression) {
-        return MOCKITO_DO_X_WHEN.matches(expression);
-    }
-
-    /**
-     * Gets whether the argument expression is an {@code org.mockito.Mockito.do*} method call.
-     *
-     * @param expression the method call expression
-     * @return true if the method is a Mockito.do*, false otherwise
-     */
-    public static boolean isMockitoDoX(PsiMethodCallExpression expression) {
-        return MOCKITO_DO_X.matches(expression);
     }
 
     /**
@@ -308,80 +210,6 @@ public final class MockitoolsPsiUtil {
         return typeElement != null
             && typeElement.getType() instanceof PsiClassReferenceType
             && ORG_MOCKITO_ARGUMENT_CAPTOR.equals(((PsiClassReferenceType) typeElement.getType()).rawType().getCanonicalText());
-    }
-
-    /**
-     * Finds the first @DoNotMock annotated type in the class hierarchy, and returns it with the optional reason provided.
-     *
-     * @param type the type to check the type hierarchy of for the @DoNotMock annotation
-     * @return the class annotated as @DoNotMock or null if not found, and the reason provided if any if the class is annotated as @DoNotMock
-     */
-    public static Pair<PsiClass, String> getDoNotMockAnnotatedTypeAndReasonInHierarchy(@Nullable PsiType type) {
-        if (type instanceof PsiClassType) {
-            PsiClass referencedClass = ((PsiClassType) type).resolve();
-            if (referencedClass != null) {
-                var doNotMock = getDoNotMockAnnotationOn(referencedClass);
-                if (doNotMock.isPresent()) {
-                    return Pair.create(referencedClass, AnnotationUtil.getStringAttributeValue(doNotMock.get(), "reason"));
-                }
-                for (PsiClass cls : InheritanceUtil.getSuperClasses(referencedClass)) {
-                    var doNotMockInHierarchy = getDoNotMockAnnotationOn(cls);
-                    if (doNotMockInHierarchy.isPresent()) {
-                        return Pair.create(cls, AnnotationUtil.getStringAttributeValue(doNotMockInHierarchy.get(), "reason"));
-                    }
-                }
-            }
-        }
-        return Pair.empty();
-    }
-
-    /**
-     * This is a simplified version {@link #getDoNotMockAnnotatedTypeAndReasonInHierarchy(PsiType)} that returns a boolean whether any of
-     * the types in the type hierarchy is annotated with @DoNotMock.
-     *
-     * @param type the type to check the type hierarchy of for the @DoNotMock annotation
-     * @since 0.2.0
-     */
-    private static boolean isDoNotMockAnnotatedInHierarchy(@Nullable PsiType type) {
-        if (type instanceof PsiClassType) {
-            PsiClass referencedClass = ((PsiClassType) type).resolve();
-            if (referencedClass != null) {
-                return getDoNotMockAnnotationOn(referencedClass).isPresent()
-                    || InheritanceUtil.getSuperClasses(referencedClass).stream().anyMatch(cls -> getDoNotMockAnnotationOn(cls).isPresent());
-            }
-        }
-        return false;
-    }
-
-    private static Optional<PsiAnnotation> getDoNotMockAnnotationOn(PsiClass clazz) {
-        return !CommonClassNames.JAVA_LANG_OBJECT.equals(clazz.getQualifiedName())
-            ? Arrays.stream(clazz.getAnnotations())
-            .filter(annotation -> annotation.getQualifiedName().endsWith(MockitoQualifiedNames.ORG_MOCKITO_DO_NOT_MOCK))
-            .findFirst()
-            : Optional.empty();
-    }
-
-    /**
-     * Returns whether the argument type is mockable, be it not restricted by Mockito itself, or by a @DoNotMock annotation.
-     *
-     * @since 0.2.0
-     */
-    public static boolean isMockableTypeInAnyWay(@Nullable PsiType type) {
-        return isMockableType(type) && !isDoNotMockAnnotatedInHierarchy(type);
-    }
-
-    /**
-     * Gets whether the argument type is mockable by Mockito.
-     *
-     * @param type the type to validate
-     * @return true if the type is mockable, false otherwise
-     * @see #NON_MOCKABLE_TYPES
-     */
-    public static boolean isMockableType(@Nullable PsiType type) {
-        return type != null
-            && !TypeConversionUtil.isPrimitiveWrapper(type)
-            && !TypeConversionUtil.isPrimitive(type.getCanonicalText())
-            && !NON_MOCKABLE_TYPES.contains(type.getCanonicalText());
     }
 
     private MockitoolsPsiUtil() {

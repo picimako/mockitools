@@ -6,8 +6,8 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_CONFIGUR
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_PLUGINS_ANNOTATION_ENGINE;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_PLUGINS_INSTANTIATOR_PROVIDER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_PLUGINS_INSTANTIATOR_PROVIDER_2;
-import static com.picimako.mockitools.ModuleDependencyHelper.isMockitoCore2xOr3xAvailableInModuleOf;
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.util.ModuleDependencyHelper.isMockitoCore2xOr3xAvailableInModuleOf;
+import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
@@ -30,6 +30,7 @@ public class UsageOfDeprecatedPluginClassesInspection extends MigrationAidBase.V
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
+        //Whether the file contains JUnit test classes is not validated, since runners may be referenced in non-unittest (i.e. util) classes.
         if (!isInTestSourceContent(session.getFile()) || !isMockitoCore2xOr3xAvailableInModuleOf(session.getFile(), holder.getProject())) {
             return PsiElementVisitor.EMPTY_VISITOR;
         }

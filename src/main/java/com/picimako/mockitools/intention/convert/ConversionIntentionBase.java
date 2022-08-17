@@ -6,13 +6,13 @@ import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getPrevSiblingOfType;
 import static com.intellij.util.text.CharArrayUtil.containsOnlyWhiteSpaces;
-import static com.picimako.mockitools.FromSelectionDataRetriever.collectStatementsInSelection;
-import static com.picimako.mockitools.FromSelectionDataRetriever.selectionLengthIn;
-import static com.picimako.mockitools.PsiMethodUtil.getMethodCallForIdentifier;
-import static com.picimako.mockitools.PsiMethodUtil.getQualifier;
-import static com.picimako.mockitools.PsiMethodUtil.isIdentifierOfMethodCall;
-import static com.picimako.mockitools.Ranges.charSequenceInRange;
-import static com.picimako.mockitools.TokenTypes.isTokenType;
+import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
+import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.selectionLengthIn;
+import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallForIdentifier;
+import static com.picimako.mockitools.util.PsiMethodUtil.getQualifier;
+import static com.picimako.mockitools.util.PsiMethodUtil.isIdentifierOfMethodCall;
+import static com.picimako.mockitools.util.Ranges.charSequenceInRange;
+import static com.picimako.mockitools.util.TokenTypes.isTokenType;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.ide.highlighter.JavaFileType;
@@ -29,9 +29,11 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.util.IncorrectOperationException;
-import com.picimako.mockitools.ListPopupHelper;
+import com.picimako.mockitools.util.ListPopupHelper;
 import com.picimako.mockitools.intention.convert.verification.NoActionAvailableAction;
 import com.picimako.mockitools.resources.MockitoolsBundle;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -43,22 +45,18 @@ import java.util.List;
  * @see com.picimako.mockitools.intention.convert.stub.ConvertStubbingIntentionBase
  * @see com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase
  */
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class ConversionIntentionBase implements IntentionAction {
     protected static final List<AnAction> NO_ACTION_AVAILABLE = Collections.singletonList(NoActionAvailableAction.INSTANCE);
     protected final String sourceApproachName;
     private final int minSelectionLength;
-
-    protected ConversionIntentionBase(String sourceApproachName, int minSelectionLength) {
-        this.sourceApproachName = sourceApproachName;
-        this.minSelectionLength = minSelectionLength;
-    }
 
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
         if (!file.getFileType().equals(JavaFileType.INSTANCE)) return false;
 
         if (!editor.getSelectionModel().hasSelection()) {
-            final PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
+            final var element = file.findElementAt(editor.getCaretModel().getOffset());
             return isIdentifierOfMethodCall(element) && isAvailableFor(getMethodCallForIdentifier(element));
         } else return isAvailableForBulkConversion(editor, file);
     }

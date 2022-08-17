@@ -92,6 +92,16 @@
                 id="mockitools.unused.inorder.mock" language="JAVA"
                 displayName="Unused or unconfigured mock objects in InOrder verifications" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.StubbingAndMethodReturnTypeMismatchInspection"
+                id="mockitools.stubbing.method.return.type.mismatch" language="JAVA"
+                displayName="Stubbing calls and stubbed method's return type don't match" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.verification.CannotVerifyToStringInspection"
+                id="mockitools.cannot.verify.to.string" language="JAVA"
+                displayName="'toString()' call in verification" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
 
         <!-- v4 migration aids -->
         <localInspection

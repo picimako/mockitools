@@ -7,9 +7,8 @@ import static com.google.common.collect.Iterables.getLast;
 import java.util.List;
 
 import com.intellij.psi.PsiMethodCallExpression;
+import com.picimako.mockitools.inspection.ExceptionStubber;
 import org.jetbrains.annotations.NotNull;
-
-import com.picimako.mockitools.inspection.ThrowStubDescriptor;
 
 /**
  * Data class to be used during quick fix registration.
@@ -28,15 +27,15 @@ class ConsecutiveCallRegistrarContext {
      */
     final List<Integer> consecutiveCallIndeces;
     /**
-     * @see ConsecutiveCallAnalysisDescriptor#throwDescriptor
+     * @see ConsecutiveCallAnalysisDescriptor#exceptionStubber
      */
-    private final ThrowStubDescriptor throwDescriptor;
+    private final ExceptionStubber exceptionStubber;
 
     ConsecutiveCallRegistrarContext(@NotNull ConsecutiveCallAnalysisDescriptor analyzer,
                                     @NotNull List<PsiMethodCallExpression> callsInWholeChain,
                                     @NotNull List<Integer> consecutiveCallIndeces) {
         consecutiveMethodName = analyzer.consecutiveMethodName;
-        throwDescriptor = analyzer.throwDescriptor;
+        exceptionStubber = analyzer.exceptionStubber;
         this.callsInWholeChain = callsInWholeChain;
         this.consecutiveCallIndeces = List.copyOf(consecutiveCallIndeces);
     }
@@ -49,10 +48,10 @@ class ConsecutiveCallRegistrarContext {
     }
 
     boolean isCallToClasses(PsiMethodCallExpression call) {
-        return throwDescriptor != null && throwDescriptor.classMatcher.matches(call);
+        return exceptionStubber != null && exceptionStubber.classMatcher.matches(call);
     }
 
     boolean isCallToThrowables(PsiMethodCallExpression call) {
-        return throwDescriptor != null && throwDescriptor.throwablesMatcher.matches(call);
+        return exceptionStubber != null && exceptionStubber.throwablesMatcher.matches(call);
     }
 }

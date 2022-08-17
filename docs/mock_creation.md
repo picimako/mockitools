@@ -160,6 +160,11 @@ If there is only one method in the class, then that is the target method, otherw
 
 Inner classes are not taken into consideration. Converting the field is possible only within the same class.
 
+The methods in the target selection list are reordered and are always shown in before hooks, test methods, rest of methods order. Before hooks and test methods also have dedicated
+icons for better visual presentation of them.
+
+![target_method_selection](assets/target_method_selection_list.png)
+
 #### Examples
 
 Below you can find an extensive list of examples, what is converted into what.

@@ -2,11 +2,15 @@
 
 package com.picimako.mockitools.inspection;
 
+import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
+
 import com.intellij.codeInspection.LocalInspectionTool;
+import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiCallExpression;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNewExpression;
@@ -16,6 +20,11 @@ import org.jetbrains.annotations.NotNull;
  * Base class for inspections that has to distinguish validation between files in test sources and actual unit test classes.
  */
 public abstract class MockitoolsBaseInspection extends LocalInspectionTool {
+
+    @Override
+    public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
+        return isInTestSourceContent(session.getFile()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
+    }
 
     @NotNull
     protected JavaElementVisitor methodCallVisitor(@NotNull ProblemsHolder holder) {

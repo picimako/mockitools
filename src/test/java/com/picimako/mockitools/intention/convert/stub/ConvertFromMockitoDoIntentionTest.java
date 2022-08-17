@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
+import com.picimako.mockitools.StubbingApproach;
 import com.picimako.mockitools.inspection.EnforceConventionInspection;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
 import org.jetbrains.annotations.NotNull;
@@ -326,7 +327,7 @@ public class ConvertFromMockitoDoIntentionTest extends EnforceConventionAwareInt
             .stream()
             .map(action -> (ConvertStubbingAction) action)
             .map(ConvertStubbingAction::getTo)
-            .map(StubbingDescriptor::getActionText)
+            .map(StubbingApproach::getPresentableText)
             .collect(toList());
     }
 }

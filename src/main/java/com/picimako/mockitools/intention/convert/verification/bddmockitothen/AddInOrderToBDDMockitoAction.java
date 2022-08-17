@@ -2,7 +2,7 @@
 
 package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 
-import static com.picimako.mockitools.PsiMethodUtil.collectCallsInChainFromFirst;
+import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.siyeh.ig.psiutils.ExpressionUtils.getFirstExpressionInList;
 
 import com.intellij.openapi.editor.Editor;

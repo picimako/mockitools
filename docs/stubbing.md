@@ -122,6 +122,38 @@ From: Mockito.when(mockObject.invoke())
         .thenThrow(IllegalArgumentException.class, IOException.class);
 ```
 
+## Stubbing calls and method return type mismatch
+
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.7.0-blue) [![](https://img.shields.io/badge/implementation-StubbingAndMethodReturnTypeMismatchInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/StubbingAndMethodReturnTypeMismatchInspection.java)
+
+There are two parts to this inspection:
+- it reports `doNothing()` and `willDoNothing()` calls when the stubbed method's return type is not void. Mockito's [corresponding error handling](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java#L568)
+- it reports `*Return()` calls when the stubbed method's return type is void. Mockito's [corresponding error handling](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java#L546)
+
+It highlights every instance of `doNothing()`, `willDoNothing()` and `*Return()` calls in the affected call chains.
+
+**doNothing() + not void**
+
+```java
+Mockito.doNothing()   //reported
+  .doThrow(IllegalArgumentException.class)
+  .doNothing()        //reported
+  .when(mock).notVoidMethod();
+
+BDDMockito.willThrow(IllegalArgumentException.class)
+  .willDoNothing()    //reported
+  .given(mock).notVoidMethod();
+```
+
+**doReturn() + void**
+
+```java
+Mockito.doReturn(10)    //reported
+  .doThrow(IllegalArgumentException.class)
+  .doReturn(10)         //reported
+  .when(mock).voidMethod();
+```
+
 ## Convert arguments of `*Throw()` stubbing methods
 
 ![](https://img.shields.io/badge/intention-orange) ![](https://img.shields.io/badge/since-0.4.0-blue) [![](https://img.shields.io/badge/implementation-ConvertThrowStubbingArgumentsIntention-blue)](../src/main/java/com/picimako/mockitools/intention/ConvertThrowStubbingArgumentsIntention.java)
@@ -136,7 +168,7 @@ All stubbing approaches are supported:
 - `BDDMockito.given().willThrow()`
 - `Mockito.doThrow().when()`
 - `Mockito.do*().doThrow().when()`
-- `BDDMockito.willl*).willThrow().given()`
+- `BDDMockito.will*().willThrow().given()`
 - `BDDMockito.willThrow().given()`
 
 ```java

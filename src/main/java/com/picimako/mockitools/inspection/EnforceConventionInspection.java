@@ -7,23 +7,21 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE;
 import static com.picimako.mockitools.MockitoolsPsiUtil.INORDER_VERIFY;
-import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
-import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.util.ui.JBUI;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.callMatcher.CallMatcher;
-import org.jetbrains.annotations.Nls;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -71,12 +69,12 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
     @Nullable
     @Override
     public JComponent createOptionsPanel() {
-        final JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 5, true, false));
+        final var panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 5, true, false));
         panel.add(new JLabel(MockitoolsBundle.inspectionOption("enforce.stubbing.and.verification.label")));
 
         var group = new ButtonGroup();
         for (var convention : Convention.values()) {
-            var radioButton = new JRadioButton(convention.getMessage(), convention == conventionToEnforce);
+            var radioButton = new JRadioButton(convention.getClassFqn(), convention == conventionToEnforce);
             radioButton.setBorder(JBUI.Borders.emptyLeft(20));
             radioButton.addActionListener(e -> conventionToEnforce = convention);
             panel.add(radioButton);
@@ -84,11 +82,6 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
         }
 
         return panel;
-    }
-
-    @Override
-    public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-        return isInTestSourceContent(session.getFile()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
     }
 
     @Override
@@ -101,7 +94,7 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
 
     private void register(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         holder.registerProblem(Optional.ofNullable(getReferenceNameElement(expression)).orElse(expression),
-            MockitoolsBundle.inspection("stubbing.and.verification.must.be.performed.via.x", conventionToEnforce.getMessage()));
+            MockitoolsBundle.inspection("stubbing.and.verification.must.be.performed.via.x", conventionToEnforce.getClassFqn()));
     }
 
     // Static helpers
@@ -137,18 +130,12 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
 
     //Convention type
 
+    @Getter
+    @RequiredArgsConstructor
     public enum Convention {
         MOCKITO(ORG_MOCKITO_MOCKITO + " / " + ORG_MOCKITO_INORDER),
         BDD_MOCKITO(ORG_MOCKITO_BDDMOCKITO);
 
         private final String classFqn;
-
-        Convention(String classFqn) {
-            this.classFqn = classFqn;
-        }
-
-        public @Nls String getMessage() {
-            return classFqn;
-        }
     }
 }

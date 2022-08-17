@@ -7,12 +7,15 @@ import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 import java.util.List;
 
 import com.intellij.psi.PsiMethodCallExpression;
+import com.picimako.mockitools.CallChainAnalyzer;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Analyzes a call chain whether it contains a call to the method with a predefined name.
  * <p>
  * It is used to filter out call chains for stubbing approach conversions with no matching alternative in the target approach.
  */
+@RequiredArgsConstructor
 public final class DoesntContainUnsupportedMethod implements CallChainAnalyzer {
     public static final DoesntContainUnsupportedMethod DOESNT_CONTAIN_THEN = new DoesntContainUnsupportedMethod("then");
     public static final DoesntContainUnsupportedMethod DOESNT_CONTAIN_WILL = new DoesntContainUnsupportedMethod("will");
@@ -20,10 +23,6 @@ public final class DoesntContainUnsupportedMethod implements CallChainAnalyzer {
     public static final DoesntContainUnsupportedMethod DOESNT_CONTAIN_WILL_DO_NOTHING = new DoesntContainUnsupportedMethod("willDoNothing");
 
     private final String unsupportedMethodName;
-
-    public DoesntContainUnsupportedMethod(String unsupportedMethodName) {
-        this.unsupportedMethodName = unsupportedMethodName;
-    }
 
     @Override
     public boolean analyze(List<PsiMethodCallExpression> calls) {

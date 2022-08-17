@@ -8,7 +8,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.MATCHERS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT_MATCHERS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MATCHERS;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMatchers;
-import static com.picimako.mockitools.PsiMethodUtil.getQualifier;
+import static com.picimako.mockitools.util.PsiMethodUtil.getQualifier;
 import static com.siyeh.ig.psiutils.ImportUtils.nameCanBeImported;
 
 import java.util.Optional;

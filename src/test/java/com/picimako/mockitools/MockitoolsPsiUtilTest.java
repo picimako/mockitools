@@ -4,10 +4,10 @@ package com.picimako.mockitools;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.function.Supplier;
-
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethodCallExpression;
+
+import java.util.function.Supplier;
 
 /**
  * Functional test for {@link MockitoolsPsiUtil}.
@@ -32,24 +32,6 @@ public class MockitoolsPsiUtilTest extends MockitoolsTestBase {
                     "        Object mock = Mockito.<caret>spy(Object.class);\n" +
                     "    }\n" +
                     "}", () -> MockitoolsPsiUtil.isMockitoSpy(getMethodCall())),
-            new TestData("IsMockitoWhenTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "\n" +
-                    "public class IsMockitoWhenTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.mock(Object.class);\n" +
-                    "        Mockito.<caret>when(mock.toString()).thenReturn(\"\");\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isMockitoWhen(getMethodCall())),
-            new TestData("IsBDDMockitoGivenTest.java",
-                "import org.mockito.BDDMockito;\n" +
-                    "\n" +
-                    "public class IsBDDMockitoGivenTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.mock(Object.class);\n" +
-                    "        BDDMockito.<caret>given(mock.toString()).willReturn(\"\");\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isBDDMockitoGiven(getMethodCall())),
             new TestData("IsAdditionalMatchersTest.java",
                 "import org.mockito.BDDMockito;\n" +
                     "import org.mockito.AdditionalMatchers;\n" +
@@ -60,15 +42,6 @@ public class MockitoolsPsiUtilTest extends MockitoolsTestBase {
                     "        BDDMockito.given(mock.equals(AdditionalMatchers.<caret>cmpEq(new Object()))).willReturn(10);\n" +
                     "    }\n" +
                     "}", () -> MockitoolsPsiUtil.isAdditionalMatchers(getMethodCall())),
-            new TestData("IsMockitoDoXWhenTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "\n" +
-                    "public class IsMockitoDoXWhenTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.mock(Object.class);\n" +
-                    "        Mockito.doReturn(\"\").<caret>when(mock.equals(mock.toString());\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isMockitoDoXWhen(getMethodCall())),
             new TestData("IsTimesTest.java",
                 "import org.mockito.Mockito;\n" +
                     "import static org.mockito.Mockito.times;\n" +
@@ -163,10 +136,7 @@ public class MockitoolsPsiUtilTest extends MockitoolsTestBase {
         TestData[] testData = new TestData[]{
             new TestData("IsNotMockitoMockTest.java", String.format(fileContent, "IsNotMockitoMockTest"), () -> MockitoolsPsiUtil.isMockitoMock(getMethodCall())),
             new TestData("IsNotMockitoSpyTest.java", String.format(fileContent, "IsNotMockitoSpyTest"), () -> MockitoolsPsiUtil.isMockitoSpy(getMethodCall())),
-            new TestData("IsNotMockitoWhenTest.java", String.format(fileContent, "IsNotMockitoWhenTest"), () -> MockitoolsPsiUtil.isMockitoWhen(getMethodCall())),
-            new TestData("IsNotBDDMockitoGivenTest.java", String.format(fileContent, "IsNotBDDMockitoGivenTest"), () -> MockitoolsPsiUtil.isBDDMockitoGiven(getMethodCall())),
             new TestData("IsNotAdditionalMatchersTest.java", String.format(fileContent, "IsNotAdditionalMatchersTest"), () -> MockitoolsPsiUtil.isAdditionalMatchers(getMethodCall())),
-            new TestData("IsNotMockitoDoXWhenTest.java", String.format(fileContent, "IsNotMockitoDoXWhenTest"), () -> MockitoolsPsiUtil.isMockitoDoXWhen(getMethodCall())),
             new TestData("isNotTimesTest.java", String.format(fileContent, "isNotTimesTest"), () -> MockitoolsPsiUtil.isTimes(getMethodCall())),
             new TestData("isNotCallsTest.java", String.format(fileContent, "isNotCallsTest"), () -> MockitoolsPsiUtil.isCalls(getMethodCall())),
             new TestData("isNotAfterTest.java", String.format(fileContent, "isNotAfterTest"), () -> MockitoolsPsiUtil.isAfter(getMethodCall())),
@@ -213,39 +183,6 @@ public class MockitoolsPsiUtilTest extends MockitoolsTestBase {
                     "        }\n" +
                     "    }\n" +
                     "}", () -> MockitoolsPsiUtil.isMockitoSpy(getMethodCall())),
-            new TestData("IsWhenNotMockitoWhenTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "\n" +
-                    "public class IsWhenNotMockitoWhenTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.mock(Object.class);\n" +
-                    "        Mockito.doReturn(\"\").<caret>when(mock.equals(mock.toString());\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isMockitoWhen(getMethodCall())),
-            new TestData("IsGivenNotBDDMockitoGivenTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "\n" +
-                    "public class IsGivenNotBDDMockitoGivenTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.mock(Object.class);\n" +
-                    "        Given.<caret>given(mock.toString()).willReturn(\"\");\n" +
-                    "    }\n" +
-                    "\n" +
-                    "    private static final class Given {\n" +
-                    "        public static Given given(Object object) {\n" +
-                    "            return new Given();\n" +
-                    "        }\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isBDDMockitoGiven(getMethodCall())),
-            new TestData("IsWhenNotMockitoWhenTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "\n" +
-                    "public class IsWhenNotMockitoWhenTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.mock(Object.class);\n" +
-                    "        Mockito.<caret>when(mock.toString()).thenReturn(\"\");\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isMockitoDoXWhen(getMethodCall())),
             new TestData("IsTimesNotMockitoTimesTest.java",
                 "import org.mockito.Mockito;\n" +
                     "\n" +
@@ -387,44 +324,6 @@ public class MockitoolsPsiUtilTest extends MockitoolsTestBase {
                 "}\n");
 
         assertThat(MockitoolsPsiUtil.isOfTypeArgumentCaptor(getField())).isFalse();
-    }
-
-    //isMockableType
-
-    public void testIsMockableType() {
-        myFixture.configureByText("IsMockableTypeTest.java",
-            "import org.mockito.Mock;\n" +
-                "\n" +
-                "public class IsMockableTypeTest {\n" +
-                "    @Mock\n" +
-                "    public List<String> <caret>mock;\n" +
-                "}\n");
-
-        assertThat(MockitoolsPsiUtil.isMockableType(getField().getTypeElement().getType())).isTrue();
-    }
-
-    public void testIsNotMockableTypePrimitive() {
-        myFixture.configureByText("IsNotMockableTypePrimitiveTest.java",
-            "import org.mockito.Mock;\n" +
-                "\n" +
-                "public class IsNotMockableTypePrimitiveTest {\n" +
-                "    @Mock\n" +
-                "    public int <caret>mock;\n" +
-                "}\n");
-
-        assertThat(MockitoolsPsiUtil.isMockableType(getField().getTypeElement().getType())).isFalse();
-    }
-
-    public void testIsNotMockableTypeWrapper() {
-        myFixture.configureByText("IsNotMockableTypeWrapperTest.java",
-            "import org.mockito.Mock;\n" +
-                "\n" +
-                "public class IsNotMockableTypeWrapperTest {\n" +
-                "    @Mock\n" +
-                "    public String <caret>mock;\n" +
-                "}\n");
-
-        assertThat(MockitoolsPsiUtil.isMockableType(getField().getTypeElement().getType())).isFalse();
     }
 
     //isMatchers

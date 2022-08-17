@@ -10,8 +10,8 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ANY_OBJECT;
 import static com.picimako.mockitools.MockitoQualifiedNames.ANY_SET_OF;
 import static com.picimako.mockitools.MockitoQualifiedNames.ANY_VARARG;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT_MATCHERS;
-import static com.picimako.mockitools.PsiMethodUtil.getParentCall;
-import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
+import static com.picimako.mockitools.util.PsiMethodUtil.getParentCall;
+import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import java.util.regex.Matcher;
@@ -28,7 +28,7 @@ import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.mockitools.MockitoQualifiedNames;
-import com.picimako.mockitools.PsiMethodUtil;
+import com.picimako.mockitools.util.PsiMethodUtil;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 
 /**
@@ -75,7 +75,7 @@ public class UsageOfAnyMatchersInspection extends MigrationAidBase.V23ToV4BaseIn
 
         @Override
         protected void doFix(Project project, ProblemDescriptor descriptor) {
-            PsiMethodCallExpression parentCall = getParentCall(descriptor.getPsiElement());
+            var parentCall = getParentCall(descriptor.getPsiElement());
             if (parentCall != null) {
                 PsiElement elementAfterReplace = descriptor.getPsiElement().replace(PsiElementFactory.getInstance(project).createIdentifier(ANY));
                 replaceMatchersQualifierAndStaticImportMatcher(parentCall, ANY, elementAfterReplace);
@@ -98,7 +98,7 @@ public class UsageOfAnyMatchersInspection extends MigrationAidBase.V23ToV4BaseIn
 
         @Override
         protected void doFix(Project project, ProblemDescriptor descriptor) {
-            PsiMethodCallExpression parentCall = getParentCall(descriptor.getPsiElement());
+            var parentCall = getParentCall(descriptor.getPsiElement());
             if (parentCall != null) {
                 PsiElement elementAfterReplace = descriptor.getPsiElement().replace(PsiElementFactory.getInstance(project).createIdentifier(anyX));
                 PsiMethodUtil.deleteArguments(parentCall); //delete all matcher call arguments, since any<collectionType>() methods don't have arguments

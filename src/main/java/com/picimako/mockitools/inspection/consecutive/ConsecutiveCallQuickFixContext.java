@@ -2,7 +2,7 @@
 
 package com.picimako.mockitools.inspection.consecutive;
 
-import static com.picimako.mockitools.PointersUtil.toPointers;
+import static com.picimako.mockitools.util.PointersUtil.toPointers;
 
 import java.util.List;
 

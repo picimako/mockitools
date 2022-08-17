@@ -9,9 +9,9 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_VERIFICA
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_NO_MORE_INTERACTION;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_ZERO_INTERACTIONS;
-import static com.picimako.mockitools.PsiMethodUtil.getArguments;
-import static com.picimako.mockitools.PsiMethodUtil.getParentCall;
-import static com.picimako.mockitools.PsiMethodUtil.getReferenceNameElement;
+import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
+import static com.picimako.mockitools.util.PsiMethodUtil.getParentCall;
+import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
 
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemsHolder;
@@ -20,7 +20,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
-import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
@@ -72,10 +71,10 @@ public class UsageOfDeprecatedVerifyInspection extends MigrationAidBase.V3ToV4Ba
 
         @Override
         protected void doFix(Project project, ProblemDescriptor descriptor) {
-            PsiMethodCallExpression parentCall = getParentCall(descriptor.getPsiElement());
+            var parentCall = getParentCall(descriptor.getPsiElement());
             if (parentCall != null) {
-                PsiExpression[] arguments = getArguments(parentCall);
-                PsiExpression save = JavaPsiFacade.getElementFactory(project).createExpressionFromText(arguments[0].getText(), parentCall);
+                var arguments = getArguments(parentCall);
+                var save = JavaPsiFacade.getElementFactory(project).createExpressionFromText(arguments[0].getText(), parentCall);
                 arguments[0].replace(arguments[1]);
                 arguments[1].replace(save);
             }
@@ -91,7 +90,7 @@ public class UsageOfDeprecatedVerifyInspection extends MigrationAidBase.V3ToV4Ba
 
         @Override
         protected void doFix(Project project, ProblemDescriptor descriptor) {
-            PsiMethodCallExpression parentCall = getParentCall(descriptor.getPsiElement());
+            var parentCall = getParentCall(descriptor.getPsiElement());
             if (parentCall != null) {
                 PsiElement elementAfterReplace = descriptor.getPsiElement().replace(PsiElementFactory.getInstance(project).createIdentifier(VERIFY_NO_MORE_INTERACTION));
                 if (!parentCall.getMethodExpression().isQualified()) {

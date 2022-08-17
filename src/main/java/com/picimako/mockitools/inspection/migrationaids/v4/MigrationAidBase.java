@@ -2,9 +2,9 @@
 
 package com.picimako.mockitools.inspection.migrationaids.v4;
 
-import static com.picimako.mockitools.ModuleDependencyHelper.isMockitoCore2xOr3xAvailableInModuleOf;
-import static com.picimako.mockitools.ModuleDependencyHelper.isMockitoCore3xAvailableInModuleOf;
-import static com.picimako.mockitools.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.util.ModuleDependencyHelper.isMockitoCore2xOr3xAvailableInModuleOf;
+import static com.picimako.mockitools.util.ModuleDependencyHelper.isMockitoCore3xAvailableInModuleOf;
+import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;

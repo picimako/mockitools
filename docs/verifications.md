@@ -11,7 +11,7 @@
 
 ## Verification mode arguments must be between limits
 
-![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-VerificationModeValuesBetweenLimitsInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/VerificationModeValuesBetweenLimitsInspection.java)
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-VerificationModeValuesBetweenLimitsInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/VerificationModeValuesBetweenLimitsInspection.java)
 
 This inspection validates the following time- and occurrence based methods for `VerificationMode` whether their arguments are out of the allowed bounds:
 `Mockito.times`, `Mockito.atLeast`, `Mockito.atMost`, `Mockito.calls`, `Mockito.after`, `Mockito.timeout`
@@ -37,7 +37,7 @@ Mockito.verify(mockObject, timeout(6000)).method(); //over threshold, since 5000
 
 ## Mockito.times(0) and Mockito.times(1) calls may be optimized or removed
 
-![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-TimesVerificationModeInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/TimesVerificationModeInspection.java)
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-TimesVerificationModeInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/TimesVerificationModeInspection.java)
 
 This inspection reports `Mockito.times()` calls whether they can be optimized or deleted based on their argument values.
 
@@ -64,7 +64,7 @@ From: Mockito.verify(mock, times(0).description("message"))... //times(0) can be
 
 ## No method call argument is provided
 
-![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-NoMethodCallArgumentSpecifiedInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/NoMethodCallArgumentSpecifiedInspection.java)
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-NoMethodCallArgumentSpecifiedInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/NoMethodCallArgumentSpecifiedInspection.java)
 
 There are a couple of methods in Mockito that must be passed at least one argument (usually these methods take varargs as argument),
 so this inspection reports when there is no argument specified in those calls:
@@ -88,6 +88,27 @@ void testMethod() {
     Mockito.ignoreStubs();  //marked with only warning level since this wouldn't block test execution
     Mockito.inOrder();
 }
+```
+
+## Cannot verify `toString()`
+
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.7.0-blue)
+[![](https://img.shields.io/badge/impl-CannotVerifyToStringInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/verification/CannotVerifyToStringInspection.java)
+
+This inspection report calls to `toString()` in mock verifications, since [Mockito cannot verify toString()](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java#L719).
+
+The inspection doesn't distinguish between `toString()` calls that come directly as overridden methods
+from the mock objects' classes, or when they come from a type deeper in the class hierarchy.
+
+All `toString()` calls in the following example are reported:
+
+```java
+Mockito.verify(mockObject).toString();
+
+BDDMockito.then(mockObject).should().toString();
+
+InOrder inOrder = Mockito.inOrder(mockObject);
+inOrder.verify(mockObject).toString();
 ```
 
 ## InOrder with a single verification
