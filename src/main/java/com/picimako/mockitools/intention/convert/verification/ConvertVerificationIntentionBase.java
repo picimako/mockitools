@@ -4,6 +4,8 @@ package com.picimako.mockitools.intention.convert.verification;
 
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
+import com.intellij.psi.PsiMethodCallExpression;
+import com.picimako.mockitools.VerificationApproach;
 import com.picimako.mockitools.intention.convert.ConversionIntentionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
@@ -18,13 +20,22 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class ConvertVerificationIntentionBase extends ConversionIntentionBase {
 
-    protected ConvertVerificationIntentionBase(String sourceApproachName, int minSelectionLength) {
-        super(sourceApproachName, minSelectionLength);
+    private final VerificationApproach sourceApproach;
+
+    protected ConvertVerificationIntentionBase(VerificationApproach sourceApproach, int minSelectionLength) {
+        super(sourceApproach.presentableText, minSelectionLength);
+        this.sourceApproach = sourceApproach;
     }
 
     //The shortest option is selecting 'verify(y).z();'.
-    protected ConvertVerificationIntentionBase(String sourceApproachName) {
-        super(sourceApproachName, 14);
+    protected ConvertVerificationIntentionBase(VerificationApproach sourceApproach) {
+        super(sourceApproach.presentableText, 14);
+        this.sourceApproach = sourceApproach;
+    }
+
+    @Override
+    public boolean isAvailableFor(PsiMethodCallExpression methodCall) {
+        return sourceApproach.isVerifiedBy(methodCall) && sourceApproach.isValid(methodCall);
     }
 
     //Intention names

@@ -10,7 +10,6 @@ import static com.picimako.mockitools.MockitoQualifiedNames.MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ADDITIONAL_MATCHERS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT_CAPTOR;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT_MATCHERS;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MATCHERS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_STATIC;
@@ -18,7 +17,6 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK_SETTINGS;
 import static com.picimako.mockitools.MockitoQualifiedNames.RESET;
 import static com.picimako.mockitools.MockitoQualifiedNames.SPY;
-import static com.picimako.mockitools.MockitoQualifiedNames.THEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.TIMEOUT;
 import static com.picimako.mockitools.MockitoQualifiedNames.TIMES;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY;
@@ -46,7 +44,6 @@ public final class MockitoolsPsiUtil {
 
     public static final CallMatcher.Simple MOCKITO_MOCK = staticCall(ORG_MOCKITO_MOCKITO, MOCK);
     private static final CallMatcher MOCKITO_SPY = staticCall(ORG_MOCKITO_MOCKITO, SPY).parameterCount(1);
-    private static final CallMatcher BDDMOCKITO_THEN = staticCall(ORG_MOCKITO_BDDMOCKITO, THEN).parameterCount(1);
     private static final CallMatcher MOCKITO_TIMES = staticCall(ORG_MOCKITO_MOCKITO, TIMES).parameterCount(1);
     private static final CallMatcher MOCKITO_CALLS = staticCall(ORG_MOCKITO_MOCKITO, CALLS).parameterCount(1);
     private static final CallMatcher MOCKITO_AFTER = staticCall(ORG_MOCKITO_MOCKITO, AFTER).parameterCount(1);
@@ -87,16 +84,6 @@ public final class MockitoolsPsiUtil {
      */
     public static boolean isMockitoVerify(PsiMethodCallExpression expression) {
         return MOCKITO_VERIFY.matches(expression);
-    }
-
-    /**
-     * Gets whether the argument expression is an {@code org.mockito.BDDMockito.then} method call.
-     *
-     * @param expression the method call expression
-     * @return true if the method is a BDDMockito.then, false otherwise
-     */
-    public static boolean isBDDMockitoThen(PsiMethodCallExpression expression) {
-        return BDDMOCKITO_THEN.matches(expression);
     }
 
     /**

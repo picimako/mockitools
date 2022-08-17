@@ -8,8 +8,6 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
 import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
-import static com.picimako.mockitools.inspection.EnforceConventionInspection.IN_ORDER_VERIFY_NON_MOCKED_STATIC;
-import static com.picimako.mockitools.intention.convert.verification.bddmockitothen.ConvertFromBDDMockitoThenIntention.THEN_SHOULD_WITH_INORDER;
 import static com.siyeh.ig.psiutils.TypeUtils.typeEquals;
 import static java.util.stream.Collectors.toList;
 
@@ -27,6 +25,7 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.util.SmartList;
+import com.picimako.mockitools.VerificationApproach;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,7 +44,6 @@ import java.util.List;
  * @since 0.5.0
  */
 public class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends LocalInspectionTool {
-
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
         if (isInTestSourceContent(session.getFile())) {
@@ -100,7 +98,7 @@ public class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loc
         return Arrays.stream(inOrderRefs).allMatch(ref -> {
             if (ref instanceof PsiReferenceExpression) {
                 var verifyOrShould = getParentOfType((PsiReferenceExpression) ref, PsiMethodCallExpression.class);
-                return IN_ORDER_VERIFY_NON_MOCKED_STATIC.matches(verifyOrShould) || THEN_SHOULD_WITH_INORDER.matches(verifyOrShould);
+                return VerificationApproach.INORDER_VERIFY.isVerifiedBy(verifyOrShould) || VerificationApproach.BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(verifyOrShould);
             } else return false;
         });
     }
@@ -114,10 +112,10 @@ public class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loc
         for (var ref : inOrderRefs) {
             if (ref instanceof PsiReferenceExpression) {
                 var verifyOrShould = getParentOfType((PsiReferenceExpression) ref, PsiMethodCallExpression.class);
-                if (IN_ORDER_VERIFY_NON_MOCKED_STATIC.matches(verifyOrShould)) {
+                if (VerificationApproach.INORDER_VERIFY.isVerifiedBy(verifyOrShould)) {
                     if (mocksUsed == null) mocksUsed = new SmartList<>();
                     saveMockFrom(verifyOrShould, mocksUsed);
-                } else if (THEN_SHOULD_WITH_INORDER.matches(verifyOrShould)) {
+                } else if (VerificationApproach.BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(verifyOrShould)) {
                     if (mocksUsed == null) mocksUsed = new SmartList<>();
                     saveMockFrom(/*then*/findChildOfType(verifyOrShould, PsiMethodCallExpression.class), mocksUsed);
                 }

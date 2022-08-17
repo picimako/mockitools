@@ -5,8 +5,6 @@ package com.picimako.mockitools.inspection.verification;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
 import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
-import static com.picimako.mockitools.inspection.EnforceConventionInspection.IN_ORDER_VERIFY_NON_MOCKED_STATIC;
-import static com.picimako.mockitools.intention.convert.verification.bddmockitothen.ConvertFromBDDMockitoThenIntention.THEN_SHOULD_WITH_INORDER;
 import static com.siyeh.ig.psiutils.TypeUtils.typeEquals;
 
 import com.intellij.codeInspection.LocalInspectionTool;
@@ -18,6 +16,7 @@ import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.search.searches.ReferencesSearch;
+import com.picimako.mockitools.VerificationApproach;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
  * @since 0.5.0
  */
 public class SingleInOrderVerificationInspection extends LocalInspectionTool {
-
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
         if (isInTestSourceContent(session.getFile())) {
@@ -44,7 +42,7 @@ public class SingleInOrderVerificationInspection extends LocalInspectionTool {
                         if (ref instanceof PsiReferenceExpression) {
                             var verifyOrShould = getParentOfType((PsiReferenceExpression) ref, PsiMethodCallExpression.class);
                             //If the only usage is a method call to InOrder.verify() or BDDMockito.should(InOrder)
-                            if (IN_ORDER_VERIFY_NON_MOCKED_STATIC.matches(verifyOrShould) || THEN_SHOULD_WITH_INORDER.matches(verifyOrShould))
+                            if (VerificationApproach.INORDER_VERIFY.isVerifiedBy(verifyOrShould) || VerificationApproach.BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(verifyOrShould))
                                 holder.registerProblem(variable.getNameIdentifier(), MockitoolsBundle.inspection("in.order.is.used.only.once"));
                         }
                     }

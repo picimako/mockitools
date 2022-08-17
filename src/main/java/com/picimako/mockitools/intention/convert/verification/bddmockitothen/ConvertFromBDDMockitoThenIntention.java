@@ -4,21 +4,13 @@ package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
-import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO_THEN;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE;
-import static com.picimako.mockitools.MockitoQualifiedNames.THEN;
-import static com.picimako.mockitools.MockitoolsPsiUtil.isBDDMockitoThen;
-import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;
-import static com.picimako.mockitools.util.PsiMethodUtil.getSubsequentMethodCall;
-import static com.picimako.mockitools.util.PsiMethodUtil.hasSubsequentMethodCall;
+import static com.picimako.mockitools.VerificationApproach.BDDMOCKITO_THEN_SHOULD;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isBDDMockitoEnforced;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isMockitoEnforced;
-import static com.siyeh.ig.callMatcher.CallMatcher.anyOf;
-import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
-import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
+import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
+import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;
+import static com.picimako.mockitools.util.PsiMethodUtil.getSubsequentMethodCall;
 import static java.util.stream.Collectors.toList;
 
 import com.intellij.openapi.actionSystem.AnAction;
@@ -30,10 +22,9 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
-import com.picimako.mockitools.util.PsiMethodUtil;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase;
 import com.picimako.mockitools.intention.convert.verification.NoActionAvailableAction;
-import com.siyeh.ig.callMatcher.CallMatcher;
+import com.picimako.mockitools.util.PsiMethodUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -55,27 +46,8 @@ import java.util.List;
  * @since 0.5.0
  */
 public class ConvertFromBDDMockitoThenIntention extends ConvertVerificationIntentionBase {
-    private static final CallMatcher.Simple SHOULD = instanceCall(ORG_MOCKITO_BDDMOCKITO_THEN, "should");
-    static final CallMatcher THEN_SHOULD_WITHOUT_INORDER = anyOf(
-        SHOULD.parameterCount(0),
-        SHOULD.parameterTypes(ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE));
-    public static final CallMatcher THEN_SHOULD_WITH_INORDER = anyOf(
-        SHOULD.parameterTypes(ORG_MOCKITO_INORDER),
-        SHOULD.parameterTypes(ORG_MOCKITO_INORDER, ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE)
-    );
-    private static final CallMatcher THEN_SHOULD = anyOf(THEN_SHOULD_WITHOUT_INORDER, THEN_SHOULD_WITH_INORDER);
-
     public ConvertFromBDDMockitoThenIntention() {
-        super("BDDMockito.then()");
-    }
-
-    @Override
-    public boolean isAvailableFor(PsiMethodCallExpression methodCall) {
-        if (THEN.equals(getMethodName(methodCall)) && isBDDMockitoThen(methodCall)) {
-            var should = getSubsequentMethodCall(methodCall);
-            return THEN_SHOULD.matches(should) && hasSubsequentMethodCall(should);
-        }
-        return false;
+        super(BDDMOCKITO_THEN_SHOULD);
     }
 
     @Override
@@ -99,7 +71,7 @@ public class ConvertFromBDDMockitoThenIntention extends ConvertVerificationInten
             if (!isBulkMode) actions.add(new ConvertBDDMockitoThenToInOrderVerifyAction(false));
             else {
                 var shoulds = collectShouldCalls(editor, file);
-                boolean areAllVerificationsWithoutInOrder = shoulds.stream().allMatch(THEN_SHOULD_WITHOUT_INORDER::matches);
+                boolean areAllVerificationsWithoutInOrder = shoulds.stream().noneMatch(BDDMOCKITO_THEN_SHOULD::isInOrderSpecific);
 
                 //In bulk mode, we only allow conversion if either none of the should() calls use an IrOrder variable,
                 // or all of them use the same one.
@@ -128,7 +100,7 @@ public class ConvertFromBDDMockitoThenIntention extends ConvertVerificationInten
     }
 
     private boolean areAllVerificationsWithInOrder(List<PsiMethodCallExpression> shoulds) {
-        return shoulds.stream().noneMatch(THEN_SHOULD_WITHOUT_INORDER::matches);
+        return shoulds.stream().allMatch(BDDMOCKITO_THEN_SHOULD::isInOrderSpecific);
     }
 
     private boolean areAllVerificationsUsingSameInOrder(List<PsiMethodCallExpression> shoulds) {
@@ -141,7 +113,7 @@ public class ConvertFromBDDMockitoThenIntention extends ConvertVerificationInten
      */
     private boolean areAllVerificationsWithoutInOrder(Editor editor, PsiFile file, boolean isBulkMode) {
         return !isBulkMode
-            ? THEN_SHOULD_WITHOUT_INORDER.matches(getSubsequentMethodCall(getMethodCallAtCaret(file, editor)))
-            : collectShouldCalls(editor, file).stream().allMatch(THEN_SHOULD_WITHOUT_INORDER::matches);
+            ? !BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(getSubsequentMethodCall(getMethodCallAtCaret(file, editor)))
+            : collectShouldCalls(editor, file).stream().noneMatch(BDDMOCKITO_THEN_SHOULD::isInOrderSpecific);
     }
 }

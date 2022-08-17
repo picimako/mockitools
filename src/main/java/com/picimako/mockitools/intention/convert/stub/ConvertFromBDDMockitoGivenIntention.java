@@ -2,13 +2,10 @@
 
 package com.picimako.mockitools.intention.convert.stub;
 
-import static com.picimako.mockitools.MockitoQualifiedNames.GIVEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isBDDMockitoEnforced;
 import static com.picimako.mockitools.inspection.EnforceConventionInspection.isMockitoEnforced;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_WILL;
-import static com.picimako.mockitools.util.PsiMethodUtil.hasSubsequentMethodCall;
-import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.Editor;
@@ -20,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * Converts stubbing call chains from the {@code BDDMockito.given().will*()} approach.
  * <p>
  * The reason for excluding chains containing {@code will()} calls is that it doesn't have a matching method in the
@@ -36,9 +32,8 @@ public class ConvertFromBDDMockitoGivenIntention extends ConvertStubbingIntentio
 
     @Override
     public boolean isAvailableFor(PsiMethodCallExpression methodCall) {
-        return GIVEN.equals(getMethodName(methodCall))
-            && StubbingApproach.BDDMOCKITO_GIVEN.isStubbedBy(methodCall)
-            && hasSubsequentMethodCall(methodCall);
+        return StubbingApproach.BDDMOCKITO_GIVEN.isStubbedBy(methodCall)
+            && StubbingApproach.BDDMOCKITO_GIVEN.isValid(methodCall);
     }
 
     @Override

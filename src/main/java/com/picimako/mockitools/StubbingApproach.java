@@ -43,6 +43,8 @@ import java.util.stream.Stream;
 
 /**
  * Represents an approach of stubbing methods in Mockito.
+ *
+ * @since 0.7.0
  */
 @RequiredArgsConstructor
 @Getter
@@ -88,8 +90,8 @@ public enum StubbingApproach {
         }
 
         @Override
-        public boolean isValid(List<PsiMethodCallExpression> stubbingCalls) {
-            return true; //no specific criteria is assigned to it, so considering valid by default
+        public boolean isValid(PsiMethodCallExpression stubbingCall) {
+            return hasSubsequentMethodCall(stubbingCall);
         }
 
         @Override
@@ -199,8 +201,8 @@ public enum StubbingApproach {
         }
 
         @Override
-        public boolean isValid(List<PsiMethodCallExpression> stubbingCalls) {
-            return true; //no specific criteria is assigned to it, so considering valid by default
+        public boolean isValid(PsiMethodCallExpression stubbingCall) {
+            return hasSubsequentMethodCall(stubbingCall);
         }
 
         @Override
@@ -356,7 +358,21 @@ public enum StubbingApproach {
      *
      * @param stubbingCalls the calls in the call chain constituting as a stubbing
      */
-    public abstract boolean isValid(List<PsiMethodCallExpression> stubbingCalls);
+    public boolean isValid(List<PsiMethodCallExpression> stubbingCalls) {
+        return true; //no specific criteria is assigned by default to it, so considering valid by default
+    }
+
+    /**
+     * Returns whether the argument method call stubber is valid and meets preconditions to validate it,
+     * or extract information from it.
+     * <p>
+     * It is used in conjunction with {@link #isStubbedBy(PsiMethodCallExpression)}.
+     *
+     * @param stubbingCall the call in the call chain constituting as the method call stubber
+     */
+    public boolean isValid(PsiMethodCallExpression stubbingCall) {
+        return true; //no specific criteria is assigned by default to it, so considering valid by default
+    }
 
     /**
      * Return whether the argument of a method call stubber, specifically the call to a stubbed method from a
