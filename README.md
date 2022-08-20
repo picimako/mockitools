@@ -4,14 +4,26 @@
 ![Build](https://github.com/picimako/mockitools/workflows/Build/badge.svg)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/18117-mockitools.svg)](https://plugins.jetbrains.com/plugin/18117-mockitools)
 ![](https://img.shields.io/badge/since-IJ2021.2-blue) ![](https://img.shields.io/badge/until-IJ2022.2-blue)
-[![PayPal](https://img.shields.io/badge/donate-paypal-yellow.svg)](https://www.paypal.com/donate/?hosted_button_id=VVLWNZWPBRUDL)
-[![BuyMeACoffee](https://img.shields.io/badge/donate-buymeacoffee-yellow.svg)](https://www.buymeacoffee.com/picimako)
 
 <!-- Plugin description -->
 Mockitools is a plugin for IntelliJ-based IDEs that provides framework integration for [Mockito](https://site.mockito.org), one of the (if not the) most popular mocking frameworks for unit testing in Java.
 <!-- Plugin description end -->
 
 It is available for IntelliJ Community Edition as well as IntelliJ IDEA Ultimate Edition.
+
+## Why Mockitools is tasty
+
+If [*"Mockito ... tastes really good"* and *"doesn’t give you hangover"*](https://site.mockito.org/#why),
+this IDE plugin will only make it better. You can find out why, in the dedicated documentation below.
+
+- [Mock creation](docs/mock_creation.md)
+- [Stubbing](docs/stubbing.md)
+- [Mockito verifications](docs/verifications.md)
+- [Argument matching and capturing](docs/argument_matching_capture.md)
+- [Version migration aids](docs/migration_aids_v4.md)
+- [Framework integration](docs/framework_integration.md)
+
+In the Intellij Inspections settings, all inspections are available under the <kbd>Java</kbd> > <kbd>Mockito</kbd> folder.
 
 ## Plugin setup
 
@@ -35,20 +47,6 @@ This will help declutter your editor from duplicate highlights for the same prob
 
 You can find the list of those inspections in the [Mockitools/SonarLint rules](docs/sonarlint_rules.md) document.
 
-## Why Mockitools is tasty
-
-If [*"Mockito ... tastes really good"* and *"doesn’t give you hangover"*](https://site.mockito.org/#why),
-this IDE plugin will only make it better. You can find out why, in the dedicated documentation below.
-
-- [Mock creation](docs/mock_creation.md)
-- [Stubbing](docs/stubbing.md)
-- [Mockito verifications](docs/verifications.md)
-- [Argument matching and capturing](docs/argument_matching_capture.md)
-- [Version migration aids](docs/migration_aids_v4.md)
-- [Framework integration](docs/framework_integration.md)
-
-In the Intellij Inspections settings, all inspections are available under the <kbd>Java</kbd> > <kbd>Mockito</kbd> folder.
-
 ## Licensing
 
 This project and the plugin logo are licensed under the terms of Apache Licence Version 2.0.
@@ -56,6 +54,10 @@ This project and the plugin logo are licensed under the terms of Apache Licence 
 ## Acknowledgments
 
 Thank you to my good friend, [Thubakabra](https://www.facebook.com/Thubakabra), for creating the logo.
+
+## Reading
+
+- [DZone: IntelliJ Integration for Mockito](https://dzone.com/articles/intellij-mockito-integration)
 
 ---
 Plugin based on the [IntelliJ Platform Plugin Template][template].
