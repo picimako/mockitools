@@ -9,7 +9,7 @@
     <description>Provides integration for the Mockito framework for Java.</description>
 
     <!-- https://jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html -->
-    <idea-version since-build="212"/>
+    <idea-version since-build="213"/>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html on how to target different products -->
     <depends>com.intellij.modules.platform</depends>

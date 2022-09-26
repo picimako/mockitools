@@ -3,6 +3,10 @@
 # Mockitools Changelog
 
 ## [Unreleased]
+### Changed
+- Dropped support for IJ-2021.2.
+- Added support for IJ-2022.3 EAPs.
+- Upgraded dependency versions: gradle-intellij-plugin 
 
 ## [0.7.0]
 ### Added

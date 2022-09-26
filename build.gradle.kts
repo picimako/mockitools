@@ -100,10 +100,15 @@ tasks {
 //        systemProperty("jb.consents.confirmation.enabled", "false")
 //    }
 
-    //Uncomment and configure this for functional testing
-//    test {
-//        systemProperty("idea.home.path", "ABSOLUTE PATH TO LOCAL intellij-community")
-//    }
+    test {
+//        This is not required for functional testing since real JDK is used always.
+//        systemProperty("idea.home.path", "<COMMUNITY PATH>")
+
+        //Required for running tests in 2021.3 due to it not finding test classes properly.
+        //See https://app.slack.com/client/T5P9YATH9/C5U8BM1MK/thread/C5U8BM1MK-1639934273.054400
+        isScanForTestClasses = false
+        include("**/*Test.class")
+    }
 
     signPlugin {
         certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
