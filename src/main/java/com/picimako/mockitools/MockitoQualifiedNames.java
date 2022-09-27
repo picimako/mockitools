@@ -93,6 +93,8 @@ public final class MockitoQualifiedNames {
     public static final String LENIENT = "lenient";
     public static final String NAME = "name";
     public static final String EXTRA_INTERFACES = "extraInterfaces";
+    public static final String STRICTNESS = "strictness";
+    public static final String MOCK_MAKER = "mockMaker";
 
     //Annotations
     public static final String ORG_MOCKITO_CAPTOR = "org.mockito.Captor";

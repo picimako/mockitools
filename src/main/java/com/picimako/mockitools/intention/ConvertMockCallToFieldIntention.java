@@ -3,6 +3,8 @@
 package com.picimako.mockitools.intention;
 
 import static com.google.common.collect.Iterables.getLast;
+import static com.picimako.mockitools.MockitoQualifiedNames.MOCK_MAKER;
+import static com.picimako.mockitools.MockitoQualifiedNames.STRICTNESS;
 import static com.picimako.mockitools.util.ClassObjectAccessUtil.getOperandType;
 import static com.picimako.mockitools.MockableTypesUtil.isMockableTypeInAnyWay;
 import static com.picimako.mockitools.MockitoQualifiedNames.ANSWER;
@@ -96,7 +98,7 @@ public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntention
     private static final CallMatcher MOCKITO_WITH_SETTINGS = staticCall(ORG_MOCKITO_MOCKITO, "withSettings");
 
     private static final CallMatcher MOCK_SETTINGS_SERIALIZABLE_WITH_MODE = instanceCall(ORG_MOCKITO_MOCK_SETTINGS, SERIALIZABLE).parameterTypes(ORG_MOCKITO_MOCK_SERIALIZABLE_MODE);
-    private static final Set<String> SUPPORTED_MOCK_SETTINGS_METHODS = Set.of(DEFAULT_ANSWER, STUB_ONLY, NAME, EXTRA_INTERFACES, LENIENT, "strictness");
+    private static final Set<String> SUPPORTED_MOCK_SETTINGS_METHODS = Set.of(DEFAULT_ANSWER, STUB_ONLY, NAME, EXTRA_INTERFACES, LENIENT, STRICTNESS, MOCK_MAKER);
 
     public ConvertMockCallToFieldIntention() {
         super(MockitoQualifiedNames.MOCK, "@Mock");
@@ -202,7 +204,8 @@ public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntention
             else if (NAME.equals(methodName)) configurer.configureName(call);
             else if (DEFAULT_ANSWER.equals(methodName)) configurer.configureAnswerFromCall(call);
             else if (EXTRA_INTERFACES.equals(methodName)) configurer.configureExtraInterfaces(call);
-            else if ("strictness".equals(methodName)) configurer.configureStrictness(call);
+            else if (STRICTNESS.equals(methodName)) configurer.configureStrictness(call);
+            else if (MOCK_MAKER.equals(methodName)) configurer.configureMockMaker(call);
         }
     }
 
@@ -232,8 +235,8 @@ public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntention
             this.mockAnnotation = mockAnnotation;
         }
 
-        private void configureBooleanAttribute(String methodName) {
-            mockAnnotation.setDeclaredAttributeValue(methodName, attributeValue("true"));
+        private void configureBooleanAttribute(String attributeName) {
+            mockAnnotation.setDeclaredAttributeValue(attributeName, attributeValue("true"));
         }
 
         private void configureName(PsiMethodCallExpression call) {
@@ -272,9 +275,13 @@ public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntention
                 if (resolved instanceof PsiEnumConstant) {
                     String strictnessName = ((PsiEnumConstant) resolved).getName();
                     PsiClassUtil.importClass("org.mockito.Mock.Strictness", mockAnnotation);
-                    mockAnnotation.setDeclaredAttributeValue("strictness", attributeValue("Mock.Strictness." + strictnessName));
+                    mockAnnotation.setDeclaredAttributeValue(STRICTNESS, attributeValue("Mock.Strictness." + strictnessName));
                 }
             }
+        }
+
+        public void configureMockMaker(PsiMethodCallExpression call) {
+            mockAnnotation.setDeclaredAttributeValue(MOCK_MAKER, attributeValue(getFirstArgument(call).getText()));
         }
 
         @NotNull

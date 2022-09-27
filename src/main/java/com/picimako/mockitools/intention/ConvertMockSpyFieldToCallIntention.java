@@ -2,19 +2,22 @@
 
 package com.picimako.mockitools.intention;
 
-import static com.picimako.mockitools.util.ListPopupHelper.selectItemAndRun;
+import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 import static com.picimako.mockitools.MockitoQualifiedNames.ANSWER;
 import static com.picimako.mockitools.MockitoQualifiedNames.DEFAULT_ANSWER;
 import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
 import static com.picimako.mockitools.MockitoQualifiedNames.MOCK;
+import static com.picimako.mockitools.MockitoQualifiedNames.MOCK_MAKER;
 import static com.picimako.mockitools.MockitoQualifiedNames.NAME;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_SPY;
 import static com.picimako.mockitools.MockitoQualifiedNames.SPY;
+import static com.picimako.mockitools.MockitoQualifiedNames.STRICTNESS;
 import static com.picimako.mockitools.MockitoolsPsiUtil.MOCKITO_WITH_SETTINGS;
 import static com.picimako.mockitools.intention.ConvertMockCallToFieldIntention.isDefaultAnswer;
 import static com.picimako.mockitools.intention.MethodRearranger.reOrder;
+import static com.picimako.mockitools.util.ListPopupHelper.selectItemAndRun;
 import static java.util.stream.Collectors.joining;
 
 import com.intellij.codeInsight.AnnotationUtil;
@@ -23,7 +26,6 @@ import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.lang.jvm.annotation.JvmAnnotationAttribute;
-import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
@@ -34,6 +36,7 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiCodeBlock;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiEnumConstant;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
@@ -45,9 +48,9 @@ import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.util.IncorrectOperationException;
 import com.picimako.mockitools.MockitoQualifiedNames;
-import com.picimako.mockitools.util.PsiClassUtil;
 import com.picimako.mockitools.intention.MethodRearranger.ClassMethodCellRenderer;
 import com.picimako.mockitools.resources.MockitoolsBundle;
+import com.picimako.mockitools.util.PsiClassUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -207,6 +210,23 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
                     }
                 });
 
+                valueOf(mockAnnotation.findAttribute(STRICTNESS)).ifPresent(value -> {
+                    if (value instanceof PsiReferenceExpression) {
+                        var resolved = ((PsiReferenceExpression) value).resolve();
+                        if (resolved instanceof PsiEnumConstant) {
+                            String strictnessName = ((PsiEnumConstant) resolved).getName();
+                            //Mock.Strictness.TEST_LEVEL_DEFAULT has no matching enum constant in Strictness, thus we'll ignore it.
+                            if (!"TEST_LEVEL_DEFAULT".equals(strictnessName)) {
+                                runWriteCommandAction(file.getProject(),
+                                    () -> PsiClassUtil.importClass("org.mockito.quality.Strictness", mockAnnotation));
+                                appendSetting(mockSettings, STRICTNESS, "Strictness." + strictnessName);
+                            }
+                        }
+                    }
+                });
+
+                valueOf(mockAnnotation.findAttribute(MOCK_MAKER)).ifPresent(value -> appendSetting(mockSettings, MOCK_MAKER, value.getText()));
+
                 mockitoMockingCall.append(", ").append(mockSettings); //Adds the second parameter to Mockito.mock(Class, MockSettings)
             }
         } else { //@Spy -> Mockito.spy()
@@ -220,7 +240,7 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
 
         mockitoMockingCall.append(")");
 
-        WriteCommandAction.runWriteCommandAction(file.getProject(), () -> {
+        runWriteCommandAction(file.getProject(), () -> {
             var elementFactory = JavaPsiFacade.getElementFactory(file.getProject());
             PsiClassUtil.importClass(ORG_MOCKITO_MOCKITO, file);
             var mockitoMockingInitializer = elementFactory.createExpressionFromText(mockitoMockingCall.toString(), file);
@@ -262,8 +282,8 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
             : Optional.empty();
     }
 
-    private void appendSetting(StringBuilder sb, String attributeName, String argument) {
-        sb.append(".").append(attributeName).append("(").append(argument).append(")");
+    private void appendSetting(StringBuilder sb, String methodName, String argument) {
+        sb.append(".").append(methodName).append("(").append(argument).append(")");
     }
 
     /**

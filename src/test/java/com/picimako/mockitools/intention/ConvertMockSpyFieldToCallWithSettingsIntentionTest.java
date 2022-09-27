@@ -460,4 +460,83 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
                 "}");
     }
 
+
+    public void testConvertsMockFieldToCallWithMockSettingsStrictnessDefault() {
+        checkIntentionRun(
+            "import org.mockito.Mock;\n" +
+                "import java.util.List;\n" +
+                "\n" +
+                "public class ConversionTest {\n" +
+                "    @Mock(strictness = Mock.Strictness.TEST_LEVEL_DEFAULT)\n" +
+                "    Object mo<caret>ck;\n" +
+                "\n" +
+                "    public void method() {\n" +
+                "    }\n" +
+                "}",
+            "import org.mockito.Mock;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "import java.util.List;\n" +
+                "\n" +
+                "public class ConversionTest {\n" +
+                "\n" +
+                "    public void method() {\n" +
+                "        Object mock = Mockito.mock(Object.class);\n" +
+                "    }\n" +
+                "}");
+    }
+
+    public void testConvertsMockFieldToCallWithMockSettingsStrictness() {
+        checkIntentionRun(
+            "import org.mockito.Mock;\n" +
+                "import java.util.List;\n" +
+                "\n" +
+                "public class ConversionTest {\n" +
+                "    @Mock(strictness = Mock.Strictness.WARN)\n" +
+                "    Object mo<caret>ck;\n" +
+                "\n" +
+                "    public void method() {\n" +
+                "    }\n" +
+                "}",
+            "import org.mockito.Mock;\n" +
+                "import org.mockito.Mockito;\n" +
+                "import org.mockito.quality.Strictness;\n" +
+                "\n" +
+                "import java.util.List;\n" +
+                "\n" +
+                "public class ConversionTest {\n" +
+                "\n" +
+                "    public void method() {\n" +
+                "        Object mock = Mockito.mock(Object.class, Mockito.withSettings().strictness(Strictness.WARN));\n" +
+                "    }\n" +
+                "}");
+    }
+
+    public void testConvertsMockFieldToCallWithMockSettingsMockMaker() {
+        checkIntentionRun(
+            "import org.mockito.Mock;\n" +
+                "import org.mockito.MockMakers;\n" +
+                "import java.util.List;\n" +
+                "\n" +
+                "public class ConversionTest {\n" +
+                "    @Mock(mockMaker = MockMakers.INLINE)\n" +
+                "    Object mo<caret>ck;\n" +
+                "\n" +
+                "    public void method() {\n" +
+                "    }\n" +
+                "}",
+            "import org.mockito.Mock;\n" +
+                "import org.mockito.MockMakers;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "import java.util.List;\n" +
+                "\n" +
+                "public class ConversionTest {\n" +
+                "\n" +
+                "    public void method() {\n" +
+                "        Object mock = Mockito.mock(Object.class, Mockito.withSettings().mockMaker(MockMakers.INLINE));\n" +
+                "    }\n" +
+                "}");
+    }
+
 }

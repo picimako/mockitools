@@ -214,6 +214,12 @@ to:   Object mock = Mockito.mock(Object.class, Mockito.withSettings().serializab
 
 from: @Mock(lenient = true) Object mock;
 to:   Object mock = Mockito.mock(Object.class, Mockito.withSettings().lenient());
+
+from: @Mock(strictness = Mock.Strictness.WARN) Object mock;
+to:   Object mock = Mockito.mock(Object.class, Mockito.withSettings().strictness(Strictness.WARN));
+
+from: @Mock(mockMaker = MockMakers.INLINE) Object mock;
+to:   Object mock = Mockito.mock(Object.class, Mockito.withSettings().mockMaker(MockMakers.INLINE));
 ```
 
 ```java
@@ -292,7 +298,7 @@ to:   @Spy Clazz<typeargs> localVar;
 This intention is available on `Mockito.mock()` calls, when the Class argument of the call is a class object access expression (i.e. `MockObject.class`),
 and in case of the `MockSettings` specific overload, the @Mock annotation supports all configuration specified:
 - it starts with the `Mockito.withSettings()` call,
-- it doesn't have a call other than to `lenient()`, `stubOnly()`, `defaultAnswer()`, `name()`, `extraInterfaces()`
+- it doesn't have a call other than to `lenient()`, `stubOnly()`, `defaultAnswer()`, `name()`, `extraInterfaces()`, `mockMaker()`
   or `serializable()` but not its overloaded variant `serializable(SerializableMode)`.
 
 NOTE: there is no validation on whether the specified name or answer is valid to be put into the annotation attribute (as annotation attributes accept constants only),
@@ -331,6 +337,9 @@ to:   @Mock(extraInterfaces = List.class) Clazz clazz;
 
 from: mock(Clazz.class, Mockito.withSettings().strictness(Strictness.WARN))
 to:   @Mock(strictness = Mock.Strictness.WARN) Clazz clazz;
+
+from: mock(Clazz.class, Mockito.withSettings().mockMaker(MockMakers.INLINE))
+to:   @Mock(mockMaker = MockMakers.INLINE) Clazz clazz;
 ```
 
 Furthermore, the type that is being mocked should be mockable either by Mockito's rules or not being annotated with `@DoNotMock`.
