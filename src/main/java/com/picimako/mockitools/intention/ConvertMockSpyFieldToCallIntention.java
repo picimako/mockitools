@@ -3,6 +3,7 @@
 package com.picimako.mockitools.intention;
 
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
+import static com.picimako.mockitools.dsl.MockAnnotation.isAttributeEnabledOnMockAnnotation;
 import static com.picimako.mockitools.MockitoQualifiedNames.ANSWER;
 import static com.picimako.mockitools.MockitoQualifiedNames.DEFAULT_ANSWER;
 import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
@@ -11,6 +12,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.MOCK_MAKER;
 import static com.picimako.mockitools.MockitoQualifiedNames.NAME;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_QUALITY_STRICTNESS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_SPY;
 import static com.picimako.mockitools.MockitoQualifiedNames.SPY;
 import static com.picimako.mockitools.MockitoQualifiedNames.STRICTNESS;
@@ -20,7 +22,6 @@ import static com.picimako.mockitools.intention.MethodRearranger.reOrder;
 import static com.picimako.mockitools.util.ListPopupHelper.selectItemAndRun;
 import static java.util.stream.Collectors.joining;
 
-import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
@@ -157,7 +158,7 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
             mockitoMockingCall = new StringBuilder("Mockito").append(".").append(MOCK).append("(");
             appendType(fieldToConvert, mockitoMockingCall);
 
-            PsiAnnotation mockAnnotation = fieldToConvert.getAnnotation(ORG_MOCKITO_MOCK);
+            var mockAnnotation = fieldToConvert.getAnnotation(ORG_MOCKITO_MOCK);
             //Assemble Mockito.mock() call based on the @Mock annotation attributes
             boolean isMockSettingsOverride = true;
             //Handle .mock(Class, Answer) and .mock(Class, String)
@@ -180,10 +181,10 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
                 StringBuilder mockSettings = new StringBuilder("Mockito").append(".withSettings()");
 
                 //Handle boolean attributes
-                BOOLEAN_ATTRIBUTES.forEach(attributeName ->
-                    Optional.ofNullable(AnnotationUtil.getBooleanAttributeValue(mockAnnotation, attributeName))
-                        .filter(Boolean.TRUE::equals) //Given that the default values are false, and to be true they have to be specified explicitly
-                        .ifPresent(enabled -> appendSetting(mockSettings, attributeName, "")));
+                BOOLEAN_ATTRIBUTES.forEach(attributeName -> {
+                    if (isAttributeEnabledOnMockAnnotation(mockAnnotation, attributeName))
+                        appendSetting(mockSettings, attributeName, "");
+                });
 
                 //Handle attributes for whose MockSettings counterpart the value of the attribute must be passed in.
                 //E.g. withSettings().name("some name") or withSettings().answer(anAnswer)
@@ -218,7 +219,7 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
                             //Mock.Strictness.TEST_LEVEL_DEFAULT has no matching enum constant in Strictness, thus we'll ignore it.
                             if (!"TEST_LEVEL_DEFAULT".equals(strictnessName)) {
                                 runWriteCommandAction(file.getProject(),
-                                    () -> PsiClassUtil.importClass("org.mockito.quality.Strictness", mockAnnotation));
+                                    () -> PsiClassUtil.importClass(ORG_MOCKITO_QUALITY_STRICTNESS, mockAnnotation));
                                 appendSetting(mockSettings, STRICTNESS, "Strictness." + strictnessName);
                             }
                         }
@@ -258,11 +259,10 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
             var mockitoMockingVariableDeclaration = elementFactory.createVariableDeclarationStatement(fieldToConvert.getName(), fieldToConvert.getType(), finalMockingInitializer);
             PsiCodeBlock methodBody = targetMethod.getBody();
             if (methodBody != null) {
-                if (methodBody.getFirstBodyElement() != null) {
+                if (methodBody.getFirstBodyElement() != null)
                     methodBody.addBefore(mockitoMockingVariableDeclaration, methodBody.getFirstBodyElement());
-                } else {
+                else
                     methodBody.add(mockitoMockingVariableDeclaration);
-                }
             }
             fieldToConvert.delete();
         });

@@ -246,3 +246,34 @@ to:
       inOrder.verify(mock).doSomething();
       inOrder.verify(mock2, times(2)).doSomething();
 ```
+
+## Stub-only mock is used in verification
+
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.8.0-blue)
+[![](https://img.shields.io/badge/impl-StubOnlyMockInVerificationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/verification/StubOnlyMockInVerificationInspection.java)
+
+Mocks (via the `@Mock` annotation and the `MockSettings`) class has a stub-only configuration which allows users to
+define mocks as such if they are not used in verifications, thus saving memory. See [MockSettings javadoc](https://site.mockito.org/javadoc/current/org/mockito/MockSettings.html#stubOnly()).
+
+Spies and MockedStatic mocks are ignored since they have no stub-only configuration.
+
+```java
+public class StubOnlyMockInVerification {
+
+  @Mock(stubOnly = true)
+  SomeType stubOnly;
+  @Mock
+  SomeType notStubOnly;
+  
+  @Test
+  void testMethod() {
+    SomeType localStubOnly = Mockito.mock(SomeType.class, Mockito.withSettings().stubOnly());
+    SomeType localNotStubOnly = Mockito.mock(SomeType.class);
+
+    Mockito.verify(stubOnly).doesSomething(); //'stubOnly' is reported
+    Mockito.verify(localStubOnly).doesSomething(); //'localStubOnly' is reported
+
+    BDDMockito.then(notStubOnly).should().doesSomething(); //not reported
+    BDDMockito.then(localNotStubOnly).should().doesSomething(); //not reported
+  }
+```

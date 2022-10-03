@@ -102,6 +102,11 @@
                 id="mockitools.cannot.verify.to.string" language="JAVA"
                 displayName="'toString()' call in verification" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.verification.StubOnlyMockInVerificationInspection"
+                id="mockitools.stub.only.mock.in.verification" language="JAVA"
+                displayName="Stub-only mock used in verification" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
 
         <!-- v4 migration aids -->
         <localInspection
