@@ -32,6 +32,8 @@ Mockito.mock(Object.class, Mockito.withSettings().extraInterfaces(Object.class, 
 The respective Mockito exceptions are thrown in Mockito's [Reporter.java](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java),
 look for the `extraInterfacesAcceptsOnlyInterfaces(Class)` method.
 
+----
+
 ## No argument is provided for the extraInterfaces() call
 
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-ExtraInterfacesInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/ExtraInterfacesInspection.java)
@@ -45,6 +47,8 @@ Mockito.mock(Object.class, Mockito.withSettings().extraInterfaces()); //no argum
 
 You can find the related Mockito exception handling in its [Reporter.java](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java),
 look for the `extraInterfacesRequiresAtLeastOneInterface()` method.
+
+----
 
 ## Mockito cannot mock certain types
 
@@ -115,6 +119,8 @@ Additional resources:
 - [@DoNotMock javadoc](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/DoNotMock.html)
 - [Mockito pull request: Add annotation to mark a type as DoNotMock](https://github.com/mockito/mockito/pull/1833/files)
 
+----
+
 ## Mockito/MockedStatic.reset() is used
 
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-CallOnMockitoResetInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/CallOnMockitoResetInspection.java)
@@ -141,6 +147,8 @@ void testMethod() {
 Additional resources:
 - [Reflectoring.io - Clean Unit Tests with Mockito](https://reflectoring.io/clean-unit-tests-with-mockito/) (**Avoid Mockito.reset() for Better Unit Tests** section)
 - [Stack Exchange - Is this an appropriate use of Mockito's reset method?](https://softwareengineering.stackexchange.com/questions/188299/is-this-an-appropriate-use-of-mockitos-reset-method)
+
+----
 
 ## Convert @Mock/@Spy fields to Mockito.mock()/spy() calls
 
@@ -253,6 +261,8 @@ Object mock = Mockito.mock(Object.class, Mockito.withSettings()
     .extraInterfaces(List.class, Set.class));
 ```
 </details>
+
+----
 
 ## Convert Mockito.mock()/spy() calls to @Mock/@Spy fields
 
