@@ -91,19 +91,7 @@ tasks {
         })
     }
 
-    // Configure UI tests plugin
-    // Read more: https://github.com/JetBrains/intellij-ui-test-robot
-//    runIdeForUiTests {
-//        systemProperty("robot-server.port", "8082")
-//        systemProperty("ide.mac.message.dialogs.as.sheets", "false")
-//        systemProperty("jb.privacy.policy.text", "<!--999.999-->")
-//        systemProperty("jb.consents.confirmation.enabled", "false")
-//    }
-
     test {
-//        This is not required for functional testing since real JDK is used always.
-//        systemProperty("idea.home.path", "<COMMUNITY PATH>")
-
         //Required for running tests in 2021.3 due to it not finding test classes properly.
         //See https://app.slack.com/client/T5P9YATH9/C5U8BM1MK/thread/C5U8BM1MK-1639934273.054400
         isScanForTestClasses = false
