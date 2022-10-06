@@ -23,10 +23,7 @@ Mockito.when(mock.method("some string", geq(25))).thenReturn(10);
 ```
 
 The following ways of stubbing are supported by this inspection:
-- `Mockito.when()`
-- `BDDMockito.given()`
-- `Mockito.do...().when()`
-- matchers in `AdditionalMatchers`
+- `Mockito.when()`, `BDDMockito.given()`, `Mockito.do...().when()`, matchers in `AdditionalMatchers`
 
 You can find more information in the official documents and source code:
 - [Argument matchers documentation](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#argument_matchers)
@@ -37,6 +34,8 @@ You can find more information in the official documents and source code:
 ### SonarLint
 
 SonarLint also have a rule for this validation: [Mockito argument matchers should be used on all parameters](https://rules.sonarsource.com/java/tag/mockito/RSPEC-6073)
+
+----
 
 ## Explicit initialization of @Captor field is not required
 
@@ -64,6 +63,8 @@ public class CaptorTest {
     public ArgumentCaptor<String> captor;
 }
 ```
+
+----
 
 ## @Captor field must be of the type ArgumentCaptor
 

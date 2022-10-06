@@ -14,14 +14,7 @@ some inspections to help migrate from one version to another; in the context of 
 
 Check out the [Mockito 4.0.0 release notes](https://github.com/mockito/mockito/releases/tag/v4.0.0) for details.
 
-- [Argument matchers are called via org.mockito.Matchers instead of org.mockito.ArgumentMatchers](#argument-matchers-are-called-via-orgmockitomatchers-instead-of-orgmockitoargumentmatchers)
-- [Usage of deprecated anyX() matchers](#usage-of-deprecated-anyx-matchers)
-- [Usage of parameterized variants of isNull(), isNotNull() and notNull()](#usage-of-parameterized-variants-of-isnull-isnotnull-and-notnull)
-- [Usage of deprecated verify methods](#usage-of-deprecated-verify-methods)
-- [Usage of deprecated plugins classes](#usage-of-deprecated-plugins-classes)
-- [Usage of deprecated JUnit runners](#usage-of-deprecated-junit-runners)
-
-### Argument matchers are called via org.mockito.Matchers instead of org.mockito.ArgumentMatchers
+## Argument matchers are called via org.mockito.Matchers instead of org.mockito.ArgumentMatchers
 
 ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-ArgumentMatchersCalledViaMatchersInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/migrationaids/v4/ArgumentMatchersCalledViaMatchersInspection.java)
 ![](https://img.shields.io/badge/mockito-2.x-orange) ![](https://img.shields.io/badge/mockito-3.x-orange)
@@ -45,12 +38,12 @@ Mockito.when(mock.method(Matchers.anyString())).thenReturn(10);
 Mockito.when(mock.method(ArgumentMatchers.anyString())).thenReturn(10);
 ```
 
-### Usage of deprecated anyX() matchers
+## Usage of deprecated anyX() matchers
 
 ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-UsageOfAnyMatchersInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/migrationaids/v4/UsageOfAnyMatchersInspection.java)
 ![](https://img.shields.io/badge/mockito-2.x-orange) ![](https://img.shields.io/badge/mockito-3.x-orange)
 
-#### anyObject/anyVararg -> any
+### anyObject/anyVararg -> any
 
 `anyObject()` and `anyVararg()` are removed in 4.0.0, and it is advised to use `any()` instead.
 
@@ -65,7 +58,7 @@ Mockito.when(mock.method(org.mockito.ArgumentMatchers.any())).thenReturn(10);
 Mockito.when(mock.method(ArgumentMatchers.any())).thenReturn(10);
 ```
 
-#### anyXOf -> anyX
+### anyXOf -> anyX
 
 `anyCollectionOf()`, `anyIterableOf()`, `anyListOf()`, `anyMapOf()` and `anySetOf()` are removed in 4.0.0, and it is advised to use their `anyX()` variants instead.
 
@@ -78,12 +71,12 @@ Mockito.when(mock.method(ArgumentMatchers.anyCollectionOf(String.class))).thenRe
 Mockito.when(mock.method(ArgumentMatchers.anyCollection())).thenReturn(10);
 ```
 
-#### Notes
+### Notes
 
 If a matcher is not used with static import and referenced via `org.mockito.Matchers`, it is also replaced
 with the `org.mockito.ArgumentMatchers` qualifier. See the corresponding logic in [ReplaceAnyXOfWithAnyXQuickFix](../src/main/java/com/picimako/mockitools/inspection/migrationaids/v4/UsageOfAnyMatchersInspection.java).
 
-### Usage of parameterized variants of isNull(), isNotNull() and notNull()
+## Usage of parameterized variants of isNull(), isNotNull() and notNull()
 
 ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-UsageOfAnyMatchersInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/migrationaids/v4/UsageOfAnyMatchersInspection.java)
 ![](https://img.shields.io/badge/mockito-2.x-orange) ![](https://img.shields.io/badge/mockito-3.x-orange)
@@ -103,12 +96,12 @@ Mockito.when(mock.method(ArgumentMatchers.isNotNull())).thenReturn(10);
 Mockito.when(mock.method(ArgumentMatchers.notNull())).thenReturn(10);
 ```
 
-### Usage of deprecated verify methods
+## Usage of deprecated verify methods
 
 ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-UsageOfDeprecatedVerifyInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/migrationaids/v4/UsageOfDeprecatedVerifyInspection.java)
 ![](https://img.shields.io/badge/mockito-3.x-orange)
 
-#### MockedStatic.verify()
+### MockedStatic.verify()
 In Mockito v3 there are two `verify()` methods in `MockedStatic` with different signatures.
 `MockedStatic.verify(VerificationMode, Verification)` is removed in 4.0.0, thus it is advised to use verify with the other signature.
 
@@ -125,7 +118,7 @@ try (MockedStatic<Util> util = Mockito.mockStatic(Util.class)) {
 }
 ```
 
-#### Mockito.verifyZeroInteractions()
+### Mockito.verifyZeroInteractions()
 
 `verifyZeroInteractions()` is deprecated since Mockito 3.0.1, and is removed in 4.0.0, thus it is advised to use `verifyNoMoreInteractions()` which it was an alias for.
 
@@ -138,14 +131,14 @@ Mockito.verifyZeroInteractions(mock1, mock2);
 Mockito.verifyNoMoreInteractions(mock1, mock2);
 ```
 
-### Usage of deprecated plugins classes
+## Usage of deprecated plugins classes
 
 ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-UsageOfDeprecatedPluginClassesInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/migrationaids/v4/UsageOfDeprecatedPluginClassesInspection.java)
 ![](https://img.shields.io/badge/mockito-2.x-orange) ![](https://img.shields.io/badge/mockito-3.x-orange)
 
 `org.mockito.configuration.AnnotationEngine` and `org.mockito.plugins.InstantiatorProvider` are deprecated since Mockito v2, and are removed in 4.0.0.
 
-#### AnnotationEngine
+### AnnotationEngine
 
 This quick fix replaces either the whole import statement, if possible, to minimize migration work, or if the reference is qualified, then replaces only that single reference.
 
@@ -163,7 +156,7 @@ public interface CustomAnnotationEngine extends AnnotationEngine {
 }
 ```
 
-#### InstantiatorProvider
+### InstantiatorProvider
 
 Due to no name collision (unlike in case of `AnnotationEngine`), it is only a single reference that is replaced by this quick fix.
 
@@ -182,7 +175,7 @@ public interface CustomInstantiatorProvider extends InstantiatorProvider2 {
 }
 ```
 
-### Usage of deprecated JUnit runners
+## Usage of deprecated JUnit runners
 
 ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-UsageOfOldJUnitRunnerInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/migrationaids/v4/UsageOfOldJUnitRunnerInspection.java)
 ![](https://img.shields.io/badge/mockito-2.x-orange) ![](https://img.shields.io/badge/mockito-3.x-orange)

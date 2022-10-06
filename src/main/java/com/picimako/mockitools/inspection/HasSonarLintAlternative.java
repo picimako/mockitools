@@ -2,9 +2,18 @@
 
 package com.picimako.mockitools.inspection;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * Marks inspection classes that has a validation in SonarLint too.
  */
+@Documented
+@Retention(RetentionPolicy.SOURCE)
+@Target({ElementType.TYPE})
 public @interface HasSonarLintAlternative {
     /**
      * The URL of the SonarLint rule documentation. 

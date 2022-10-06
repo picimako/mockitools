@@ -463,6 +463,30 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
+    public void testConvertsMockitoMockWithSettingsMockMaker() {
+        checkIntentionRun(
+            "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class ConversionTest {\n" +
+                "    public void testMethod() {\n" +
+                "        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().mockMaker(\"mock-maker-inline\")));\n" +
+                "    }\n" +
+                "    public void aMethod(Object object) { }\n" +
+                "}",
+            "import org.mockito.Mock;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class ConversionTest {\n" +
+                "    @Mock(mockMaker = \"mock-maker-inline\")\n" +
+                "    Object object;\n" +
+                "\n" +
+                "    public void testMethod() {\n" +
+                "        aMethod(object);\n" +
+                "    }\n" +
+                "    public void aMethod(Object object) { }\n" +
+                "}");
+    }
+
     public void testConvertsMockitoMockWithSettingsDefaultAnswer() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +

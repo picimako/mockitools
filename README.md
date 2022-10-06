@@ -3,7 +3,7 @@
 [![Version](https://img.shields.io/jetbrains/plugin/v/18117-mockitools.svg)](https://plugins.jetbrains.com/plugin/18117-mockitools)
 ![Build](https://github.com/picimako/mockitools/workflows/Build/badge.svg)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/18117-mockitools.svg)](https://plugins.jetbrains.com/plugin/18117-mockitools)
-![](https://img.shields.io/badge/since-IJ2021.2-blue) ![](https://img.shields.io/badge/until-IJ2022.2-blue)
+![](https://img.shields.io/badge/since-IJ2021.3-blue) ![](https://img.shields.io/badge/until-IJ2022.3-blue)
 
 <!-- Plugin description -->
 Mockitools is a plugin for IntelliJ-based IDEs that provides framework integration for [Mockito](https://site.mockito.org), one of the (if not the) most popular mocking frameworks for unit testing in Java.

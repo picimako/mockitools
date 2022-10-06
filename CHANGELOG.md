@@ -4,6 +4,16 @@
 
 ## [Unreleased]
 
+## [0.8.0]
+### Added
+- [#37](https://github.com/picimako/mockitools/issues/37): Added inspection to report stub-only mocks when they are used verifications.
+- [#43](https://github.com/picimako/mockitools/issues/43): Added support for converting the `mockMaker` mock setting between the `@Mock` annotation and `MockSettings`.
+- Added missing support for the conversion of the `strictness` mock setting from `@Mock` to `MockSettings`.
+
+### Changed
+- Dropped support for IJ-2021.2.
+- Added support for IJ-2022.3 EAPs.
+
 ## [0.7.0]
 ### Added
 - [#36](https://github.com/picimako/mockitools/issues/36): Added inspection to report `toString()` calls in verifications, since Mockito cannot verify `toString()`.

@@ -32,6 +32,8 @@ Mockito.mock(Object.class, Mockito.withSettings().extraInterfaces(Object.class, 
 The respective Mockito exceptions are thrown in Mockito's [Reporter.java](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java),
 look for the `extraInterfacesAcceptsOnlyInterfaces(Class)` method.
 
+----
+
 ## No argument is provided for the extraInterfaces() call
 
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-ExtraInterfacesInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/ExtraInterfacesInspection.java)
@@ -45,6 +47,8 @@ Mockito.mock(Object.class, Mockito.withSettings().extraInterfaces()); //no argum
 
 You can find the related Mockito exception handling in its [Reporter.java](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java),
 look for the `extraInterfacesRequiresAtLeastOneInterface()` method.
+
+----
 
 ## Mockito cannot mock certain types
 
@@ -115,6 +119,8 @@ Additional resources:
 - [@DoNotMock javadoc](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/DoNotMock.html)
 - [Mockito pull request: Add annotation to mark a type as DoNotMock](https://github.com/mockito/mockito/pull/1833/files)
 
+----
+
 ## Mockito/MockedStatic.reset() is used
 
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-CallOnMockitoResetInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/CallOnMockitoResetInspection.java)
@@ -141,6 +147,8 @@ void testMethod() {
 Additional resources:
 - [Reflectoring.io - Clean Unit Tests with Mockito](https://reflectoring.io/clean-unit-tests-with-mockito/) (**Avoid Mockito.reset() for Better Unit Tests** section)
 - [Stack Exchange - Is this an appropriate use of Mockito's reset method?](https://softwareengineering.stackexchange.com/questions/188299/is-this-an-appropriate-use-of-mockitos-reset-method)
+
+----
 
 ## Convert @Mock/@Spy fields to Mockito.mock()/spy() calls
 
@@ -214,6 +222,12 @@ to:   Object mock = Mockito.mock(Object.class, Mockito.withSettings().serializab
 
 from: @Mock(lenient = true) Object mock;
 to:   Object mock = Mockito.mock(Object.class, Mockito.withSettings().lenient());
+
+from: @Mock(strictness = Mock.Strictness.WARN) Object mock;
+to:   Object mock = Mockito.mock(Object.class, Mockito.withSettings().strictness(Strictness.WARN));
+
+from: @Mock(mockMaker = MockMakers.INLINE) Object mock;
+to:   Object mock = Mockito.mock(Object.class, Mockito.withSettings().mockMaker(MockMakers.INLINE));
 ```
 
 ```java
@@ -247,6 +261,8 @@ Object mock = Mockito.mock(Object.class, Mockito.withSettings()
     .extraInterfaces(List.class, Set.class));
 ```
 </details>
+
+----
 
 ## Convert Mockito.mock()/spy() calls to @Mock/@Spy fields
 
@@ -292,7 +308,7 @@ to:   @Spy Clazz<typeargs> localVar;
 This intention is available on `Mockito.mock()` calls, when the Class argument of the call is a class object access expression (i.e. `MockObject.class`),
 and in case of the `MockSettings` specific overload, the @Mock annotation supports all configuration specified:
 - it starts with the `Mockito.withSettings()` call,
-- it doesn't have a call other than to `lenient()`, `stubOnly()`, `defaultAnswer()`, `name()`, `extraInterfaces()`
+- it doesn't have a call other than to `lenient()`, `stubOnly()`, `defaultAnswer()`, `name()`, `extraInterfaces()`, `mockMaker()`
   or `serializable()` but not its overloaded variant `serializable(SerializableMode)`.
 
 NOTE: there is no validation on whether the specified name or answer is valid to be put into the annotation attribute (as annotation attributes accept constants only),
@@ -331,6 +347,9 @@ to:   @Mock(extraInterfaces = List.class) Clazz clazz;
 
 from: mock(Clazz.class, Mockito.withSettings().strictness(Strictness.WARN))
 to:   @Mock(strictness = Mock.Strictness.WARN) Clazz clazz;
+
+from: mock(Clazz.class, Mockito.withSettings().mockMaker(MockMakers.INLINE))
+to:   @Mock(mockMaker = MockMakers.INLINE) Clazz clazz;
 ```
 
 Furthermore, the type that is being mocked should be mockable either by Mockito's rules or not being annotated with `@DoNotMock`.

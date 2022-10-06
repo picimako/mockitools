@@ -8,7 +8,7 @@ plugins {
     // Kotlin support
     id("org.jetbrains.kotlin.jvm") version "1.7.0"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.5.3"
+    id("org.jetbrains.intellij") version "1.9.0"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "1.3.1"
     // Gradle Qodana Plugin
@@ -91,19 +91,12 @@ tasks {
         })
     }
 
-    // Configure UI tests plugin
-    // Read more: https://github.com/JetBrains/intellij-ui-test-robot
-//    runIdeForUiTests {
-//        systemProperty("robot-server.port", "8082")
-//        systemProperty("ide.mac.message.dialogs.as.sheets", "false")
-//        systemProperty("jb.privacy.policy.text", "<!--999.999-->")
-//        systemProperty("jb.consents.confirmation.enabled", "false")
-//    }
-
-    //Uncomment and configure this for functional testing
-//    test {
-//        systemProperty("idea.home.path", "ABSOLUTE PATH TO LOCAL intellij-community")
-//    }
+    test {
+        //Required for running tests in 2021.3 due to it not finding test classes properly.
+        //See https://app.slack.com/client/T5P9YATH9/C5U8BM1MK/thread/C5U8BM1MK-1639934273.054400
+        isScanForTestClasses = false
+        include("**/*Test.class")
+    }
 
     signPlugin {
         certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))

@@ -11,12 +11,14 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_VERIFICA
 import static com.picimako.mockitools.MockitoQualifiedNames.THEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoVerify;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.getSubsequentMethodCall;
 import static com.picimako.mockitools.util.PsiMethodUtil.hasSubsequentMethodCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.anyOf;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 
+import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.picimako.mockitools.inspection.EnforceConventionInspection;
 import com.siyeh.ig.callMatcher.CallMatcher;
@@ -212,4 +214,13 @@ public enum VerificationApproach {
      * @return the found call as PsiMethodCallExpression, or empty Optional if the call is not found
      */
     public abstract Optional<PsiMethodCallExpression> getVerifiedMethodCall(List<PsiMethodCallExpression> verificationCalls);
+
+    /**
+     * Returns the mock argument used in the provided verification call.
+     *
+     * @param verificationCall the verification method call
+     */
+    public PsiExpression getVerifiedMock(PsiMethodCallExpression verificationCall) {
+        return getFirstArgument(verificationCall);
+    }
 }

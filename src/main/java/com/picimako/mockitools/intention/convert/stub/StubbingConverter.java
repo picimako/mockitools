@@ -30,11 +30,13 @@ import java.util.List;
  */
 public final class StubbingConverter {
 
+    private final Project project;
     private final Document document;
     private final PsiFile file;
     private final PsiDocumentManager documentManager;
 
     public StubbingConverter(Project project, Document document, PsiFile file) {
+        this.project = project;
         this.document = document;
         this.file = file;
         documentManager = PsiDocumentManager.getInstance(project);
@@ -52,7 +54,7 @@ public final class StubbingConverter {
         if (from.hasSameStubTypeAs(to) && from.methodCallStubber.equals(to.methodCallStubber))
             return;
 
-        WriteCommandAction.runWriteCommandAction(firstCallInChain.getProject(), () -> {
+        WriteCommandAction.runWriteCommandAction(project, () -> {
             var calls = collectCallsInChainFromFirst(firstCallInChain, true);
 
             if (from.hasSameStubTypeAs(to)) convertSameType(calls, from, to);
@@ -131,7 +133,7 @@ public final class StubbingConverter {
 
     private void doBaseConversion(StubbingApproach from, StubbingApproach to, List<PsiMethodCallExpression> calls, int endOffset, String replacement) {
         replaceBeginningOfChain(calls, endOffset, replacement);
-        PsiClassUtil.importClassAndCommit(to.getStubStarterClassFqn(), calls.get(0).getProject(), file, document);
+        PsiClassUtil.importClassAndCommit(to.getStubStarterClassFqn(), project, file, document);
         convertMethodNames(calls, from, to);
     }
 

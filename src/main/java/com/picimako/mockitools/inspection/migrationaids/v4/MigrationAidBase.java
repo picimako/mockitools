@@ -18,6 +18,9 @@ import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
  */
 public interface MigrationAidBase {
 
+    /**
+     * Migration from 3.x to 4.x.
+     */
     abstract class V3ToV4BaseInspection extends MockitoolsBaseInspection {
         @Override
         public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
@@ -25,6 +28,9 @@ public interface MigrationAidBase {
         }
     }
 
+    /**
+     * Migration from 2.x or 3.x to 4.x.
+     */
     abstract class V23ToV4BaseInspection extends MockitoolsBaseInspection {
         @Override
         public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
