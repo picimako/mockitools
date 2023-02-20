@@ -223,9 +223,8 @@ public final class PsiMethodUtil {
      * @since 0.3.0
      */
     public static Optional<PsiMethodCallExpression> findCallDownwardsInChain(@NotNull PsiExpression aCallInChain, String methodNameToFind) {
-        var callsInChain = PsiTreeUtil.collectParents(aCallInChain,
-            PsiMethodCallExpression.class, false, e -> e instanceof PsiExpressionList || e instanceof PsiStatement);
-        return callsInChain.stream()
+        return collectCallsInChainFromFirst(aCallInChain)
+            .stream()
             .filter(call -> methodNameToFind.equals(getMethodName(call)))
             .findFirst();
     }
@@ -248,12 +247,16 @@ public final class PsiMethodUtil {
         return calls.stream().map(PsiMethodCallExpression.class::cast).collect(toList());
     }
 
-    public static List<PsiMethodCallExpression> collectCallsInChainFromFirst(PsiMethodCallExpression expression, boolean includeMySelf) {
+    public static List<PsiMethodCallExpression> collectCallsInChainFromFirst(PsiExpression expression, boolean includeMySelf) {
         return PsiTreeUtil.collectParents(expression,
             PsiMethodCallExpression.class, includeMySelf, e -> e instanceof PsiExpressionList || e instanceof PsiStatement);
     }
 
     public static List<PsiMethodCallExpression> collectCallsInChainFromFirst(PsiMethodCallExpression expression) {
+        return collectCallsInChainFromFirst(expression, false);
+    }
+
+    public static List<PsiMethodCallExpression> collectCallsInChainFromFirst(PsiExpression expression) {
         return collectCallsInChainFromFirst(expression, false);
     }
 
