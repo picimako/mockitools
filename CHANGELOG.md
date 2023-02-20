@@ -8,6 +8,7 @@
 ### Changed
 - Dropped support for IJ-2021.3.
 - Added support for IJ-2023.1 EAPs.
+- Minor simplifications under the hood.
 
 ## [0.8.0]
 ### Added
