@@ -33,7 +33,8 @@ public final class MockObject {
         return Optional.of(ref)
             .map(PsiReference::resolve)
             .map(mockVariable -> {
-                if (mockVariable instanceof PsiField) return isFieldMock((PsiField) mockVariable);
+                if (mockVariable instanceof PsiField)
+                    return isFieldMock((PsiField) mockVariable);
                 else if (mockVariable instanceof PsiLocalVariable)
                     return isVariableMock((PsiLocalVariable) mockVariable);
                 return false;

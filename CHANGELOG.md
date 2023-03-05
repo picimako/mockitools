@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+## [0.9.0]
+### Changed
+- Dropped support for IJ-2021.3.
+- Added support for IJ-2023.1.
+- Minor simplifications under the hood.
+
 ## [0.8.0]
 ### Added
 - [#37](https://github.com/picimako/mockitools/issues/37): Added inspection to report stub-only mocks when they are used verifications.
