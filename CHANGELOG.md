@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+## [0.10.0]
+### Changed
+- Disabled the v3 to v4 migration aids inspections since Mockito 4.x has already been public for 1.5 years.
+
 ## [0.9.0]
 ### Changed
 - Dropped support for IJ-2021.3.
