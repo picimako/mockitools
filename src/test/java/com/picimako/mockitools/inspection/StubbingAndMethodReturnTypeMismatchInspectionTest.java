@@ -3,18 +3,20 @@
 package com.picimako.mockitools.inspection;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
+import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link StubbingAndMethodReturnTypeMismatchInspection}.
  */
-public class StubbingAndMethodReturnTypeMismatchInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
+class StubbingAndMethodReturnTypeMismatchInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
         return new StubbingAndMethodReturnTypeMismatchInspection();
     }
 
-    public void testStubbingAndMethodReturnTypeMismatch() {
+    @Test
+    void testStubbingAndMethodReturnTypeMismatch() {
         doJavaTest();
     }
 }

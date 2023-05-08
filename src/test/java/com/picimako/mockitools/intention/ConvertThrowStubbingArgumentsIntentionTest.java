@@ -3,11 +3,14 @@
 package com.picimako.mockitools.intention;
 
 import com.intellij.codeInsight.intention.IntentionAction;
+import com.intellij.testFramework.RunsInEdt;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link ConvertThrowStubbingArgumentsIntention}.
  */
-public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntentionTestBase {
+@RunsInEdt
+class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntentionTestBase {
 
     @Override
     protected IntentionAction getIntention() {
@@ -16,14 +19,16 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
 
     //Availability
 
-    public void testNotAvailableForNonMethodCallIdentifier() {
+    @Test
+    void testNotAvailableForNonMethodCallIdentifier() {
         checkIntentionIsNotAvailable(
             "class NotAvailable {\n" +
                 "    private String fiel<caret>d;\n" +
                 "}");
     }
 
-    public void testNotAvailableWhenMethodNameDoesntMatch() {
+    @Test
+    void testNotAvailableWhenMethodNameDoesntMatch() {
         checkIntentionIsNotAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -41,7 +46,8 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "}");
     }
 
-    public void testNotAvailableWhenNotAllArgumentsAreTheSameKind() {
+    @Test
+    void testNotAvailableWhenNotAllArgumentsAreTheSameKind() {
         checkIntentionIsNotAvailable(
             "import java.io.IOException;\n" +
                 "import org.mockito.BDDMockito;\n" +
@@ -60,7 +66,8 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "}");
     }
 
-    public void testNotAvailableWhenThereIsNonDefaultConstructorNewExpressionArgument() {
+    @Test
+    void testNotAvailableWhenThereIsNonDefaultConstructorNewExpressionArgument() {
         checkIntentionIsNotAvailable(
             "import java.io.IOException;\n" +
                 "import java.sql.SQLException;\n" +
@@ -80,7 +87,8 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "}");
     }
 
-    public void testAvailableOnThenThrowClasses() {
+    @Test
+    void testAvailableOnThenThrowClasses() {
         checkIntentionIsAvailable(
             "import java.io.IOException;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -98,7 +106,8 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "}");
     }
 
-    public void testAvailableOnThenThrowThrowables() {
+    @Test
+    void testAvailableOnThenThrowThrowables() {
         checkIntentionIsAvailable(
             "import java.io.IOException;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -116,7 +125,8 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "}");
     }
 
-    public void testAvailableOnDoThrowClasses() {
+    @Test
+    void testAvailableOnDoThrowClasses() {
         checkIntentionIsAvailable(
             "import java.io.IOException;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -134,7 +144,8 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "}");
     }
 
-    public void testAvailableOnDoThrowThrowables() {
+    @Test
+    void testAvailableOnDoThrowThrowables() {
         checkIntentionIsAvailable(
             "import java.io.IOException;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -152,7 +163,8 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "}");
     }
 
-    public void testAvailableOnGivenWillThrowClasses() {
+    @Test
+    void testAvailableOnGivenWillThrowClasses() {
         checkIntentionIsAvailable(
             "import java.io.IOException;\n" +
                 "import org.mockito.BDDMockito;\n" +
@@ -171,7 +183,8 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "}");
     }
 
-    public void testAvailableOnGivenWillThrowThrowables() {
+    @Test
+    void testAvailableOnGivenWillThrowThrowables() {
         checkIntentionIsAvailable(
             "import java.io.IOException;\n" +
                 "import org.mockito.BDDMockito;\n" +
@@ -190,7 +203,8 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "}");
     }
 
-    public void testAvailableWillThrowGivenClasses() {
+    @Test
+    void testAvailableWillThrowGivenClasses() {
         checkIntentionIsAvailable(
             "import java.io.IOException;\n" +
                 "import org.mockito.BDDMockito;\n" +
@@ -209,7 +223,8 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "}");
     }
 
-    public void testAvailableWillThrowGivenThrowables() {
+    @Test
+    void testAvailableWillThrowGivenThrowables() {
         checkIntentionIsAvailable(
             "import java.io.IOException;\n" +
                 "import org.mockito.BDDMockito;\n" +
@@ -229,8 +244,9 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
     }
 
     //Conversion
-    
-    public void testConvertsThrowablesToClasses() {
+
+    @Test
+    void testConvertsThrowablesToClasses() {
         checkIntentionRun(
             "import java.io.IOException;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -264,7 +280,8 @@ public class ConvertThrowStubbingArgumentsIntentionTest extends MockitoolsIntent
                 "}");
     }
 
-    public void testConvertsClassesToThrowables() {
+    @Test
+    void testConvertsClassesToThrowables() {
         checkIntentionRun(
             "import java.io.IOException;\n" +
                 "import org.mockito.Mockito;\n" +

@@ -3,18 +3,20 @@
 package com.picimako.mockitools.inspection;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link ExtraInterfacesInspection}.
  */
-public class ExtraInterfacesInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class ExtraInterfacesInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
         return new ExtraInterfacesInspection();
     }
 
-    public void testExtraInterfacesTest() {
+    @Test
+    void testExtraInterfacesTest() {
         doJavaTest();
     }
 }

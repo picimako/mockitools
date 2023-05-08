@@ -3,18 +3,20 @@ package com.picimako.mockitools.inspection.migrationaids.v4;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link UsageOfAnyMatchersInspection}.
  */
-public class UsageOfAnyMatchersInspectionAnyTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class UsageOfAnyMatchersInspectionAnyTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
         return new UsageOfAnyMatchersInspection();
     }
 
-    public void testArgumentMatchersAnyObjectIsReplacedWithAny() {
+    @Test
+    void testArgumentMatchersAnyObjectIsReplacedWithAny() {
         doQuickFixTest("Replace with ArgumentMatchers.any()", "UseAnyInsteadOfAnyObjectTest.java",
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.ArgumentMatchers;\n" +
@@ -46,7 +48,8 @@ public class UsageOfAnyMatchersInspectionAnyTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testArgumentMatchersAnyVarargIsReplacedWithAny() {
+    @Test
+    void testArgumentMatchersAnyVarargIsReplacedWithAny() {
         doQuickFixTest("Replace with ArgumentMatchers.any()", "UseAnyInsteadOfAnyVarargTest.java",
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.ArgumentMatchers;\n" +
@@ -78,7 +81,8 @@ public class UsageOfAnyMatchersInspectionAnyTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testMatchersAnyObjectIsReplacedWithAny() {
+    @Test
+    void testMatchersAnyObjectIsReplacedWithAny() {
         doQuickFixTest("Replace with ArgumentMatchers.any()", "UseAnyInsteadOfAnyObjectTest.java",
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Matchers;\n" +
@@ -111,7 +115,8 @@ public class UsageOfAnyMatchersInspectionAnyTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testMatchersAnyVarargIsReplacedWithAny() {
+    @Test
+    void testMatchersAnyVarargIsReplacedWithAny() {
         doQuickFixTest("Replace with ArgumentMatchers.any()", "UseAnyInsteadOfAnyVarargTest.java",
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Matchers;\n" +
@@ -145,7 +150,8 @@ public class UsageOfAnyMatchersInspectionAnyTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testAnyVarargIsReplacedWithAnyWithStaticImport() {
+    @Test
+    void testAnyVarargIsReplacedWithAnyWithStaticImport() {
         doQuickFixTest("Replace with ArgumentMatchers.any()", "UseAnyInsteadOfAnyVarargStaticImportTest.java",
             "import org.mockito.Mockito;\n" +
                 "import static org.mockito.ArgumentMatchers.anyVararg;\n" +
@@ -179,7 +185,8 @@ public class UsageOfAnyMatchersInspectionAnyTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testAnyIsNotReported() {
+    @Test
+    void testAnyIsNotReported() {
         doJavaTest("AnyIsNotReportedTest.java",
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.ArgumentMatchers;\n" +
@@ -197,7 +204,8 @@ public class UsageOfAnyMatchersInspectionAnyTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testAnyIsNotReportedWithStaticImport() {
+    @Test
+    void testAnyIsNotReportedWithStaticImport() {
         doJavaTest("AnyIsNotReportedTest.java",
             "import org.mockito.Mockito;\n" +
                 "import static org.mockito.ArgumentMatchers.any;\n" +

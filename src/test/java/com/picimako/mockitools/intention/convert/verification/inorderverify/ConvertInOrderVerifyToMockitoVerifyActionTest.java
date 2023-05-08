@@ -2,14 +2,18 @@
 
 package com.picimako.mockitools.intention.convert.verification.inorderverify;
 
+import com.intellij.testFramework.RunsInEdt;
 import com.picimako.mockitools.MockitoolsActionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link ConvertInOrderVerifyToMockitoVerifyAction}.
  */
-public class ConvertInOrderVerifyToMockitoVerifyActionTest extends MockitoolsActionTestBase {
+@RunsInEdt
+class ConvertInOrderVerifyToMockitoVerifyActionTest extends MockitoolsActionTestBase {
 
-    public void testConvertsInOrderVerifyToMockitoVerifyWithoutVerificationMode() {
+    @Test
+    void testConvertsInOrderVerifyToMockitoVerifyWithoutVerificationMode() {
         checkAction(() -> new ConvertInOrderVerifyToMockitoVerifyAction(false),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -42,7 +46,8 @@ public class ConvertInOrderVerifyToMockitoVerifyActionTest extends MockitoolsAct
             );
     }
 
-    public void testConvertsInOrderVerifyToMockitoVerifyWithVerificationMode() {
+    @Test
+    void testConvertsInOrderVerifyToMockitoVerifyWithVerificationMode() {
         checkAction(() -> new ConvertInOrderVerifyToMockitoVerifyAction(false),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -74,7 +79,8 @@ public class ConvertInOrderVerifyToMockitoVerifyActionTest extends MockitoolsAct
                 "}");
     }
 
-    public void testConvertsInOrderVerifyToMockitoVerifyWithVerificationModeWithLineWrapping() {
+    @Test
+    void testConvertsInOrderVerifyToMockitoVerifyWithVerificationModeWithLineWrapping() {
         checkAction(() -> new ConvertInOrderVerifyToMockitoVerifyAction(false),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -110,7 +116,8 @@ public class ConvertInOrderVerifyToMockitoVerifyActionTest extends MockitoolsAct
                 "}");
     }
 
-    public void testConvertsInOrderVerifyToMockitoVerifyWithoutVerificationModeInBulkSingle() {
+    @Test
+    void testConvertsInOrderVerifyToMockitoVerifyWithoutVerificationModeInBulkSingle() {
         checkAction(() -> new ConvertInOrderVerifyToMockitoVerifyAction(true),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -142,7 +149,8 @@ public class ConvertInOrderVerifyToMockitoVerifyActionTest extends MockitoolsAct
                 "}");
     }
 
-    public void testConvertsInOrderVerifyToMockitoVerifyWithVerificationModeInBulkSingle() {
+    @Test
+    void testConvertsInOrderVerifyToMockitoVerifyWithVerificationModeInBulkSingle() {
         checkAction(() -> new ConvertInOrderVerifyToMockitoVerifyAction(true),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -174,7 +182,8 @@ public class ConvertInOrderVerifyToMockitoVerifyActionTest extends MockitoolsAct
                 "}");
     }
 
-    public void testConvertsInOrderVerifyToMockitoVerifyWithoutVerificationModeInBulkMultiple() {
+    @Test
+    void testConvertsInOrderVerifyToMockitoVerifyWithoutVerificationModeInBulkMultiple() {
         checkAction(() -> new ConvertInOrderVerifyToMockitoVerifyAction(true),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -210,7 +219,8 @@ public class ConvertInOrderVerifyToMockitoVerifyActionTest extends MockitoolsAct
                 "}");
     }
 
-    public void testConvertsInOrderVerifyToMockitoVerifyWithVerificationModeInBulkMultiple() {
+    @Test
+    void testConvertsInOrderVerifyToMockitoVerifyWithVerificationModeInBulkMultiple() {
         checkAction(() -> new ConvertInOrderVerifyToMockitoVerifyAction(true),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +

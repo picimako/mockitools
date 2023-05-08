@@ -4,18 +4,20 @@ package com.picimako.mockitools.inspection.migrationaids.v4;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link UsageOfDeprecatedVerifyInspection}.
  */
-public class UsageOfDeprecatedVerifyInspectionMockitoTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class UsageOfDeprecatedVerifyInspectionMockitoTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
         return new UsageOfDeprecatedVerifyInspection();
     }
 
-    public void testVerifyZeroInteractionsIsReplacedWithVerifyNoMoreInteractionsNoArgument() {
+    @Test
+    void testVerifyZeroInteractionsIsReplacedWithVerifyNoMoreInteractionsNoArgument() {
         doQuickFixTest("Replace with verifyNoMoreInteractions()", "ReplaceVerifyZeroInteractionsTest.java",
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -33,7 +35,8 @@ public class UsageOfDeprecatedVerifyInspectionMockitoTest extends MockitoolsInsp
                 "}");
     }
 
-    public void testVerifyZeroInteractionsIsReplacedWithVerifyNoMoreInteractionsArguments() {
+    @Test
+    void testVerifyZeroInteractionsIsReplacedWithVerifyNoMoreInteractionsArguments() {
         doQuickFixTest("Replace with verifyNoMoreInteractions()", "ReplaceVerifyZeroInteractionsTest.java",
             "import org.mockito.Mockito;\n" +
                 "import java.util.List;\n" +
@@ -53,7 +56,8 @@ public class UsageOfDeprecatedVerifyInspectionMockitoTest extends MockitoolsInsp
                 "}");
     }
 
-    public void testVerifyZeroInteractionsIsReplacedWithVerifyNoMoreInteractionsArgumentsStaticImported() {
+    @Test
+    void testVerifyZeroInteractionsIsReplacedWithVerifyNoMoreInteractionsArgumentsStaticImported() {
         doQuickFixTest("Replace with verifyNoMoreInteractions()", "ReplaceVerifyZeroInteractionsTest.java",
             "import org.mockito.Mockito;\n" +
                 "import java.util.List;\n" +

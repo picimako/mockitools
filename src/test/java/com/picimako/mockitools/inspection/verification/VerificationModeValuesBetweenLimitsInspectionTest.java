@@ -4,18 +4,20 @@ package com.picimako.mockitools.inspection.verification;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link VerificationModeValuesBetweenLimitsInspection}.
  */
-public class VerificationModeValuesBetweenLimitsInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class VerificationModeValuesBetweenLimitsInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
         return new VerificationModeValuesBetweenLimitsInspection();
     }
 
-    public void testVerificationModeValuesBetweenLimitsTest() {
+    @Test
+    void testVerificationModeValuesBetweenLimitsTest() {
         doJavaTest();
     }
 }

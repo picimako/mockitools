@@ -4,13 +4,14 @@ package com.picimako.mockitools.inspection.consecutive;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
 /**
  * Functional test for {@link SimplifyConsecutiveReturnCallsInspection}.
  */
-public class SimplifyConsecutiveReturnCallsInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
+class SimplifyConsecutiveReturnCallsInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
 
     private static final String MOCK_OBJECT_CLASS =
         "    private static class MockObject {\n" +
@@ -271,31 +272,36 @@ public class SimplifyConsecutiveReturnCallsInspectionTest extends MockitoolsInsp
 
     //Quick fixes
 
-    public void testReplacesWhenThenReturns() {
+    @Test
+    void testReplacesWhenThenReturns() {
         WHEN_THEN_RETURN_CASES.forEach((before, after) ->
             doQuickFixTest("Merge thenReturn calls", "QuickFix.java",
                 createClassText(before), createClassText(after)));
     }
 
-    public void testReplacesDoReturnWhens() {
+    @Test
+    void testReplacesDoReturnWhens() {
         DO_RETURN_WHEN_CASES.forEach((before, after) ->
             doQuickFixTest("Merge doReturn calls", "QuickFix.java",
                 createClassText(before), createClassText(after)));
     }
 
-    public void testReplacesGivenWillReturns() {
+    @Test
+    void testReplacesGivenWillReturns() {
         GIVEN_WILL_RETURN_CASES.forEach((before, after) ->
             doQuickFixTest("Merge willReturn calls", "QuickFix.java",
                 createClassText(before), createClassText(after)));
     }
 
-    public void testReplacesWillReturnGivens() {
+    @Test
+    void testReplacesWillReturnGivens() {
         WILL_RETURN_GIVEN_CASES.forEach((before, after) ->
             doQuickFixTest("Merge willReturn calls", "QuickFix.java",
                 createClassText(before), createClassText(after)));
     }
 
-    public void testReplacesMockedStaticWhenThenReturns() {
+    @Test
+    void testReplacesMockedStaticWhenThenReturns() {
         MOCKED_STATIC_WHEN_THEN_RETURN_CASES.forEach((before, after) ->
             doQuickFixTest("Merge thenReturn calls", "QuickFix.java",
                 createMockedStaticClassText(before), createMockedStaticClassText(after)));

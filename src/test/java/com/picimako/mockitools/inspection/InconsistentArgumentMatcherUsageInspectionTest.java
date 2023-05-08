@@ -3,18 +3,20 @@
 package com.picimako.mockitools.inspection;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link InconsistentArgumentMatcherUsageInspection}.
  */
-public class InconsistentArgumentMatcherUsageInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class InconsistentArgumentMatcherUsageInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
         return new InconsistentArgumentMatcherUsageInspection();
     }
 
-    public void testInconsistentArgumentsTest() {
+    @Test
+    void testInconsistentArgumentsTest() {
         doJavaTest();
     }
 }

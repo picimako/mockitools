@@ -6,15 +6,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.intellij.testFramework.RunsInEdt;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.Supplier;
 
 /**
  * Functional test for {@link MockitoolsPsiUtil}.
  */
-public class MockitoolsPsiUtilTest extends MockitoolsTestBase {
+@RunsInEdt
+class MockitoolsPsiUtilTest extends MockitoolsTestBase {
 
-    public void testIsASpecificMethod() {
+    @Test
+    void testIsASpecificMethod() {
         TestData[] testData = new TestData[]{
             new TestData("IsMockitoMockTest.java",
                 "import org.mockito.Mockito;\n" +
@@ -118,14 +122,15 @@ public class MockitoolsPsiUtilTest extends MockitoolsTestBase {
         };
 
         for (TestData data : testData) {
-            myFixture.configureByText(data.fileName, data.fileContent);
+            getFixture().configureByText(data.fileName, data.fileContent);
             assertThat(data.isSpecificMethod.get())
                 .describedAs("Failed during the assertion of " + data.fileName)
                 .isTrue();
         }
     }
 
-    public void testIsNotASpecificMethod() {
+    @Test
+    void testIsNotASpecificMethod() {
         String fileContent = "import org.mockito.Mockito;\n" +
             "\n" +
             "public class %s {\n" +
@@ -147,14 +152,15 @@ public class MockitoolsPsiUtilTest extends MockitoolsTestBase {
         };
 
         for (TestData data : testData) {
-            myFixture.configureByText(data.fileName, data.fileContent);
+            getFixture().configureByText(data.fileName, data.fileContent);
             assertThat(data.isSpecificMethod.get())
                 .describedAs("Failed during the assertion of " + data.fileName)
                 .isFalse();
         }
     }
 
-    public void testIsCalledTheSameButNotTheSpecificMethod() {
+    @Test
+    void testIsCalledTheSameButNotTheSpecificMethod() {
         TestData[] testData = new TestData[]{
             new TestData("IsMockNotMockitoMockTest.java",
                 "\n" +
@@ -291,7 +297,7 @@ public class MockitoolsPsiUtilTest extends MockitoolsTestBase {
         };
 
         for (TestData data : testData) {
-            myFixture.configureByText(data.fileName, data.fileContent);
+            getFixture().configureByText(data.fileName, data.fileContent);
             assertThat(data.isSpecificMethod.get())
                 .describedAs("Failed during the assertion of " + data.fileName)
                 .isFalse();
@@ -300,8 +306,9 @@ public class MockitoolsPsiUtilTest extends MockitoolsTestBase {
 
     //isOfTypeArgumentCaptor
 
-    public void testIsArgumentCaptor() {
-        myFixture.configureByText("IsArgumentCaptorTest.java",
+    @Test
+    void testIsArgumentCaptor() {
+        getFixture().configureByText("IsArgumentCaptorTest.java",
             "import org.mockito.ArgumentCaptor;\n" +
                 "import org.mockito.Captor;\n" +
                 "\n" +
@@ -313,8 +320,9 @@ public class MockitoolsPsiUtilTest extends MockitoolsTestBase {
         assertThat(MockitoolsPsiUtil.isOfTypeArgumentCaptor(getField())).isTrue();
     }
 
-    public void testIsNotArgumentCaptor() {
-        myFixture.configureByText("IsNotArgumentCaptorTest.java",
+    @Test
+    void testIsNotArgumentCaptor() {
+        getFixture().configureByText("IsNotArgumentCaptorTest.java",
             "import org.mockito.ArgumentCaptor;\n" +
                 "import org.mockito.Captor;\n" +
                 "\n" +
@@ -328,8 +336,9 @@ public class MockitoolsPsiUtilTest extends MockitoolsTestBase {
 
     //isMatchers
 
-    public void testIsNotMatchers() {
-        myFixture.configureByText("isNotMatchersTest.java",
+    @Test
+    void testIsNotMatchers() {
+        getFixture().configureByText("isNotMatchersTest.java",
             "import org.mockito.ArgumentMatchers;\n" +
                 "\n" +
                 "public class isNotMatchersTest {\n" +
@@ -342,11 +351,11 @@ public class MockitoolsPsiUtilTest extends MockitoolsTestBase {
     }
 
     private PsiMethodCallExpression getMethodCall() {
-        return (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        return (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
     }
 
     private PsiField getField() {
-        return (PsiField) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent();
+        return (PsiField) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent();
     }
 
     private static final class TestData {

@@ -3,23 +3,26 @@
 package com.picimako.mockitools.inspection;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link MockTypeInspection}.
  */
-public class MockTypeInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
+class MockTypeInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
     
     @Override
     protected InspectionProfileEntry getInspection() {
         return new MockTypeInspection();
     }
 
-    public void testNonMockableTypesTest() {
+    @Test
+    void testNonMockableTypesTest() {
         doJavaTest();
     }
-    
-    public void testNonMockableTypesDoNotMockTest() {
-        myFixture.copyFileToProject("DoNotMock.java");
+
+    @Test
+    void testNonMockableTypesDoNotMockTest() {
+        getFixture().copyFileToProject("DoNotMock.java");
         doJavaTest();
     }
 }

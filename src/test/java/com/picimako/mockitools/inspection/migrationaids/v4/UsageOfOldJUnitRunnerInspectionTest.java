@@ -6,11 +6,12 @@ import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadJUnit4;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link UsageOfOldJUnitRunnerInspection}.
  */
-public class UsageOfOldJUnitRunnerInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class UsageOfOldJUnitRunnerInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
@@ -19,10 +20,11 @@ public class UsageOfOldJUnitRunnerInspectionTest extends MockitoolsInspectionTes
 
     @Override
     protected void loadLibs() {
-        loadJUnit4(myFixture.getProjectDisposable(), getModule());
+        loadJUnit4(getFixture().getProjectDisposable(), getFixture().getModule());
     }
 
-    public void testReplaceConsoleSpammingMockitoJUnitRunner() {
+    @Test
+    void testReplaceConsoleSpammingMockitoJUnitRunner() {
         doQuickFixTest("Replace with org.mockito.junit.MockitoJUnitRunner", "ReplaceOldRunnerTest.java",
             "import org.junit.runner.RunWith;\n" +
                 "import org.mockito.runners.ConsoleSpammingMockitoJUnitRunner;\n" +
@@ -39,7 +41,8 @@ public class UsageOfOldJUnitRunnerInspectionTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testReplaceVerboseMockitoJUnitRunner() {
+    @Test
+    void testReplaceVerboseMockitoJUnitRunner() {
         doQuickFixTest("Replace with org.mockito.junit.MockitoJUnitRunner", "ReplaceOldRunnerTest.java",
             "import org.junit.runner.RunWith;\n" +
                 "import org.mockito.runners.VerboseMockitoJUnitRunner;\n" +
@@ -56,7 +59,8 @@ public class UsageOfOldJUnitRunnerInspectionTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testReplaceMockitoJUnitRunner() {
+    @Test
+    void testReplaceMockitoJUnitRunner() {
         doQuickFixTest("Replace with org.mockito.junit.MockitoJUnitRunner", "ReplaceOldRunnerTest.java",
             "import org.junit.runner.RunWith;\n" +
                 "import org.mockito.runners.MockitoJUnitRunner;\n" +
@@ -72,7 +76,8 @@ public class UsageOfOldJUnitRunnerInspectionTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testReplaceConsoleSpammingMockitoJUnitRunnerWithFqn() {
+    @Test
+    void testReplaceConsoleSpammingMockitoJUnitRunnerWithFqn() {
         doQuickFixTest("Replace with org.mockito.junit.MockitoJUnitRunner", "ReplaceOldRunnerTest.java",
             "import org.junit.runner.RunWith;\n" +
                 "@RunWith(org.mockito.runners.ConsoleSpammingMockitoJU<caret>nitRunner.class)\n" +
@@ -86,7 +91,8 @@ public class UsageOfOldJUnitRunnerInspectionTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testReplaceVerboseMockitoJUnitRunnerWithFqn() {
+    @Test
+    void testReplaceVerboseMockitoJUnitRunnerWithFqn() {
         doQuickFixTest("Replace with org.mockito.junit.MockitoJUnitRunner", "ReplaceOldRunnerTest.java",
             "import org.junit.runner.RunWith;\n" +
                 "@RunWith(org.mockito.runners.VerboseMoc<caret>kitoJUnitRunner.class)\n" +
@@ -100,7 +106,8 @@ public class UsageOfOldJUnitRunnerInspectionTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testReplaceMockitoJUnitRunnerWithFqn() {
+    @Test
+    void testReplaceMockitoJUnitRunnerWithFqn() {
         doQuickFixTest("Replace with org.mockito.junit.MockitoJUnitRunner", "ReplaceOldRunnerTest.java",
             "import org.junit.runner.RunWith;\n" +
                 "@RunWith(org.mockito.runners.MockitoJUni<caret>tRunner.class)\n" +

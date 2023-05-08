@@ -7,11 +7,12 @@ import java.util.Map;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link SimplifyConsecutiveThrowCallsInspection};
  */
-public class SimplifyConsecutiveThrowCallsInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
+class SimplifyConsecutiveThrowCallsInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
 
     private static final Map<String, String> DO_THROW_WHEN_CASES = new HashMap<>();
 
@@ -306,37 +307,44 @@ public class SimplifyConsecutiveThrowCallsInspectionTest extends MockitoolsInspe
 
     //Quick fixes
 
-    public void testReplacesWhenThenThrows() {
+    @Test
+    void testReplacesWhenThenThrows() {
         WHEN_THEN_THROW_CASES.forEach((before, after) ->
             doQuickFixTest("Merge thenThrow calls", "QuickFix.java", createClassText(before), createClassText(after)));
     }
 
-    public void testReplacesDoThrowWhens() {
+    @Test
+    void testReplacesDoThrowWhens() {
         DO_THROW_WHEN_CASES.forEach((before, after) ->
             doQuickFixTest("Merge doThrow calls", "QuickFix.java", createClassText(before), createClassText(after)));
     }
 
-    public void testReplacesGivenWillThrows() {
+    @Test
+    void testReplacesGivenWillThrows() {
         GIVEN_WILL_THROW_CASES.forEach((before, after) ->
             doQuickFixTest("Merge willThrow calls", "QuickFix.java", createClassText(before), createClassText(after)));
     }
 
-    public void testReplacesWillThrowGivens() {
+    @Test
+    void testReplacesWillThrowGivens() {
         WILL_THROW_GIVEN_CASES.forEach((before, after) ->
             doQuickFixTest("Merge willThrow calls", "QuickFix.java", createClassText(before), createClassText(after)));
     }
 
-    public void testMixedToClassesCases() {
+    @Test
+    void testMixedToClassesCases() {
         TO_CLASSES_MIXED_CASES.forEach((before, after) ->
             doQuickFixTest("Merge calls, convert parameters to Class objects", "QuickFix.java", createClassText(before), createClassText(after)));
     }
 
-    public void testMixedToThrowablesCases() {
+    @Test
+    void testMixedToThrowablesCases() {
         TO_THROWABLES_MIXED_CASES.forEach((before, after) ->
             doQuickFixTest("Merge calls, convert parameters to Throwables", "QuickFix.java", createClassText(before), createClassText(after)));
     }
 
-    public void testReplacesMockedStaticWhenThenThrows() {
+    @Test
+    void testReplacesMockedStaticWhenThenThrows() {
         MOCKED_STATIC_WHEN_THEN_THROWS_CASES.forEach((before, after) ->
             doQuickFixTest("Merge thenThrow calls", "QuickFix.java",
                 createMockedStaticClassText(before), createMockedStaticClassText(after)));

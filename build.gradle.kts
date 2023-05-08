@@ -58,6 +58,8 @@ qodana {
 
 dependencies {
     testImplementation("org.assertj:assertj-core:3.23.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 }
 
 tasks {
@@ -92,6 +94,7 @@ tasks {
     }
 
     test {
+        useJUnitPlatform()
         //Required for running tests in 2021.3 due to it not finding test classes properly.
         //See https://app.slack.com/client/T5P9YATH9/C5U8BM1MK/thread/C5U8BM1MK-1639934273.054400
         isScanForTestClasses = false

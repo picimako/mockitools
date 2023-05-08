@@ -7,17 +7,18 @@ import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito4Latest
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.psi.PsiField;
-
-import java.util.Optional;
+import com.intellij.testFramework.RunsInEdt;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link com.picimako.mockitools.MockitoolsPsiUtil}.
  */
-public class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
+@RunsInEdt
+class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
 
     @Override
     protected void loadLibs() {
-        loadMockito4Latest(myFixture.getProjectDisposable(), getModule());
+        loadMockito4Latest(getFixture().getProjectDisposable(), getFixture().getModule());
     }
 
     @Override
@@ -27,8 +28,9 @@ public class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
 
     //getDoNotMockAnnotatedTypeAndReasonInHierarchy
 
-    public void testReturnsDoNotMockedClassWithDefaultReason() {
-        myFixture.configureByText("DoNotMockTest.java",
+    @Test
+    void testReturnsDoNotMockedClassWithDefaultReason() {
+        getFixture().configureByText("DoNotMockTest.java",
             "import org.mockito.DoNotMock;\n" +
                 "import org.mockito.Mock;\n" +
                 "\n" +
@@ -41,12 +43,13 @@ public class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 "    private static class NotMockable {}\n" +
                 "}\n");
 
-        Optional<MockableTypesUtil.DoNotMockType> doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
+        var doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
         assertThat(doNotMock.get().reason).isEqualTo("Create a real instance instead.");
     }
 
-    public void testReturnsDoNotMockedClassWithCustomReason() {
-        myFixture.configureByText("DoNotMockTest.java",
+    @Test
+    void testReturnsDoNotMockedClassWithCustomReason() {
+        getFixture().configureByText("DoNotMockTest.java",
             "import org.mockito.DoNotMock;\n" +
                 "import org.mockito.Mock;\n" +
                 "\n" +
@@ -59,12 +62,13 @@ public class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 "    private static class NotMockable {}\n" +
                 "}\n");
 
-        Optional<MockableTypesUtil.DoNotMockType> doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
+        var doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
         assertThat(doNotMock.get().reason).isEqualTo("A custom reason");
     }
 
-    public void testReturnsDoNotMockedClassWithEmptyReason() {
-        myFixture.configureByText("DoNotMockTest.java",
+    @Test
+    void testReturnsDoNotMockedClassWithEmptyReason() {
+        getFixture().configureByText("DoNotMockTest.java",
             "import org.mockito.DoNotMock;\n" +
                 "import org.mockito.Mock;\n" +
                 "\n" +
@@ -77,13 +81,14 @@ public class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 "    private static class NotMockable {}\n" +
                 "}\n");
 
-        Optional<MockableTypesUtil.DoNotMockType> doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
+        var doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
         assertThat(doNotMock.get().reason).isEmpty();
     }
 
-    public void testReturnsCustomDoNotMockedClassWithDefaultReason() {
-        myFixture.copyFileToProject("DoNotMock.java");
-        myFixture.configureByText("DoNotMockTest.java",
+    @Test
+    void testReturnsCustomDoNotMockedClassWithDefaultReason() {
+        getFixture().copyFileToProject("DoNotMock.java");
+        getFixture().configureByText("DoNotMockTest.java",
             "import pm.org.mockito.DoNotMock;\n" +
                 "import org.mockito.Mock;\n" +
                 "\n" +
@@ -96,13 +101,14 @@ public class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 "    private static class NotMockable {}\n" +
                 "}\n");
 
-        Optional<MockableTypesUtil.DoNotMockType> doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
+        var doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
         assertThat(doNotMock.get().reason).isEqualTo("Default reason");
     }
 
-    public void testReturnsCustomDoNotMockedClassWithCustomReason() {
-        myFixture.copyFileToProject("DoNotMock.java");
-        myFixture.configureByText("DoNotMockTest.java",
+    @Test
+    void testReturnsCustomDoNotMockedClassWithCustomReason() {
+        getFixture().copyFileToProject("DoNotMock.java");
+        getFixture().configureByText("DoNotMockTest.java",
             "import pm.org.mockito.DoNotMock;\n" +
                 "import org.mockito.Mock;\n" +
                 "\n" +
@@ -115,13 +121,14 @@ public class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 "    private static class NotMockable {}\n" +
                 "}\n");
 
-        Optional<MockableTypesUtil.DoNotMockType> doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
+        var doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
         assertThat(doNotMock.get().reason).isEqualTo("Custom reason");
     }
 
-    public void testReturnsCustomDoNotMockedClassWithEmptyReason() {
-        myFixture.copyFileToProject("DoNotMock.java");
-        myFixture.configureByText("DoNotMockTest.java",
+    @Test
+    void testReturnsCustomDoNotMockedClassWithEmptyReason() {
+        getFixture().copyFileToProject("DoNotMock.java");
+        getFixture().configureByText("DoNotMockTest.java",
             "import pm.org.mockito.DoNotMock;\n" +
                 "import org.mockito.Mock;\n" +
                 "\n" +
@@ -134,15 +141,16 @@ public class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 "    private static class NotMockable {}\n" +
                 "}\n");
 
-        Optional<MockableTypesUtil.DoNotMockType> doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
+        var doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
         assertThat(doNotMock.get().reason).isEmpty();
     }
 
     //isMockableTypeInAnyWay
 
-    public void testIsNotMockableTypeInAnyWayDoNotMock() {
-        myFixture.copyFileToProject("DoNotMock.java");
-        myFixture.configureByText("DoNotMockTest.java",
+    @Test
+    void testIsNotMockableTypeInAnyWayDoNotMock() {
+        getFixture().copyFileToProject("DoNotMock.java");
+        getFixture().configureByText("DoNotMockTest.java",
             "import pm.org.mockito.DoNotMock;\n" +
                 "import org.mockito.Mock;\n" +
                 "\n" +
@@ -158,8 +166,9 @@ public class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
         assertThat(MockableTypesUtil.isMockableTypeInAnyWay(getField().getTypeElement().getType())).isFalse();
     }
 
-    public void testIsNotMockableTypeInAnyWay() {
-        myFixture.configureByText("DoNotMockTest.java",
+    @Test
+    void testIsNotMockableTypeInAnyWay() {
+        getFixture().configureByText("DoNotMockTest.java",
             "import org.mockito.Mock;\n" +
                 "\n" +
                 "public class DoNotMockTest {\n" +
@@ -172,6 +181,6 @@ public class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
     }
 
     private PsiField getField() {
-        return (PsiField) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent();
+        return (PsiField) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent();
     }
 }

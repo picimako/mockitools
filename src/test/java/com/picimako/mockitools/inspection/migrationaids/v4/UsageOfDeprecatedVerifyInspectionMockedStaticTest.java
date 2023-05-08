@@ -4,18 +4,20 @@ package com.picimako.mockitools.inspection.migrationaids.v4;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link UsageOfDeprecatedVerifyInspection}.
  */
-public class UsageOfDeprecatedVerifyInspectionMockedStaticTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class UsageOfDeprecatedVerifyInspectionMockedStaticTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
         return new UsageOfDeprecatedVerifyInspection();
     }
 
-    public void testVerifyArgumentsAreSwitchedSimpleLambda() {
+    @Test
+    void testVerifyArgumentsAreSwitchedSimpleLambda() {
         doQuickFixTest("Use non-deprecated 'verify()'", "VerifyArgumentsAreSwitchedTest.java",
             "import org.mockito.MockedStatic;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -43,7 +45,8 @@ public class UsageOfDeprecatedVerifyInspectionMockedStaticTest extends Mockitool
                 "}");
     }
 
-    public void testVerifyArgumentsAreSwitchedLambdaBlock() {
+    @Test
+    void testVerifyArgumentsAreSwitchedLambdaBlock() {
         doQuickFixTest("Use non-deprecated 'verify()'", "VerifyArgumentsAreSwitchedTest.java",
             "import org.mockito.MockedStatic;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -75,7 +78,8 @@ public class UsageOfDeprecatedVerifyInspectionMockedStaticTest extends Mockitool
                 "}");
     }
 
-    public void testNonDeprecatedVerifyIsNotReported() {
+    @Test
+    void testNonDeprecatedVerifyIsNotReported() {
         doJavaTest("NoVerifyIsReportedTest.java",
             "import org.mockito.MockedStatic;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -93,7 +97,8 @@ public class UsageOfDeprecatedVerifyInspectionMockedStaticTest extends Mockitool
                 "}");
     }
 
-    public void testNonDeprecatedVerifyIsNotReportedSimpleLambda() {
+    @Test
+    void testNonDeprecatedVerifyIsNotReportedSimpleLambda() {
         doJavaTest("NoVerifyIsReportedTest.java",
             "import org.mockito.MockedStatic;\n" +
                 "import org.mockito.Mockito;\n" +

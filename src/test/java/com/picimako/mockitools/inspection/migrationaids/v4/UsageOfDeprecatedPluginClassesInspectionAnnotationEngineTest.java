@@ -4,18 +4,20 @@ package com.picimako.mockitools.inspection.migrationaids.v4;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link UsageOfDeprecatedPluginClassesInspection}.
  */
-public class UsageOfDeprecatedPluginClassesInspectionAnnotationEngineTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class UsageOfDeprecatedPluginClassesInspectionAnnotationEngineTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
         return new UsageOfDeprecatedPluginClassesInspection();
     }
 
-    public void testReplacesAnnotationEngineImport() {
+    @Test
+    void testReplacesAnnotationEngineImport() {
         doQuickFixTest("Replace with org.mockito.plugins.AnnotationEngine", "ReplaceAnnotationEngineTest.java",
             "import org.mockito.configuration.AnnotationEngine;\n" +
                 "\n" +
@@ -33,7 +35,8 @@ public class UsageOfDeprecatedPluginClassesInspectionAnnotationEngineTest extend
                 "}");
     }
 
-    public void testReplacesAnnotationEngineImportInterfaceDeclaration() {
+    @Test
+    void testReplacesAnnotationEngineImportInterfaceDeclaration() {
         doQuickFixTest("Replace with org.mockito.plugins.AnnotationEngine", "ReplaceAnnotationEngineTest.java",
             "import org.mockito.configuration.AnnotationEngine\n" +
                 "\n" +
@@ -45,7 +48,8 @@ public class UsageOfDeprecatedPluginClassesInspectionAnnotationEngineTest extend
                 "}");
     }
 
-    public void testReplacesAnnotationEngineFullyQualifiedNameWithoutNameCollision() {
+    @Test
+    void testReplacesAnnotationEngineFullyQualifiedNameWithoutNameCollision() {
         doQuickFixTest("Replace with org.mockito.plugins.AnnotationEngine", "ReplaceAnnotationEngineTest.java",
             "public class ReplaceAnnotationEngineTest {\n" +
                 "    public void testMethod() {\n" +
@@ -61,7 +65,8 @@ public class UsageOfDeprecatedPluginClassesInspectionAnnotationEngineTest extend
                 "}");
     }
 
-    public void testReplacesAnnotationEngineFullyQualifiedNameWithNameCollision() {
+    @Test
+    void testReplacesAnnotationEngineFullyQualifiedNameWithNameCollision() {
         doQuickFixTest("Replace with org.mockito.plugins.AnnotationEngine", "ReplaceAnnotationEngineTest.java",
             "import org.mockito.configuration.AnnotationEngine;\n" +
                 "\n" +
@@ -81,7 +86,8 @@ public class UsageOfDeprecatedPluginClassesInspectionAnnotationEngineTest extend
                 "}");
     }
 
-    public void testReplacesAllNonFqnOccurrencesOfAnnotationEngine() {
+    @Test
+    void testReplacesAllNonFqnOccurrencesOfAnnotationEngine() {
         doQuickFixTest("Replace with org.mockito.plugins.AnnotationEngine", "ReplaceAnnotationEngineTest.java",
             "import org.mockito.configuration.AnnotationEngine;\n" +
                 "\n" +

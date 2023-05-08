@@ -2,14 +2,18 @@
 
 package com.picimako.mockitools.intention.convert.verification.inorderverify;
 
+import com.intellij.testFramework.RunsInEdt;
 import com.picimako.mockitools.MockitoolsActionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction}.
  */
-public class ConvertInOrderVerifyToBDDMockitoThenWithInOrderActionTest extends MockitoolsActionTestBase {
+@RunsInEdt
+class ConvertInOrderVerifyToBDDMockitoThenWithInOrderActionTest extends MockitoolsActionTestBase {
 
-    public void testConvertsInOrderVerifyToBDDMockitoThenWithoutVerificationMode() {
+    @Test
+    void testConvertsInOrderVerifyToBDDMockitoThenWithoutVerificationMode() {
         checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction(false),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -42,7 +46,8 @@ public class ConvertInOrderVerifyToBDDMockitoThenWithInOrderActionTest extends M
                 "}");
     }
 
-    public void testConvertsInOrderVerifyToBDDMockitoThenWithVerificationMode() {
+    @Test
+    void testConvertsInOrderVerifyToBDDMockitoThenWithVerificationMode() {
         checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction(false),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -75,7 +80,8 @@ public class ConvertInOrderVerifyToBDDMockitoThenWithInOrderActionTest extends M
                 "}");
     }
 
-    public void testConvertsInOrderVerifyToBDDMockitoThenWithoutVerificationModeInBulkSingle() {
+    @Test
+    void testConvertsInOrderVerifyToBDDMockitoThenWithoutVerificationModeInBulkSingle() {
         checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction(true),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -108,7 +114,8 @@ public class ConvertInOrderVerifyToBDDMockitoThenWithInOrderActionTest extends M
                 "}");
     }
 
-    public void testConvertsInOrderVerifyToBDDMockitoThenWithVerificationModeInBulkSingle() {
+    @Test
+    void testConvertsInOrderVerifyToBDDMockitoThenWithVerificationModeInBulkSingle() {
         checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction(true),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -141,7 +148,8 @@ public class ConvertInOrderVerifyToBDDMockitoThenWithInOrderActionTest extends M
                 "}");
     }
 
-    public void testConvertsInOrderVerifyToBDDMockitoThenWithoutVerificationModeInBulkMultiple() {
+    @Test
+    void testConvertsInOrderVerifyToBDDMockitoThenWithoutVerificationModeInBulkMultiple() {
         checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction(true),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -178,7 +186,8 @@ public class ConvertInOrderVerifyToBDDMockitoThenWithInOrderActionTest extends M
                 "}");
     }
 
-    public void testConvertsInOrderVerifyToBDDMockitoThenWithVerificationModeInBulkMultiple() {
+    @Test
+    void testConvertsInOrderVerifyToBDDMockitoThenWithVerificationModeInBulkMultiple() {
         checkAction(() -> new ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction(true),
             "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +

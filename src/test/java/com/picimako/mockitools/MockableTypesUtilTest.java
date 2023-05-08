@@ -1,15 +1,22 @@
-//Copyright 2022 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.psi.PsiField;
+import com.intellij.testFramework.RunsInEdt;
+import org.junit.jupiter.api.Test;
 
-public class MockableTypesUtilTest extends MockitoolsTestBase {
+/**
+ * Integration test for {@link MockableTypesUtil}.
+ */
+@RunsInEdt
+class MockableTypesUtilTest extends MockitoolsTestBase {
 
-    public void testIsMockableType() {
-        myFixture.configureByText("IsMockableTypeTest.java",
+    @Test
+    void testIsMockableType() {
+        getFixture().configureByText("IsMockableTypeTest.java",
             "import org.mockito.Mock;\n" +
                 "\n" +
                 "public class IsMockableTypeTest {\n" +
@@ -20,8 +27,9 @@ public class MockableTypesUtilTest extends MockitoolsTestBase {
         assertThat(MockableTypesUtil.isMockableType(getField().getTypeElement().getType())).isTrue();
     }
 
-    public void testIsNotMockableTypePrimitive() {
-        myFixture.configureByText("IsNotMockableTypePrimitiveTest.java",
+    @Test
+    void testIsNotMockableTypePrimitive() {
+        getFixture().configureByText("IsNotMockableTypePrimitiveTest.java",
             "import org.mockito.Mock;\n" +
                 "\n" +
                 "public class IsNotMockableTypePrimitiveTest {\n" +
@@ -32,8 +40,9 @@ public class MockableTypesUtilTest extends MockitoolsTestBase {
         assertThat(MockableTypesUtil.isMockableType(getField().getTypeElement().getType())).isFalse();
     }
 
-    public void testIsNotMockableTypeWrapper() {
-        myFixture.configureByText("IsNotMockableTypeWrapperTest.java",
+    @Test
+    void testIsNotMockableTypeWrapper() {
+        getFixture().configureByText("IsNotMockableTypeWrapperTest.java",
             "import org.mockito.Mock;\n" +
                 "\n" +
                 "public class IsNotMockableTypeWrapperTest {\n" +
@@ -45,6 +54,6 @@ public class MockableTypesUtilTest extends MockitoolsTestBase {
     }
 
     private PsiField getField() {
-        return (PsiField) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent();
+        return (PsiField) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent();
     }
 }

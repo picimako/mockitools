@@ -5,11 +5,14 @@ package com.picimako.mockitools.intention;
 import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito4Latest;
 
 import com.intellij.codeInsight.intention.IntentionAction;
+import com.intellij.testFramework.RunsInEdt;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link ConvertMockSpyFieldToCallIntention}.
  */
-public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionTestBase {
+@RunsInEdt
+class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionTestBase {
 
     @Override
     protected IntentionAction getIntention() {
@@ -18,19 +21,21 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
 
     @Override
     protected void loadLibs() {
-        loadMockito4Latest(myFixture.getProjectDisposable(), getModule());
+        loadMockito4Latest(getFixture().getProjectDisposable(), getFixture().getModule());
     }
 
     //Intention availability
 
-    public void testIntentionIsNotAvailableForNonMockNonSpyField() {
+    @Test
+    void testIntentionIsNotAvailableForNonMockNonSpyField() {
         checkIntentionIsNotAvailable(
             "public class NotAvailable {\n" +
                 "    Object mo<caret>ck;\n" +
                 "}");
     }
 
-    public void testIntentionIsNotAvailableWhenTheParentClassHasNoMethod() {
+    @Test
+    void testIntentionIsNotAvailableWhenTheParentClassHasNoMethod() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mock;\n" +
                 "\n" +
@@ -40,7 +45,8 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
                 "}");
     }
 
-    public void testIntentionIsNotAvailableWhenBothMockAndSpyAnnotationsAreOnField() {
+    @Test
+    void testIntentionIsNotAvailableWhenBothMockAndSpyAnnotationsAreOnField() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mock;\n" +
                 "import org.mockito.Spy;\n" +
@@ -52,7 +58,8 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
                 "}");
     }
 
-    public void testIntentionIsAvailableOnMockField() {
+    @Test
+    void testIntentionIsAvailableOnMockField() {
         checkIntentionIsAvailable(
             "import org.mockito.Mock;\n" +
                 "\n" +
@@ -64,7 +71,8 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
                 "}");
     }
 
-    public void testIntentionIsAvailableOnSpyField() {
+    @Test
+    void testIntentionIsAvailableOnSpyField() {
         checkIntentionIsAvailable(
             "import org.mockito.Spy;\n" +
                 "\n" +
@@ -78,7 +86,8 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
 
     //@Mock -> Mockito.mock(<type>.class)
 
-    public void testConvertsMockFieldToMockCallFirstInCodeBlockOfManyStatements() {
+    @Test
+    void testConvertsMockFieldToMockCallFirstInCodeBlockOfManyStatements() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "\n" +
@@ -102,7 +111,8 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
                 "}");
     }
 
-    public void testConvertsMockFieldToMockCallFirstInCodeBlockOfNoStatement() {
+    @Test
+    void testConvertsMockFieldToMockCallFirstInCodeBlockOfNoStatement() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "\n" +
@@ -123,7 +133,8 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
                 "}");
     }
 
-    public void testConvertsMockFieldToMockCallIntoSelectedMethod() {
+    @Test
+    void testConvertsMockFieldToMockCallIntoSelectedMethod() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "\n" +
@@ -153,7 +164,8 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
 
     //@Spy -> Mockito.spy(<type>.class)
 
-    public void testConvertsSpyFieldToSpyCallFirstInCodeBlockOfManyStatements() {
+    @Test
+    void testConvertsSpyFieldToSpyCallFirstInCodeBlockOfManyStatements() {
         checkIntentionRun(
             "import org.mockito.Spy;\n" +
                 "\n" +
@@ -177,7 +189,8 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
                 "}");
     }
 
-    public void testConvertsSpyFieldToSpyCallFirstInCodeBlockOfNoStatement() {
+    @Test
+    void testConvertsSpyFieldToSpyCallFirstInCodeBlockOfNoStatement() {
         checkIntentionRun(
             "import org.mockito.Spy;\n" +
                 "\n" +
@@ -198,7 +211,8 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
                 "}");
     }
 
-    public void testConvertsSpyFieldToSpyCallIntoSelectedMethod() {
+    @Test
+    void testConvertsSpyFieldToSpyCallIntoSelectedMethod() {
         checkIntentionRun(
             "import org.mockito.Spy;\n" +
                 "\n" +
@@ -228,7 +242,8 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
 
     //Generics: @Spy Type<type>; -> Mockito.spy(Type.class)
 
-    public void testConvertsSpyFieldWithGenericsToSpyCall() {
+    @Test
+    void testConvertsSpyFieldWithGenericsToSpyCall() {
         checkIntentionRun(
             "import org.mockito.Spy;\n" +
                 "\n" +
@@ -254,7 +269,8 @@ public class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionT
                 "}");
     }
 
-    public void testConvertsMockFieldWithGenericsToMockCall() {
+    @Test
+    void testConvertsMockFieldWithGenericsToMockCall() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "\n" +

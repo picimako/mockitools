@@ -12,8 +12,8 @@ import java.util.function.Supplier;
 public abstract class MockitoolsActionTestBase extends MockitoolsTestBase {
 
     protected void checkAction(Supplier<AnAction> action, String beforeText, String afterText) {
-        myFixture.configureByText("ConversionTest.java", beforeText);
-        myFixture.testAction(action.get());
-        myFixture.checkResult(afterText);
+        getFixture().configureByText("ConversionTest.java", beforeText);
+        getFixture().testAction(action.get());
+        getFixture().checkResult(afterText);
     }
 }

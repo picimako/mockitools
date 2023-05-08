@@ -2,14 +2,18 @@
 
 package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 
+import com.intellij.testFramework.RunsInEdt;
 import com.picimako.mockitools.MockitoolsActionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link ConvertBDDMockitoThenToMockitoVerifyAction}.
  */
-public class ConvertBDDMockitoThenToMockitoVerifyActionTest extends MockitoolsActionTestBase {
+@RunsInEdt
+class ConvertBDDMockitoThenToMockitoVerifyActionTest extends MockitoolsActionTestBase {
 
-    public void testConvertsBDDMockitoThenToMockitoVerifyWithoutVerificationMode() {
+    @Test
+    void testConvertsBDDMockitoThenToMockitoVerifyWithoutVerificationMode() {
         checkAction(() -> new ConvertBDDMockitoThenToMockitoVerifyAction(false),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -39,7 +43,8 @@ public class ConvertBDDMockitoThenToMockitoVerifyActionTest extends MockitoolsAc
                 "}");
     }
 
-    public void testConvertsBDDMockitoThenToMockitoVerifyWithVerificationMode() {
+    @Test
+    void testConvertsBDDMockitoThenToMockitoVerifyWithVerificationMode() {
         checkAction(() -> new ConvertBDDMockitoThenToMockitoVerifyAction(false),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -69,7 +74,8 @@ public class ConvertBDDMockitoThenToMockitoVerifyActionTest extends MockitoolsAc
                 "}");
     }
 
-    public void testConvertsBDDMockitoThenToMockitoVerifyWithInOrder() {
+    @Test
+    void testConvertsBDDMockitoThenToMockitoVerifyWithInOrder() {
         checkAction(() -> new ConvertBDDMockitoThenToMockitoVerifyAction(false),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.InOrder;\n" +
@@ -103,7 +109,8 @@ public class ConvertBDDMockitoThenToMockitoVerifyActionTest extends MockitoolsAc
                 "}");
     }
 
-    public void testConvertsBDDMockitoThenToMockitoVerifyWithInOrderAndVerificationMode() {
+    @Test
+    void testConvertsBDDMockitoThenToMockitoVerifyWithInOrderAndVerificationMode() {
         checkAction(() -> new ConvertBDDMockitoThenToMockitoVerifyAction(false),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.InOrder;\n" +
@@ -137,7 +144,8 @@ public class ConvertBDDMockitoThenToMockitoVerifyActionTest extends MockitoolsAc
                 "}");
     }
 
-    public void testConvertsBDDMockitoThenToMockitoVerifyWithVerificationModeWithLineWrapping() {
+    @Test
+    void testConvertsBDDMockitoThenToMockitoVerifyWithVerificationModeWithLineWrapping() {
         checkAction(() -> new ConvertBDDMockitoThenToMockitoVerifyAction(false),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -174,7 +182,8 @@ public class ConvertBDDMockitoThenToMockitoVerifyActionTest extends MockitoolsAc
 
     //Selection
 
-    public void testConvertsBDDMockitoThenToMockitoVerifyWithoutVerificationModeInSelection() {
+    @Test
+    void testConvertsBDDMockitoThenToMockitoVerifyWithoutVerificationModeInSelection() {
         checkAction(() -> new ConvertBDDMockitoThenToMockitoVerifyAction(true),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -206,7 +215,8 @@ public class ConvertBDDMockitoThenToMockitoVerifyActionTest extends MockitoolsAc
                 "}");
     }
 
-    public void testConvertsBDDMockitoThenToMockitoVerifyWithVerificationModeInSelection() {
+    @Test
+    void testConvertsBDDMockitoThenToMockitoVerifyWithVerificationModeInSelection() {
         checkAction(() -> new ConvertBDDMockitoThenToMockitoVerifyAction(true),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -238,7 +248,8 @@ public class ConvertBDDMockitoThenToMockitoVerifyActionTest extends MockitoolsAc
                 "}");
     }
 
-    public void testConvertsBDDMockitoThenToMockitoVerifyWithVerificationModeWithLineWrappingInSelection() {
+    @Test
+    void testConvertsBDDMockitoThenToMockitoVerifyWithVerificationModeWithLineWrappingInSelection() {
         checkAction(() -> new ConvertBDDMockitoThenToMockitoVerifyAction(true),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +

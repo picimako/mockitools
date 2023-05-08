@@ -5,34 +5,39 @@ package com.picimako.mockitools.inspection.verification;
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
 import com.picimako.mockitools.inspection.verification.TimesVerificationModeInspection;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link TimesVerificationModeInspection}.
  */
-public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class TimesVerificationModeInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
         return new TimesVerificationModeInspection();
     }
 
-    public void testTimesArgumentsTest() {
+    @Test
+    void testTimesArgumentsTest() {
         doJavaTest();
     }
 
-    public void testTimesArgumentsReportTimesZeroOnlyTest() {
+    @Test
+    void testTimesArgumentsReportTimesZeroOnlyTest() {
         TimesVerificationModeInspection inspection = new TimesVerificationModeInspection();
         inspection.reportTimesOneCanBeOmitted = false;
         doJavaTest(inspection);
     }
 
-    public void testTimesArgumentsReportTimesOneOnlyTest() {
+    @Test
+    void testTimesArgumentsReportTimesOneOnlyTest() {
         TimesVerificationModeInspection inspection = new TimesVerificationModeInspection();
         inspection.reportTimesZeroToNever = false;
         doJavaTest(inspection);
     }
 
-    public void testTimesOneDeletionBDDMockitoShouldIsNotAvailableWithFurtherSettings() {
+    @Test
+    void testTimesOneDeletionBDDMockitoShouldIsNotAvailableWithFurtherSettings() {
         doJavaTest("TimesOneDeletionTest.java",
             "import static org.mockito.Mockito.times;\n" +
                 "\n" +
@@ -50,7 +55,8 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
 
     //Mockito.verify
 
-    public void testTimesZeroReplacement() {
+    @Test
+    void testTimesZeroReplacement() {
         doQuickFixTest("Replace with Mockito.never()", "TimesZeroWithoutSettingsReplacementTest.java",
             "import static org.mockito.Mockito.times;\n" +
                 "\n" +
@@ -72,7 +78,8 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testTimesZeroWithSettingsReplacement() {
+    @Test
+    void testTimesZeroWithSettingsReplacement() {
         doQuickFixTest("Replace with Mockito.never()", "TimesZeroWithSettingsReplacementTest.java",
             "import static org.mockito.Mockito.times;\n" +
                 "\n" +
@@ -94,7 +101,8 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testTimesOneDeletion() {
+    @Test
+    void testTimesOneDeletion() {
         doQuickFixTest("Delete call to Mockito.times(1)", "TimesOneDeletionTest.java",
             "import static org.mockito.Mockito.times;\n" +
                 "\n" +
@@ -118,7 +126,8 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
 
     //InOrder.verify
 
-    public void testTimesZeroReplacementInOrder() {
+    @Test
+    void testTimesZeroReplacementInOrder() {
         doQuickFixTest("Replace with Mockito.never()", "TimesZeroWithoutSettingsReplacementInOrderTest.java",
             "import static org.mockito.Mockito.times;\n" +
                 "\n" +
@@ -148,7 +157,8 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testTimesZeroWithSettingsReplacementInOrder() {
+    @Test
+    void testTimesZeroWithSettingsReplacementInOrder() {
         doQuickFixTest("Replace with Mockito.never()", "TimesZeroWithSettingsReplacementInOrderTest.java",
             "import static org.mockito.Mockito.times;\n" +
                 "\n" +
@@ -178,7 +188,8 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testTimesOneDeletionInOrder() {
+    @Test
+    void testTimesOneDeletionInOrder() {
         doQuickFixTest("Delete call to Mockito.times(1)", "TimesOneDeletionTest.java",
             "import static org.mockito.Mockito.times;\n" +
                 "\n" +
@@ -210,7 +221,8 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
 
     //BDDMockito.should()
 
-    public void testTimesZeroReplacementBDDMockitoShould() {
+    @Test
+    void testTimesZeroReplacementBDDMockitoShould() {
         doQuickFixTest("Replace with Mockito.never()", "TimesZeroWithoutSettingsReplacementBDDMockitoShouldTest.java",
             "import static org.mockito.Mockito.times;\n" +
                 "\n" +
@@ -238,7 +250,8 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testTimesZeroWithSettingsReplacementBDDMockitoShould() {
+    @Test
+    void testTimesZeroWithSettingsReplacementBDDMockitoShould() {
         doQuickFixTest("Replace with Mockito.never()", "TimesZeroWithSettingsReplacementBDDMockitoShouldTest.java",
             "import static org.mockito.Mockito.times;\n" +
                 "\n" +
@@ -266,7 +279,8 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testTimesOneDeletionBDDMockitoShould() {
+    @Test
+    void testTimesOneDeletionBDDMockitoShould() {
         doQuickFixTest("Delete call to Mockito.times(1)", "TimesOneDeletionTest.java",
             "import static org.mockito.Mockito.times;\n" +
                 "\n" +
@@ -294,7 +308,8 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testTimesZeroReplacementBDDMockitoShouldInOrder() {
+    @Test
+    void testTimesZeroReplacementBDDMockitoShouldInOrder() {
         doQuickFixTest("Replace with Mockito.never()", "TimesZeroWithoutSettingsReplacementBDDMockitoShouldTest.java",
             "import static org.mockito.Mockito.times;\n" +
                 "\n" +
@@ -326,7 +341,8 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testTimesZeroWithSettingsReplacementBDDMockitoShouldInOrder() {
+    @Test
+    void testTimesZeroWithSettingsReplacementBDDMockitoShouldInOrder() {
         doQuickFixTest("Replace with Mockito.never()", "TimesZeroWithSettingsReplacementBDDMockitoShouldTest.java",
             "import static org.mockito.Mockito.times;\n" +
                 "\n" +
@@ -358,7 +374,8 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testTimesOneDeletionBDDMockitoShouldInOrder() {
+    @Test
+    void testTimesOneDeletionBDDMockitoShouldInOrder() {
         doQuickFixTest("Delete call to Mockito.times(1)", "TimesOneDeletionTest.java",
             "import static org.mockito.Mockito.times;\n" +
                 "\n" +
@@ -392,7 +409,8 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
 
     //MockedStatic.verify()
 
-    public void testTimesZeroReplacementMockedStaticVerify() {
+    @Test
+    void testTimesZeroReplacementMockedStaticVerify() {
         doQuickFixTest("Replace with Mockito.never()", "TimesZeroWithoutSettingsReplacementBDDMockitoShouldTest.java",
             "import static org.mockito.Mockito.times;\n" +
                 "\n" +
@@ -424,7 +442,8 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testTimesZeroWithSettingsReplacementMockedStaticVerify() {
+    @Test
+    void testTimesZeroWithSettingsReplacementMockedStaticVerify() {
         doQuickFixTest("Replace with Mockito.never()", "TimesZeroWithSettingsReplacementBDDMockitoShouldTest.java",
             "import static org.mockito.Mockito.times;\n" +
                 "\n" +
@@ -456,7 +475,8 @@ public class TimesVerificationModeInspectionTest extends MockitoolsInspectionTes
                 "}");
     }
 
-    public void testTimesOneDeletionMockedStaticVerify() {
+    @Test
+    void testTimesOneDeletionMockedStaticVerify() {
         doQuickFixTest("Delete call to Mockito.times(1)", "TimesOneDeletionTest.java",
             "import static org.mockito.Mockito.times;\n" +
                 "\n" +

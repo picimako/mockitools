@@ -3,11 +3,12 @@
 package com.picimako.mockitools.inspection;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link EnforceConventionInspection}.
  */
-public class EnforceConventionInspectionBDDMockitoV3Test extends MockitoolsInspectionTestBase.MockitoV3 {
+class EnforceConventionInspectionBDDMockitoV3Test extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
@@ -16,7 +17,8 @@ public class EnforceConventionInspectionBDDMockitoV3Test extends MockitoolsInspe
         return inspection;
     }
 
-    public void testEnforceBDDMockitoV3Methods() {
+    @Test
+    void testEnforceBDDMockitoV3Methods() {
         doJavaTest();
     }
 }

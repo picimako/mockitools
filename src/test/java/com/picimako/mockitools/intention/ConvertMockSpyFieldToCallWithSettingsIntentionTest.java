@@ -5,11 +5,14 @@ package com.picimako.mockitools.intention;
 import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito4Latest;
 
 import com.intellij.codeInsight.intention.IntentionAction;
+import com.intellij.testFramework.RunsInEdt;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link ConvertMockSpyFieldToCallIntention}.
  */
-public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends MockitoolsIntentionTestBase {
+@RunsInEdt
+class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends MockitoolsIntentionTestBase {
 
     @Override
     protected IntentionAction getIntention() {
@@ -18,12 +21,13 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
 
     @Override
     protected void loadLibs() {
-        loadMockito4Latest(myFixture.getProjectDisposable(), getModule());
+        loadMockito4Latest(getFixture().getProjectDisposable(), getFixture().getModule());
     }
 
     //@Mock -> Mockito.mock(<type>.class) - empty config
 
-    public void testConvertsMockFieldToCallWithEmptyConfig() {
+    @Test
+    void testConvertsMockFieldToCallWithEmptyConfig() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "\n" +
@@ -47,7 +51,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
 
     //@Spy -> Mockito.spy(<type>.class) - empty config
 
-    public void testConvertsSpyFieldToCallWithEmptyConfig() {
+    @Test
+    void testConvertsSpyFieldToCallWithEmptyConfig() {
         checkIntentionRun(
             "import org.mockito.Spy;\n" +
                 "\n" +
@@ -71,7 +76,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
 
     //@Spy -> Mockito.spy(new <type>())
 
-    public void testConvertsSpyFieldWithInitializerToCall() {
+    @Test
+    void testConvertsSpyFieldWithInitializerToCall() {
         checkIntentionRun(
             "import org.mockito.Spy;\n" +
                 "\n" +
@@ -95,7 +101,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
 
     //@Mock -> Mockito.mock(<type>.class, String)
 
-    public void testConvertsMockFieldToCallWithNameSpecificOverride() {
+    @Test
+    void testConvertsMockFieldToCallWithNameSpecificOverride() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "\n" +
@@ -117,7 +124,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
                 "}");
     }
 
-    public void testConvertsMockFieldToCallWithEmptyNameSpecificOverride() {
+    @Test
+    void testConvertsMockFieldToCallWithEmptyNameSpecificOverride() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "\n" +
@@ -141,7 +149,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
 
     //@Mock -> Mockito.mock(<type>.class, Answer)
 
-    public void testConvertsMockFieldToCallWithAnswerSpecificOverride() {
+    @Test
+    void testConvertsMockFieldToCallWithAnswerSpecificOverride() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "import org.mockito.Answers;\n" +
@@ -165,7 +174,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
                 "}");
     }
 
-    public void testConvertsMockFieldToCallWithDefaultAnswerSpecificOverride() {
+    @Test
+    void testConvertsMockFieldToCallWithDefaultAnswerSpecificOverride() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "import org.mockito.Answers;\n" +
@@ -189,11 +199,12 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
                 "}");
     }
 
-    //@Mock -> Mockito.mock(<type>.class, MockSettings)
+    //TODO: @Mock -> Mockito.mock(<type>.class, MockSettings)
 
     //extraInterfaces
 
-    public void testConvertsMockFieldToCallWithEmptyExtraInterface() {
+    @Test
+    void testConvertsMockFieldToCallWithEmptyExtraInterface() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "\n" +
@@ -215,7 +226,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
                 "}");
     }
 
-    public void testConvertsMockFieldToCallWithSingleExtraInterface() {
+    @Test
+    void testConvertsMockFieldToCallWithSingleExtraInterface() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "import java.util.List;\n" +
@@ -240,7 +252,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
                 "}");
     }
 
-    public void testConvertsMockFieldToCallWithMultipleExtraInterfaces() {
+    @Test
+    void testConvertsMockFieldToCallWithMultipleExtraInterfaces() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "import java.util.List;\n" +
@@ -269,7 +282,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
 
     //booleans
 
-    public void testConvertsMockFieldToCallWithStubOnly() {
+    @Test
+    void testConvertsMockFieldToCallWithStubOnly() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "\n" +
@@ -291,7 +305,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
                 "}");
     }
 
-    public void testConvertsMockFieldToCallWithStubOnlyFalse() {
+    @Test
+    void testConvertsMockFieldToCallWithStubOnlyFalse() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "\n" +
@@ -313,7 +328,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
                 "}");
     }
 
-    public void testConvertsMockFieldToCallWithEmptyName() {
+    @Test
+    void testConvertsMockFieldToCallWithEmptyName() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "\n" +
@@ -335,7 +351,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
                 "}");
     }
 
-    public void testConvertsMockFieldToCallWithSerializable() {
+    @Test
+    void testConvertsMockFieldToCallWithSerializable() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "\n" +
@@ -357,7 +374,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
                 "}");
     }
 
-    public void testConvertsMockFieldToCallWithLenient() {
+    @Test
+    void testConvertsMockFieldToCallWithLenient() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "\n" +
@@ -381,7 +399,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
 
     //Complex settings
 
-    public void testConvertsMockFieldToCallWithMockSettings1() {
+    @Test
+    void testConvertsMockFieldToCallWithMockSettings1() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "import java.util.List;\n" +
@@ -406,7 +425,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
                 "}");
     }
 
-    public void testConvertsMockFieldToCallWithMockSettings2() {
+    @Test
+    void testConvertsMockFieldToCallWithMockSettings2() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "import java.util.List;\n" +
@@ -432,7 +452,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
                 "}");
     }
 
-    public void testConvertsMockFieldToCallWithMockSettings3() {
+    @Test
+    void testConvertsMockFieldToCallWithMockSettings3() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "import java.util.List;\n" +
@@ -460,8 +481,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
                 "}");
     }
 
-
-    public void testConvertsMockFieldToCallWithMockSettingsStrictnessDefault() {
+    @Test
+    void testConvertsMockFieldToCallWithMockSettingsStrictnessDefault() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "import java.util.List;\n" +
@@ -486,7 +507,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
                 "}");
     }
 
-    public void testConvertsMockFieldToCallWithMockSettingsStrictness() {
+    @Test
+    void testConvertsMockFieldToCallWithMockSettingsStrictness() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "import java.util.List;\n" +
@@ -512,7 +534,8 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
                 "}");
     }
 
-    public void testConvertsMockFieldToCallWithMockSettingsMockMaker() {
+    @Test
+    void testConvertsMockFieldToCallWithMockSettingsMockMaker() {
         checkIntentionRun(
             "import org.mockito.Mock;\n" +
                 "import org.mockito.MockMakers;\n" +
@@ -538,5 +561,4 @@ public class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends Mockitoo
                 "    }\n" +
                 "}");
     }
-
 }

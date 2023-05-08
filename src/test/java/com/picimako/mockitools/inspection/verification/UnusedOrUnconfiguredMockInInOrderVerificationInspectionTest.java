@@ -4,18 +4,20 @@ package com.picimako.mockitools.inspection.verification;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link UnusedOrUnconfiguredMockInInOrderVerificationInspection}.
  */
-public class UnusedOrUnconfiguredMockInInOrderVerificationInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
+class UnusedOrUnconfiguredMockInInOrderVerificationInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
         return new UnusedOrUnconfiguredMockInInOrderVerificationInspection();
     }
 
-    public void testUnusedOrUnconfiguredMockInInOrderVerification() {
+    @Test
+    void testUnusedOrUnconfiguredMockInInOrderVerification() {
         doJavaTest();
     }
 }

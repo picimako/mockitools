@@ -4,18 +4,20 @@ package com.picimako.mockitools.inspection.verification;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link StubOnlyMockInVerificationInspection}.
  */
-public class StubOnlyMockInVerificationInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
+class StubOnlyMockInVerificationInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
         return new StubOnlyMockInVerificationInspection();
     }
 
-    public void testStubOnlyMockInVerification() {
+    @Test
+    void testStubOnlyMockInVerification() {
         doJavaTest();
     }
 }

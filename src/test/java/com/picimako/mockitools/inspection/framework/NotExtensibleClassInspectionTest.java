@@ -4,12 +4,15 @@ package com.picimako.mockitools.inspection.framework;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import org.jetbrains.annotations.Nullable;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link NotExtensibleClassInspection}.
  */
-public class NotExtensibleClassInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class NotExtensibleClassInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
+    @Nullable
     @Override
     protected String getTestDataPath() {
         return "src/test/testData/framework/inspection";
@@ -20,7 +23,8 @@ public class NotExtensibleClassInspectionTest extends MockitoolsInspectionTestBa
         return new NotExtensibleClassInspection();
     }
 
-    public void testNotExtensibleValidation() {
+    @Test
+    void testNotExtensibleValidation() {
         doJavaTest();
     }
 }

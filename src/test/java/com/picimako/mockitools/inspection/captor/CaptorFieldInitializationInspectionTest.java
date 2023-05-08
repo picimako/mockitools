@@ -4,22 +4,25 @@ package com.picimako.mockitools.inspection.captor;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link CaptorFieldInitializationInspection}.
  */
-public class CaptorFieldInitializationInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class CaptorFieldInitializationInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
         return new CaptorFieldInitializationInspection();
     }
 
-    public void testCaptorFieldInit() {
+    @Test
+    void testCaptorFieldInit() {
         doJavaTest();
     }
 
-    public void testCaptorFieldInitReplaceTest() {
+    @Test
+    void testCaptorFieldInitReplaceTest() {
         doQuickFixTest("Remove initializer");
     }
 }
