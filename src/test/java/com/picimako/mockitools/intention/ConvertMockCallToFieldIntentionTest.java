@@ -2,8 +2,6 @@
 
 package com.picimako.mockitools.intention;
 
-import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito4Latest;
-
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.testFramework.RunsInEdt;
 import org.junit.jupiter.api.Test;
@@ -17,11 +15,6 @@ class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
     @Override
     protected IntentionAction getIntention() {
         return new ConvertMockCallToFieldIntention();
-    }
-
-    @Override
-    protected void loadLibs() {
-        loadMockito4Latest(getFixture().getProjectDisposable(), getFixture().getModule());
     }
 
     //Availability

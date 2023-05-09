@@ -5,7 +5,6 @@ package com.picimako.mockitools.intention;
 import com.intellij.codeInsight.intention.IntentionAction;
 
 import com.intellij.testFramework.RunsInEdt;
-import com.picimako.mockitools.ThirdPartyLibraryLoader;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -17,11 +16,6 @@ class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
     @Override
     protected IntentionAction getIntention() {
         return new ConvertSpyCallToFieldIntention();
-    }
-
-    @Override
-    protected void loadLibs() {
-        ThirdPartyLibraryLoader.loadMockito4Latest(getFixture().getProjectDisposable(), getFixture().getModule());
     }
 
     //Availability

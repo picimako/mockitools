@@ -3,7 +3,6 @@
 package com.picimako.mockitools;
 
 import static com.picimako.mockitools.MockableTypesUtil.getDoNotMockTypeInHierarchy;
-import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito4Latest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.psi.PsiField;
@@ -15,11 +14,6 @@ import org.junit.jupiter.api.Test;
  */
 @RunsInEdt
 class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
-
-    @Override
-    protected void loadLibs() {
-        loadMockito4Latest(getFixture().getProjectDisposable(), getFixture().getModule());
-    }
 
     @Override
     protected String getTestDataPath() {

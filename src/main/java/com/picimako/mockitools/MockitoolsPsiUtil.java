@@ -101,6 +101,7 @@ public final class MockitoolsPsiUtil {
      *
      * @param expression the method call expression
      * @return true if the method is a call on a Matchers matcher, false otherwise
+     * @see com.picimako.mockitools.inspection.migrationaids.v4.ArgumentMatchersCalledViaMatchersInspection
      */
     public static boolean isMatchers(PsiMethodCallExpression expression) {
         return matchesAnyMethodIn(ORG_MOCKITO_ARGUMENT_MATCHERS, expression)

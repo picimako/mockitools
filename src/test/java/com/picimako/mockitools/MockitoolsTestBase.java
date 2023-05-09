@@ -2,7 +2,7 @@
 
 package com.picimako.mockitools;
 
-import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito3;
+import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito5;
 
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
@@ -34,6 +34,6 @@ public abstract class MockitoolsTestBase extends LightJavaCodeInsightFixtureTest
     }
 
     protected void loadLibs() {
-        loadMockito3(getFixture().getProjectDisposable(), getFixture().getModule());
+        loadMockito5(getFixture().getProjectDisposable(), getFixture().getModule());
     }
 }

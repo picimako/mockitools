@@ -3,7 +3,7 @@
 package com.picimako.mockitools.inspection;
 
 import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito3;
-import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito4Latest;
+import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito4;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.MockitoolsTestBase;
@@ -97,6 +97,11 @@ public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
         protected void setUp() {
             loadMockito3(getFixture().getProjectDisposable(), getFixture().getModule());
         }
+
+        @Override
+        protected void loadLibs() {
+            loadMockito3(getFixture().getProjectDisposable(), getFixture().getModule());
+        }
     }
 
     /**
@@ -106,7 +111,7 @@ public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
 
         @Override
         protected void loadLibs() {
-            loadMockito4Latest(getFixture().getProjectDisposable(), getFixture().getModule());
+            loadMockito4(getFixture().getProjectDisposable(), getFixture().getModule());
         }
     }
 }
