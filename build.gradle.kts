@@ -1,3 +1,4 @@
+import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 
 fun properties(key: String) = project.findProperty(key).toString()
@@ -11,7 +12,7 @@ plugins {
     // Gradle IntelliJ Plugin
     id("org.jetbrains.intellij") version "1.13.3"
     // Gradle Changelog Plugin
-    id("org.jetbrains.changelog") version "1.3.1"
+    id("org.jetbrains.changelog") version "2.0.0"
     // Gradle Qodana Plugin
     id("org.jetbrains.qodana") version "0.1.13"
     //Lombok
@@ -28,9 +29,7 @@ repositories {
 
 // Set the JVM language level used to compile sources and generate files - Java 11 is required since 2020.3
 kotlin {
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(11))
-    }
+    jvmToolchain(11)
 }
 
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
@@ -87,13 +86,14 @@ tasks {
             }
         }
 
-
-        val changelog = project.changelog // local variable for configuration cache compatibility
         // Get the latest available change notes from the changelog file
         changeNotes = provider {
-            changelog.run {
-                getOrNull(properties("pluginVersion")) ?: getLatest()
-            }.toHTML()
+            with(changelog) {
+                renderItem(
+                    getOrNull(properties("pluginVersion")) ?: getLatest(),
+                    Changelog.OutputType.HTML,
+                )
+            }
         }
     }
 
