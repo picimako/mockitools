@@ -390,6 +390,29 @@ class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends MockitoolsInten
                 "}");
     }
 
+    @Test
+    void testConvertsMockFieldToCallWithWithoutAnnotations() {
+        checkIntentionRun(
+            "import org.mockito.Mock;\n" +
+                "\n" +
+                "public class ConversionTest {\n" +
+                "    @Mock(withoutAnnotations = true)\n" +
+                "    Object mo<caret>ck;\n" +
+                "\n" +
+                "    public void method() {\n" +
+                "    }\n" +
+                "}",
+            "import org.mockito.Mock;\n" +
+                "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class ConversionTest {\n" +
+                "\n" +
+                "    public void method() {\n" +
+                "        Object mock = Mockito.mock(Object.class, Mockito.withSettings().withoutAnnotations());\n" +
+                "    }\n" +
+                "}");
+    }
+
     //Complex settings
 
     @Test

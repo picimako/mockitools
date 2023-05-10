@@ -89,7 +89,7 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
         "answer", value -> value instanceof PsiReferenceExpression && !isDefaultAnswer((PsiReferenceExpression) value),
         "name", value -> !isBlank(value)
     );
-    private static final Set<String> BOOLEAN_ATTRIBUTES = Set.of("stubOnly", "serializable", "lenient");
+    private static final Set<String> BOOLEAN_ATTRIBUTES = Set.of("stubOnly", "serializable", "lenient", "withoutAnnotations");
     private static final ClassMethodCellRenderer METHOD_CELL_RENDERER = new ClassMethodCellRenderer();
 
     @IntentionName

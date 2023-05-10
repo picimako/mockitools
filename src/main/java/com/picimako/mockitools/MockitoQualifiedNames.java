@@ -96,6 +96,7 @@ public final class MockitoQualifiedNames {
     public static final String EXTRA_INTERFACES = "extraInterfaces";
     public static final String STRICTNESS = "strictness";
     public static final String MOCK_MAKER = "mockMaker";
+    public static final String WITHOUT_ANNOTATIONS = "withoutAnnotations";
 
     //Annotations
     public static final String ORG_MOCKITO_CAPTOR = "org.mockito.Captor";

@@ -166,6 +166,18 @@ class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
                 "}");
     }
 
+    @Test
+    void testAvailableForWithoutAnnotations() {
+        checkIntentionIsAvailable(
+            "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class Available {\n" +
+                "    public void testMethod() {\n" +
+                "        Mockito.mo<caret>ck(Object.class, Mockito.withSettings().withoutAnnotations());\n" +
+                "    }\n" +
+                "}");
+    }
+
     //Conversions
 
     @Test
@@ -371,7 +383,7 @@ class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
                 "\n" +
                 "public class ConversionTest {\n" +
                 "    public void testMethod() {\n" +
-                "        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().serializable().stubOnly()));\n" +
+                "        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().serializable().stubOnly().withoutAnnotations()));\n" +
                 "    }\n" +
                 "    public void aMethod(Object object) { }\n" +
                 "}",
@@ -379,7 +391,7 @@ class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
                 "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class ConversionTest {\n" +
-                "    @Mock(lenient = true, serializable = true, stubOnly = true)\n" +
+                "    @Mock(lenient = true, serializable = true, stubOnly = true, withoutAnnotations = true)\n" +
                 "    Object object;\n" +
                 "\n" +
                 "    public void testMethod() {\n" +
@@ -396,14 +408,14 @@ class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
                 "\n" +
                 "public class ConversionTest {\n" +
                 "    public void testMethod() {\n" +
-                "        var mock = Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().serializable().stubOnly());\n" +
+                "        var mock = Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().serializable().stubOnly().withoutAnnotations());\n" +
                 "    }\n" +
                 "}",
             "import org.mockito.Mock;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class ConversionTest {\n" +
-                "    @Mock(lenient = true, serializable = true, stubOnly = true)\n" +
+                "    @Mock(lenient = true, serializable = true, stubOnly = true, withoutAnnotations = true)\n" +
                 "    Object mock;\n" +
                 "\n" +
                 "    public void testMethod() {\n" +

@@ -6,7 +6,8 @@
 
 ## [0.10.0]
 ### Changed
-- Disabled the v3 to v4 migration aids inspections since Mockito 4.x has already been public for 1.5 years.
+- Disabled the v3 to v4 migration aids inspections since Mockito 4.x has already been released for 1.5 years.
+- [#49](https://github.com/picimako/mockitools/issues/49): Added support for the `withoutAnnotations` attribute of the `@Mock` annotation.
 
 ## [0.9.0]
 ### Changed
