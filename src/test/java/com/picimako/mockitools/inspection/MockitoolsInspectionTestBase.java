@@ -6,8 +6,8 @@ import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito3;
 import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito4;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
+import com.intellij.testFramework.TestDataPath;
 import com.picimako.mockitools.MockitoolsTestBase;
-import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 
 /**
@@ -15,13 +15,8 @@ import org.junit.jupiter.api.BeforeEach;
  * <p>
  * Loads the Java 11 mock JDK and the Mockito binary for testing.
  */
+@TestDataPath("$CONTENT_ROOT/testData/inspection")
 public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
-
-    @Nullable
-    @Override
-    protected String getTestDataPath() {
-        return "src/test/testData/inspection";
-    }
 
     /**
      * Override this to configure the inspection to be tested.

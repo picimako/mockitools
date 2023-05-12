@@ -3,20 +3,15 @@
 package com.picimako.mockitools.inspection.framework;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
+import com.intellij.testFramework.TestDataPath;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
-import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link NotExtensibleClassInspection}.
  */
+@TestDataPath("$CONTENT_ROOT/testData/framework/inspection")
 class NotExtensibleClassInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
-
-    @Nullable
-    @Override
-    protected String getTestDataPath() {
-        return "src/test/testData/framework/inspection";
-    }
 
     @Override
     protected InspectionProfileEntry getInspection() {

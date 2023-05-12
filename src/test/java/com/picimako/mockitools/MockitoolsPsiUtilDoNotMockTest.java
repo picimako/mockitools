@@ -7,18 +7,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.psi.PsiField;
 import com.intellij.testFramework.RunsInEdt;
+import com.intellij.testFramework.TestDataPath;
 import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link com.picimako.mockitools.MockitoolsPsiUtil}.
  */
 @RunsInEdt
+@TestDataPath("$CONTENT_ROOT/testData/inspection/donotmockreason")
 class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
-
-    @Override
-    protected String getTestDataPath() {
-        return "src/test/testData/inspection/donotmockreason";
-    }
 
     //getDoNotMockAnnotatedTypeAndReasonInHierarchy
 
