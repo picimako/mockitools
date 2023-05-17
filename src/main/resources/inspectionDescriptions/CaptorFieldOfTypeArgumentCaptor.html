@@ -9,26 +9,28 @@ Mockito will fail with a message saying the type must be ArgumentCaptor.
     It also provides a quick fix to convert the field type to ArgumentCaptor with the appropriate generic type.
     Some examples (before-after):
 <pre>
-    //-- arrays --
-    
-    @Captor
-    String[] captor;
-    @Captor
-    ArgumentCaptor&lt;String[]> captor;
-    
-    //-- primitive types --
-    
-    @Captor
-    char captor;
-    @Captor
-    ArgumentCaptor&lt;Character> captor;
-    
-    //-- types with generic types --
-    
-    @Captor
-    List&lt;List&lt;String>> captor;
-    @Captor
-    ArgumentCaptor&lt;List&lt;List&lt;String>>> captor;
+    <code>
+//-- arrays --
+
+@Captor
+String[] captor;
+@Captor
+ArgumentCaptor&lt;String[]> captor;
+
+//-- primitive types --
+
+@Captor
+char captor;
+@Captor
+ArgumentCaptor&lt;Character> captor;
+
+//-- types with generic types --
+
+@Captor
+List&lt;List&lt;String>> captor;
+@Captor
+ArgumentCaptor&lt;List&lt;List&lt;String>>> captor;
+    </code>
 </pre>
 
 </body>

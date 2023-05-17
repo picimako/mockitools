@@ -8,21 +8,27 @@ issues.
     <b>Types specified in the <code>@Mock</code> annotation's <code>extraInterfaces</code> attribute must be interfaces</b>
 
 <pre>
-    @Mock(extraInterfaces = {List.class, Set.class, Object.class}) //Object is not an interface
-    public Object mock;
+    <code>
+@Mock(extraInterfaces = {List.class, Set.class, Object.class}) //Object is not an interface
+public Object mock;
+    </code>
 </pre>
 
 <b>Types specified in <code>Mockito.withSettings().extraInterfaces()</code> must be interfaces</b>
 
 <pre>
-    //None of the arguments is an interface
-    Mockito.mock(Object.class, Mockito.withSettings().extraInterfaces(Object.class, ArrayList.class, AbstractMap.class));
+    <code>
+//None of the arguments is an interface
+Mockito.mock(Object.class, Mockito.withSettings().extraInterfaces(Object.class, ArrayList.class, AbstractMap.class));
+    </code>
 </pre>
 
 <b><code>Mockito.withSettings().extraInterfaces()</code> calls must be provided at least one argument</b>
 
 <pre>
-    Mockito.mock(Object.class, Mockito.withSettings().extraInterfaces()); //no argument specified
+    <code>
+Mockito.mock(Object.class, Mockito.withSettings().extraInterfaces()); //no argument specified
+    </code>
 </pre>
 
 <p>

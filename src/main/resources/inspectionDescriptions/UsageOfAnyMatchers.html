@@ -17,17 +17,21 @@ v4.
 <p>
 <h4>anyObject/anyVararg -> any</h4>
 <pre>
+    <code>
 //from:
 Mockito.when(mock.method(ArgumentMatchers.anyVararg())).thenReturn(10);
 //to:
 Mockito.when(mock.method(ArgumentMatchers.any())).thenReturn(10);
+    </code>
 </pre>
 <h4>anyXOf -> anyX</h4>
 <pre>
+    <code>
 //from:
 Mockito.when(mock.method(ArgumentMatchers.anyCollectionOf(String.class))).thenReturn(10);
 //to:
 Mockito.when(mock.method(ArgumentMatchers.anyCollection())).thenReturn(10);
+    </code>
 </pre>
 <br>
 Furthermore, if the matcher is referenced via <code>org.mockito.Matchers</code>, it is also replaced with the <code>org.mockito.ArgumentMatchers</code>
