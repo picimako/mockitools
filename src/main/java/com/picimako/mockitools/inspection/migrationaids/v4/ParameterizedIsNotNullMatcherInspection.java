@@ -19,6 +19,7 @@ import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.siyeh.ig.callMatcher.CallMatcher;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.mockitools.util.PsiMethodUtil;
@@ -52,12 +53,9 @@ public class ParameterizedIsNotNullMatcherInspection extends MigrationAidBase.V2
         }
     }
 
+    @RequiredArgsConstructor
     private static final class ReplaceNullMatcherWithNonParameterizedVariantQuickfix extends MigrationAidV4BaseQuickFix {
         private final String quickFixName;
-
-        public ReplaceNullMatcherWithNonParameterizedVariantQuickfix(String quickFixName) {
-            this.quickFixName = quickFixName;
-        }
 
         @Override
         public @IntentionName @NotNull String getName() {
