@@ -1,7 +1,7 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 
-fun properties(key: String) = project.findProperty(key).toString()
+fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
 
 plugins {
@@ -10,7 +10,7 @@ plugins {
     // Kotlin support
     id("org.jetbrains.kotlin.jvm") version "1.8.21"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.13.3"
+    id("org.jetbrains.intellij") version "1.14.1"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "2.0.0"
     // Gradle Qodana Plugin
@@ -19,8 +19,8 @@ plugins {
     id("io.freefair.lombok") version "6.5.0.3"
 }
 
-group = properties("pluginGroup")
-version = properties("pluginVersion")
+group = properties("pluginGroup").get()
+version = properties("pluginVersion").get()
 
 // Configure project's dependencies
 repositories {
@@ -32,14 +32,14 @@ kotlin {
     jvmToolchain(17)
 }
 
-// Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
+// Configure Gradle IntelliJ Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
     pluginName = properties("pluginName")
     version = properties("platformVersion")
     type = properties("platformType")
 
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
-    plugins = properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty)
+    plugins = properties("platformPlugins").map { it.split(',').map(String::trim).filter(String::isNotEmpty) }
 }
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
@@ -65,7 +65,7 @@ dependencies {
 
 tasks {
     wrapper {
-        gradleVersion = properties("gradleVersion")
+        gradleVersion = properties("gradleVersion").get()
     }
 
     patchPluginXml {
@@ -86,11 +86,14 @@ tasks {
             }
         }
 
+        val changelog = project.changelog // local variable for configuration cache compatibility
         // Get the latest available change notes from the changelog file
-        changeNotes = provider {
+        changeNotes = properties("pluginVersion").map { pluginVersion ->
             with(changelog) {
                 renderItem(
-                    getOrNull(properties("pluginVersion")) ?: getLatest(),
+                    (getOrNull(pluginVersion) ?: getUnreleased())
+                        .withHeader(false)
+                        .withEmptySections(false),
                     Changelog.OutputType.HTML,
                 )
             }
@@ -118,9 +121,9 @@ tasks {
     publishPlugin {
         dependsOn("patchChangelog")
         token = environment("PUBLISH_TOKEN")
-        // pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
+        // The pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
-        channels = listOf(properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.').first())
+        channels = properties("pluginVersion").map { listOf(it.split('-').getOrElse(1) { "default" }.split('.').first()) }
     }
 }
