@@ -18,6 +18,7 @@ Reports calls to various verify methods which are deprecated since Mockito v3, a
 <p>
 <h4>MockedStatic.verify()</h4>
 <pre>
+    <code>
 //from:
 try (MockedStatic&lt;Util> util = Mockito.mockStatic(Util.class)) {
     util.verify(Mockito.times(1), () -> Util.method(List.of()));
@@ -26,13 +27,16 @@ try (MockedStatic&lt;Util> util = Mockito.mockStatic(Util.class)) {
 try (MockedStatic&lt;Util> util = Mockito.mockStatic(Util.class)) {
     util.verify(() -> Util.method(List.of()), Mockito.times(1));
 }
+    </code>
 </pre>
 <h4>Mockito.verifyZeroInteractions()</h4>
 <pre>
+    <code>
 //from:
 Mockito.verifyZeroInteractions(mock1, mock2);
 //to:
 Mockito.verifyNoMoreInteractions(mock1, mock2);
+    </code>
 </pre>
 </body>
 </html>

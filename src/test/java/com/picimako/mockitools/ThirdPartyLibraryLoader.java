@@ -1,4 +1,4 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools;
 
@@ -19,11 +19,15 @@ public final class ThirdPartyLibraryLoader {
     private static final String THIRD_PARTY_LIB_DIRECTORY = "lib";
 
     public static void loadMockito3(@NotNull Disposable projectDisposable, @NotNull Module module) {
-        loadLibrary(projectDisposable, module, "Mockito 3 Library", "mockito-core-3.11.2.jar");
+        loadLibrary(projectDisposable, module, "Mockito 3 Core", "mockito-core-3.12.4.jar");
     }
 
-    public static void loadMockito4Latest(@NotNull Disposable projectDisposable, @NotNull Module module) {
-        loadLibrary(projectDisposable, module, "Mockito 4 Library", "mockito-core-4.8.0.jar");
+    public static void loadMockito4(@NotNull Disposable projectDisposable, @NotNull Module module) {
+        loadLibrary(projectDisposable, module, "Mockito 4 Core", "mockito-core-4.11.0.jar");
+    }
+
+    public static void loadMockito5(@NotNull Disposable projectDisposable, @NotNull Module module) {
+        loadLibrary(projectDisposable, module, "Mockito 5 Core", "mockito-core-5.3.1.jar");
     }
 
     public static void loadJUnit4(@NotNull Disposable projectDisposable, @NotNull Module module) {

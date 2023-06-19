@@ -1,4 +1,4 @@
-//Copyright 2022 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.stub;
 
@@ -6,17 +6,20 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
+import com.intellij.testFramework.RunsInEdt;
 import com.picimako.mockitools.StubbingApproach;
 import com.picimako.mockitools.inspection.EnforceConventionInspection;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 /**
  * Integration test for {@link ConvertFromBDDMockitoWillIntention}.
  */
-public class ConvertFromBDDMockitoWillIntentionTest extends EnforceConventionAwareIntentionTestBase {
+@RunsInEdt
+class ConvertFromBDDMockitoWillIntentionTest extends EnforceConventionAwareIntentionTestBase {
 
     @Override
     protected IntentionAction getIntention() {
@@ -25,18 +28,21 @@ public class ConvertFromBDDMockitoWillIntentionTest extends EnforceConventionAwa
 
     //Availability
 
-    public void testNotAvailableForNonJavaFile() {
+    @Test
+    void testNotAvailableForNonJavaFile() {
         checkIntentionIsNotAvailable("NotJava.xml", "<tag><caret></tag>");
     }
 
-    public void testNotAvailableForNonMethodCallIdentifier() {
+    @Test
+    void testNotAvailableForNonMethodCallIdentifier() {
         checkIntentionIsNotAvailable(
             "class NotAvailable {\n" +
                 "    private String fiel<caret>d;\n" +
                 "}");
     }
 
-    public void testNotAvailableForNonBDDMockitoWillCall() {
+    @Test
+    void testNotAvailableForNonBDDMockitoWillCall() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.invocation.InvocationOnMock\n" +
@@ -54,7 +60,8 @@ public class ConvertFromBDDMockitoWillIntentionTest extends EnforceConventionAwa
                 "}");
     }
 
-    public void testNotAvailableForNonBDDMockitoWillCallInBulk() {
+    @Test
+    void testNotAvailableForNonBDDMockitoWillCallInBulk() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.invocation.InvocationOnMock\n" +
@@ -73,7 +80,8 @@ public class ConvertFromBDDMockitoWillIntentionTest extends EnforceConventionAwa
                 "}");
     }
 
-    public void testNotAvailableForBDDMockitoWillWithoutGiven() {
+    @Test
+    void testNotAvailableForBDDMockitoWillWithoutGiven() {
         checkIntentionIsNotAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -91,7 +99,8 @@ public class ConvertFromBDDMockitoWillIntentionTest extends EnforceConventionAwa
                 "}");
     }
 
-    public void testNotAvailableForBDDMockitoWillWithoutGivenInBulk() {
+    @Test
+    void testNotAvailableForBDDMockitoWillWithoutGivenInBulk() {
         checkIntentionIsNotAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -110,7 +119,8 @@ public class ConvertFromBDDMockitoWillIntentionTest extends EnforceConventionAwa
                 "}");
     }
 
-    public void testNotAvailableForBDDMockitoWillWithoutCallOnStub() {
+    @Test
+    void testNotAvailableForBDDMockitoWillWithoutCallOnStub() {
         checkIntentionIsNotAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -128,7 +138,8 @@ public class ConvertFromBDDMockitoWillIntentionTest extends EnforceConventionAwa
                 "}");
     }
 
-    public void testNotAvailableForBDDMockitoWillWithoutCallOnStubInBulk() {
+    @Test
+    void testNotAvailableForBDDMockitoWillWithoutCallOnStubInBulk() {
         checkIntentionIsNotAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -147,7 +158,8 @@ public class ConvertFromBDDMockitoWillIntentionTest extends EnforceConventionAwa
                 "}");
     }
 
-    public void testAvailableOnBDDMockitoWill() {
+    @Test
+    void testAvailableOnBDDMockitoWill() {
         checkIntentionIsAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -165,7 +177,8 @@ public class ConvertFromBDDMockitoWillIntentionTest extends EnforceConventionAwa
                 "}");
     }
 
-    public void testAvailableOnBDDMockitoWillInBulk() {
+    @Test
+    void testAvailableOnBDDMockitoWillInBulk() {
         checkIntentionIsAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -186,10 +199,11 @@ public class ConvertFromBDDMockitoWillIntentionTest extends EnforceConventionAwa
 
     // Action selection options
 
-    public void testOptionsWhenBDDMockitoIsEnforced() {
+    @Test
+    void testOptionsWhenBDDMockitoIsEnforced() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
 
-        myFixture.configureByText("Options.java",
+        getFixture().configureByText("Options.java",
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -208,10 +222,11 @@ public class ConvertFromBDDMockitoWillIntentionTest extends EnforceConventionAwa
         assertThat(getActionTexts()).containsExactly("BDDMockito.given()");
     }
 
-    public void testOptionsWhenMockitoIsEnforced() {
+    @Test
+    void testOptionsWhenMockitoIsEnforced() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.MOCKITO);
 
-        myFixture.configureByText("Options.java",
+        getFixture().configureByText("Options.java",
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -230,8 +245,9 @@ public class ConvertFromBDDMockitoWillIntentionTest extends EnforceConventionAwa
         assertThat(getActionTexts()).containsExactly("Mockito.do*()", "Mockito.when()");
     }
 
-    public void testOptionsWhenNothingIsEnforced() {
-        myFixture.configureByText("Options.java",
+    @Test
+    void testOptionsWhenNothingIsEnforced() {
+        getFixture().configureByText("Options.java",
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -250,8 +266,9 @@ public class ConvertFromBDDMockitoWillIntentionTest extends EnforceConventionAwa
         assertThat(getActionTexts()).containsExactly("Mockito.do*()", "Mockito.when()", "BDDMockito.given()");
     }
 
-    public void testOptionsWhenBDDMockitoIsNotEnforcedAndCallChainContainsWill() {
-        myFixture.configureByText("Options.java",
+    @Test
+    void testOptionsWhenBDDMockitoIsNotEnforcedAndCallChainContainsWill() {
+        getFixture().configureByText("Options.java",
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "import org.mockito.invocation.InvocationOnMock\n" +
@@ -271,8 +288,9 @@ public class ConvertFromBDDMockitoWillIntentionTest extends EnforceConventionAwa
         assertThat(getActionTexts()).containsExactly("Mockito.when()", "BDDMockito.given()");
     }
 
-    public void testOptionsWhenBDDMockitoIsNotEnforcedAndCallChainDoesntContainWill() {
-        myFixture.configureByText("Options.java",
+    @Test
+    void testOptionsWhenBDDMockitoIsNotEnforcedAndCallChainDoesntContainWill() {
+        getFixture().configureByText("Options.java",
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -291,8 +309,9 @@ public class ConvertFromBDDMockitoWillIntentionTest extends EnforceConventionAwa
         assertThat(getActionTexts()).containsExactly("Mockito.do*()", "Mockito.when()", "BDDMockito.given()");
     }
 
-    public void testOptionsWhenBDDMockitoIsNotEnforcedAndCallChainContainsWillDoNothing() {
-        myFixture.configureByText("Options.java",
+    @Test
+    void testOptionsWhenBDDMockitoIsNotEnforcedAndCallChainContainsWillDoNothing() {
+        getFixture().configureByText("Options.java",
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -311,8 +330,9 @@ public class ConvertFromBDDMockitoWillIntentionTest extends EnforceConventionAwa
         assertThat(getActionTexts()).containsExactly("Mockito.do*()");
     }
 
-    public void testOptionsWhenBDDMockitoIsNotEnforcedAndCallChainDoesntContainWillDoNothing() {
-        myFixture.configureByText("Options.java",
+    @Test
+    void testOptionsWhenBDDMockitoIsNotEnforcedAndCallChainDoesntContainWillDoNothing() {
+        getFixture().configureByText("Options.java",
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -333,7 +353,7 @@ public class ConvertFromBDDMockitoWillIntentionTest extends EnforceConventionAwa
 
     @NotNull
     private List<String> getActionTexts() {
-        return new ConvertFromBDDMockitoWillIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+        return new ConvertFromBDDMockitoWillIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream()
             .map(action -> (ConvertStubbingAction) action)
             .map(ConvertStubbingAction::getTo)

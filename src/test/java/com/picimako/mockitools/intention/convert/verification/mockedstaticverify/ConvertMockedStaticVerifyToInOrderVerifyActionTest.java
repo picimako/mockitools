@@ -1,17 +1,21 @@
-//Copyright 2022 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.verification.mockedstaticverify;
 
+import com.intellij.testFramework.RunsInEdt;
 import com.picimako.mockitools.MockitoolsActionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link ConvertMockedStaticVerifyToInOrderVerifyAction}.
  */
-public class ConvertMockedStaticVerifyToInOrderVerifyActionTest extends MockitoolsActionTestBase {
+@RunsInEdt
+class ConvertMockedStaticVerifyToInOrderVerifyActionTest extends MockitoolsActionTestBase {
 
     //Caret based conversion
 
-    public void testConvertsMockedStaticVerifyToInOrderVerifyWithoutVerificationMode() {
+    @Test
+    void testConvertsMockedStaticVerifyToInOrderVerifyWithoutVerificationMode() {
         checkAction(() -> new ConvertMockedStaticVerifyToInOrderVerifyAction(false),
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.MockedStatic;\n" +
@@ -39,7 +43,8 @@ public class ConvertMockedStaticVerifyToInOrderVerifyActionTest extends Mockitoo
                 "}");
     }
 
-    public void testConvertsMockedStaticVerifyToInOrderVerifyWithVerificationMode() {
+    @Test
+    void testConvertsMockedStaticVerifyToInOrderVerifyWithVerificationMode() {
         checkAction(() -> new ConvertMockedStaticVerifyToInOrderVerifyAction(false),
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.MockedStatic;\n" +
@@ -69,7 +74,8 @@ public class ConvertMockedStaticVerifyToInOrderVerifyActionTest extends Mockitoo
 
     //Selection based conversion
 
-    public void testConvertsMockedStaticVerifyToInOrderVerifyWithoutVerificationModeInSelection() {
+    @Test
+    void testConvertsMockedStaticVerifyToInOrderVerifyWithoutVerificationModeInSelection() {
         checkAction(() -> new ConvertMockedStaticVerifyToInOrderVerifyAction(true),
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.MockedStatic;\n" +
@@ -99,7 +105,8 @@ public class ConvertMockedStaticVerifyToInOrderVerifyActionTest extends Mockitoo
                 "}");
     }
 
-    public void testConvertsMockedStaticVerifyToInOrderVerifyWithVerificationModeInSelection() {
+    @Test
+    void testConvertsMockedStaticVerifyToInOrderVerifyWithVerificationModeInSelection() {
         checkAction(() -> new ConvertMockedStaticVerifyToInOrderVerifyAction(true),
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.MockedStatic;\n" +
@@ -129,7 +136,8 @@ public class ConvertMockedStaticVerifyToInOrderVerifyActionTest extends Mockitoo
                 "}");
     }
 
-    public void testConvertsMockedStaticVerifyToInOrderVerifyWithVerificationModeInSelectionMultipleMockObjects() {
+    @Test
+    void testConvertsMockedStaticVerifyToInOrderVerifyWithVerificationModeInSelectionMultipleMockObjects() {
         checkAction(() -> new ConvertMockedStaticVerifyToInOrderVerifyAction(true),
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.MockedStatic;\n" +

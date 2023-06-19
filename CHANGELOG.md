@@ -4,6 +4,14 @@
 
 ## [Unreleased]
 
+## [0.10.0]
+### Changed
+- New support range of IDEs: 2022.2-2023.2
+- Disabled the v3 to v4 migration aids inspections since Mockito 4.x has already been released for 1.5 years.
+- [#49](https://github.com/picimako/mockitools/issues/49): Added support for the `withoutAnnotations` attribute of the `@Mock` annotation.
+- Underlying plugin configuration updates, and test optimizations.
+- Update inspection description documents to enable code snippet syntax highlighting in them starting from IJ 2023.2.
+
 ## [0.9.0]
 ### Changed
 - Dropped support for IJ-2021.3.

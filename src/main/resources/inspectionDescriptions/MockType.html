@@ -15,27 +15,29 @@ This inspection validates <code>@Mock</code> and <code>@Spy</code> annotated fie
 <p>
     The following examples are all non-compliant ones:
 <pre>
+    <code>
 class MockTypesTest {
     @Mock
     NotMockable notMockable;
-    
+
     @Mock
     String mock;
-    
+
     @Spy
     int spy;
-    
+
     @Test
     public void shouldInspectMockTypes() {
         Mockito.mock(Short.class);
         Mockito.spy(Class.class);
-        Mockito.mock(String.class, Mockito.withSettings().name("name")); 
+        Mockito.mock(String.class, Mockito.withSettings().name("name"));
     }
-    
+
     @DoNotMock
     private static class NotMockable {
     }
 }
+    </code>
 </pre>
 </body>
 </html>

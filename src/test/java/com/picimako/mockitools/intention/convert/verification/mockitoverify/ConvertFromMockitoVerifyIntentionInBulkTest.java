@@ -1,15 +1,18 @@
-//Copyright 2022 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.verification.mockitoverify;
 
 import com.intellij.codeInsight.intention.IntentionAction;
+import com.intellij.testFramework.RunsInEdt;
 import com.picimako.mockitools.inspection.EnforceConventionInspection;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link ConvertFromMockitoVerifyIntention}.
  */
-public class ConvertFromMockitoVerifyIntentionInBulkTest extends EnforceConventionAwareIntentionTestBase {
+@RunsInEdt
+class ConvertFromMockitoVerifyIntentionInBulkTest extends EnforceConventionAwareIntentionTestBase {
 
     @Override
     protected IntentionAction getIntention() {
@@ -18,7 +21,8 @@ public class ConvertFromMockitoVerifyIntentionInBulkTest extends EnforceConventi
 
     //Availability
 
-    public void testNotAvailableWithSelectionShorterThanMinRequiredLength() {
+    @Test
+    void testNotAvailableWithSelectionShorterThanMinRequiredLength() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -29,7 +33,8 @@ public class ConvertFromMockitoVerifyIntentionInBulkTest extends EnforceConventi
                 "}");
     }
 
-    public void testNotAvailableForOnlyWhitespaceSelection() {
+    @Test
+    void testNotAvailableForOnlyWhitespaceSelection() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -40,7 +45,8 @@ public class ConvertFromMockitoVerifyIntentionInBulkTest extends EnforceConventi
                 "}");
     }
 
-    public void testNotAvailableForIncorrectSelectionEndDot() {
+    @Test
+    void testNotAvailableForIncorrectSelectionEndDot() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -56,7 +62,8 @@ public class ConvertFromMockitoVerifyIntentionInBulkTest extends EnforceConventi
                 "}");
     }
 
-    public void testNotAvailableOnNonMockitoVerifyChain() {
+    @Test
+    void testNotAvailableOnNonMockitoVerifyChain() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -67,7 +74,8 @@ public class ConvertFromMockitoVerifyIntentionInBulkTest extends EnforceConventi
                 "}");
     }
 
-    public void testNotAvailableWhenMockitoVerifyHasNoSubsequentMethodCall() {
+    @Test
+    void testNotAvailableWhenMockitoVerifyHasNoSubsequentMethodCall() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -83,7 +91,8 @@ public class ConvertFromMockitoVerifyIntentionInBulkTest extends EnforceConventi
                 "}");
     }
 
-    public void testNotAvailableOnMockitoVerifyWithNoArgument() {
+    @Test
+    void testNotAvailableOnMockitoVerifyWithNoArgument() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -95,7 +104,8 @@ public class ConvertFromMockitoVerifyIntentionInBulkTest extends EnforceConventi
                 "}");
     }
 
-    public void testNotAvailableOnMultipleMixedVerificationSelected() {
+    @Test
+    void testNotAvailableOnMultipleMixedVerificationSelected() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.InOrder;\n" +
@@ -115,7 +125,8 @@ public class ConvertFromMockitoVerifyIntentionInBulkTest extends EnforceConventi
                 "}");
     }
 
-    public void testNotAvailableOnBDDMockitoThenSelected() {
+    @Test
+    void testNotAvailableOnBDDMockitoThenSelected() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.BDDMockito;\n" +
@@ -132,7 +143,8 @@ public class ConvertFromMockitoVerifyIntentionInBulkTest extends EnforceConventi
                 "}");
     }
 
-    public void testAvailableWhenMockitoIsEnforced() {
+    @Test
+    void testAvailableWhenMockitoIsEnforced() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.MOCKITO);
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
@@ -149,7 +161,8 @@ public class ConvertFromMockitoVerifyIntentionInBulkTest extends EnforceConventi
                 "}");
     }
 
-    public void testAvailableForMockitoVerifyWithoutVerificationMode() {
+    @Test
+    void testAvailableForMockitoVerifyWithoutVerificationMode() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -165,7 +178,8 @@ public class ConvertFromMockitoVerifyIntentionInBulkTest extends EnforceConventi
                 "}");
     }
 
-    public void testAvailableForMockitoVerifyWithVerificationMode() {
+    @Test
+    void testAvailableForMockitoVerifyWithVerificationMode() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -181,7 +195,8 @@ public class ConvertFromMockitoVerifyIntentionInBulkTest extends EnforceConventi
                 "}");
     }
 
-    public void testAvailableOnSingleMockitoVerifySelected() {
+    @Test
+    void testAvailableOnSingleMockitoVerifySelected() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -199,7 +214,8 @@ public class ConvertFromMockitoVerifyIntentionInBulkTest extends EnforceConventi
                 "}");
     }
 
-    public void testAvailableOnMultipleMockitoVerifySelected() {
+    @Test
+    void testAvailableOnMultipleMockitoVerifySelected() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +

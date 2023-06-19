@@ -1,4 +1,4 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 
@@ -6,15 +6,18 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
+import com.intellij.testFramework.RunsInEdt;
 import com.picimako.mockitools.inspection.EnforceConventionInspection;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 /**
  * Integration test for {@link ConvertFromBDDMockitoThenIntention}.
  */
-public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConventionAwareIntentionTestBase {
+@RunsInEdt
+class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConventionAwareIntentionTestBase {
 
     @Override
     protected IntentionAction getIntention() {
@@ -23,7 +26,8 @@ public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConvent
 
     //Availability
 
-    public void testNotAvailableWithSelectionShorterThanMinRequiredLength() {
+    @Test
+    void testNotAvailableWithSelectionShorterThanMinRequiredLength() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -34,7 +38,8 @@ public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConvent
                 "}");
     }
 
-    public void testNotAvailableForOnlyWhitespaceSelection() {
+    @Test
+    void testNotAvailableForOnlyWhitespaceSelection() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -45,7 +50,8 @@ public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConvent
                 "}");
     }
 
-    public void testNotAvailableForIncorrectSelectionEndDot() {
+    @Test
+    void testNotAvailableForIncorrectSelectionEndDot() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.BDDMockito;\n" +
@@ -63,7 +69,8 @@ public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConvent
                 "}");
     }
 
-    public void testNotAvailableOnNonBDDMockitoThenChain() {
+    @Test
+    void testNotAvailableOnNonBDDMockitoThenChain() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -74,7 +81,8 @@ public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConvent
                 "}");
     }
 
-    public void testNotAvailableWhenBDDMockitoThenHasNoSubsequentMethodCall() {
+    @Test
+    void testNotAvailableWhenBDDMockitoThenHasNoSubsequentMethodCall() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.BDDMockito;\n" +
@@ -91,7 +99,8 @@ public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConvent
                 "}");
     }
 
-    public void testNotAvailableOnBDDMockitoThenWithNoArgument() {
+    @Test
+    void testNotAvailableOnBDDMockitoThenWithNoArgument() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.BDDMockito;\n" +
@@ -104,7 +113,8 @@ public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConvent
                 "}");
     }
 
-    public void testNotAvailableOnMultipleMixedVerificationSelected() {
+    @Test
+    void testNotAvailableOnMultipleMixedVerificationSelected() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.BDDMockito;\n" +
@@ -123,7 +133,8 @@ public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConvent
                 "}");
     }
 
-    public void testAvailableWhenMockitoIsEnforced() {
+    @Test
+    void testAvailableWhenMockitoIsEnforced() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
@@ -141,7 +152,8 @@ public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConvent
                 "}");
     }
 
-    public void testAvailableForBDDMockitoThenWithoutVerificationMode() {
+    @Test
+    void testAvailableForBDDMockitoThenWithoutVerificationMode() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.BDDMockito;\n" +
@@ -158,7 +170,8 @@ public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConvent
                 "}");
     }
 
-    public void testAvailableForBDDMockitoThenWithVerificationMode() {
+    @Test
+    void testAvailableForBDDMockitoThenWithVerificationMode() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.BDDMockito;\n" +
@@ -175,7 +188,8 @@ public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConvent
                 "}");
     }
 
-    public void testAvailableOnSingleBDDMockitoThenSelected() {
+    @Test
+    void testAvailableOnSingleBDDMockitoThenSelected() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.BDDMockito;\n" +
@@ -194,7 +208,8 @@ public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConvent
                 "}");
     }
 
-    public void testAvailableOnMultipleBDDMockitoThenSelected() {
+    @Test
+    void testAvailableOnMultipleBDDMockitoThenSelected() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.BDDMockito;\n" +
@@ -215,8 +230,9 @@ public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConvent
 
     //Action selection options
 
-    public void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedAllVerificationsWithoutInOrder() {
-        myFixture.configureByText("Options.java",
+    @Test
+    void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedAllVerificationsWithoutInOrder() {
+        getFixture().configureByText("Options.java",
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -230,7 +246,7 @@ public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConvent
                 "        }\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(
@@ -239,8 +255,9 @@ public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConvent
             AddInOrderToBDDMockitoAction.class);
     }
 
-    public void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedAllVerificationsWithInOrder() {
-        myFixture.configureByText("Options.java",
+    @Test
+    void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedAllVerificationsWithInOrder() {
+        getFixture().configureByText("Options.java",
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -257,7 +274,7 @@ public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConvent
                 "        }\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(
@@ -265,8 +282,9 @@ public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConvent
             ConvertBDDMockitoThenToInOrderVerifyAction.class);
     }
 
-    public void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedVerificationsMixedWithAndWithoutInOrder() {
-        myFixture.configureByText("Options.java",
+    @Test
+    void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedVerificationsMixedWithAndWithoutInOrder() {
+        getFixture().configureByText("Options.java",
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -283,14 +301,15 @@ public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConvent
                 "        }\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(ConvertBDDMockitoThenToMockitoVerifyAction.class);
     }
 
-    public void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedVerificationsMultipleDifferentInOrders() {
-        myFixture.configureByText("Options.java",
+    @Test
+    void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedVerificationsMultipleDifferentInOrders() {
+        getFixture().configureByText("Options.java",
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.InOrder;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -308,7 +327,7 @@ public class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConvent
                 "        }\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(ConvertBDDMockitoThenToMockitoVerifyAction.class);

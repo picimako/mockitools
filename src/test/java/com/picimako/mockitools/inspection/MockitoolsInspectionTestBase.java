@@ -1,24 +1,22 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection;
 
 import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito3;
-import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito4Latest;
+import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito4;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
+import com.intellij.testFramework.TestDataPath;
 import com.picimako.mockitools.MockitoolsTestBase;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * Base test class for Mockitools inspection unit testing.
  * <p>
  * Loads the Java 11 mock JDK and the Mockito binary for testing.
  */
+@TestDataPath("$CONTENT_ROOT/testData/inspection")
 public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
-
-    @Override
-    protected String getTestDataPath() {
-        return "src/test/testData/inspection";
-    }
 
     /**
      * Override this to configure the inspection to be tested.
@@ -38,15 +36,15 @@ public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
      * without the 'test' prefix.
      */
     protected void doJavaTest(InspectionProfileEntry inspection) {
-        myFixture.configureByFile(getTestName(false) + ".java");
-        myFixture.enableInspections(inspection);
-        myFixture.testHighlighting(true, false, false);
+        getFixture().configureByFile(getTestName(false) + ".java");
+        getFixture().enableInspections(inspection);
+        getFixture().testHighlighting(true, false, false);
     }
 
     protected void doJavaTest(String filename, String text) {
-        myFixture.configureByText(filename, text);
-        myFixture.enableInspections(getInspection());
-        myFixture.testHighlighting(true, false, false);
+        getFixture().configureByText(filename, text);
+        getFixture().enableInspections(getInspection());
+        getFixture().testHighlighting(true, false, false);
     }
 
     /**
@@ -57,9 +55,9 @@ public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
      * @param quickFixName the name/text of the quick fix
      */
     protected void doQuickFixTest(String quickFixName) {
-        myFixture.configureByFile(getTestName(false) + ".java");
+        getFixture().configureByFile(getTestName(false) + ".java");
         launchQuickFix(quickFixName);
-        myFixture.checkResultByFile(getTestName(false) + ".after.java");
+        getFixture().checkResultByFile(getTestName(false) + ".after.java");
     }
 
     /**
@@ -72,25 +70,32 @@ public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
      * @param afterText    the code after applying the quick fix
      */
     protected void doQuickFixTest(String quickFixName, String filename, String beforeText, String afterText) {
-        myFixture.configureByText(filename, beforeText);
+        getFixture().configureByText(filename, beforeText);
         launchQuickFix(quickFixName);
-        myFixture.checkResult(afterText);
+        getFixture().checkResult(afterText);
     }
     
     private void launchQuickFix(String quickFixName) {
-        myFixture.enableInspections(getInspection());
-        myFixture.doHighlighting();
-        myFixture.launchAction(myFixture.findSingleIntention(quickFixName));
+        getFixture().enableInspections(getInspection());
+        getFixture().doHighlighting();
+        getFixture().launchAction(getFixture().findSingleIntention(quickFixName));
     }
 
     /**
      * Base class for testing Mockito 3 specific inspections.
      */
     public static abstract class MockitoV3 extends MockitoolsInspectionTestBase {
+
+        //This must be overridden, otherwise the library load doesn't seem to take effect
+        @BeforeEach
         @Override
-        protected void setUp() throws Exception {
-            super.setUp();
-            loadMockito3(myFixture.getProjectDisposable(), getModule());
+        protected void setUp() {
+            loadMockito3(getFixture().getProjectDisposable(), getFixture().getModule());
+        }
+
+        @Override
+        protected void loadLibs() {
+            loadMockito3(getFixture().getProjectDisposable(), getFixture().getModule());
         }
     }
 
@@ -98,10 +103,10 @@ public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
      * Base class for testing Mockito 4 specific inspections.
      */
     public static abstract class MockitoV4 extends MockitoolsInspectionTestBase {
+
         @Override
-        protected void setUp() throws Exception {
-            super.setUp();
-            loadMockito4Latest(myFixture.getProjectDisposable(), getModule());
+        protected void loadLibs() {
+            loadMockito4(getFixture().getProjectDisposable(), getFixture().getModule());
         }
     }
 }

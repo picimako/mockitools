@@ -1,17 +1,21 @@
-//Copyright 2022 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.verification.mockitoverify;
 
+import com.intellij.testFramework.RunsInEdt;
 import com.picimako.mockitools.MockitoolsActionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderAction}.
  */
-public class ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderActionTest extends MockitoolsActionTestBase {
+@RunsInEdt
+class ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderActionTest extends MockitoolsActionTestBase {
 
     //Caret based conversion
 
-    public void testConvertsMockitoVerifyToBDDMockitoThenWithoutVerificationMode() {
+    @Test
+    void testConvertsMockitoVerifyToBDDMockitoThenWithoutVerificationMode() {
         checkAction(() -> new ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderAction(false),
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -40,7 +44,8 @@ public class ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderActionTest extend
                 "}");
     }
 
-    public void testConvertsMockitoVerifyToBDDMockitoThenWithVerificationMode() {
+    @Test
+    void testConvertsMockitoVerifyToBDDMockitoThenWithVerificationMode() {
         checkAction(() -> new ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderAction(false),
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -69,7 +74,8 @@ public class ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderActionTest extend
                 "}");
     }
 
-    public void testConvertsMockitoVerifyToBDDMockitoThenWithVerificationModeWithLineWrapping() {
+    @Test
+    void testConvertsMockitoVerifyToBDDMockitoThenWithVerificationModeWithLineWrapping() {
         checkAction(() -> new ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderAction(false),
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -104,7 +110,8 @@ public class ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderActionTest extend
 
     //Selection based conversion
 
-    public void testConvertsMockitoVerifyToBDDMockitoThenWithoutVerificationModeInSelection() {
+    @Test
+    void testConvertsMockitoVerifyToBDDMockitoThenWithoutVerificationModeInSelection() {
         checkAction(() -> new ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderAction(true),
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -135,7 +142,8 @@ public class ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderActionTest extend
                 "}");
     }
 
-    public void testConvertsMockitoVerifyToBDDMockitoThenWithVerificationModeInSelection() {
+    @Test
+    void testConvertsMockitoVerifyToBDDMockitoThenWithVerificationModeInSelection() {
         checkAction(() -> new ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderAction(true),
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -166,7 +174,8 @@ public class ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderActionTest extend
                 "}");
     }
 
-    public void testConvertsMockitoVerifyToBDDMockitoThenWithVerificationModeWithLineWrappingInSelection() {
+    @Test
+    void testConvertsMockitoVerifyToBDDMockitoThenWithVerificationModeWithLineWrappingInSelection() {
         checkAction(() -> new ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderAction(true),
             "import org.mockito.Mockito;\n" +
                 "\n" +

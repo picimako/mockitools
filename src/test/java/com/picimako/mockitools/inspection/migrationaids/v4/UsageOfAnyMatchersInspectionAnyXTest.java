@@ -1,20 +1,22 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.picimako.mockitools.inspection.migrationaids.v4;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link UsageOfAnyMatchersInspection}.
  */
-public class UsageOfAnyMatchersInspectionAnyXTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class UsageOfAnyMatchersInspectionAnyXTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
         return new UsageOfAnyMatchersInspection();
     }
 
-    public void testArgumentMatchersAnyIterableOfReplacedWithAnyIterable() {
+    @Test
+    void testArgumentMatchersAnyIterableOfReplacedWithAnyIterable() {
         doQuickFixTest("Replace with ArgumentMatchers.anyIterable()", "UseAnyIterableInsteadOfAnyIterableOfTest.java",
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.ArgumentMatchers;\n" +
@@ -46,7 +48,8 @@ public class UsageOfAnyMatchersInspectionAnyXTest extends MockitoolsInspectionTe
                 "}");
     }
 
-    public void testArgumentMatchersAnyMapOfReplacedWithAnyMap() {
+    @Test
+    void testArgumentMatchersAnyMapOfReplacedWithAnyMap() {
         doQuickFixTest("Replace with ArgumentMatchers.anyMap()", "UseAnyMapInsteadOfAnyMapOfTest.java",
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.ArgumentMatchers;\n" +
@@ -80,7 +83,8 @@ public class UsageOfAnyMatchersInspectionAnyXTest extends MockitoolsInspectionTe
                 "}");
     }
 
-    public void testArgumentMatchersAnyIterableOfReplacedWithAnyIterableForStaticImport() {
+    @Test
+    void testArgumentMatchersAnyIterableOfReplacedWithAnyIterableForStaticImport() {
         doQuickFixTest("Replace with ArgumentMatchers.anyIterable()", "UseAnyIterableInsteadOfAnyIterableOfTest.java",
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -115,7 +119,8 @@ public class UsageOfAnyMatchersInspectionAnyXTest extends MockitoolsInspectionTe
                 "}");
     }
 
-    public void testArgumentMatchersAnyMapOfReplacedWithAnyMapForStaticImport() {
+    @Test
+    void testArgumentMatchersAnyMapOfReplacedWithAnyMapForStaticImport() {
         doQuickFixTest("Replace with ArgumentMatchers.anyMap()", "UseAnyMapInsteadOfAnyMapOfTest.java",
             "import org.mockito.Mockito;\n" +
                 "import java.util.Map;\n" +
@@ -152,7 +157,8 @@ public class UsageOfAnyMatchersInspectionAnyXTest extends MockitoolsInspectionTe
                 "}");
     }
 
-    public void testMatchersAnyIterableOfReplacedWithAnyIterable() {
+    @Test
+    void testMatchersAnyIterableOfReplacedWithAnyIterable() {
         doQuickFixTest("Replace with ArgumentMatchers.anyIterable()", "UseAnyIterableInsteadOfAnyIterableOfTest.java",
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Matchers;\n" +
@@ -185,7 +191,8 @@ public class UsageOfAnyMatchersInspectionAnyXTest extends MockitoolsInspectionTe
                 "}");
     }
 
-    public void testMatchersAnyMapOfReplacedWithAnyMap() {
+    @Test
+    void testMatchersAnyMapOfReplacedWithAnyMap() {
         doQuickFixTest("Replace with ArgumentMatchers.anyMap()", "UseAnyMapInsteadOfAnyMapOfTest.java",
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Matchers;\n" +

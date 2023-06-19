@@ -1,6 +1,4 @@
-/*
- * Copyright 2022 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
- */
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.util;
 
@@ -9,18 +7,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.intellij.testFramework.RunsInEdt;
 import com.picimako.mockitools.MockitoolsTestBase;
 import com.picimako.mockitools.util.PsiMethodUtil;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link PsiMethodUtil}.
  */
-public class PsiMethodUtilTest extends MockitoolsTestBase {
+@RunsInEdt
+class PsiMethodUtilTest extends MockitoolsTestBase {
 
     //hasOneArgument
 
-    public void testHasOnlyOneArgument() {
-        myFixture.configureByText("OneArgumentTest.java",
+    @Test
+    void testHasOnlyOneArgument() {
+        getFixture().configureByText("OneArgumentTest.java",
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class OneArgumentTest {\n" +
@@ -29,13 +31,14 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
                 "    }\n" +
                 "}");
 
-        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
 
         assertThat(PsiMethodUtil.hasOneArgument(methodCall)).isTrue();
     }
 
-    public void testDoesntHaveOnlyOneArgument() {
-        myFixture.configureByText("OneArgumentTest.java",
+    @Test
+    void testDoesntHaveOnlyOneArgument() {
+        getFixture().configureByText("OneArgumentTest.java",
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class OneArgumentTest {\n" +
@@ -44,15 +47,16 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
                 "    }\n" +
                 "}");
 
-        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
 
         assertThat(PsiMethodUtil.hasOneArgument(methodCall)).isFalse();
     }
 
     //hasAtLeastOneArgument
 
-    public void testDoesntHaveAtLeastOneArgumentForZero() {
-        myFixture.configureByText("OneArgumentTest.java",
+    @Test
+    void testDoesntHaveAtLeastOneArgumentForZero() {
+        getFixture().configureByText("OneArgumentTest.java",
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class OneArgumentTest {\n" +
@@ -61,13 +65,14 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
                 "    }\n" +
                 "}");
 
-        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
 
         assertThat(PsiMethodUtil.hasAtLeastOneArgument(methodCall)).isFalse();
     }
 
-    public void testHasAtLeastOneArgumentForOne() {
-        myFixture.configureByText("OneArgumentTest.java",
+    @Test
+    void testHasAtLeastOneArgumentForOne() {
+        getFixture().configureByText("OneArgumentTest.java",
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class OneArgumentTest {\n" +
@@ -76,13 +81,14 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
                 "    }\n" +
                 "}");
 
-        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
 
         assertThat(PsiMethodUtil.hasAtLeastOneArgument(methodCall)).isTrue();
     }
 
-    public void testHasAtLeastOneArgumentForMoreThanOne() {
-        myFixture.configureByText("MultipleArgumentsTest.java",
+    @Test
+    void testHasAtLeastOneArgumentForMoreThanOne() {
+        getFixture().configureByText("MultipleArgumentsTest.java",
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class MultipleArgumentsTest {\n" +
@@ -91,13 +97,14 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
                 "    }\n" +
                 "}");
 
-        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
 
         assertThat(PsiMethodUtil.hasAtLeastOneArgument(methodCall)).isTrue();
     }
 
-    public void testHasNoArgument() {
-        myFixture.configureByText("NoArgumentsTest.java",
+    @Test
+    void testHasNoArgument() {
+        getFixture().configureByText("NoArgumentsTest.java",
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class NoArgumentsTest {\n" +
@@ -106,15 +113,16 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
                 "    }\n" +
                 "}");
 
-        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
 
         assertThat(PsiMethodUtil.hasAtLeastOneArgument(methodCall)).isFalse();
     }
 
     //hasSubsequentMethodCall
 
-    public void testHasSubsequentCall() {
-        myFixture.configureByText("HasSubsequentCallTest.java",
+    @Test
+    void testHasSubsequentCall() {
+        getFixture().configureByText("HasSubsequentCallTest.java",
             "import org.mockito.Mockito;\n" +
                 "import static org.mockito.Mockito.times;\n" +
                 "\n" +
@@ -124,13 +132,14 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
                 "    }\n" +
                 "}");
 
-        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
 
         assertThat(PsiMethodUtil.hasSubsequentMethodCall(methodCall)).isTrue();
     }
 
-    public void testDoesntHaveSubsequentCallDueToNotMatchingParentPsi() {
-        myFixture.configureByText("HasSubsequentCallNotMatchingParentTest.java",
+    @Test
+    void testDoesntHaveSubsequentCallDueToNotMatchingParentPsi() {
+        getFixture().configureByText("HasSubsequentCallNotMatchingParentTest.java",
             "import org.mockito.Mockito;\n" +
                 "import static org.mockito.Mockito.times;\n" +
                 "\n" +
@@ -140,15 +149,16 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
                 "    }\n" +
                 "}");
 
-        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
 
         assertThat(PsiMethodUtil.hasSubsequentMethodCall(methodCall)).isFalse();
     }
 
     //getArguments
 
-    public void testGetArguments() {
-        myFixture.configureByText("GetArgumentsTest.java",
+    @Test
+    void testGetArguments() {
+        getFixture().configureByText("GetArgumentsTest.java",
             "import org.mockito.Mockito;\n" +
                 "import static org.mockito.Mockito.times;\n" +
                 "\n" +
@@ -158,13 +168,14 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
                 "    }\n" +
                 "}");
 
-        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
 
         assertThat(PsiMethodUtil.getArguments(methodCall)).hasSize(2);
     }
 
-    public void testGetEmptyArguments() {
-        myFixture.configureByText("GetEmptyArgumentsTest.java",
+    @Test
+    void testGetEmptyArguments() {
+        getFixture().configureByText("GetEmptyArgumentsTest.java",
             "import org.mockito.Mockito;\n" +
                 "import static org.mockito.Mockito.never;\n" +
                 "\n" +
@@ -174,15 +185,16 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
                 "    }\n" +
                 "}");
 
-        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
 
         assertThat(PsiMethodUtil.getArguments(methodCall)).isEmpty();
     }
 
     //getFirstArgument
 
-    public void testGetFirstArgument() {
-        myFixture.configureByText("GetArgumentsTest.java",
+    @Test
+    void testGetFirstArgument() {
+        getFixture().configureByText("GetArgumentsTest.java",
             "import org.mockito.Mockito;\n" +
                 "import static org.mockito.Mockito.times;\n" +
                 "\n" +
@@ -192,15 +204,16 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
                 "    }\n" +
                 "}");
 
-        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
 
         assertThat(PsiMethodUtil.getFirstArgument(methodCall).getText()).isEqualTo("new Object()");
     }
 
     //deleteArguments
 
-    public void testDeletesArguments() {
-        myFixture.configureByText("DeletesArgumentsTest.java",
+    @Test
+    void testDeletesArguments() {
+        getFixture().configureByText("DeletesArgumentsTest.java",
             "import org.mockito.Mockito;\n" +
                 "import static org.mockito.Mockito.never;\n" +
                 "\n" +
@@ -210,16 +223,17 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
                 "    }\n" +
                 "}");
 
-        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
-        WriteAction.run(() -> CommandProcessor.getInstance().executeCommand(getProject(), () -> PsiMethodUtil.deleteArguments(methodCall), "Delete", "group.id"));
+        PsiMethodCallExpression methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
+        WriteAction.run(() -> CommandProcessor.getInstance().executeCommand(getFixture().getProject(), () -> PsiMethodUtil.deleteArguments(methodCall), "Delete", "group.id"));
 
         assertThat(methodCall.getArgumentList().isEmpty()).isTrue();
     }
 
     //getSubsequentMethodCall
 
-    public void testGetsSubsequentCall() {
-        myFixture.configureByText("SubSequent.java",
+    @Test
+    void testGetsSubsequentCall() {
+        getFixture().configureByText("SubSequent.java",
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class SubSequent {\n" +
@@ -228,18 +242,20 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
                 "    }\n" +
                 "}");
 
-        var methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        var methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
         var subsequentMethodCall = PsiMethodUtil.getSubsequentMethodCall(methodCall);
 
         assertThat(subsequentMethodCall.getMethodExpression().getReferenceName()).isEqualTo("toString");
     }
 
-    public void testDoesntGetSubsequentCallForNullArgument() {
+    @Test
+    void testDoesntGetSubsequentCallForNullArgument() {
         assertThat(PsiMethodUtil.getSubsequentMethodCall(null)).isNull();
     }
 
-    public void testDoesntGetSubsequentCallWhenThereIsNoSubsequentCall() {
-        myFixture.configureByText("SubSequent.java",
+    @Test
+    void testDoesntGetSubsequentCallWhenThereIsNoSubsequentCall() {
+        getFixture().configureByText("SubSequent.java",
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class SubSequent {\n" +
@@ -248,7 +264,7 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
                 "    }\n" +
                 "}");
 
-        var methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        var methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
         var subsequentMethodCall = PsiMethodUtil.getSubsequentMethodCall(methodCall);
 
         assertThat(subsequentMethodCall).isNull();
@@ -256,8 +272,9 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
 
     //findCallUpwardsInChain
 
-    public void testFindsCallUpwards() {
-        myFixture.configureByText("FindUpwards.java",
+    @Test
+    void testFindsCallUpwards() {
+        getFixture().configureByText("FindUpwards.java",
             "public class FindUpwards {\n" +
                 "    public void testMethod() {\n" +
                 "        \"string\".substring(1).subS<caret>equence(2, 3).toString();\n" +
@@ -265,14 +282,15 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
                 "}");
 
 
-        var methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        var methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
         var foundCall = PsiMethodUtil.findCallUpwardsInChain(methodCall, "substring");
 
         assertThat(foundCall.get().getText()).isEqualTo("\"string\".substring(1)");
     }
 
-    public void testDoesntFindNonExistentCallUpwards() {
-        myFixture.configureByText("FindUpwards.java",
+    @Test
+    void testDoesntFindNonExistentCallUpwards() {
+        getFixture().configureByText("FindUpwards.java",
             "public class FindUpwards {\n" +
                 "    public void testMethod() {\n" +
                 "        \"string\".substring(1).subS<caret>equence(2, 3).toString();\n" +
@@ -280,7 +298,7 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
                 "}");
 
 
-        var methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        var methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
         var foundCall = PsiMethodUtil.findCallUpwardsInChain(methodCall, "toString");
 
         assertThat(foundCall).isEmpty();
@@ -288,8 +306,9 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
 
     //findCallDownwardsInChain
 
-    public void testFindsCallDownwards() {
-        myFixture.configureByText("FindDownwards.java",
+    @Test
+    void testFindsCallDownwards() {
+        getFixture().configureByText("FindDownwards.java",
             "public class FindDownwards {\n" +
                 "    public void testMethod() {\n" +
                 "        \"string\".substring(1).subS<caret>equence(2, 3).toString();\n" +
@@ -297,14 +316,15 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
                 "}");
 
 
-        var methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        var methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
         var foundCall = PsiMethodUtil.findCallDownwardsInChain(methodCall, "toString");
 
         assertThat(foundCall.get().getText()).isEqualTo("\"string\".substring(1).subSequence(2, 3).toString()");
     }
 
-    public void testDoesntFindNonExistentCallDownwards() {
-        myFixture.configureByText("FindDownwards.java",
+    @Test
+    void testDoesntFindNonExistentCallDownwards() {
+        getFixture().configureByText("FindDownwards.java",
             "public class FindDownwards {\n" +
                 "    public void testMethod() {\n" +
                 "        \"string\".substring(1).subS<caret>equence(2, 3).toString();\n" +
@@ -312,7 +332,7 @@ public class PsiMethodUtilTest extends MockitoolsTestBase {
                 "}");
 
 
-        var methodCall = (PsiMethodCallExpression) myFixture.getFile().findElementAt(myFixture.getCaretOffset()).getParent().getParent();
+        var methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
         var foundCall = PsiMethodUtil.findCallDownwardsInChain(methodCall, "substring");
 
         assertThat(foundCall).isEmpty();

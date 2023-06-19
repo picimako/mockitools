@@ -1,10 +1,11 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.picimako.mockitools.MockitoQualifiedNames.MOCK_MAKER;
 import static com.picimako.mockitools.MockitoQualifiedNames.STRICTNESS;
+import static com.picimako.mockitools.MockitoQualifiedNames.WITHOUT_ANNOTATIONS;
 import static com.picimako.mockitools.util.ClassObjectAccessUtil.getOperandType;
 import static com.picimako.mockitools.MockableTypesUtil.isMockableTypeInAnyWay;
 import static com.picimako.mockitools.MockitoQualifiedNames.ANSWER;
@@ -98,7 +99,8 @@ public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntention
     private static final CallMatcher MOCKITO_WITH_SETTINGS = staticCall(ORG_MOCKITO_MOCKITO, "withSettings");
 
     private static final CallMatcher MOCK_SETTINGS_SERIALIZABLE_WITH_MODE = instanceCall(ORG_MOCKITO_MOCK_SETTINGS, SERIALIZABLE).parameterTypes(ORG_MOCKITO_MOCK_SERIALIZABLE_MODE);
-    private static final Set<String> SUPPORTED_MOCK_SETTINGS_METHODS = Set.of(DEFAULT_ANSWER, STUB_ONLY, NAME, EXTRA_INTERFACES, LENIENT, STRICTNESS, MOCK_MAKER);
+    private static final Set<String> SUPPORTED_MOCK_SETTINGS_METHODS =
+        Set.of(DEFAULT_ANSWER, STUB_ONLY, NAME, EXTRA_INTERFACES, LENIENT, STRICTNESS, MOCK_MAKER, WITHOUT_ANNOTATIONS);
 
     public ConvertMockCallToFieldIntention() {
         super(MockitoQualifiedNames.MOCK, "@Mock");
@@ -199,7 +201,10 @@ public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntention
         for (int i = calls.size() - 2; i >= 0; i--) {
             var call = calls.get(i);
             String methodName = getMethodName(call);
-            if (STUB_ONLY.equals(methodName) || LENIENT.equals(methodName) || SERIALIZABLE.equals(methodName))
+            if (STUB_ONLY.equals(methodName)
+                || LENIENT.equals(methodName)
+                || SERIALIZABLE.equals(methodName)
+                || WITHOUT_ANNOTATIONS.equals(methodName))
                 configurer.configureBooleanAttribute(methodName);
             else if (NAME.equals(methodName)) configurer.configureName(call);
             else if (DEFAULT_ANSWER.equals(methodName)) configurer.configureAnswerFromCall(call);

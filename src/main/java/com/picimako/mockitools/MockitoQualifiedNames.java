@@ -1,4 +1,4 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools;
 
@@ -96,6 +96,7 @@ public final class MockitoQualifiedNames {
     public static final String EXTRA_INTERFACES = "extraInterfaces";
     public static final String STRICTNESS = "strictness";
     public static final String MOCK_MAKER = "mockMaker";
+    public static final String WITHOUT_ANNOTATIONS = "withoutAnnotations";
 
     //Annotations
     public static final String ORG_MOCKITO_CAPTOR = "org.mockito.Captor";

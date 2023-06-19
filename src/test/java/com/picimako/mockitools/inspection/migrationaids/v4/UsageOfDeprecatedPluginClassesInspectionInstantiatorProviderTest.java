@@ -1,21 +1,23 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.migrationaids.v4;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link UsageOfDeprecatedPluginClassesInspection}.
  */
-public class UsageOfDeprecatedPluginClassesInspectionInstantiatorProviderTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class UsageOfDeprecatedPluginClassesInspectionInstantiatorProviderTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
         return new UsageOfDeprecatedPluginClassesInspection();
     }
 
-    public void testReplacesInstantiatorProviderImport() {
+    @Test
+    void testReplacesInstantiatorProviderImport() {
         doQuickFixTest("Replace with InstantiatorProvider2", "ReplaceInstantiatorProviderTest.java",
             "import org.mockito.plugins.InstantiatorProvider;\n" +
                 "\n" +
@@ -34,7 +36,8 @@ public class UsageOfDeprecatedPluginClassesInspectionInstantiatorProviderTest ex
                 "}");
     }
 
-    public void testReplacesInstantiatorProviderImportInterfaceDeclaration() {
+    @Test
+    void testReplacesInstantiatorProviderImportInterfaceDeclaration() {
         doQuickFixTest("Replace with InstantiatorProvider2", "ReplaceInstantiatorProviderTest.java",
             "import org.mockito.plugins.InstantiatorProvider;\n" +
                 "\n" +
@@ -47,7 +50,8 @@ public class UsageOfDeprecatedPluginClassesInspectionInstantiatorProviderTest ex
                 "}");
     }
 
-    public void testReplacesInstantiatorProviderFullyQualifiedNameWithoutNameCollision() {
+    @Test
+    void testReplacesInstantiatorProviderFullyQualifiedNameWithoutNameCollision() {
         doQuickFixTest("Replace with InstantiatorProvider2", "ReplaceInstantiatorProviderTest.java",
             "public class ReplaceInstantiatorProviderTest {\n" +
                 "    public void testMethod() {\n" +
@@ -63,7 +67,8 @@ public class UsageOfDeprecatedPluginClassesInspectionInstantiatorProviderTest ex
                 "}");
     }
 
-    public void testReplacesAllNonFqnOccurrencesOfInstantiatorProvider() {
+    @Test
+    void testReplacesAllNonFqnOccurrencesOfInstantiatorProvider() {
         doQuickFixTest("Replace with InstantiatorProvider2", "ReplaceInstantiatorProviderTest.java",
             "import org.mockito.plugins.InstantiatorProvider;\n" +
                 "\n" +

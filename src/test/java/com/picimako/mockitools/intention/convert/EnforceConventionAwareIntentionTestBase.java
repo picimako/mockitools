@@ -1,4 +1,4 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert;
 
@@ -15,17 +15,11 @@ import com.picimako.mockitools.intention.MockitoolsIntentionTestBase;
 public abstract class EnforceConventionAwareIntentionTestBase extends MockitoolsIntentionTestBase {
 
     protected void addEnforceConventionInspection(EnforceConventionInspection.Convention convention) {
-        var profile = InspectionProfileManager.getInstance(getProject()).getCurrentProfile();
+        var profile = InspectionProfileManager.getInstance(getFixture().getProject()).getCurrentProfile();
         var inspection = new EnforceConventionInspection();
         inspection.conventionToEnforce = convention;
         InspectionsKt.disableAllTools(profile);
-        profile.addTool(getProject(), new LocalInspectionToolWrapper(inspection), null);
-        profile.enableTool(EnforceConventionInspection.SHORT_NAME, getProject());
-    }
-
-    protected void addDisabledEnforceConventionInspection() {
-        var profile = InspectionProfileManager.getInstance(getProject()).getCurrentProfile();
-        InspectionsKt.disableAllTools(profile);
-        profile.addTool(getProject(), new LocalInspectionToolWrapper(new EnforceConventionInspection()), null);
+        profile.addTool(getFixture().getProject(), new LocalInspectionToolWrapper(inspection), null);
+        profile.enableTool(EnforceConventionInspection.SHORT_NAME, getFixture().getProject());
     }
 }

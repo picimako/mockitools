@@ -1,20 +1,22 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.picimako.mockitools.inspection.migrationaids.v4;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link ArgumentMatchersCalledViaMatchersInspection}.
  */
-public class UseArgumentMatchersInsteadOfMatchersInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class UseArgumentMatchersInsteadOfMatchersInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
         return new ArgumentMatchersCalledViaMatchersInspection();
     }
 
-    public void testUseArgumentMatchersInsteadOfMatchersWithFqn() {
+    @Test
+    void testUseArgumentMatchersInsteadOfMatchersWithFqn() {
         doQuickFixTest("Use matcher from ArgumentMatchers", "UseArgumentMatchersInsteadOfMatchersTest.java",
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -44,7 +46,8 @@ public class UseArgumentMatchersInsteadOfMatchersInspectionTest extends Mockitoo
                 "}");
     }
 
-    public void testUseArgumentMatchersInsteadOfMatchersWithClassNameQualifier() {
+    @Test
+    void testUseArgumentMatchersInsteadOfMatchersWithClassNameQualifier() {
         doQuickFixTest("Use matcher from ArgumentMatchers", "UseArgumentMatchersInsteadOfMatchersTest.java",
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Matchers;\n" +
@@ -77,7 +80,8 @@ public class UseArgumentMatchersInsteadOfMatchersInspectionTest extends Mockitoo
                 "}");
     }
 
-    public void testNoHighlightForStaticImportedMatcherFromArgumentMatchers() {
+    @Test
+    void testNoHighlightForStaticImportedMatcherFromArgumentMatchers() {
         doJavaTest("NoHighlightTest.java",
             "import org.mockito.Mockito;\n" +
                 "import static org.mockito.ArgumentMatchers.anyString;\n" +
@@ -95,5 +99,4 @@ public class UseArgumentMatchersInsteadOfMatchersInspectionTest extends Mockitoo
                 "   }\n" +
                 "}");
     }
-
 }

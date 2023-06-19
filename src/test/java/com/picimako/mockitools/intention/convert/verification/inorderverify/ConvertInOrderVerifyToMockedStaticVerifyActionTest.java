@@ -1,15 +1,19 @@
-//Copyright 2022 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.verification.inorderverify;
 
+import com.intellij.testFramework.RunsInEdt;
 import com.picimako.mockitools.MockitoolsActionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link ConvertInOrderVerifyToMockedStaticVerifyAction}.
  */
-public class ConvertInOrderVerifyToMockedStaticVerifyActionTest extends MockitoolsActionTestBase {
+@RunsInEdt
+class ConvertInOrderVerifyToMockedStaticVerifyActionTest extends MockitoolsActionTestBase {
 
-    public void testConvertsInOrderVerifyToMockedStaticVerifyWithoutVerificationMode() {
+    @Test
+    void testConvertsInOrderVerifyToMockedStaticVerifyWithoutVerificationMode() {
         checkAction(() -> new ConvertInOrderVerifyToMockedStaticVerifyAction(false),
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.MockedStatic;\n" +
@@ -40,7 +44,8 @@ public class ConvertInOrderVerifyToMockedStaticVerifyActionTest extends Mockitoo
         );
     }
 
-    public void testConvertsInOrderVerifyToMockedStaticVerifyWithVerificationMode() {
+    @Test
+    void testConvertsInOrderVerifyToMockedStaticVerifyWithVerificationMode() {
         checkAction(() -> new ConvertInOrderVerifyToMockedStaticVerifyAction(false),
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.MockedStatic;\n" +
@@ -71,7 +76,8 @@ public class ConvertInOrderVerifyToMockedStaticVerifyActionTest extends Mockitoo
         );
     }
 
-    public void testConvertsInOrderVerifyToMockedStaticVerifyInBulk() {
+    @Test
+    void testConvertsInOrderVerifyToMockedStaticVerifyInBulk() {
         checkAction(() -> new ConvertInOrderVerifyToMockedStaticVerifyAction(true),
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.MockedStatic;\n" +

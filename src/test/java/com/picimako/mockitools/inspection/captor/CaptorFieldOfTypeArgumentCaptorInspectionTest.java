@@ -1,25 +1,28 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.captor;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link CaptorFieldOfTypeArgumentCaptorInspection}.
  */
-public class CaptorFieldOfTypeArgumentCaptorInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class CaptorFieldOfTypeArgumentCaptorInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
         return new CaptorFieldOfTypeArgumentCaptorInspection();
     }
 
-    public void testCaptorFieldOfType() {
+    @Test
+    void testCaptorFieldOfType() {
         doJavaTest();
     }
 
-    public void testCaptorFieldConvertToArgumentCaptorArrayTest() {
+    @Test
+    void testCaptorFieldConvertToArgumentCaptorArrayTest() {
         doQuickFixTest("Convert field type to ArgumentCaptor<>", "CaptorFieldConvertToArgumentCaptorArrayTest.java",
             "import org.mockito.Captor;\n" +
                 "\n" +
@@ -38,7 +41,8 @@ public class CaptorFieldOfTypeArgumentCaptorInspectionTest extends MockitoolsIns
                 "}\n");
     }
 
-    public void testCaptorFieldConvertToArgumentCaptorPrimitiveTest() {
+    @Test
+    void testCaptorFieldConvertToArgumentCaptorPrimitiveTest() {
         doQuickFixTest("Convert field type to ArgumentCaptor<>", "CaptorFieldConvertToArgumentCaptorPrimitiveTest.java",
             "import org.mockito.Captor;\n" +
                 "\n" +
@@ -57,7 +61,8 @@ public class CaptorFieldOfTypeArgumentCaptorInspectionTest extends MockitoolsIns
                 "}\n");
     }
 
-    public void testCaptorFieldConvertToArgumentCaptorGenericsTest() {
+    @Test
+    void testCaptorFieldConvertToArgumentCaptorGenericsTest() {
         doQuickFixTest("Convert field type to ArgumentCaptor<>", "CaptorFieldConvertToArgumentCaptorGenericsTest.java",
             "import org.mockito.Captor;\n" +
                 "import java.util.List;\n" +
@@ -78,7 +83,8 @@ public class CaptorFieldOfTypeArgumentCaptorInspectionTest extends MockitoolsIns
                 "}\n");
     }
 
-    public void testCaptorFieldConvertToArgumentCaptorWildcardGenericsTest() {
+    @Test
+    void testCaptorFieldConvertToArgumentCaptorWildcardGenericsTest() {
         doQuickFixTest("Convert field type to ArgumentCaptor<>", "CaptorFieldConvertToArgumentCaptorWildcardGenericsTest.java",
             "import org.mockito.Captor;\n" +
                 "import java.util.List;\n" +

@@ -1,4 +1,4 @@
-//Copyright 2022 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.verification.mockedstaticverify;
 
@@ -6,14 +6,17 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
+import com.intellij.testFramework.RunsInEdt;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 /**
  * Integration test for {@link ConvertFromMockedStaticVerifyIntention}.
  */
-public class ConvertFromMockedStaticVerifyIntentionTest extends EnforceConventionAwareIntentionTestBase {
+@RunsInEdt
+class ConvertFromMockedStaticVerifyIntentionTest extends EnforceConventionAwareIntentionTestBase {
 
     @Override
     protected IntentionAction getIntention() {
@@ -22,18 +25,21 @@ public class ConvertFromMockedStaticVerifyIntentionTest extends EnforceConventio
 
     //Availability
 
-    public void testNotAvailableForNonJavaFile() {
+    @Test
+    void testNotAvailableForNonJavaFile() {
         checkIntentionIsNotAvailable("NotJava.xml", "<tag><caret></tag>");
     }
 
-    public void testNotAvailableForNonMethodCallIdentifier() {
+    @Test
+    void testNotAvailableForNonMethodCallIdentifier() {
         checkIntentionIsNotAvailable(
             "class NotAvailable {\n" +
                 "    private String fiel<caret>d;\n" +
                 "}");
     }
 
-    public void testAvailableOnNonVerifyMethod() {
+    @Test
+    void testAvailableOnNonVerifyMethod() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -44,7 +50,8 @@ public class ConvertFromMockedStaticVerifyIntentionTest extends EnforceConventio
                 "}");
     }
 
-    public void testAvailableOnNonMockedStaticVerifyMethod() {
+    @Test
+    void testAvailableOnNonMockedStaticVerifyMethod() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -56,7 +63,8 @@ public class ConvertFromMockedStaticVerifyIntentionTest extends EnforceConventio
                 "}");
     }
 
-    public void testAvailableOnMockedStaticVerifyMethod() {
+    @Test
+    void testAvailableOnMockedStaticVerifyMethod() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.MockedStatic;\n" +
@@ -71,7 +79,8 @@ public class ConvertFromMockedStaticVerifyIntentionTest extends EnforceConventio
                 "}");
     }
 
-    public void testAvailableOnMockedStaticVerifyWithVerificationModeMethod() {
+    @Test
+    void testAvailableOnMockedStaticVerifyWithVerificationModeMethod() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.MockedStatic;\n" +
@@ -88,8 +97,9 @@ public class ConvertFromMockedStaticVerifyIntentionTest extends EnforceConventio
 
     //Action selection options
 
-    public void testReturnsAvailableActions() {
-        myFixture.configureByText("Options.java",
+    @Test
+    void testReturnsAvailableActions() {
+        getFixture().configureByText("Options.java",
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "class Options {\n" +
@@ -97,7 +107,7 @@ public class ConvertFromMockedStaticVerifyIntentionTest extends EnforceConventio
                 "        Mockito.ve<caret>rify(Mockito.mock(Object.class)).doSomething();\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromMockedStaticVerifyIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromMockedStaticVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(ConvertMockedStaticVerifyToInOrderVerifyAction.class);

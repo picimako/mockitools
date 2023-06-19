@@ -1,21 +1,25 @@
-//Copyright 2022 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.verification.mockedstaticverify;
 
 import com.intellij.codeInsight.intention.IntentionAction;
+import com.intellij.testFramework.RunsInEdt;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link ConvertFromMockedStaticVerifyIntention}.
  */
-public class ConvertFromMockedStaticVerifyIntentionInBulkTest extends EnforceConventionAwareIntentionTestBase {
+@RunsInEdt
+class ConvertFromMockedStaticVerifyIntentionInBulkTest extends EnforceConventionAwareIntentionTestBase {
 
     @Override
     protected IntentionAction getIntention() {
         return new ConvertFromMockedStaticVerifyIntention();
     }
 
-    public void testNotAvailableWithSelectionShorterThanMinRequiredLength() {
+    @Test
+    void testNotAvailableWithSelectionShorterThanMinRequiredLength() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.MockedStatic;\n" +
@@ -30,7 +34,8 @@ public class ConvertFromMockedStaticVerifyIntentionInBulkTest extends EnforceCon
                 "}");
     }
 
-    public void testNotAvailableForOnlyWhitespaceSelection() {
+    @Test
+    void testNotAvailableForOnlyWhitespaceSelection() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.MockedStatic;\n" +
@@ -45,7 +50,8 @@ public class ConvertFromMockedStaticVerifyIntentionInBulkTest extends EnforceCon
                 "}");
     }
 
-    public void testNotAvailableOnNonMockedStaticVerifyChain() {
+    @Test
+    void testNotAvailableOnNonMockedStaticVerifyChain() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.MockedStatic;\n" +
@@ -61,7 +67,8 @@ public class ConvertFromMockedStaticVerifyIntentionInBulkTest extends EnforceCon
                 "}");
     }
 
-    public void testNotAvailableOnMultipleMixedVerificationSelected() {
+    @Test
+    void testNotAvailableOnMultipleMixedVerificationSelected() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.MockedStatic;\n" +
@@ -78,7 +85,8 @@ public class ConvertFromMockedStaticVerifyIntentionInBulkTest extends EnforceCon
                 "}");
     }
 
-    public void testAvailableForMockedStaticVerifyWithoutVerificationMode() {
+    @Test
+    void testAvailableForMockedStaticVerifyWithoutVerificationMode() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.MockedStatic;\n" +
@@ -93,7 +101,8 @@ public class ConvertFromMockedStaticVerifyIntentionInBulkTest extends EnforceCon
                 "}");
     }
 
-    public void testAvailableForMockedStaticVerifyWithVerificationMode() {
+    @Test
+    void testAvailableForMockedStaticVerifyWithVerificationMode() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.MockedStatic;\n" +
@@ -108,7 +117,8 @@ public class ConvertFromMockedStaticVerifyIntentionInBulkTest extends EnforceCon
                 "}");
     }
 
-    public void testAvailableOnSingleMockedStaticVerifySelected() {
+    @Test
+    void testAvailableOnSingleMockedStaticVerifySelected() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.MockedStatic;\n" +
@@ -124,7 +134,8 @@ public class ConvertFromMockedStaticVerifyIntentionInBulkTest extends EnforceCon
                 "}");
     }
 
-    public void testAvailableOnMultipleMockedStaticVerifySelected() {
+    @Test
+    void testAvailableOnMultipleMockedStaticVerifySelected() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.MockedStatic;\n" +

@@ -3,13 +3,13 @@
     <id>mockitools</id>
     <name>Mockitools</name>
     <vendor url="https://github.com/picimako/mockitools">Tamás Balog</vendor>
-    <version>0.9.0</version>
+    <version>0.10.0</version>
     <resource-bundle>messages.MockitoolsBundle</resource-bundle>
 
     <description>Provides integration for the Mockito framework for Java.</description>
 
     <!-- https://jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html -->
-    <idea-version since-build="221"/>
+    <idea-version since-build="222"/>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
@@ -113,32 +113,32 @@
                 implementationClass="com.picimako.mockitools.inspection.migrationaids.v4.ArgumentMatchersCalledViaMatchersInspection"
                 id="mockitools.aid.v4.useArgumentMatchers" language="JAVA"
                 displayName="Argument matchers are used via Matchers" groupPath="Java,Mockito"
-                groupName="Migration aids (v4)" enabledByDefault="true" level="WARNING"/>
+                groupName="Migration aids (v4)" enabledByDefault="false" level="WARNING"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.migrationaids.v4.UsageOfAnyMatchersInspection"
                 id="mockitools.aid.v4.useAny" language="JAVA"
                 displayName="Using deprecated anyX() matcher" groupPath="Java,Mockito"
-                groupName="Migration aids (v4)" enabledByDefault="true" level="WARNING"/>
+                groupName="Migration aids (v4)" enabledByDefault="false" level="WARNING"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.migrationaids.v4.ParameterizedIsNotNullMatcherInspection"
                 id="mockitools.aid.v4.use.non.param.null" language="JAVA"
                 displayName="Using parameterized null matcher" groupPath="Java,Mockito"
-                groupName="Migration aids (v4)" enabledByDefault="true" level="WARNING"/>
+                groupName="Migration aids (v4)" enabledByDefault="false" level="WARNING"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.migrationaids.v4.UsageOfDeprecatedVerifyInspection"
                 id="mockitools.aid.v4.mocked.static.verify" language="JAVA"
                 displayName="Using deprecated Mockito and MockedStatic.verify" groupPath="Java,Mockito"
-                groupName="Migration aids (v4)" enabledByDefault="true" level="WARNING"/>
+                groupName="Migration aids (v4)" enabledByDefault="false" level="WARNING"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.migrationaids.v4.UsageOfDeprecatedPluginClassesInspection"
                 id="mockitools.aid.v4.plugin.classes" language="JAVA"
                 displayName="Using deprecated plugins classes" groupPath="Java,Mockito"
-                groupName="Migration aids (v4)" enabledByDefault="true" level="WARNING"/>
+                groupName="Migration aids (v4)" enabledByDefault="false" level="WARNING"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.migrationaids.v4.UsageOfOldJUnitRunnerInspection"
                 id="mockitools.aid.v4.junit.runners" language="JAVA"
                 displayName="Using deprecated JUnit runner" groupPath="Java,Mockito"
-                groupName="Migration aids (v4)" enabledByDefault="true" level="WARNING"/>
+                groupName="Migration aids (v4)" enabledByDefault="false" level="WARNING"/>
 
         <!-- Inspections for Mockito framework integration -->
         <localInspection

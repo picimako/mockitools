@@ -1,26 +1,29 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link ThrowsCheckedExceptionStubbingInspection}.
  */
-public class ThrowsCheckedExceptionStubbingInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
+class ThrowsCheckedExceptionStubbingInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
         return new ThrowsCheckedExceptionStubbingInspection();
     }
 
-    public void testThrowsCheckedExceptionStubbing() {
+    @Test
+    void testThrowsCheckedExceptionStubbing() {
         doJavaTest();
     }
 
     //Quick fixes
 
-    public void testAddsExceptionToEmptyThrowsClause() {
+    @Test
+    void testAddsExceptionToEmptyThrowsClause() {
         doQuickFixTest("Add exception to throws clause", "QuickFix.java",
             "import java.io.IOException;\n" +
                 "import java.lang.NoSuchMethodException;\n" +
@@ -54,7 +57,8 @@ public class ThrowsCheckedExceptionStubbingInspectionTest extends MockitoolsInsp
                 "}");
     }
 
-    public void testAddsExceptionToNonEmptyThrowsClause() {
+    @Test
+    void testAddsExceptionToNonEmptyThrowsClause() {
         doQuickFixTest("Add exception to throws clause", "QuickFix.java",
             "import java.io.IOException;\n" +
                 "import java.lang.NoSuchMethodException;\n" +

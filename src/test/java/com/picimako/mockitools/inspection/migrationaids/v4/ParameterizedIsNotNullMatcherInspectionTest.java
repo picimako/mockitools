@@ -1,21 +1,23 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.migrationaids.v4;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link ParameterizedIsNotNullMatcherInspection}.
  */
-public class ParameterizedIsNotNullMatcherInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class ParameterizedIsNotNullMatcherInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
     @Override
     protected InspectionProfileEntry getInspection() {
         return new ParameterizedIsNotNullMatcherInspection();
     }
 
-    public void testArgumentMatchersIsNotNullIsReplaced() {
+    @Test
+    void testArgumentMatchersIsNotNullIsReplaced() {
         doQuickFixTest("Remove matcher argument", "ArgumentMatchersIsNotNullIsReplacedTest.java",
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.ArgumentMatchers;\n" +
@@ -47,7 +49,8 @@ public class ParameterizedIsNotNullMatcherInspectionTest extends MockitoolsInspe
                 "}");
     }
 
-    public void testArgumentMatchersNotNullIsReplaced() {
+    @Test
+    void testArgumentMatchersNotNullIsReplaced() {
         doQuickFixTest("Remove matcher argument", "ArgumentMatchersNotNullIsReplacedTest.java",
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.ArgumentMatchers;\n" +
@@ -79,7 +82,8 @@ public class ParameterizedIsNotNullMatcherInspectionTest extends MockitoolsInspe
                 "}");
     }
 
-    public void testArgumentMatchersIsNullIsReplaced() {
+    @Test
+    void testArgumentMatchersIsNullIsReplaced() {
         doQuickFixTest("Remove matcher argument", "ArgumentMatchersIsNullIsReplacedTest.java",
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.ArgumentMatchers;\n" +
@@ -111,7 +115,8 @@ public class ParameterizedIsNotNullMatcherInspectionTest extends MockitoolsInspe
                 "}");
     }
 
-    public void testMatchersIsNotNullIsReplaced() {
+    @Test
+    void testMatchersIsNotNullIsReplaced() {
         doQuickFixTest("Replace with ArgumentMatchers.isNotNull()", "ArgumentMatchersIsNotNullIsReplacedTest.java",
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Matchers;\n" +
@@ -144,7 +149,8 @@ public class ParameterizedIsNotNullMatcherInspectionTest extends MockitoolsInspe
                 "}");
     }
 
-    public void testMatchersNotNullIsReplaced() {
+    @Test
+    void testMatchersNotNullIsReplaced() {
         doQuickFixTest("Replace with ArgumentMatchers.notNull()", "ArgumentMatchersNotNullIsReplacedTest.java",
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Matchers;\n" +
@@ -177,7 +183,8 @@ public class ParameterizedIsNotNullMatcherInspectionTest extends MockitoolsInspe
                 "}");
     }
 
-    public void testMatchersIsNullIsReplaced() {
+    @Test
+    void testMatchersIsNullIsReplaced() {
         doQuickFixTest("Replace with ArgumentMatchers.isNull()", "ArgumentMatchersIsNullIsReplacedTest.java",
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Matchers;\n" +

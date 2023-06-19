@@ -1,19 +1,17 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.consecutive;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Functional test for {@link SimplifyConsecutiveThrowCallsInspection};
  */
-public class SimplifyConsecutiveThrowCallsInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
-
-    private static final Map<String, String> DO_THROW_WHEN_CASES = new HashMap<>();
+class SimplifyConsecutiveThrowCallsInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
 
     private static final String MOCK_OBJECT_CLASS =
         "    private static class MockObject {\n" +
@@ -22,275 +20,399 @@ public class SimplifyConsecutiveThrowCallsInspectionTest extends MockitoolsInspe
             "       }\n" +
             "    }\n";
 
-    private static final Map<String, String> WHEN_THEN_THROW_CASES = Map.of(
-        "       Mockito.when(mockObject.doSomething()).thenThrow(NoSuchMethodException.class).thenThr<caret>ow(IOException.class);",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(NoSuchMethodException.class, IOException.class);",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(IOException.class, NoSuchMethodException.class).the<caret>nThrow(IllegalArgumentException.class);",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(IOException.class, NoSuchMethodException.class, IllegalArgumentException.class);",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(IOException.class).thenT<caret>hrow(IllegalArgumentException.class, NoSuchMethodException.class);",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(IOException.class, IllegalArgumentException.class, NoSuchMethodException.class);",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException()).thenT<caret>hrow(new IllegalArgumentException());",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new IllegalArgumentException());",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new NoSuchMethodException()).the<caret>nThrow(new IllegalArgumentException());",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new NoSuchMethodException(), new IllegalArgumentException());",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new NoSuchMethodException()).thenThrow(new IllegalArgumentException())\n" +
-            "          .thenReturn(10)\n" +
-            "          .thenThrow(new IOException(), new NoSuchMethodException()).the<caret>nThrow(new IllegalArgumentException());",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new NoSuchMethodException()).thenThrow(new IllegalArgumentException())\n" +
-            "          .thenReturn(10)\n" +
-            "          .thenThrow(new IOException(), new NoSuchMethodException(), new IllegalArgumentException());",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new NoSuchMethodException()).thenTh<caret>row(new IllegalArgumentException())\n" +
-            "          .thenReturn(10)\n" +
-            "          .thenThrow(new IOException(), new NoSuchMethodException()).thenThrow(new IllegalArgumentException());",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new NoSuchMethodException(), new IllegalArgumentException())\n" +
-            "          .thenReturn(10)\n" +
-            "          .thenThrow(new IOException(), new NoSuchMethodException()).thenThrow(new IllegalArgumentException());",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException()).then<caret>Throw(new IllegalArgumentException(\"message\"));",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new IllegalArgumentException(\"message\"));",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(NoSuchMethodException.class).then<caret>Throw(new IllegalArgumentException(\"message\"));",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(new NoSuchMethodException(), new IllegalArgumentException(\"message\"));"
-    );
+    private static String[][] whenThenThrowCases() {
+        return new String[][]{
+            {
+                "       Mockito.when(mockObject.doSomething()).thenThrow(NoSuchMethodException.class).thenThr<caret>ow(IOException.class);",
+                "       Mockito.when(mockObject.doSomething()).thenThrow(NoSuchMethodException.class, IOException.class);"
+            },
+            {
+                "       Mockito.when(mockObject.doSomething()).thenThrow(IOException.class, NoSuchMethodException.class).the<caret>nThrow(IllegalArgumentException.class);",
+                "       Mockito.when(mockObject.doSomething()).thenThrow(IOException.class, NoSuchMethodException.class, IllegalArgumentException.class);"
+            },
+            {
+                "       Mockito.when(mockObject.doSomething()).thenThrow(IOException.class).thenT<caret>hrow(IllegalArgumentException.class, NoSuchMethodException.class);",
+                "       Mockito.when(mockObject.doSomething()).thenThrow(IOException.class, IllegalArgumentException.class, NoSuchMethodException.class);"
+            },
+            {
+                "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException()).thenT<caret>hrow(new IllegalArgumentException());",
+                "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new IllegalArgumentException());"
+            },
+            {
+                "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new NoSuchMethodException()).the<caret>nThrow(new IllegalArgumentException());",
+                "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new NoSuchMethodException(), new IllegalArgumentException());"
+            },
+            {
+                "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new NoSuchMethodException()).thenThrow(new IllegalArgumentException())\n" +
+                    "          .thenReturn(10)\n" +
+                    "          .thenThrow(new IOException(), new NoSuchMethodException()).the<caret>nThrow(new IllegalArgumentException());",
+                "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new NoSuchMethodException()).thenThrow(new IllegalArgumentException())\n" +
+                    "          .thenReturn(10)\n" +
+                    "          .thenThrow(new IOException(), new NoSuchMethodException(), new IllegalArgumentException());"
+            },
+            {
+                "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new NoSuchMethodException()).thenTh<caret>row(new IllegalArgumentException())\n" +
+                    "          .thenReturn(10)\n" +
+                    "          .thenThrow(new IOException(), new NoSuchMethodException()).thenThrow(new IllegalArgumentException());",
+                "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new NoSuchMethodException(), new IllegalArgumentException())\n" +
+                    "          .thenReturn(10)\n" +
+                    "          .thenThrow(new IOException(), new NoSuchMethodException()).thenThrow(new IllegalArgumentException());"
+            },
+            {
+                "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException()).then<caret>Throw(new IllegalArgumentException(\"message\"));",
+                "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new IllegalArgumentException(\"message\"));"
+            },
+            {
+                "       Mockito.when(mockObject.doSomething()).thenThrow(NoSuchMethodException.class).then<caret>Throw(new IllegalArgumentException(\"message\"));",
+                "       Mockito.when(mockObject.doSomething()).thenThrow(new NoSuchMethodException(), new IllegalArgumentException(\"message\"));"
+            }
+        };
+    }
 
-    private static final Map<String, String> GIVEN_WILL_THROW_CASES = Map.of(
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class).will<caret>Throw(NoSuchMethodException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class, NoSuchMethodException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class, NoSuchMethodException.class).willT<caret>hrow(IllegalArgumentException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class, NoSuchMethodException.class, IllegalArgumentException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(IllegalArgumentException.class).will<caret>Throw(IOException.class, NoSuchMethodException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(IllegalArgumentException.class, IOException.class, NoSuchMethodException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException()).wil<caret>lThrow(new IllegalArgumentException(\"message\"));",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(\"message\"));",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class).wil<caret>lThrow(new IllegalArgumentException(\"message\"));",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(\"message\"));",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(\"message\")).will<caret>Throw(NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(\"message\"), new NoSuchMethodException())\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IllegalArgumentException(\"message\")).wi<caret>llThrow(NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IllegalArgumentException(\"message\"), new NoSuchMethodException())\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class);"
-    );
+    private static String[][] givenWillThrowCases() {
+        return new String[][]{
+            {
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class).will<caret>Throw(NoSuchMethodException.class);",
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class, NoSuchMethodException.class);"
+            },
+            {
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class, NoSuchMethodException.class).willT<caret>hrow(IllegalArgumentException.class);",
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class, NoSuchMethodException.class, IllegalArgumentException.class);"
+            },
+            {
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(IllegalArgumentException.class).will<caret>Throw(IOException.class, NoSuchMethodException.class);",
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(IllegalArgumentException.class, IOException.class, NoSuchMethodException.class);"
+            },
+            {
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException()).wil<caret>lThrow(new IllegalArgumentException(\"message\"));",
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(\"message\"));"
+            },
+            {
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class).wil<caret>lThrow(new IllegalArgumentException(\"message\"));",
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(\"message\"));"
+            },
+            {
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(\"message\")).will<caret>Throw(NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class);",
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(\"message\"), new NoSuchMethodException())\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class);"
+            },
+            {
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IllegalArgumentException(\"message\")).wi<caret>llThrow(NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class);",
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IllegalArgumentException(\"message\"), new NoSuchMethodException())\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class);"
+            }
+        };
+    }
 
-    private static final Map<String, String> WILL_THROW_GIVEN_CASES = Map.of(
-        "       BDDMockito.willThrow(IOException.class).will<caret>Throw(NoSuchMethodException.class).given(mockObject).doSomething();",
-        "       BDDMockito.willThrow(IOException.class, NoSuchMethodException.class).given(mockObject).doSomething();",
-        "       BDDMockito.willThrow(IOException.class, NoSuchMethodException.class).willT<caret>hrow(IllegalArgumentException.class).given(mockObject).doSomething();",
-        "       BDDMockito.willThrow(IOException.class, NoSuchMethodException.class, IllegalArgumentException.class).given(mockObject).doSomething();",
-        "       BDDMockito.willThrow(IllegalArgumentException.class).will<caret>Throw(IOException.class, NoSuchMethodException.class).given(mockObject).doSomething();",
-        "       BDDMockito.willThrow(IllegalArgumentException.class, IOException.class, NoSuchMethodException.class).given(mockObject).doSomething();",
-        "       BDDMockito.willThrow(new IOException()).wil<caret>lThrow(new IllegalArgumentException(\"message\")).given(mockObject).doSomething();",
-        "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException(\"message\")).given(mockObject).doSomething();",
-        "       BDDMockito.willThrow(IOException.class).wil<caret>lThrow(new IllegalArgumentException(\"message\")).given(mockObject).doSomething();",
-        "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException(\"message\")).given(mockObject).doSomething();"
-    );
+    private static String[][] willThrowGivenCases() {
+        return new String[][]{
+            {
+                "       BDDMockito.willThrow(IOException.class).will<caret>Throw(NoSuchMethodException.class).given(mockObject).doSomething();",
+                "       BDDMockito.willThrow(IOException.class, NoSuchMethodException.class).given(mockObject).doSomething();"
+            },
+            {
+                "       BDDMockito.willThrow(IOException.class, NoSuchMethodException.class).willT<caret>hrow(IllegalArgumentException.class).given(mockObject).doSomething();",
+                "       BDDMockito.willThrow(IOException.class, NoSuchMethodException.class, IllegalArgumentException.class).given(mockObject).doSomething();"
+            },
+            {
+                "       BDDMockito.willThrow(IllegalArgumentException.class).will<caret>Throw(IOException.class, NoSuchMethodException.class).given(mockObject).doSomething();",
+                "       BDDMockito.willThrow(IllegalArgumentException.class, IOException.class, NoSuchMethodException.class).given(mockObject).doSomething();"
+            },
+            {
+                "       BDDMockito.willThrow(new IOException()).wil<caret>lThrow(new IllegalArgumentException(\"message\")).given(mockObject).doSomething();",
+                "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException(\"message\")).given(mockObject).doSomething();"
+            },
+            {
+                "       BDDMockito.willThrow(IOException.class).wil<caret>lThrow(new IllegalArgumentException(\"message\")).given(mockObject).doSomething();",
+                "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException(\"message\")).given(mockObject).doSomething();"
+            }
+        };
+    }
 
-    private static final Map<String, String> TO_CLASSES_MIXED_CASES = Map.of(
-        "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException()).wil<caret>lThrow(NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
-            "           .given(mockObject.doSomething());",
-        "       BDDMockito.willThrow(IOException.class, IllegalArgumentException.class, NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
-            "           .given(mockObject.doSomething());",
-        "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException()).wil<caret>lThrow(NoSuchMethodException.class)\n" +
-            "           .given(mockObject.doSomething());",
-        "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(IOException.class, IllegalArgumentException.class, NoSuchMethodException.class)\n" +
-            "           .given(mockObject.doSomething());",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException()).will<caret>Throw(NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class, IllegalArgumentException.class, NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException()).will<caret>Throw(NoSuchMethodException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(IOException.class, IllegalArgumentException.class, NoSuchMethodException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(\"message\")).willThrow(NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException()).wi<caret>llThrow(NoSuchMethodException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(\"message\")).willThrow(NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(IOException.class, IllegalArgumentException.class, NoSuchMethodException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException()).wil<caret>lThrow(IllegalArgumentException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class, IllegalArgumentException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class).wil<caret>lThrow(new IllegalArgumentException());",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class, IllegalArgumentException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException()).willT<caret>hrow(NoSuchMethodException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class, IllegalArgumentException.class, NoSuchMethodException.class);",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(IOException.class).then<caret>Throw(new IllegalArgumentException());",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(IOException.class, IllegalArgumentException.class);",
-        "      Mockito.doThrow(IOException.class).do<caret>Throw(new IllegalArgumentException()).when(mockObject).doSomething();",
-        "      Mockito.doThrow(IOException.class, IllegalArgumentException.class).when(mockObject).doSomething();"
-    );
+    private static String[][] toClassesMixedCases() {
+        return new String[][]{
+            {
+                "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException()).wil<caret>lThrow(NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
+                    "           .given(mockObject.doSomething());",
+                "       BDDMockito.willThrow(IOException.class, IllegalArgumentException.class, NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
+                    "           .given(mockObject.doSomething());"
+            },
+            {
+                "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException()).wil<caret>lThrow(NoSuchMethodException.class)\n" +
+                    "           .given(mockObject.doSomething());",
+                "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(IOException.class, IllegalArgumentException.class, NoSuchMethodException.class)\n" +
+                    "           .given(mockObject.doSomething());"
+            },
+            {
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException()).will<caret>Throw(NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class);",
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class, IllegalArgumentException.class, NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class);"
+            },
+            {
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException()).will<caret>Throw(NoSuchMethodException.class);",
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(IOException.class, IllegalArgumentException.class, NoSuchMethodException.class);"
+            },
+            {
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(\"message\")).willThrow(NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException()).wi<caret>llThrow(NoSuchMethodException.class);",
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(\"message\")).willThrow(NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(IOException.class, IllegalArgumentException.class, NoSuchMethodException.class);"
+            },
+            {
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException()).wil<caret>lThrow(IllegalArgumentException.class);",
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class, IllegalArgumentException.class);"
+            },
+            {
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class).wil<caret>lThrow(new IllegalArgumentException());",
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class, IllegalArgumentException.class);"
+            },
+            {
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException()).willT<caret>hrow(NoSuchMethodException.class);",
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class, IllegalArgumentException.class, NoSuchMethodException.class);"
+            },
+            {
+                "       Mockito.when(mockObject.doSomething()).thenThrow(IOException.class).then<caret>Throw(new IllegalArgumentException());",
+                "       Mockito.when(mockObject.doSomething()).thenThrow(IOException.class, IllegalArgumentException.class);"
+            },
+            {
+                "      Mockito.doThrow(IOException.class).do<caret>Throw(new IllegalArgumentException()).when(mockObject).doSomething();",
+                "      Mockito.doThrow(IOException.class, IllegalArgumentException.class).when(mockObject).doSomething();"
+            }
+        };
+    }
 
-    private static final Map<String, String> TO_THROWABLES_MIXED_CASES = Map.of(
-        "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException()).wil<caret>lThrow(NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
-            "           .given(mockObject.doSomething());",
-        "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException(), new NoSuchMethodException())\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
-            "           .given(mockObject.doSomething());",
-        "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException()).wil<caret>lThrow(NoSuchMethodException.class)\n" +
-            "           .given(mockObject.doSomething());",
-        "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException(), new NoSuchMethodException())\n" +
-            "           .given(mockObject.doSomething());",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException()).will<caret>Throw(NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(), new NoSuchMethodException())\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException()).wil<caret>lThrow(NoSuchMethodException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException(), new NoSuchMethodException());",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(\"message\")).willThrow(NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException()).wi<caret>llThrow(NoSuchMethodException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(\"message\")).willThrow(NoSuchMethodException.class)\n" +
-            "           .willReturn(10)\n" +
-            "           .willThrow(new IOException(), new IllegalArgumentException(), new NoSuchMethodException());",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException()).wil<caret>lThrow(IllegalArgumentException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException());",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class).wil<caret>lThrow(new IllegalArgumentException());",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException());",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException()).willT<caret>hrow(NoSuchMethodException.class);",
-        "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(), new NoSuchMethodException());",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(IOException.class).then<caret>Throw(new IllegalArgumentException());",
-        "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new IllegalArgumentException());",
-        "      Mockito.doThrow(IOException.class).do<caret>Throw(new IllegalArgumentException()).when(mockObject).doSomething();",
-        "      Mockito.doThrow(new IOException(), new IllegalArgumentException()).when(mockObject).doSomething();"
-    );
+    private static String[][] toThrowableMixedCases() {
+        return new String[][]{
+            {
+                "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException()).wil<caret>lThrow(NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
+                    "           .given(mockObject.doSomething());",
+                "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException(), new NoSuchMethodException())\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
+                    "           .given(mockObject.doSomething());"
+            },
+            {
+                "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException()).wil<caret>lThrow(NoSuchMethodException.class)\n" +
+                    "           .given(mockObject.doSomething());",
+                "       BDDMockito.willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException(), new NoSuchMethodException())\n" +
+                    "           .given(mockObject.doSomething());"
+            },
+            {
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException()).will<caret>Throw(NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class);",
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(), new NoSuchMethodException())\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class);"
+            },
+            {
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException()).wil<caret>lThrow(NoSuchMethodException.class);",
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException()).willThrow(NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException(), new NoSuchMethodException());"
+            },
+            {
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(\"message\")).willThrow(NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException()).wi<caret>llThrow(NoSuchMethodException.class);",
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(\"message\")).willThrow(NoSuchMethodException.class)\n" +
+                    "           .willReturn(10)\n" +
+                    "           .willThrow(new IOException(), new IllegalArgumentException(), new NoSuchMethodException());"
+            },
+            {
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException()).wil<caret>lThrow(IllegalArgumentException.class);",
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException());"
+            },
+            {
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(IOException.class).wil<caret>lThrow(new IllegalArgumentException());",
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException());"
+            },
+            {
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException()).willT<caret>hrow(NoSuchMethodException.class);",
+                "       BDDMockito.given(mockObject.doSomething()).willThrow(new IOException(), new IllegalArgumentException(), new NoSuchMethodException());"
+            },
+            {
+                "       Mockito.when(mockObject.doSomething()).thenThrow(IOException.class).then<caret>Throw(new IllegalArgumentException());",
+                "       Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new IllegalArgumentException());"
+            },
+            {
+                "      Mockito.doThrow(IOException.class).do<caret>Throw(new IllegalArgumentException()).when(mockObject).doSomething();",
+                "      Mockito.doThrow(new IOException(), new IllegalArgumentException()).when(mockObject).doSomething();"
+            }
+        };
+    }
 
-    private static final Map<String, String> MOCKED_STATIC_WHEN_THEN_THROWS_CASES = Map.of(
-        "       mock.when(List::of).thenThrow(IOException.class).then<caret>Throw(NoSuchMethodException.class);",
-        "       mock.when(List::of).thenThrow(IOException.class, NoSuchMethodException.class);",
-        "       mock.when(List::of).thenThrow(IOException.class, NoSuchMethodException.class).thenT<caret>hrow(IllegalArgumentException.class);",
-        "       mock.when(List::of).thenThrow(IOException.class, NoSuchMethodException.class, IllegalArgumentException.class);",
-        "       mock.when(List::of).thenThrow(IllegalArgumentException.class).then<caret>Throw(IOException.class, NoSuchMethodException.class);",
-        "       mock.when(List::of).thenThrow(IllegalArgumentException.class, IOException.class, NoSuchMethodException.class);",
-        "       mock.when(List::of).thenThrow(new IOException()).then<caret>Throw(new IllegalArgumentException(\"message\"));",
-        "       mock.when(List::of).thenThrow(new IOException(), new IllegalArgumentException(\"message\"));",
-        "       mock.when(List::of).thenThrow(IOException.class).then<caret>Throw(new IllegalArgumentException(\"message\"));",
-        "       mock.when(List::of).thenThrow(new IOException(), new IllegalArgumentException(\"message\"));",
-        "       mock.when(List::of).thenThrow(new IOException(), new IllegalArgumentException(\"message\")).then<caret>Throw(NoSuchMethodException.class)\n" +
-            "           .thenReturn(List.of())\n" +
-            "           .thenThrow(new IOException(), new IllegalArgumentException()).thenThrow(NoSuchMethodException.class);",
-        "       mock.when(List::of).thenThrow(new IOException(), new IllegalArgumentException(\"message\"), new NoSuchMethodException())\n" +
-            "           .thenReturn(List.of())\n" +
-            "           .thenThrow(new IOException(), new IllegalArgumentException()).thenThrow(NoSuchMethodException.class);",
-        "       mock.when(List::of).thenThrow(new IllegalArgumentException(\"message\")).th<caret>enThrow(NoSuchMethodException.class)\n" +
-            "           .thenReturn(List.of())\n" +
-            "           .thenThrow(new IOException(), new IllegalArgumentException()).thenThrow(NoSuchMethodException.class);",
-        "       mock.when(List::of).thenThrow(new IllegalArgumentException(\"message\"), new NoSuchMethodException())\n" +
-            "           .thenReturn(List.of())\n" +
-            "           .thenThrow(new IOException(), new IllegalArgumentException()).thenThrow(NoSuchMethodException.class);"
-    );
+    private static String[][] mockedStaticWhenThenThrowsCases() {
+        return new String[][]{
+            {
+                "       mock.when(List::of).thenThrow(IOException.class).then<caret>Throw(NoSuchMethodException.class);",
+                "       mock.when(List::of).thenThrow(IOException.class, NoSuchMethodException.class);"
+            },
+            {
+                "       mock.when(List::of).thenThrow(IOException.class, NoSuchMethodException.class).thenT<caret>hrow(IllegalArgumentException.class);",
+                "       mock.when(List::of).thenThrow(IOException.class, NoSuchMethodException.class, IllegalArgumentException.class);"
+            },
+            {
+                "       mock.when(List::of).thenThrow(IllegalArgumentException.class).then<caret>Throw(IOException.class, NoSuchMethodException.class);",
+                "       mock.when(List::of).thenThrow(IllegalArgumentException.class, IOException.class, NoSuchMethodException.class);"
+            },
+            {
+                "       mock.when(List::of).thenThrow(new IOException()).then<caret>Throw(new IllegalArgumentException(\"message\"));",
+                "       mock.when(List::of).thenThrow(new IOException(), new IllegalArgumentException(\"message\"));"
+            },
+            {
+                "       mock.when(List::of).thenThrow(IOException.class).then<caret>Throw(new IllegalArgumentException(\"message\"));",
+                "       mock.when(List::of).thenThrow(new IOException(), new IllegalArgumentException(\"message\"));"
+            },
+            {
+                "       mock.when(List::of).thenThrow(new IOException(), new IllegalArgumentException(\"message\")).then<caret>Throw(NoSuchMethodException.class)\n" +
+                    "           .thenReturn(List.of())\n" +
+                    "           .thenThrow(new IOException(), new IllegalArgumentException()).thenThrow(NoSuchMethodException.class);",
+                "       mock.when(List::of).thenThrow(new IOException(), new IllegalArgumentException(\"message\"), new NoSuchMethodException())\n" +
+                    "           .thenReturn(List.of())\n" +
+                    "           .thenThrow(new IOException(), new IllegalArgumentException()).thenThrow(NoSuchMethodException.class);"
+            },
+            {
+                "       mock.when(List::of).thenThrow(new IllegalArgumentException(\"message\")).th<caret>enThrow(NoSuchMethodException.class)\n" +
+                    "           .thenReturn(List.of())\n" +
+                    "           .thenThrow(new IOException(), new IllegalArgumentException()).thenThrow(NoSuchMethodException.class);",
+                "       mock.when(List::of).thenThrow(new IllegalArgumentException(\"message\"), new NoSuchMethodException())\n" +
+                    "           .thenReturn(List.of())\n" +
+                    "           .thenThrow(new IOException(), new IllegalArgumentException()).thenThrow(NoSuchMethodException.class);"
+            }
+        };
+    }
 
-    static {
-        DO_THROW_WHEN_CASES.put(
-            "       Mockito.doThrow(IllegalArgumentException.class).doTh<caret>row(NoSuchMethodException.class).when(mockObject).doSomething();",
-            "       Mockito.doThrow(IllegalArgumentException.class, NoSuchMethodException.class).when(mockObject).doSomething();");
-        DO_THROW_WHEN_CASES.put(
-            "       Mockito.doThrow(IllegalArgumentException.class, NoSuchMethodException.class).doThr<caret>ow(IOException.class).when(mockObject).doSomething();",
-            "       Mockito.doThrow(IllegalArgumentException.class, NoSuchMethodException.class, IOException.class).when(mockObject).doSomething();");
-        DO_THROW_WHEN_CASES.put(
-            "       Mockito.doThrow(IllegalArgumentException.class).do<caret>Throw(IOException.class, NoSuchMethodException.class).when(mockObject).doSomething();",
-            "       Mockito.doThrow(IllegalArgumentException.class, IOException.class, NoSuchMethodException.class).when(mockObject).doSomething();");
-        DO_THROW_WHEN_CASES.put(
-            "       Mockito.doThrow(new IllegalArgumentException()).doTh<caret>row(new IOException()).when(mockObject).doSomething();",
-            "       Mockito.doThrow(new IllegalArgumentException(), new IOException()).when(mockObject).doSomething();");
-        DO_THROW_WHEN_CASES.put(
-            "       Mockito.doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doT<caret>hrow(new IOException()).when(mockObject).doSomething();",
-            "       Mockito.doThrow(new IllegalArgumentException(), new NoSuchMethodException(), new IOException()).when(mockObject).doSomething();");
-        DO_THROW_WHEN_CASES.put(
-            "       Mockito.doThrow(new IllegalArgumentException(), new NoSuchMethodException()).do<caret>Throw(new IOException())\n" +
-                "          .doReturn(10)\n" +
-                "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doThrow(new IOException())\n" +
-                "          .when(mockObject).doSomething();",
-            "       Mockito.doThrow(new IllegalArgumentException(), new NoSuchMethodException(), new IOException())\n" +
-                "          .doReturn(10)\n" +
-                "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doThrow(new IOException())\n" +
-                "          .when(mockObject).doSomething();");
-        DO_THROW_WHEN_CASES.put(
-            "       Mockito.doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doThrow(new IOException())\n" +
-                "          .doReturn(10)\n" +
-                "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException()).do<caret>Throw(new IOException())\n" +
-                "          .when(mockObject).doSomething();",
-            "       Mockito.doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doThrow(new IOException())\n" +
-                "          .doReturn(10)\n" +
-                "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException(), new IOException())\n" +
-                "          .when(mockObject).doSomething();");
-        DO_THROW_WHEN_CASES.put(
-            "       Mockito.doThrow(IllegalArgumentException.class, NoSuchMethodException.class).do<caret>Throw(IOException.class)\n" +
-                "          .doReturn(10)\n" +
-                "          .doThrow(IllegalArgumentException.class, NoSuchMethodException.class).doThrow(IOException.class)\n" +
-                "          .when(mockObject).doSomething();",
-            "       Mockito.doThrow(IllegalArgumentException.class, NoSuchMethodException.class, IOException.class)\n" +
-                "          .doReturn(10)\n" +
-                "          .doThrow(IllegalArgumentException.class, NoSuchMethodException.class).doThrow(IOException.class)\n" +
-                "          .when(mockObject).doSomething();");
-        DO_THROW_WHEN_CASES.put(
-            "       Mockito.doThrow(IllegalArgumentException.class, NoSuchMethodException.class).doThrow(IOException.class)\n" +
-                "          .doReturn(10)\n" +
-                "          .doThrow(IllegalArgumentException.class, NoSuchMethodException.class).do<caret>Throw(IOException.class)\n" +
-                "          .when(mockObject).doSomething();",
-            "       Mockito.doThrow(IllegalArgumentException.class, NoSuchMethodException.class).doThrow(IOException.class)\n" +
-                "          .doReturn(10)\n" +
-                "          .doThrow(IllegalArgumentException.class, NoSuchMethodException.class, IOException.class)\n" +
-                "          .when(mockObject).doSomething();");
-        DO_THROW_WHEN_CASES.put(
-            "       Mockito.doReturn(5)\n" +
-                "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doT<caret>hrow(new IOException())\n" +
-                "          .doReturn(10)\n" +
-                "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doThrow(new IOException())\n" +
-                "          .when(mockObject).doSomething();",
-            "       Mockito.doReturn(5)\n" +
-                "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException(), new IOException())\n" +
-                "          .doReturn(10)\n" +
-                "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doThrow(new IOException())\n" +
-                "          .when(mockObject).doSomething();");
-        DO_THROW_WHEN_CASES.put(
-            "       Mockito.doReturn(5)\n" +
-                "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doThrow(new IOException())\n" +
-                "          .doReturn(10)\n" +
-                "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doT<caret>hrow(new IOException())\n" +
-                "          .when(mockObject).doSomething();",
-            "       Mockito.doReturn(5)\n" +
-                "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doThrow(new IOException())\n" +
-                "          .doReturn(10)\n" +
-                "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException(), new IOException())\n" +
-                "          .when(mockObject).doSomething();");
-        DO_THROW_WHEN_CASES.put(
-            "       Mockito.doThrow(new IllegalArgumentException()).doThr<caret>ow(new IOException(\"message\")).when(mockObject).doSomething();",
-            "       Mockito.doThrow(new IllegalArgumentException(), new IOException(\"message\")).when(mockObject).doSomething();");
-        DO_THROW_WHEN_CASES.put(
-            "       Mockito.doThrow(IllegalArgumentException.class).doT<caret>hrow(new IOException(\"message\")).when(mockObject).doSomething();",
-            "       Mockito.doThrow(new IllegalArgumentException(), new IOException(\"message\")).when(mockObject).doSomething();");
-        DO_THROW_WHEN_CASES.put(
-            "       Mockito.doThrow(IllegalArgumentException.class).doThrow(new IOException()).doT<caret>hrow(new IOException(\"message\")).when(mockObject).doSomething();",
-            "       Mockito.doThrow(new IllegalArgumentException(), new IOException(), new IOException(\"message\")).when(mockObject).doSomething();");
+    private static String[][] doThrowWhenCases() {
+        return new String[][]{
+            {
+                "       Mockito.doThrow(IllegalArgumentException.class).doTh<caret>row(NoSuchMethodException.class).when(mockObject).doSomething();",
+                "       Mockito.doThrow(IllegalArgumentException.class, NoSuchMethodException.class).when(mockObject).doSomething();"
+            },
+            {
+                "       Mockito.doThrow(IllegalArgumentException.class, NoSuchMethodException.class).doThr<caret>ow(IOException.class).when(mockObject).doSomething();",
+                "       Mockito.doThrow(IllegalArgumentException.class, NoSuchMethodException.class, IOException.class).when(mockObject).doSomething();"
+            },
+            {
+                "       Mockito.doThrow(IllegalArgumentException.class).do<caret>Throw(IOException.class, NoSuchMethodException.class).when(mockObject).doSomething();",
+                "       Mockito.doThrow(IllegalArgumentException.class, IOException.class, NoSuchMethodException.class).when(mockObject).doSomething();"
+            },
+            {
+                "       Mockito.doThrow(new IllegalArgumentException()).doTh<caret>row(new IOException()).when(mockObject).doSomething();",
+                "       Mockito.doThrow(new IllegalArgumentException(), new IOException()).when(mockObject).doSomething();"
+            },
+            {
+                "       Mockito.doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doT<caret>hrow(new IOException()).when(mockObject).doSomething();",
+                "       Mockito.doThrow(new IllegalArgumentException(), new NoSuchMethodException(), new IOException()).when(mockObject).doSomething();"
+            },
+            {
+                "       Mockito.doThrow(new IllegalArgumentException(), new NoSuchMethodException()).do<caret>Throw(new IOException())\n" +
+                    "          .doReturn(10)\n" +
+                    "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doThrow(new IOException())\n" +
+                    "          .when(mockObject).doSomething();",
+                "       Mockito.doThrow(new IllegalArgumentException(), new NoSuchMethodException(), new IOException())\n" +
+                    "          .doReturn(10)\n" +
+                    "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doThrow(new IOException())\n" +
+                    "          .when(mockObject).doSomething();"
+            },
+            {
+                "       Mockito.doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doThrow(new IOException())\n" +
+                    "          .doReturn(10)\n" +
+                    "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException()).do<caret>Throw(new IOException())\n" +
+                    "          .when(mockObject).doSomething();",
+                "       Mockito.doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doThrow(new IOException())\n" +
+                    "          .doReturn(10)\n" +
+                    "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException(), new IOException())\n" +
+                    "          .when(mockObject).doSomething();"
+            },
+            {
+                "       Mockito.doThrow(IllegalArgumentException.class, NoSuchMethodException.class).do<caret>Throw(IOException.class)\n" +
+                    "          .doReturn(10)\n" +
+                    "          .doThrow(IllegalArgumentException.class, NoSuchMethodException.class).doThrow(IOException.class)\n" +
+                    "          .when(mockObject).doSomething();",
+                "       Mockito.doThrow(IllegalArgumentException.class, NoSuchMethodException.class, IOException.class)\n" +
+                    "          .doReturn(10)\n" +
+                    "          .doThrow(IllegalArgumentException.class, NoSuchMethodException.class).doThrow(IOException.class)\n" +
+                    "          .when(mockObject).doSomething();"
+            },
+            {
+                "       Mockito.doThrow(IllegalArgumentException.class, NoSuchMethodException.class).doThrow(IOException.class)\n" +
+                    "          .doReturn(10)\n" +
+                    "          .doThrow(IllegalArgumentException.class, NoSuchMethodException.class).do<caret>Throw(IOException.class)\n" +
+                    "          .when(mockObject).doSomething();",
+                "       Mockito.doThrow(IllegalArgumentException.class, NoSuchMethodException.class).doThrow(IOException.class)\n" +
+                    "          .doReturn(10)\n" +
+                    "          .doThrow(IllegalArgumentException.class, NoSuchMethodException.class, IOException.class)\n" +
+                    "          .when(mockObject).doSomething();"
+            },
+            {
+                "       Mockito.doReturn(5)\n" +
+                    "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doT<caret>hrow(new IOException())\n" +
+                    "          .doReturn(10)\n" +
+                    "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doThrow(new IOException())\n" +
+                    "          .when(mockObject).doSomething();",
+                "       Mockito.doReturn(5)\n" +
+                    "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException(), new IOException())\n" +
+                    "          .doReturn(10)\n" +
+                    "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doThrow(new IOException())\n" +
+                    "          .when(mockObject).doSomething();"
+            },
+            {
+                "       Mockito.doReturn(5)\n" +
+                    "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doThrow(new IOException())\n" +
+                    "          .doReturn(10)\n" +
+                    "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doT<caret>hrow(new IOException())\n" +
+                    "          .when(mockObject).doSomething();",
+                "       Mockito.doReturn(5)\n" +
+                    "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException()).doThrow(new IOException())\n" +
+                    "          .doReturn(10)\n" +
+                    "          .doThrow(new IllegalArgumentException(), new NoSuchMethodException(), new IOException())\n" +
+                    "          .when(mockObject).doSomething();"
+            },
+            {
+                "       Mockito.doThrow(new IllegalArgumentException()).doThr<caret>ow(new IOException(\"message\")).when(mockObject).doSomething();",
+                "       Mockito.doThrow(new IllegalArgumentException(), new IOException(\"message\")).when(mockObject).doSomething();"
+            },
+            {
+                "       Mockito.doThrow(IllegalArgumentException.class).doT<caret>hrow(new IOException(\"message\")).when(mockObject).doSomething();",
+                "       Mockito.doThrow(new IllegalArgumentException(), new IOException(\"message\")).when(mockObject).doSomething();"
+            },
+            {
+                "       Mockito.doThrow(IllegalArgumentException.class).doThrow(new IOException()).doT<caret>hrow(new IOException(\"message\")).when(mockObject).doSomething();",
+                "       Mockito.doThrow(new IllegalArgumentException(), new IOException(), new IOException(\"message\")).when(mockObject).doSomething();"
+            }
+        };
     }
 
     @Override
@@ -300,46 +422,53 @@ public class SimplifyConsecutiveThrowCallsInspectionTest extends MockitoolsInspe
 
     //Highlighting
 
-    public void testSimplifyConsecutiveThrowCalls() {
+    @Test
+    void testSimplifyConsecutiveThrowCalls() {
         doJavaTest();
     }
 
     //Quick fixes
 
-    public void testReplacesWhenThenThrows() {
-        WHEN_THEN_THROW_CASES.forEach((before, after) ->
-            doQuickFixTest("Merge thenThrow calls", "QuickFix.java", createClassText(before), createClassText(after)));
+    @ParameterizedTest
+    @MethodSource("whenThenThrowCases")
+    void testReplacesWhenThenThrows(String before, String after) {
+        doQuickFixTest("Merge thenThrow calls", "QuickFix.java", createClassText(before), createClassText(after));
     }
 
-    public void testReplacesDoThrowWhens() {
-        DO_THROW_WHEN_CASES.forEach((before, after) ->
-            doQuickFixTest("Merge doThrow calls", "QuickFix.java", createClassText(before), createClassText(after)));
+    @ParameterizedTest
+    @MethodSource("doThrowWhenCases")
+    void testReplacesDoThrowWhens(String before, String after) {
+        doQuickFixTest("Merge doThrow calls", "QuickFix.java", createClassText(before), createClassText(after));
     }
 
-    public void testReplacesGivenWillThrows() {
-        GIVEN_WILL_THROW_CASES.forEach((before, after) ->
-            doQuickFixTest("Merge willThrow calls", "QuickFix.java", createClassText(before), createClassText(after)));
+    @ParameterizedTest
+    @MethodSource("givenWillThrowCases")
+    void testReplacesGivenWillThrows(String before, String after) {
+        doQuickFixTest("Merge willThrow calls", "QuickFix.java", createClassText(before), createClassText(after));
     }
 
-    public void testReplacesWillThrowGivens() {
-        WILL_THROW_GIVEN_CASES.forEach((before, after) ->
-            doQuickFixTest("Merge willThrow calls", "QuickFix.java", createClassText(before), createClassText(after)));
+    @ParameterizedTest
+    @MethodSource("willThrowGivenCases")
+    void testReplacesWillThrowGivens(String before, String after) {
+        doQuickFixTest("Merge willThrow calls", "QuickFix.java", createClassText(before), createClassText(after));
     }
 
-    public void testMixedToClassesCases() {
-        TO_CLASSES_MIXED_CASES.forEach((before, after) ->
-            doQuickFixTest("Merge calls, convert parameters to Class objects", "QuickFix.java", createClassText(before), createClassText(after)));
+    @ParameterizedTest
+    @MethodSource("toClassesMixedCases")
+    void testMixedToClassesCases(String before, String after) {
+        doQuickFixTest("Merge calls, convert parameters to Class objects", "QuickFix.java", createClassText(before), createClassText(after));
     }
 
-    public void testMixedToThrowablesCases() {
-        TO_THROWABLES_MIXED_CASES.forEach((before, after) ->
-            doQuickFixTest("Merge calls, convert parameters to Throwables", "QuickFix.java", createClassText(before), createClassText(after)));
+    @ParameterizedTest
+    @MethodSource("toThrowableMixedCases")
+    void testMixedToThrowablesCases(String before, String after) {
+        doQuickFixTest("Merge calls, convert parameters to Throwables", "QuickFix.java", createClassText(before), createClassText(after));
     }
 
-    public void testReplacesMockedStaticWhenThenThrows() {
-        MOCKED_STATIC_WHEN_THEN_THROWS_CASES.forEach((before, after) ->
-            doQuickFixTest("Merge thenThrow calls", "QuickFix.java",
-                createMockedStaticClassText(before), createMockedStaticClassText(after)));
+    @ParameterizedTest
+    @MethodSource("mockedStaticWhenThenThrowsCases")
+    void testReplacesMockedStaticWhenThenThrows(String before, String after) {
+        doQuickFixTest("Merge thenThrow calls", "QuickFix.java", createMockedStaticClassText(before), createMockedStaticClassText(after));
     }
 
     private String createClassText(String beforeOrAfter) {

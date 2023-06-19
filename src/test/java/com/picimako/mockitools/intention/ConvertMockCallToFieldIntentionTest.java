@@ -1,38 +1,37 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention;
 
-import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito4Latest;
-
 import com.intellij.codeInsight.intention.IntentionAction;
+import com.intellij.testFramework.RunsInEdt;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link ConvertMockCallToFieldIntention}.
  */
-public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
+@RunsInEdt
+class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
 
     @Override
     protected IntentionAction getIntention() {
         return new ConvertMockCallToFieldIntention();
     }
 
-    @Override
-    protected void loadLibs() {
-        loadMockito4Latest(myFixture.getProjectDisposable(), getModule());
-    }
-
     //Availability
 
-    public void testNotAvailableForNonJavaFile() {
+    @Test
+    void testNotAvailableForNonJavaFile() {
         checkIntentionIsNotAvailable("NotJava.xml", "<tag><caret></tag>");
     }
 
-    public void testNotAvailableForNonMethodCallIdentifier() {
+    @Test
+    void testNotAvailableForNonMethodCallIdentifier() {
         checkIntentionIsNotAvailable(
             "public class NotAvaila<caret>ble { }");
     }
 
-    public void testNotAvailableForNotMockMethod() {
+    @Test
+    void testNotAvailableForNotMockMethod() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -43,7 +42,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testNotAvailableForNotClassObjectAccessExpression() {
+    @Test
+    void testNotAvailableForNotClassObjectAccessExpression() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -54,7 +54,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testNotAvailableForNotMockableType() {
+    @Test
+    void testNotAvailableForNotMockableType() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -65,7 +66,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testNotAvailableForNonMockitoWithSettings() {
+    @Test
+    void testNotAvailableForNonMockitoWithSettings() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -77,7 +79,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testNotAvailableForNotSupportedMockSettings() {
+    @Test
+    void testNotAvailableForNotSupportedMockSettings() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -88,7 +91,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testNotAvailableForNotSupportedMockSettingsSerializableWithMode() {
+    @Test
+    void testNotAvailableForNotSupportedMockSettingsSerializableWithMode() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.mock.SerializableMode;\n" +
@@ -100,7 +104,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testAvailableForMockitoMock() {
+    @Test
+    void testAvailableForMockitoMock() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -111,7 +116,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testAvailableForMockitoMockWithName() {
+    @Test
+    void testAvailableForMockitoMockWithName() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -122,7 +128,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testAvailableForMockitoMockWithAnswer() {
+    @Test
+    void testAvailableForMockitoMockWithAnswer() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Answers;\n" +
@@ -134,7 +141,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testAvailableForMockitoMockWithSettings() {
+    @Test
+    void testAvailableForMockitoMockWithSettings() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "import java.util.List;\n" +
@@ -146,7 +154,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testAvailableForNotSupportedMockSettingsSerializableWithoutMode() {
+    @Test
+    void testAvailableForNotSupportedMockSettingsSerializableWithoutMode() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -157,9 +166,22 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
+    @Test
+    void testAvailableForWithoutAnnotations() {
+        checkIntentionIsAvailable(
+            "import org.mockito.Mockito;\n" +
+                "\n" +
+                "public class Available {\n" +
+                "    public void testMethod() {\n" +
+                "        Mockito.mo<caret>ck(Object.class, Mockito.withSettings().withoutAnnotations());\n" +
+                "    }\n" +
+                "}");
+    }
+
     //Conversions
 
-    public void testConvertsMockitoMock() {
+    @Test
+    void testConvertsMockitoMock() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -183,7 +205,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testConvertsMockitoMockFromVariable() {
+    @Test
+    void testConvertsMockitoMockFromVariable() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -204,7 +227,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testConvertsMockitoMockWithName() {
+    @Test
+    void testConvertsMockitoMockWithName() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -228,7 +252,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testConvertsMockitoMockWithNameFromVariable() {
+    @Test
+    void testConvertsMockitoMockWithNameFromVariable() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -249,7 +274,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testConvertsMockitoMockWithDefaultAnswer() {
+    @Test
+    void testConvertsMockitoMockWithDefaultAnswer() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Answers;\n" +
@@ -275,7 +301,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testConvertsMockitoMockWithDefaultAnswerFromVariable() {
+    @Test
+    void testConvertsMockitoMockWithDefaultAnswerFromVariable() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Answers;\n" +
@@ -298,7 +325,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testConvertsMockitoMockWithNonDefaultAnswer() {
+    @Test
+    void testConvertsMockitoMockWithNonDefaultAnswer() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Answers;\n" +
@@ -324,7 +352,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testConvertsMockitoMockWithNonDefaultAnswerFromVariable() {
+    @Test
+    void testConvertsMockitoMockWithNonDefaultAnswerFromVariable() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Answers;\n" +
@@ -347,13 +376,14 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testConvertsMockitoMockWithBooleanSettings() {
+    @Test
+    void testConvertsMockitoMockWithBooleanSettings() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class ConversionTest {\n" +
                 "    public void testMethod() {\n" +
-                "        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().serializable().stubOnly()));\n" +
+                "        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().serializable().stubOnly().withoutAnnotations()));\n" +
                 "    }\n" +
                 "    public void aMethod(Object object) { }\n" +
                 "}",
@@ -361,7 +391,7 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class ConversionTest {\n" +
-                "    @Mock(lenient = true, serializable = true, stubOnly = true)\n" +
+                "    @Mock(lenient = true, serializable = true, stubOnly = true, withoutAnnotations = true)\n" +
                 "    Object object;\n" +
                 "\n" +
                 "    public void testMethod() {\n" +
@@ -371,20 +401,21 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testConvertsMockitoMockWithBooleanSettingsFromVariable() {
+    @Test
+    void testConvertsMockitoMockWithBooleanSettingsFromVariable() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class ConversionTest {\n" +
                 "    public void testMethod() {\n" +
-                "        var mock = Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().serializable().stubOnly());\n" +
+                "        var mock = Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().serializable().stubOnly().withoutAnnotations());\n" +
                 "    }\n" +
                 "}",
             "import org.mockito.Mock;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
                 "public class ConversionTest {\n" +
-                "    @Mock(lenient = true, serializable = true, stubOnly = true)\n" +
+                "    @Mock(lenient = true, serializable = true, stubOnly = true, withoutAnnotations = true)\n" +
                 "    Object mock;\n" +
                 "\n" +
                 "    public void testMethod() {\n" +
@@ -392,7 +423,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testConvertsMockitoMockWithSettingsName() {
+    @Test
+    void testConvertsMockitoMockWithSettingsName() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -416,7 +448,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testConvertsMockitoMockWithSettingsNameFromVariable() {
+    @Test
+    void testConvertsMockitoMockWithSettingsNameFromVariable() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -437,7 +470,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testConvertsMockitoMockWithSettingsStrictness() {
+    @Test
+    void testConvertsMockitoMockWithSettingsStrictness() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.quality.Strictness;\n" +
@@ -463,7 +497,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testConvertsMockitoMockWithSettingsMockMaker() {
+    @Test
+    void testConvertsMockitoMockWithSettingsMockMaker() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -487,7 +522,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testConvertsMockitoMockWithSettingsDefaultAnswer() {
+    @Test
+    void testConvertsMockitoMockWithSettingsDefaultAnswer() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Answers;\n" +
@@ -513,7 +549,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testConvertsMockitoMockWithSettingsDefaultAnswerFromVariable() {
+    @Test
+    void testConvertsMockitoMockWithSettingsDefaultAnswerFromVariable() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Answers;\n" +
@@ -536,7 +573,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testConvertsMockitoMockWithSettingsNonDefaultAnswer() {
+    @Test
+    void testConvertsMockitoMockWithSettingsNonDefaultAnswer() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Answers;\n" +
@@ -562,7 +600,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testConvertsMockitoMockWithSettingsNonDefaultAnswerFromVariable() {
+    @Test
+    void testConvertsMockitoMockWithSettingsNonDefaultAnswerFromVariable() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.Answers;\n" +
@@ -588,7 +627,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testConvertsMockitoMockWithSettingsSingleExtraInterface() {
+    @Test
+    void testConvertsMockitoMockWithSettingsSingleExtraInterface() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import java.util.List;\n" +
@@ -614,7 +654,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
                 "}");
     }
 
-    public void testConvertsMockitoMockWithSettingsMultipleExtraInterfaces() {
+    @Test
+    void testConvertsMockitoMockWithSettingsMultipleExtraInterfaces() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "import java.util.List;\n" +
@@ -644,7 +685,8 @@ public class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTest
     
     //Generics
 
-    public void testConvertsMockitoMockWithGenericsFromVariable() {
+    @Test
+    void testConvertsMockitoMockWithGenericsFromVariable() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +

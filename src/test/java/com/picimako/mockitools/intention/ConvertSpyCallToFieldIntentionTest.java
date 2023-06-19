@@ -1,38 +1,38 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 
-import com.picimako.mockitools.ThirdPartyLibraryLoader;
+import com.intellij.testFramework.RunsInEdt;
+import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link ConvertSpyCallToFieldIntention}
  */
-public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
+@RunsInEdt
+class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
 
     @Override
     protected IntentionAction getIntention() {
         return new ConvertSpyCallToFieldIntention();
     }
 
-    @Override
-    protected void loadLibs() {
-        ThirdPartyLibraryLoader.loadMockito4Latest(myFixture.getProjectDisposable(), getModule());
-    }
-
     //Availability
 
-    public void testNotAvailableForNonJavaFile() {
+    @Test
+    void testNotAvailableForNonJavaFile() {
         checkIntentionIsNotAvailable("NotJava.xml", "<tag><caret></tag>");
     }
 
-    public void testNotAvailableForNonMethodCallIdentifier() {
+    @Test
+    void testNotAvailableForNonMethodCallIdentifier() {
         checkIntentionIsNotAvailable(
             "public class NotAvaila<caret>ble { }");
     }
 
-    public void testNotAvailableForNonMockitoSpyCall() {
+    @Test
+    void testNotAvailableForNonMockitoSpyCall() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -43,7 +43,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}");
     }
 
-    public void testNotAvailableForMockitoSpyCallWithNotOneArgument() {
+    @Test
+    void testNotAvailableForMockitoSpyCallWithNotOneArgument() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -54,7 +55,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}");
     }
 
-    public void testNotAvailableForNonNewExpressionOrNonClassObjectAccessExpression() {
+    @Test
+    void testNotAvailableForNonNewExpressionOrNonClassObjectAccessExpression() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -66,7 +68,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}");
     }
 
-    public void testNotAvailableForNonMockableTypeNewExpression() {
+    @Test
+    void testNotAvailableForNonMockableTypeNewExpression() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -77,7 +80,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}");
     }
 
-    public void testNotAvailableForNonMockableTypeClassObjectAccess() {
+    @Test
+    void testNotAvailableForNonMockableTypeClassObjectAccess() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -88,7 +92,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}");
     }
 
-    public void testNotAvailableForDoNotMockAnnotatedTypeNewExpression() {
+    @Test
+    void testNotAvailableForDoNotMockAnnotatedTypeNewExpression() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.DoNotMock;\n" +
@@ -103,7 +108,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}");
     }
 
-    public void testNotAvailableForDoNotMockAnnotatedTypeClassObjectAccess() {
+    @Test
+    void testNotAvailableForDoNotMockAnnotatedTypeClassObjectAccess() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "import org.mockito.DoNotMock;\n" +
@@ -118,7 +124,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}");
     }
 
-    public void testAvailableForNewExpression() {
+    @Test
+    void testAvailableForNewExpression() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -131,7 +138,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}");
     }
 
-    public void testNotAvailableForClassObjectAccessExpression() {
+    @Test
+    void testNotAvailableForClassObjectAccessExpression() {
         checkIntentionIsAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -146,7 +154,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
 
     //Conversion - standalone spy call + new expression
 
-    public void testConvertsStandaloneSpyCallNewExpressionDefaultToExplicitDefaultConstructor() {
+    @Test
+    void testConvertsStandaloneSpyCallNewExpressionDefaultToExplicitDefaultConstructor() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -178,7 +187,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}");
     }
 
-    public void testConvertsStandaloneSpyCallNewExpressionDefaultToNonDefaultConstructor() {
+    @Test
+    void testConvertsStandaloneSpyCallNewExpressionDefaultToNonDefaultConstructor() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -210,7 +220,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}\n");
     }
 
-    public void testConvertsStandaloneSpyCallNewExpressionNonDefaultMatchingConstructor() {
+    @Test
+    void testConvertsStandaloneSpyCallNewExpressionNonDefaultMatchingConstructor() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -242,7 +253,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}\n");
     }
 
-    public void testConvertsStandaloneSpyCallNewExpressionNonDefaultToNonMatchingConstructor() {
+    @Test
+    void testConvertsStandaloneSpyCallNewExpressionNonDefaultToNonMatchingConstructor() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -274,7 +286,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}\n");
     }
 
-    public void testConvertsStandaloneSpyCallNewExpressionNonDefaultToDefaultAndNonMatchingConstructor() {
+    @Test
+    void testConvertsStandaloneSpyCallNewExpressionNonDefaultToDefaultAndNonMatchingConstructor() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -310,7 +323,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
 
     //---
 
-    public void testConvertsStandaloneSpyCallNewExpressionDefaultToAutoGenDefaultConstructor() {
+    @Test
+    void testConvertsStandaloneSpyCallNewExpressionDefaultToAutoGenDefaultConstructor() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -338,7 +352,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}");
     }
 
-    public void testConvertsStandaloneSpyCallNewExpressionDefaultToMultipleNonDefaultConstructors() {
+    @Test
+    void testConvertsStandaloneSpyCallNewExpressionDefaultToMultipleNonDefaultConstructors() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -372,7 +387,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}");
     }
 
-    public void testConvertsStandaloneSpyCallNewExpressionNonDefaultToDefaultAndMultipleNonDefaultConstructors() {
+    @Test
+    void testConvertsStandaloneSpyCallNewExpressionNonDefaultToDefaultAndMultipleNonDefaultConstructors() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -410,7 +426,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
 
     //--- Generics
 
-    public void testConvertsStandaloneSpyCallNewExpressionGenerics() {
+    @Test
+    void testConvertsStandaloneSpyCallNewExpressionGenerics() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -440,7 +457,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
 
     //Conversion - standalone spy call + class object access expression
 
-    public void testConvertsStandaloneSpyCallClassObjectAccess() {
+    @Test
+    void testConvertsStandaloneSpyCallClassObjectAccess() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -472,7 +490,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
 
     //Conversion - local variable declaration + new expression
 
-    public void testConvertsLocalVariableDeclarationNewExpressionDefaultToExplicitDefaultConstructor() {
+    @Test
+    void testConvertsLocalVariableDeclarationNewExpressionDefaultToExplicitDefaultConstructor() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -501,7 +520,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}");
     }
 
-    public void testConvertsLocalVariableDeclarationNewExpressionDefaultToNonDefaultConstructor() {
+    @Test
+    void testConvertsLocalVariableDeclarationNewExpressionDefaultToNonDefaultConstructor() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -530,7 +550,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}\n");
     }
 
-    public void testConvertsLocalVariableDeclarationNewExpressionNonDefaultMatchingConstructor() {
+    @Test
+    void testConvertsLocalVariableDeclarationNewExpressionNonDefaultMatchingConstructor() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -559,7 +580,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}\n");
     }
 
-    public void testConvertsLocalVariableDeclarationNewExpressionNonDefaultToNonMatchingConstructor() {
+    @Test
+    void testConvertsLocalVariableDeclarationNewExpressionNonDefaultToNonMatchingConstructor() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -588,7 +610,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}\n");
     }
 
-    public void testConvertsLocalVariableDeclarationNewExpressionNonDefaultToDefaultAndNonMatchingConstructor() {
+    @Test
+    void testConvertsLocalVariableDeclarationNewExpressionNonDefaultToDefaultAndNonMatchingConstructor() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -621,7 +644,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
 
     //---
 
-    public void testConvertsLocalVariableDeclarationNewExpressionDefaultToAutoGenDefaultConstructor() {
+    @Test
+    void testConvertsLocalVariableDeclarationNewExpressionDefaultToAutoGenDefaultConstructor() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -646,7 +670,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}");
     }
 
-    public void testConvertsLocalVariableDeclarationNewExpressionDefaultToMultipleNonDefaultConstructors() {
+    @Test
+    void testConvertsLocalVariableDeclarationNewExpressionDefaultToMultipleNonDefaultConstructors() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -677,7 +702,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}");
     }
 
-    public void testConvertsLocalVariableDeclarationNewExpressionNonDefaultToDefaultAndMultipleNonDefaultConstructors() {
+    @Test
+    void testConvertsLocalVariableDeclarationNewExpressionNonDefaultToDefaultAndMultipleNonDefaultConstructors() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -712,7 +738,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
 
     //--- Generics
 
-    public void testConvertsLocalVariableDeclarationNewExpressionGenerics() {
+    @Test
+    void testConvertsLocalVariableDeclarationNewExpressionGenerics() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -739,7 +766,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
 
     //--- var keyword
 
-    public void testConvertsLocalVariableDeclarationWithVarKeywordWithNewExpressionNonGenerics() {
+    @Test
+    void testConvertsLocalVariableDeclarationWithVarKeywordWithNewExpressionNonGenerics() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -764,7 +792,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
                 "}");
     }
 
-    public void testConvertsLocalVariableDeclarationWithVarKeywordWithNewExpressionGenerics() {
+    @Test
+    void testConvertsLocalVariableDeclarationWithVarKeywordWithNewExpressionGenerics() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -791,7 +820,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
 
     //Conversion - local variable declaration + class object access expression
 
-    public void testConvertsLocalVariableDeclarationClassObjectAccessExpression() {
+    @Test
+    void testConvertsLocalVariableDeclarationClassObjectAccessExpression() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -818,7 +848,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
 
     //--- Generics
 
-    public void testConvertsLocalVariableDeclarationClassObjectAccessExpressionGenerics() {
+    @Test
+    void testConvertsLocalVariableDeclarationClassObjectAccessExpressionGenerics() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -845,7 +876,8 @@ public class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestB
 
     //--- var keyword
 
-    public void testConvertsLocalVariableDeclarationWithVarKeywordWithClassObjectAccessExpression() {
+    @Test
+    void testConvertsLocalVariableDeclarationWithVarKeywordWithClassObjectAccessExpression() {
         checkIntentionRun(
             "import org.mockito.Mockito;\n" +
                 "\n" +

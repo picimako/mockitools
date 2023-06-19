@@ -1,4 +1,4 @@
-//Copyright 2021 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 
@@ -6,34 +6,40 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
+import com.intellij.testFramework.RunsInEdt;
 import com.picimako.mockitools.inspection.EnforceConventionInspection;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
 import com.picimako.mockitools.intention.convert.verification.NoActionAvailableAction;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 /**
  * Integration test for {@link ConvertFromBDDMockitoThenIntention}.
  */
-public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareIntentionTestBase {
+@RunsInEdt
+class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareIntentionTestBase {
 
     @Override
     protected IntentionAction getIntention() {
         return new ConvertFromBDDMockitoThenIntention();
     }
 
-    public void testNotAvailableForNonJavaFile() {
+    @Test
+    void testNotAvailableForNonJavaFile() {
         checkIntentionIsNotAvailable("NotJava.xml", "<tag><caret></tag>");
     }
 
-    public void testNotAvailableForNonMethodCallIdentifier() {
+    @Test
+    void testNotAvailableForNonMethodCallIdentifier() {
         checkIntentionIsNotAvailable(
             "class NotAvailable {\n" +
                 "    private String fiel<caret>d;\n" +
                 "}");
     }
 
-    public void testNotAvailableOnNonBDDMockitoThenMethod() {
+    @Test
+    void testNotAvailableOnNonBDDMockitoThenMethod() {
         checkIntentionIsNotAvailable(
             "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -44,7 +50,8 @@ public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwa
                 "}");
     }
 
-    public void testNotAvailableWhenBDDMockitoThenHasNoSubsequentMethodCall() {
+    @Test
+    void testNotAvailableWhenBDDMockitoThenHasNoSubsequentMethodCall() {
         checkIntentionIsNotAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -61,7 +68,8 @@ public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwa
                 "}");
     }
 
-    public void testNotAvailableWhenSubsequentMethodCallToBDDMockitoThenIsNotShould() {
+    @Test
+    void testNotAvailableWhenSubsequentMethodCallToBDDMockitoThenIsNotShould() {
         checkIntentionIsNotAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -78,7 +86,8 @@ public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwa
                 "}");
     }
 
-    public void testNotAvailableWhenBDDMockitoThenShouldHasNoSubsequentMethodCall() {
+    @Test
+    void testNotAvailableWhenBDDMockitoThenShouldHasNoSubsequentMethodCall() {
         checkIntentionIsNotAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -95,7 +104,8 @@ public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwa
                 "}");
     }
 
-    public void testAvailableWhenBDDMockitoIsEnforced() {
+    @Test
+    void testAvailableWhenBDDMockitoIsEnforced() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
         checkIntentionIsAvailable(
             "import org.mockito.BDDMockito;\n" +
@@ -113,7 +123,8 @@ public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwa
                 "}");
     }
 
-    public void testAvailableForBDDMockitoThenShouldWithoutVerificationMode() {
+    @Test
+    void testAvailableForBDDMockitoThenShouldWithoutVerificationMode() {
         checkIntentionIsAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -130,7 +141,8 @@ public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwa
                 "}");
     }
 
-    public void testAvailableForBDDMockitoThenShouldWithVerificationMode() {
+    @Test
+    void testAvailableForBDDMockitoThenShouldWithVerificationMode() {
         checkIntentionIsAvailable(
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -149,9 +161,10 @@ public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwa
 
     //Action selection options
 
-    public void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedWithoutInOrder() {
+    @Test
+    void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedWithoutInOrder() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
-        myFixture.configureByText("Options.java",
+        getFixture().configureByText("Options.java",
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -160,15 +173,16 @@ public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwa
                 "        BDDMockito.th<caret>en(Mockito.mock(Object.class)).should().doSomething();\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(AddInOrderToBDDMockitoAction.class);
     }
 
-    public void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedWithInOrder() {
+    @Test
+    void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedWithInOrder() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
-        myFixture.configureByText("Options.java",
+        getFixture().configureByText("Options.java",
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -178,15 +192,16 @@ public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwa
                 "        BDDMockito.th<caret>en(mock).should(Mockito.inOrder(mock)).doSomething();\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(NoActionAvailableAction.class);
     }
 
-    public void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedWithoutInOrderInSelection() {
+    @Test
+    void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedWithoutInOrderInSelection() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
-        myFixture.configureByText("Options.java",
+        getFixture().configureByText("Options.java",
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -196,15 +211,16 @@ public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwa
                 "        BDDMockito.then(Mockito.mock(Object.class)).should().doSomething();</selection>\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(AddInOrderToBDDMockitoAction.class);
     }
 
-    public void testReturnsAvailableActionsWhenMockitoIsEnforcedWithoutInOrder() {
+    @Test
+    void testReturnsAvailableActionsWhenMockitoIsEnforcedWithoutInOrder() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.MOCKITO);
-        myFixture.configureByText("Options.java",
+        getFixture().configureByText("Options.java",
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -213,7 +229,7 @@ public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwa
                 "        BDDMockito.th<caret>en(Mockito.mock(Object.class)).should().doSomething();\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(
@@ -222,9 +238,10 @@ public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwa
         );
     }
 
-    public void testReturnsAvailableActionsWhenMockitoIsEnforcedWithInOrder() {
+    @Test
+    void testReturnsAvailableActionsWhenMockitoIsEnforcedWithInOrder() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.MOCKITO);
-        myFixture.configureByText("Options.java",
+        getFixture().configureByText("Options.java",
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -233,7 +250,7 @@ public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwa
                 "        BDDMockito.th<caret>en(mock).should(Mockito.inOrder(mock)).doSomething();\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(
@@ -242,8 +259,9 @@ public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwa
         );
     }
 
-    public void testReturnsAvailableActionsWhenNothingIsEnforcedWithoutInOrder() {
-        myFixture.configureByText("Options.java",
+    @Test
+    void testReturnsAvailableActionsWhenNothingIsEnforcedWithoutInOrder() {
+        getFixture().configureByText("Options.java",
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -252,7 +270,7 @@ public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwa
                 "        BDDMockito.th<caret>en(Mockito.mock(Object.class)).should().doSomething();\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(
@@ -262,8 +280,9 @@ public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwa
         );
     }
 
-    public void testReturnsAvailableActionsWhenNothingIsEnforcedWithInOrder() {
-        myFixture.configureByText("Options.java",
+    @Test
+    void testReturnsAvailableActionsWhenNothingIsEnforcedWithInOrder() {
+        getFixture().configureByText("Options.java",
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -273,7 +292,7 @@ public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwa
                 "        BDDMockito.th<caret>en(mock).should(Mockito.inOrder(mock)).doSomething();\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(
@@ -282,8 +301,9 @@ public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwa
         );
     }
 
-    public void testReturnsAvailableActionsWhenNothingIsEnforcedWithoutInOrderInSelection() {
-        myFixture.configureByText("Options.java",
+    @Test
+    void testReturnsAvailableActionsWhenNothingIsEnforcedWithoutInOrderInSelection() {
+        getFixture().configureByText("Options.java",
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
                 "\n" +
@@ -293,7 +313,7 @@ public class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwa
                 "        BDDMockito.then(Mockito.mock(Object.class)).should().doSomething();</selection>\n" +
                 "    }\n" +
                 "}");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(myFixture.getEditor(), getFile())
+        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
         assertThat(actions).containsExactly(

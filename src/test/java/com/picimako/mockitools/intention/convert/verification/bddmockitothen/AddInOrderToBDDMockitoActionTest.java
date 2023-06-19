@@ -1,15 +1,19 @@
-//Copyright 2022 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 
+import com.intellij.testFramework.RunsInEdt;
 import com.picimako.mockitools.MockitoolsActionTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link AddInOrderToBDDMockitoAction}.
  */
-public class AddInOrderToBDDMockitoActionTest extends MockitoolsActionTestBase {
+@RunsInEdt
+class AddInOrderToBDDMockitoActionTest extends MockitoolsActionTestBase {
 
-    public void testAddsInOrderArgumentToBDDMockitoThenWithoutVerificationMode() {
+    @Test
+    void testAddsInOrderArgumentToBDDMockitoThenWithoutVerificationMode() {
         checkAction(() -> new AddInOrderToBDDMockitoAction(false),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -41,7 +45,8 @@ public class AddInOrderToBDDMockitoActionTest extends MockitoolsActionTestBase {
                 "}");
     }
 
-    public void testAddsInOrderArgumentToBDDMockitoThenWithVerificationMode() {
+    @Test
+    void testAddsInOrderArgumentToBDDMockitoThenWithVerificationMode() {
         checkAction(() -> new AddInOrderToBDDMockitoAction(false),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -73,7 +78,8 @@ public class AddInOrderToBDDMockitoActionTest extends MockitoolsActionTestBase {
                 "}");
     }
 
-    public void testAddsInOrderArgumentToBDDMockitoThenWithoutVerificationModeInSelection() {
+    @Test
+    void testAddsInOrderArgumentToBDDMockitoThenWithoutVerificationModeInSelection() {
         checkAction(() -> new AddInOrderToBDDMockitoAction(true),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
@@ -107,7 +113,8 @@ public class AddInOrderToBDDMockitoActionTest extends MockitoolsActionTestBase {
                 "}");
     }
 
-    public void testAddsInOrderArgumentToBDDMockitoThenWithVerificationModeInSelection() {
+    @Test
+    void testAddsInOrderArgumentToBDDMockitoThenWithVerificationModeInSelection() {
         checkAction(() -> new AddInOrderToBDDMockitoAction(true),
             "import org.mockito.BDDMockito;\n" +
                 "import org.mockito.Mockito;\n" +
