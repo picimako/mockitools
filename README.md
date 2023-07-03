@@ -2,19 +2,11 @@
 
 [![Version](https://img.shields.io/jetbrains/plugin/v/18117-mockitools.svg)](https://plugins.jetbrains.com/plugin/18117-mockitools)
 ![Build](https://github.com/picimako/mockitools/workflows/Build/badge.svg)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/18117-mockitools.svg)](https://plugins.jetbrains.com/plugin/18117-mockitools)
-![](https://img.shields.io/badge/since-IJ2021.3-blue) ![](https://img.shields.io/badge/until-IJ2022.3-blue)
 
 <!-- Plugin description -->
 Mockitools is a plugin for IntelliJ-based IDEs that provides framework integration for [Mockito](https://site.mockito.org), one of the (if not the) most popular mocking frameworks for unit testing in Java.
-<!-- Plugin description end -->
 
-It is available for IntelliJ Community Edition as well as IntelliJ IDEA Ultimate Edition.
-
-## Why Mockitools is tasty
-
-If [*"Mockito ... tastes really good"* and *"doesn’t give you hangover"*](https://site.mockito.org/#why),
-this IDE plugin will only make it better. You can find out why, in the dedicated documentation below.
+It provides features in the following areas of Mockito:
 
 - [Mock creation](docs/mock_creation.md)
 - [Stubbing](docs/stubbing.md)
@@ -22,8 +14,9 @@ this IDE plugin will only make it better. You can find out why, in the dedicated
 - [Argument matching and capturing](docs/argument_matching_capture.md)
 - [Version migration aids](docs/migration_aids_v4.md)
 - [Framework integration](docs/framework_integration.md)
+<!-- Plugin description end -->
 
-In the Intellij Inspections settings, all inspections are available under the <kbd>Java</kbd> > <kbd>Mockito</kbd> folder.
+In the Intellij Inspections settings, all inspections are available under the <kbd>Java</kbd> / <kbd>Mockito</kbd> folder.
 
 ## Plugin setup
 
