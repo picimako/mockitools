@@ -11,6 +11,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.siyeh.ig.InspectionGadgetsFix;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.mockitools.resources.MockitoolsBundle;
@@ -19,14 +20,10 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  * Quick fix that merges consecutive {@code *Throw()} or {@code *Return()} calls, respectively.
  * Only a single section of consecutive calls is merged if there are multiple.
  */
+@RequiredArgsConstructor
 public class MergeConsecutiveStubbingCallsQuickFix extends InspectionGadgetsFix {
     private final ConsecutiveCallQuickFixContext context;
     private final TypeConversionMethod argumentTypeConverter;
-
-    public MergeConsecutiveStubbingCallsQuickFix(ConsecutiveCallQuickFixContext context, TypeConversionMethod argumentTypeConverter) {
-        this.context = context;
-        this.argumentTypeConverter = argumentTypeConverter;
-    }
 
     @Override
     public @IntentionName @NotNull String getName() {

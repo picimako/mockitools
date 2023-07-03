@@ -2,35 +2,29 @@
 
 package com.picimako.mockitools.inspection;
 
-import static com.picimako.mockitools.util.ExceptionUtil.isCheckedException;
-import static com.picimako.mockitools.util.PointersUtil.toPointer;
-import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
-import static com.picimako.mockitools.util.PsiMethodUtil.getSubsequentMethodCall;
-import static com.picimako.mockitools.util.EvaluationHelper.evaluateClassObjectOrNewExpressionType;
-import static com.picimako.mockitools.util.EvaluationHelper.evaluateType;
-
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiCall;
-import com.intellij.psi.PsiClassType;
-import com.intellij.psi.PsiExpression;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.psi.PsiType;
-import com.intellij.psi.SmartPsiElementPointer;
+import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.picimako.mockitools.StubbingApproach;
 import com.picimako.mockitools.StubType;
+import com.picimako.mockitools.StubbingApproach;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.InspectionGadgetsFix;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Optional;
+
+import static com.picimako.mockitools.util.EvaluationHelper.evaluateClassObjectOrNewExpressionType;
+import static com.picimako.mockitools.util.EvaluationHelper.evaluateType;
+import static com.picimako.mockitools.util.ExceptionUtil.isCheckedException;
+import static com.picimako.mockitools.util.PointersUtil.toPointer;
+import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
+import static com.picimako.mockitools.util.PsiMethodUtil.getSubsequentMethodCall;
 
 /**
  * Reports exception references in {@code *Throw()} stubbing methods based on Mockito's rule on checked exceptions:
@@ -134,22 +128,19 @@ public class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInsp
      *
      * @since 0.5.0
      */
+    @RequiredArgsConstructor
     private static final class AddExceptionToThrowsClauseQuickFix extends InspectionGadgetsFix {
         private final SmartPsiElementPointer<PsiMethod> stubbedMethod;
-
-        public AddExceptionToThrowsClauseQuickFix(SmartPsiElementPointer<PsiMethod> stubbedMethod) {
-            this.stubbedMethod = stubbedMethod;
-        }
 
         @Override
         protected void doFix(Project project, ProblemDescriptor descriptor) {
             var exception = descriptor.getPsiElement();
             if (!(exception instanceof PsiExpression)) return;
 
-            PsiType stubbedException = evaluateClassObjectOrNewExpressionType(exception);
-            if (stubbedException instanceof PsiClassType) {
+            var stubbedExceptionType = evaluateClassObjectOrNewExpressionType(exception);
+            if (stubbedExceptionType instanceof PsiClassType stubbedExceptionClassType) {
                 var stubbedExceptionRef =
-                    JavaPsiFacade.getElementFactory(project).createReferenceElementByType((PsiClassType) stubbedException);
+                    JavaPsiFacade.getElementFactory(project).createReferenceElementByType(stubbedExceptionClassType);
                 stubbedMethod.getElement().getThrowsList().add(stubbedExceptionRef);
             }
         }
