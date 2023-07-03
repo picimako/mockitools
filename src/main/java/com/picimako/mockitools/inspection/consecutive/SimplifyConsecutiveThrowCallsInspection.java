@@ -85,18 +85,13 @@ public class SimplifyConsecutiveThrowCallsInspection extends SimplifyConsecutive
     @Override
     protected void register(ConsecutiveCallRegistrarContext registrar, @NotNull ProblemsHolder holder) {
         switch (determineParamCombination(registrar)) {
-            case CLASSES:
-            case THROWABLES:
+            case CLASSES, THROWABLES ->
                 doRegister(registrar, holder, new MergeConsecutiveStubbingCallsQuickFix(new ConsecutiveCallQuickFixContext(registrar), TypeConversionMethod.NO_CONVERSION));
-                break;
-            case MIXED_WITH_THROWABLES_PREFERRED:
+            case MIXED_WITH_THROWABLES_PREFERRED ->
                 doRegister(registrar, holder, new MergeConsecutiveStubbingCallsQuickFix(new ConsecutiveCallQuickFixContext(registrar), TypeConversionMethod.TO_THROWABLES_SIMPLE));
-                break;
-            case MIXED:
-                doRegister(registrar, holder,
-                    new MergeConsecutiveStubbingCallsQuickFix(new ConsecutiveCallQuickFixContext(registrar), TypeConversionMethod.TO_CLASSES),
-                    new MergeConsecutiveStubbingCallsQuickFix(new ConsecutiveCallQuickFixContext(registrar), TypeConversionMethod.TO_THROWABLES));
-                break;
+            case MIXED -> doRegister(registrar, holder,
+                new MergeConsecutiveStubbingCallsQuickFix(new ConsecutiveCallQuickFixContext(registrar), TypeConversionMethod.TO_CLASSES),
+                new MergeConsecutiveStubbingCallsQuickFix(new ConsecutiveCallQuickFixContext(registrar), TypeConversionMethod.TO_THROWABLES));
         }
     }
 

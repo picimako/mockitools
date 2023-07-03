@@ -30,13 +30,12 @@ public class MergeConsecutiveStubbingCallsQuickFix extends InspectionGadgetsFix 
 
     @Override
     public @IntentionName @NotNull String getName() {
-        switch (argumentTypeConverter) {
-            case NO_CONVERSION:
-            case TO_THROWABLES_SIMPLE:
-                return MockitoolsBundle.quickFix("merge.with.previous.consecutive.calls", context.consecutiveMethodName);
-            default:
-                return MockitoolsBundle.quickFix("merge.with.previous.consecutive.calls.and.convert.params", argumentTypeConverter.message);
-        }
+        return switch (argumentTypeConverter) {
+            case NO_CONVERSION, TO_THROWABLES_SIMPLE ->
+                MockitoolsBundle.quickFix("merge.with.previous.consecutive.calls", context.consecutiveMethodName);
+            default ->
+                MockitoolsBundle.quickFix("merge.with.previous.consecutive.calls.and.convert.params", argumentTypeConverter.message);
+        };
     }
 
     @Override

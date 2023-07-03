@@ -198,8 +198,7 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
                 //Handle extraInterfaces attribute.
                 //This needs special care because the attribute value may be an individual value or an array initializer.
                 valueOf(mockAnnotation.findAttribute(EXTRA_INTERFACES)).ifPresent(extraInterfacesValue -> {
-                    if (extraInterfacesValue instanceof PsiArrayInitializerMemberValue) {
-                        var attributeValue = (PsiArrayInitializerMemberValue) extraInterfacesValue;
+                    if (extraInterfacesValue instanceof PsiArrayInitializerMemberValue attributeValue) {
                         //In case of empty extraInterfaces - @Mock(extraInterfaces = {}) - don't add the .extraInterfaces() call to the mock settings
                         if (attributeValue.getInitializers().length > 0) {
                             String interfaces = Arrays.stream(attributeValue.getInitializers()).map(PsiElement::getText).collect(joining(","));
@@ -211,10 +210,10 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
                 });
 
                 valueOf(mockAnnotation.findAttribute(STRICTNESS)).ifPresent(value -> {
-                    if (value instanceof PsiReferenceExpression) {
-                        var resolved = ((PsiReferenceExpression) value).resolve();
-                        if (resolved instanceof PsiEnumConstant) {
-                            String strictnessName = ((PsiEnumConstant) resolved).getName();
+                    if (value instanceof PsiReferenceExpression expression) {
+                        var resolved = expression.resolve();
+                        if (resolved instanceof PsiEnumConstant resolvedConst) {
+                            String strictnessName = resolvedConst.getName();
                             //Mock.Strictness.TEST_LEVEL_DEFAULT has no matching enum constant in Strictness, thus we'll ignore it.
                             if (!"TEST_LEVEL_DEFAULT".equals(strictnessName)) {
                                 runWriteCommandAction(file.getProject(),

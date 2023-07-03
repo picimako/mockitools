@@ -383,15 +383,6 @@ class MockitoolsPsiUtilTest extends MockitoolsTestBase {
         return (PsiField) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent();
     }
 
-    private static final class TestData {
-        final String fileName;
-        final String fileContent;
-        final Supplier<Boolean> isSpecificMethod;
-
-        public TestData(String fileName, String fileContent, Supplier<Boolean> isSpecificMethod) {
-            this.fileName = fileName;
-            this.fileContent = fileContent;
-            this.isSpecificMethod = isSpecificMethod;
-        }
+    private record TestData(String fileName, String fileContent, Supplier<Boolean> isSpecificMethod) {
     }
 }

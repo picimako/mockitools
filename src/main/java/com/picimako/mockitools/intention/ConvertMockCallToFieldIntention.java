@@ -231,14 +231,7 @@ public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntention
     /**
      * Helper class to set the attributes of the @Mock annotation being created.
      */
-    private static final class MockSettingsBasedAnnotationConfigurer {
-        private final Project project;
-        private final PsiAnnotation mockAnnotation;
-
-        private MockSettingsBasedAnnotationConfigurer(Project project, PsiAnnotation mockAnnotation) {
-            this.project = project;
-            this.mockAnnotation = mockAnnotation;
-        }
+    private record MockSettingsBasedAnnotationConfigurer(Project project, PsiAnnotation mockAnnotation) {
 
         private void configureBooleanAttribute(String attributeName) {
             mockAnnotation.setDeclaredAttributeValue(attributeName, attributeValue("true"));

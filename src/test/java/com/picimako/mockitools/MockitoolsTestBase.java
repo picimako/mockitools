@@ -14,7 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 /**
  * Base test class for non-inspection integration tests.
  * <p>
- * Configures the Java 11 JDK and loads the Mockito binary.
+ * Configures the Java JDK and loads the Mockito binary.
  */
 public abstract class MockitoolsTestBase extends LightJavaCodeInsightFixtureTestCase5 {
 
