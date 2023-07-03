@@ -36,159 +36,168 @@ class ConvertFromMockitoDoIntentionTest extends EnforceConventionAwareIntentionT
     @Test
     void testNotAvailableForNonMethodCallIdentifier() {
         checkIntentionIsNotAvailable(
-            "class NotAvailable {\n" +
-                "    private String fiel<caret>d;\n" +
-                "}");
+            """
+                class NotAvailable {
+                    private String fiel<caret>d;
+                }""");
     }
 
     @Test
     void testNotAvailableForNonMockitoDoCall() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.invocation.InvocationOnMock\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        Mockito.wh<caret>en(mockObject.doSomething()).thenReturn(10).then(InvocationOnMock::callRealMethod);\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public int doSomething() {\n" +
-                "            return 0;\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.invocation.InvocationOnMock
+
+                class NotAvailable {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        Mockito.wh<caret>en(mockObject.doSomething()).thenReturn(10).then(InvocationOnMock::callRealMethod);
+                    }
+                    private static class MockObject {
+                        public int doSomething() {
+                            return 0;
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableForNonMockitoDoCallInBulk() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.invocation.InvocationOnMock\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        <selection>Mockito.when(mockObject.doSomething()).thenReturn(10).then(InvocationOnMock::callRealMethod);\n" +
-                "        Mockito.doThrow(IllegalArgumentException.class).doNothing().when(mockObject);</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public int doSomething() {\n" +
-                "            return 0;\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.invocation.InvocationOnMock
+
+                class NotAvailable {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        <selection>Mockito.when(mockObject.doSomething()).thenReturn(10).then(InvocationOnMock::callRealMethod);
+                        Mockito.doThrow(IllegalArgumentException.class).doNothing().when(mockObject);</selection>
+                    }
+                    private static class MockObject {
+                        public int doSomething() {
+                            return 0;
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableForMockitoDoWithoutWhen() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        Mockito.doTh<caret>row(IllegalArgumentException.class).doNothing();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public int doSomething() {\n" +
-                "            return 0;\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        Mockito.doTh<caret>row(IllegalArgumentException.class).doNothing();
+                    }
+                    private static class MockObject {
+                        public int doSomething() {
+                            return 0;
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableForMockitoDoWithoutWhenInBulk() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        <selection>Mockito.doThrow(IllegalArgumentException.class).doNothing().when(mockObject).doSomething();\n" +
-                "        Mockito.doThrow(IllegalArgumentException.class).doNothing();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public int doSomething() {\n" +
-                "            return 0;\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        <selection>Mockito.doThrow(IllegalArgumentException.class).doNothing().when(mockObject).doSomething();
+                        Mockito.doThrow(IllegalArgumentException.class).doNothing();</selection>
+                    }
+                    private static class MockObject {
+                        public int doSomething() {
+                            return 0;
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableForMockitoDoWithoutCallOnStub() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        Mockito.doTh<caret>row(IllegalArgumentException.class).doNothing().when(mockObject);\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public int doSomething() {\n" +
-                "            return 0;\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        Mockito.doTh<caret>row(IllegalArgumentException.class).doNothing().when(mockObject);
+                    }
+                    private static class MockObject {
+                        public int doSomething() {
+                            return 0;
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableForMockitoDoWithoutCallOnStubInBulk() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        <selection>Mockito.doThrow(IllegalArgumentException.class).doNothing().when(mockObject).doSomething();\n" +
-                "        Mockito.doThrow(IllegalArgumentException.class).doNothing().when(mockObject);</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public int doSomething() {\n" +
-                "            return 0;\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        <selection>Mockito.doThrow(IllegalArgumentException.class).doNothing().when(mockObject).doSomething();
+                        Mockito.doThrow(IllegalArgumentException.class).doNothing().when(mockObject);</selection>
+                    }
+                    private static class MockObject {
+                        public int doSomething() {
+                            return 0;
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testAvailableOnMockitoDo() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        Mockito.doT<caret>hrow(IllegalArgumentException.class).doNothing().when(mockObject).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public int doSomething() {\n" +
-                "            return 0;\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        Mockito.doT<caret>hrow(IllegalArgumentException.class).doNothing().when(mockObject).doSomething();
+                    }
+                    private static class MockObject {
+                        public int doSomething() {
+                            return 0;
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testAvailableOnMockitoDoInBulk() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        <selection>Mockito.doThrow(IllegalArgumentException.class).doNothing().when(mockObject).doSomething();\n" +
-                "        Mockito.doThrow(IllegalArgumentException.class).doNothing().when(mockObject).doSomething();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public int doSomething() {\n" +
-                "            return 0;\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        <selection>Mockito.doThrow(IllegalArgumentException.class).doNothing().when(mockObject).doSomething();
+                        Mockito.doThrow(IllegalArgumentException.class).doNothing().when(mockObject).doSomething();</selection>
+                    }
+                    private static class MockObject {
+                        public int doSomething() {
+                            return 0;
+                        }
+                    }
+                }""");
     }
 
     // Action selection options
@@ -198,19 +207,20 @@ class ConvertFromMockitoDoIntentionTest extends EnforceConventionAwareIntentionT
         addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
 
         getFixture().configureByText("Options.java",
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        Mockito.do<caret>Throw(IllegalArgumentException.class).when(mockObject).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public int doSomething() {\n" +
-                "            return 0;\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        Mockito.do<caret>Throw(IllegalArgumentException.class).when(mockObject).doSomething();
+                    }
+                    private static class MockObject {
+                        public int doSomething() {
+                            return 0;
+                        }
+                    }
+                }""");
 
         assertThat(getActionTexts()).containsExactly("BDDMockito.will*()", "BDDMockito.given()");
     }
@@ -220,19 +230,20 @@ class ConvertFromMockitoDoIntentionTest extends EnforceConventionAwareIntentionT
         addEnforceConventionInspection(EnforceConventionInspection.Convention.MOCKITO);
 
         getFixture().configureByText("Options.java",
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        Mockito.do<caret>Throw(IllegalArgumentException.class).when(mockObject).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public int doSomething() {\n" +
-                "            return 0;\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        Mockito.do<caret>Throw(IllegalArgumentException.class).when(mockObject).doSomething();
+                    }
+                    private static class MockObject {
+                        public int doSomething() {
+                            return 0;
+                        }
+                    }
+                }""");
 
         assertThat(getActionTexts()).containsExactly("Mockito.when()");
     }
@@ -240,19 +251,20 @@ class ConvertFromMockitoDoIntentionTest extends EnforceConventionAwareIntentionT
     @Test
     void testOptionsWhenNothingIsEnforced() {
         getFixture().configureByText("Options.java",
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        Mockito.do<caret>Throw(IllegalArgumentException.class).when(mockObject).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public int doSomething() {\n" +
-                "            return 0;\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        Mockito.do<caret>Throw(IllegalArgumentException.class).when(mockObject).doSomething();
+                    }
+                    private static class MockObject {
+                        public int doSomething() {
+                            return 0;
+                        }
+                    }
+                }""");
 
         assertThat(getActionTexts()).containsExactly("Mockito.when()", "BDDMockito.will*()", "BDDMockito.given()");
     }
@@ -260,19 +272,20 @@ class ConvertFromMockitoDoIntentionTest extends EnforceConventionAwareIntentionT
     @Test
     void testOptionsWhenBDDMockitoIsNotEnforcedAndCallChainContainsDoNothing() {
         getFixture().configureByText("Options.java",
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        Mockito.do<caret>Throw(IllegalArgumentException.class).doNothing().when(mockObject).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public int doSomething() {\n" +
-                "            return 0;\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        Mockito.do<caret>Throw(IllegalArgumentException.class).doNothing().when(mockObject).doSomething();
+                    }
+                    private static class MockObject {
+                        public int doSomething() {
+                            return 0;
+                        }
+                    }
+                }""");
 
         assertThat(getActionTexts()).containsExactly("BDDMockito.will*()");
     }
@@ -280,19 +293,20 @@ class ConvertFromMockitoDoIntentionTest extends EnforceConventionAwareIntentionT
     @Test
     void testOptionsWhenBDDMockitoIsNotEnforcedAndCallChainDoesntContainDoNothing() {
         getFixture().configureByText("Options.java",
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        Mockito.do<caret>Throw(IllegalArgumentException.class).when(mockObject).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public int doSomething() {\n" +
-                "            return 0;\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        Mockito.do<caret>Throw(IllegalArgumentException.class).when(mockObject).doSomething();
+                    }
+                    private static class MockObject {
+                        public int doSomething() {
+                            return 0;
+                        }
+                    }
+                }""");
 
         assertThat(getActionTexts()).containsExactly("Mockito.when()", "BDDMockito.will*()", "BDDMockito.given()");
     }
@@ -302,19 +316,20 @@ class ConvertFromMockitoDoIntentionTest extends EnforceConventionAwareIntentionT
         addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
 
         getFixture().configureByText("Options.java",
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        Mockito.do<caret>Throw(IllegalArgumentException.class).doNothing().when(mockObject).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public int doSomething() {\n" +
-                "            return 0;\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        Mockito.do<caret>Throw(IllegalArgumentException.class).doNothing().when(mockObject).doSomething();
+                    }
+                    private static class MockObject {
+                        public int doSomething() {
+                            return 0;
+                        }
+                    }
+                }""");
 
         assertThat(getActionTexts()).containsExactly("BDDMockito.will*()");
     }
@@ -324,19 +339,20 @@ class ConvertFromMockitoDoIntentionTest extends EnforceConventionAwareIntentionT
         addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
 
         getFixture().configureByText("Options.java",
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        Mockito.do<caret>Throw(IllegalArgumentException.class).when(mockObject).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public int doSomething() {\n" +
-                "            return 0;\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        Mockito.do<caret>Throw(IllegalArgumentException.class).when(mockObject).doSomething();
+                    }
+                    private static class MockObject {
+                        public int doSomething() {
+                            return 0;
+                        }
+                    }
+                }""");
 
         assertThat(getActionTexts()).containsExactly("BDDMockito.will*()", "BDDMockito.given()");
     }

@@ -17,59 +17,63 @@ class ConvertMockedStaticVerifyToInOrderVerifyActionTest extends MockitoolsActio
     @Test
     void testConvertsMockedStaticVerifyToInOrderVerifyWithoutVerificationMode() {
         checkAction(() -> new ConvertMockedStaticVerifyToInOrderVerifyAction(false),
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.MockedStatic;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod() {\n" +
-                "        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {\n" +
-                "            mock.veri<caret>fy(List::of);\n" +
-                "        }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.MockedStatic;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod() {\n" +
-                "        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {\n" +
-                "            InOrder order = Mockito.inOrder(List.class);\n" +
-                "            order.verify(mock, List::of);\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.MockedStatic;
+                import java.util.List;
+
+                class ConversionTest {
+                    void testMethod() {
+                        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {
+                            mock.veri<caret>fy(List::of);
+                        }
+                    }
+                }""",
+            """
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+                import org.mockito.MockedStatic;
+                import java.util.List;
+
+                class ConversionTest {
+                    void testMethod() {
+                        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {
+                            InOrder order = Mockito.inOrder(List.class);
+                            order.verify(mock, List::of);
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testConvertsMockedStaticVerifyToInOrderVerifyWithVerificationMode() {
         checkAction(() -> new ConvertMockedStaticVerifyToInOrderVerifyAction(false),
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.MockedStatic;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod() {\n" +
-                "        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {\n" +
-                "            mock.veri<caret>fy(List::of, Mockito.times(2));\n" +
-                "        }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.MockedStatic;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod() {\n" +
-                "        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {\n" +
-                "            InOrder order = Mockito.inOrder(List.class);\n" +
-                "            order.verify(mock, List::of, Mockito.times(2));\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.MockedStatic;
+                import java.util.List;
+
+                class ConversionTest {
+                    void testMethod() {
+                        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {
+                            mock.veri<caret>fy(List::of, Mockito.times(2));
+                        }
+                    }
+                }""",
+            """
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+                import org.mockito.MockedStatic;
+                import java.util.List;
+
+                class ConversionTest {
+                    void testMethod() {
+                        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {
+                            InOrder order = Mockito.inOrder(List.class);
+                            order.verify(mock, List::of, Mockito.times(2));
+                        }
+                    }
+                }""");
     }
 
     //Selection based conversion
@@ -77,95 +81,101 @@ class ConvertMockedStaticVerifyToInOrderVerifyActionTest extends MockitoolsActio
     @Test
     void testConvertsMockedStaticVerifyToInOrderVerifyWithoutVerificationModeInSelection() {
         checkAction(() -> new ConvertMockedStaticVerifyToInOrderVerifyAction(true),
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.MockedStatic;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod() {\n" +
-                "        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {\n" +
-                "            <selection>mock.verify(List::of, Mockito.times(2));\n" +
-                "            mock.verify(List::copyOf, Mockito.times(3));</selection>\n" +
-                "        }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.MockedStatic;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod() {\n" +
-                "        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {\n" +
-                "            InOrder order = Mockito.inOrder(List.class);\n" +
-                "            order.verify(mock, List::of, Mockito.times(2));\n" +
-                "            order.verify(mock, List::copyOf, Mockito.times(3));\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.MockedStatic;
+                import java.util.List;
+
+                class ConversionTest {
+                    void testMethod() {
+                        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {
+                            <selection>mock.verify(List::of, Mockito.times(2));
+                            mock.verify(List::copyOf, Mockito.times(3));</selection>
+                        }
+                    }
+                }""",
+            """
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+                import org.mockito.MockedStatic;
+                import java.util.List;
+
+                class ConversionTest {
+                    void testMethod() {
+                        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {
+                            InOrder order = Mockito.inOrder(List.class);
+                            order.verify(mock, List::of, Mockito.times(2));
+                            order.verify(mock, List::copyOf, Mockito.times(3));
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testConvertsMockedStaticVerifyToInOrderVerifyWithVerificationModeInSelection() {
         checkAction(() -> new ConvertMockedStaticVerifyToInOrderVerifyAction(true),
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.MockedStatic;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod() {\n" +
-                "        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {\n" +
-                "            <selection>mock.verify(List::of);\n" +
-                "            mock.verify(List::copyOf);</selection>\n" +
-                "        }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.MockedStatic;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod() {\n" +
-                "        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {\n" +
-                "            InOrder order = Mockito.inOrder(List.class);\n" +
-                "            order.verify(mock, List::of);\n" +
-                "            order.verify(mock, List::copyOf);\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.MockedStatic;
+                import java.util.List;
+
+                class ConversionTest {
+                    void testMethod() {
+                        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {
+                            <selection>mock.verify(List::of);
+                            mock.verify(List::copyOf);</selection>
+                        }
+                    }
+                }""",
+            """
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+                import org.mockito.MockedStatic;
+                import java.util.List;
+
+                class ConversionTest {
+                    void testMethod() {
+                        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {
+                            InOrder order = Mockito.inOrder(List.class);
+                            order.verify(mock, List::of);
+                            order.verify(mock, List::copyOf);
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testConvertsMockedStaticVerifyToInOrderVerifyWithVerificationModeInSelectionMultipleMockObjects() {
         checkAction(() -> new ConvertMockedStaticVerifyToInOrderVerifyAction(true),
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.MockedStatic;\n" +
-                "import java.util.List;\n" +
-                "import java.util.Set;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod() {\n" +
-                "        try (MockedStatic<List> mockList = Mockito.mockStatic(List.class); MockedStatic<Set> mockSet = Mockito.mockStatic(Set.class)) {\n" +
-                "            <selection>mockList.verify(List::of);\n" +
-                "            mockSet.verify(Set::of, Mockito.times(2));</selection>\n" +
-                "        }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.MockedStatic;\n" +
-                "import java.util.List;\n" +
-                "import java.util.Set;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod() {\n" +
-                "        try (MockedStatic<List> mockList = Mockito.mockStatic(List.class); MockedStatic<Set> mockSet = Mockito.mockStatic(Set.class)) {\n" +
-                "            InOrder order = Mockito.inOrder(List.class, Set.class);\n" +
-                "            order.verify(mockList, List::of);\n" +
-                "            order.verify(mockSet, Set::of, Mockito.times(2));\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.MockedStatic;
+                import java.util.List;
+                import java.util.Set;
+
+                class ConversionTest {
+                    void testMethod() {
+                        try (MockedStatic<List> mockList = Mockito.mockStatic(List.class); MockedStatic<Set> mockSet = Mockito.mockStatic(Set.class)) {
+                            <selection>mockList.verify(List::of);
+                            mockSet.verify(Set::of, Mockito.times(2));</selection>
+                        }
+                    }
+                }""",
+            """
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+                import org.mockito.MockedStatic;
+                import java.util.List;
+                import java.util.Set;
+
+                class ConversionTest {
+                    void testMethod() {
+                        try (MockedStatic<List> mockList = Mockito.mockStatic(List.class); MockedStatic<Set> mockSet = Mockito.mockStatic(Set.class)) {
+                            InOrder order = Mockito.inOrder(List.class, Set.class);
+                            order.verify(mockList, List::of);
+                            order.verify(mockSet, Set::of, Mockito.times(2));
+                        }
+                    }
+                }""");
     }
 }

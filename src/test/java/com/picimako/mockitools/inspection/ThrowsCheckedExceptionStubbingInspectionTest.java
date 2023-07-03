@@ -25,70 +25,74 @@ class ThrowsCheckedExceptionStubbingInspectionTest extends MockitoolsInspectionT
     @Test
     void testAddsExceptionToEmptyThrowsClause() {
         doQuickFixTest("Add exception to throws clause", "QuickFix.java",
-            "import java.io.IOException;\n" +
-                "import java.lang.NoSuchMethodException;\n" +
-                "import org.mockito.Mockito;\n" +
-                "class QuickFix {\n" +
-                "    void testMethod() {\n" +
-                "        MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "        Mockito.when(mock.doSomething()).thenThrow(IOExcep<caret>tion.class);\n" +
-                "    }\n" +
-                "\n" +
-                "    private static class MockObject {\n" +
-                "        public int doSomething() {\n" +
-                "            return 0;\n" +
-                "        }\n" +
-                "    }\n" +
-                "}",
-            "import java.io.IOException;\n" +
-                "import java.lang.NoSuchMethodException;\n" +
-                "import org.mockito.Mockito;\n" +
-                "class QuickFix {\n" +
-                "    void testMethod() {\n" +
-                "        MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "        Mockito.when(mock.doSomething()).thenThrow(IOException.class);\n" +
-                "    }\n" +
-                "\n" +
-                "    private static class MockObject {\n" +
-                "        public int doSomething() throws IOException {\n" +
-                "            return 0;\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import java.io.IOException;
+                import java.lang.NoSuchMethodException;
+                import org.mockito.Mockito;
+                class QuickFix {
+                    void testMethod() {
+                        MockObject mock = Mockito.mock(MockObject.class);
+                        Mockito.when(mock.doSomething()).thenThrow(IOExcep<caret>tion.class);
+                    }
+
+                    private static class MockObject {
+                        public int doSomething() {
+                            return 0;
+                        }
+                    }
+                }""",
+            """
+                import java.io.IOException;
+                import java.lang.NoSuchMethodException;
+                import org.mockito.Mockito;
+                class QuickFix {
+                    void testMethod() {
+                        MockObject mock = Mockito.mock(MockObject.class);
+                        Mockito.when(mock.doSomething()).thenThrow(IOException.class);
+                    }
+
+                    private static class MockObject {
+                        public int doSomething() throws IOException {
+                            return 0;
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testAddsExceptionToNonEmptyThrowsClause() {
         doQuickFixTest("Add exception to throws clause", "QuickFix.java",
-            "import java.io.IOException;\n" +
-                "import java.lang.NoSuchMethodException;\n" +
-                "import org.mockito.Mockito;\n" +
-                "class QuickFix {\n" +
-                "    void testMethod() {\n" +
-                "        MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "        Mockito.when(mock.doSomething()).thenThrow(IOExcep<caret>tion.class);\n" +
-                "    }\n" +
-                "\n" +
-                "    private static class MockObject {\n" +
-                "        public int doSomething() throws NoSuchMethodException {\n" +
-                "            return 0;\n" +
-                "        }\n" +
-                "    }\n" +
-                "}",
-            "import java.io.IOException;\n" +
-                "import java.lang.NoSuchMethodException;\n" +
-                "import org.mockito.Mockito;\n" +
-                "class QuickFix {\n" +
-                "    void testMethod() {\n" +
-                "        MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "        Mockito.when(mock.doSomething()).thenThrow(IOException.class);\n" +
-                "    }\n" +
-                "\n" +
-                "    private static class MockObject {\n" +
-                "        public int doSomething() throws NoSuchMethodException, IOException {\n" +
-                "            return 0;\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import java.io.IOException;
+                import java.lang.NoSuchMethodException;
+                import org.mockito.Mockito;
+                class QuickFix {
+                    void testMethod() {
+                        MockObject mock = Mockito.mock(MockObject.class);
+                        Mockito.when(mock.doSomething()).thenThrow(IOExcep<caret>tion.class);
+                    }
+
+                    private static class MockObject {
+                        public int doSomething() throws NoSuchMethodException {
+                            return 0;
+                        }
+                    }
+                }""",
+            """
+                import java.io.IOException;
+                import java.lang.NoSuchMethodException;
+                import org.mockito.Mockito;
+                class QuickFix {
+                    void testMethod() {
+                        MockObject mock = Mockito.mock(MockObject.class);
+                        Mockito.when(mock.doSomething()).thenThrow(IOException.class);
+                    }
+
+                    private static class MockObject {
+                        public int doSomething() throws NoSuchMethodException, IOException {
+                            return 0;
+                        }
+                    }
+                }""");
     }
 }

@@ -15,244 +15,258 @@ class ConvertInOrderVerifyToMockitoVerifyActionTest extends MockitoolsActionTest
     @Test
     void testConvertsInOrderVerifyToMockitoVerifyWithoutVerificationMode() {
         checkAction(() -> new ConvertInOrderVerifyToMockitoVerifyAction(false),
-            "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        InOrder order = Mockito.inOrder(mockObject);\n" +
-                "        order.ver<caret>ify(mockObject).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        InOrder order = Mockito.inOrder(mockObject);\n" +
-                "        Mockito.verify(mockObject).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}"
+            """
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+
+                class ConversionTest {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        InOrder order = Mockito.inOrder(mockObject);
+                        order.ver<caret>ify(mockObject).doSomething();
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""",
+            """
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+
+                class ConversionTest {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        InOrder order = Mockito.inOrder(mockObject);
+                        Mockito.verify(mockObject).doSomething();
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }"""
             );
     }
 
     @Test
     void testConvertsInOrderVerifyToMockitoVerifyWithVerificationMode() {
         checkAction(() -> new ConvertInOrderVerifyToMockitoVerifyAction(false),
-            "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        InOrder order = Mockito.inOrder(mockObject);\n" +
-                "        order.ve<caret>rify(mockObject, Mockito.times(2)).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        InOrder order = Mockito.inOrder(mockObject);\n" +
-                "        Mockito.verify(mockObject, Mockito.times(2)).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+
+                class ConversionTest {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        InOrder order = Mockito.inOrder(mockObject);
+                        order.ve<caret>rify(mockObject, Mockito.times(2)).doSomething();
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""",
+            """
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+
+                class ConversionTest {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        InOrder order = Mockito.inOrder(mockObject);
+                        Mockito.verify(mockObject, Mockito.times(2)).doSomething();
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testConvertsInOrderVerifyToMockitoVerifyWithVerificationModeWithLineWrapping() {
         checkAction(() -> new ConvertInOrderVerifyToMockitoVerifyAction(false),
-            "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        InOrder order = Mockito.inOrder(mockObject);\n" +
-                "        order.ver<caret>ify(mockObject, Mockito.times(2)\n" +
-                "            .description(\"some description\"))\n" +
-                "            .doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        InOrder order = Mockito.inOrder(mockObject);\n" +
-                "        Mockito.verify(mockObject, Mockito.times(2)\n" +
-                "            .description(\"some description\"))\n" +
-                "            .doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+
+                class ConversionTest {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        InOrder order = Mockito.inOrder(mockObject);
+                        order.ver<caret>ify(mockObject, Mockito.times(2)
+                            .description("some description"))
+                            .doSomething();
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""",
+            """
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+
+                class ConversionTest {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        InOrder order = Mockito.inOrder(mockObject);
+                        Mockito.verify(mockObject, Mockito.times(2)
+                            .description("some description"))
+                            .doSomething();
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testConvertsInOrderVerifyToMockitoVerifyWithoutVerificationModeInBulkSingle() {
         checkAction(() -> new ConvertInOrderVerifyToMockitoVerifyAction(true),
-            "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        InOrder order = Mockito.inOrder(mockObject);\n" +
-                "        <selection>order.verify(mockObject).doSomething();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        InOrder order = Mockito.inOrder(mockObject);\n" +
-                "        Mockito.verify(mockObject).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+
+                class ConversionTest {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        InOrder order = Mockito.inOrder(mockObject);
+                        <selection>order.verify(mockObject).doSomething();</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""",
+            """
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+
+                class ConversionTest {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        InOrder order = Mockito.inOrder(mockObject);
+                        Mockito.verify(mockObject).doSomething();
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testConvertsInOrderVerifyToMockitoVerifyWithVerificationModeInBulkSingle() {
         checkAction(() -> new ConvertInOrderVerifyToMockitoVerifyAction(true),
-            "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        InOrder order = Mockito.inOrder(mockObject);\n" +
-                "        <selection>order.verify(mockObject, Mockito.times(2)).doSomething();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        InOrder order = Mockito.inOrder(mockObject);\n" +
-                "        Mockito.verify(mockObject, Mockito.times(2)).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+
+                class ConversionTest {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        InOrder order = Mockito.inOrder(mockObject);
+                        <selection>order.verify(mockObject, Mockito.times(2)).doSomething();</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""",
+            """
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+
+                class ConversionTest {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        InOrder order = Mockito.inOrder(mockObject);
+                        Mockito.verify(mockObject, Mockito.times(2)).doSomething();
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testConvertsInOrderVerifyToMockitoVerifyWithoutVerificationModeInBulkMultiple() {
         checkAction(() -> new ConvertInOrderVerifyToMockitoVerifyAction(true),
-            "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        MockObject mockObject2 = Mockito.mock(MockObject.class);\n" +
-                "        InOrder order = Mockito.inOrder(mockObject, mockObject2);\n" +
-                "        <selection>order.verify(mockObject).doSomething();\n" +
-                "        order.verify(mockObject2).doSomething();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        MockObject mockObject2 = Mockito.mock(MockObject.class);\n" +
-                "        InOrder order = Mockito.inOrder(mockObject, mockObject2);\n" +
-                "        Mockito.verify(mockObject).doSomething();\n" +
-                "        Mockito.verify(mockObject2).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+
+                class ConversionTest {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        MockObject mockObject2 = Mockito.mock(MockObject.class);
+                        InOrder order = Mockito.inOrder(mockObject, mockObject2);
+                        <selection>order.verify(mockObject).doSomething();
+                        order.verify(mockObject2).doSomething();</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""",
+            """
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+
+                class ConversionTest {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        MockObject mockObject2 = Mockito.mock(MockObject.class);
+                        InOrder order = Mockito.inOrder(mockObject, mockObject2);
+                        Mockito.verify(mockObject).doSomething();
+                        Mockito.verify(mockObject2).doSomething();
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testConvertsInOrderVerifyToMockitoVerifyWithVerificationModeInBulkMultiple() {
         checkAction(() -> new ConvertInOrderVerifyToMockitoVerifyAction(true),
-            "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        MockObject mockObject2 = Mockito.mock(MockObject.class);\n" +
-                "        InOrder order = Mockito.inOrder(mockObject, mockObject2);\n" +
-                "        <selection>order.verify(mockObject, Mockito.times(2)).doSomething();\n" +
-                "        order.verify(mockObject2).doSomething();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class ConversionTest {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        MockObject mockObject2 = Mockito.mock(MockObject.class);\n" +
-                "        InOrder order = Mockito.inOrder(mockObject, mockObject2);\n" +
-                "        Mockito.verify(mockObject, Mockito.times(2)).doSomething();\n" +
-                "        Mockito.verify(mockObject2).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+
+                class ConversionTest {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        MockObject mockObject2 = Mockito.mock(MockObject.class);
+                        InOrder order = Mockito.inOrder(mockObject, mockObject2);
+                        <selection>order.verify(mockObject, Mockito.times(2)).doSomething();
+                        order.verify(mockObject2).doSomething();</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""",
+            """
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+
+                class ConversionTest {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        MockObject mockObject2 = Mockito.mock(MockObject.class);
+                        InOrder order = Mockito.inOrder(mockObject, mockObject2);
+                        Mockito.verify(mockObject, Mockito.times(2)).doSomething();
+                        Mockito.verify(mockObject2).doSomething();
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 }

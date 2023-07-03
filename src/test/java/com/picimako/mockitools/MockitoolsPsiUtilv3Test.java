@@ -39,13 +39,14 @@ class MockitoolsPsiUtilv3Test extends MockitoolsTestBase {
     private Stream<TestData> specificMethodData() {
         return Stream.of(
             new TestData("IsMatchersTest.java",
-                "import org.mockito.Matchers;\n" +
-                    "\n" +
-                    "public class IsMatchersTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Matchers.anyS<caret>tring();\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isMatchers(getMethodCall())));
+                """
+                    import org.mockito.Matchers;
+
+                    public class IsMatchersTest {
+                        public void testMethod() {
+                            Matchers.anyS<caret>tring();
+                        }
+                    }""", () -> MockitoolsPsiUtil.isMatchers(getMethodCall())));
     }
 
     private PsiMethodCallExpression getMethodCall() {

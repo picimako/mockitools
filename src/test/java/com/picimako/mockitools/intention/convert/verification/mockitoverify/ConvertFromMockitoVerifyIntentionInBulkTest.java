@@ -24,212 +24,225 @@ class ConvertFromMockitoVerifyIntentionInBulkTest extends EnforceConventionAware
     @Test
     void testNotAvailableWithSelectionShorterThanMinRequiredLength() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        <selection>Mockito</selection>.mock(Object.class);\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                        <selection>Mockito</selection>.mock(Object.class);
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableForOnlyWhitespaceSelection() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "<selection>                </selection>Mockito.mock(Object.class);\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                <selection>                </selection>Mockito.mock(Object.class);
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableForIncorrectSelectionEndDot() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        <selection>Mockito</selection>.verify(mockObject).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        <selection>Mockito</selection>.verify(mockObject).doSomething();
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableOnNonMockitoVerifyChain() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        <selection>Mockito.mock(Object.class);</selection>\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                        <selection>Mockito.mock(Object.class);</selection>
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableWhenMockitoVerifyHasNoSubsequentMethodCall() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        <selection>Mockito.verify(mockObject);</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        <selection>Mockito.verify(mockObject);</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableOnMockitoVerifyWithNoArgument() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        <selection>Mockito.verify();</selection>\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        <selection>Mockito.verify();</selection>
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableOnMultipleMixedVerificationSelected() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.InOrder;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        MockObject mockObject2 = Mockito.mock(MockObject.class);\n" +
-                "        InOrder inOrder = Mockito.inOrder(mockObject, mockObject2);\n" +
-                "        <selection>inOrder.verify(mockObject, Mockito.times(2)).doSomething();\n" +
-                "        Mockito.verify(mockObject2).doSomething();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.InOrder;
+
+                class NotAvailable {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        MockObject mockObject2 = Mockito.mock(MockObject.class);
+                        InOrder inOrder = Mockito.inOrder(mockObject, mockObject2);
+                        <selection>inOrder.verify(mockObject, Mockito.times(2)).doSomething();
+                        Mockito.verify(mockObject2).doSomething();</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableOnBDDMockitoThenSelected() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.BDDMockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        <selection>BDDMockito.then(mockObject).should(Mockito.times(2)).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.BDDMockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        <selection>BDDMockito.then(mockObject).should(Mockito.times(2)).doSomething();
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testAvailableWhenMockitoIsEnforced() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.MOCKITO);
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        <selection>Mockito.verify(mockObject).doSomething();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        <selection>Mockito.verify(mockObject).doSomething();</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testAvailableForMockitoVerifyWithoutVerificationMode() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        <selection>Mockito.verify(mockObject).doSomething();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        <selection>Mockito.verify(mockObject).doSomething();</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testAvailableForMockitoVerifyWithVerificationMode() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        <selection>Mockito.verify(mockObject, Mockito.times(2)).doSomething();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        <selection>Mockito.verify(mockObject, Mockito.times(2)).doSomething();</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testAvailableOnSingleMockitoVerifySelected() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        MockObject mockObject2 = Mockito.mock(MockObject.class);\n" +
-                "        <selection>Mockito.verify(mockObject, Mockito.times(2)).doSomething();</selection>\n" +
-                "        Mockito.verify(mockObject2).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        MockObject mockObject2 = Mockito.mock(MockObject.class);
+                        <selection>Mockito.verify(mockObject, Mockito.times(2)).doSomething();</selection>
+                        Mockito.verify(mockObject2).doSomething();
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testAvailableOnMultipleMockitoVerifySelected() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        MockObject mockObject2 = Mockito.mock(MockObject.class);\n" +
-                "        <selection>Mockito.verify(mockObject, Mockito.times(2)).doSomething();\n" +
-                "        Mockito.verify(mockObject2).doSomething();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        MockObject mockObject2 = Mockito.mock(MockObject.class);
+                        <selection>Mockito.verify(mockObject, Mockito.times(2)).doSomething();
+                        Mockito.verify(mockObject2).doSomething();</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 }

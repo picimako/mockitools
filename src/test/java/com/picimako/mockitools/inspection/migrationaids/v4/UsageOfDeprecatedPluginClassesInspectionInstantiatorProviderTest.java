@@ -19,81 +19,89 @@ class UsageOfDeprecatedPluginClassesInspectionInstantiatorProviderTest extends M
     @Test
     void testReplacesInstantiatorProviderImport() {
         doQuickFixTest("Replace with InstantiatorProvider2", "ReplaceInstantiatorProviderTest.java",
-            "import org.mockito.plugins.InstantiatorProvider;\n" +
-                "\n" +
-                "public class ReplaceInstantiatorProviderTest {\n" +
-                "    public void testMethod() {\n" +
-                "        Instanti<caret>atorProvider provider;\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.plugins.InstantiatorProvider;\n" +
-                "import org.mockito.plugins.InstantiatorProvider2;\n" +
-                "\n" +
-                "public class ReplaceInstantiatorProviderTest {\n" +
-                "    public void testMethod() {\n" +
-                "        InstantiatorProvider2 provider;\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.plugins.InstantiatorProvider;
+
+                public class ReplaceInstantiatorProviderTest {
+                    public void testMethod() {
+                        Instanti<caret>atorProvider provider;
+                    }
+                }""",
+            """
+                import org.mockito.plugins.InstantiatorProvider;
+                import org.mockito.plugins.InstantiatorProvider2;
+
+                public class ReplaceInstantiatorProviderTest {
+                    public void testMethod() {
+                        InstantiatorProvider2 provider;
+                    }
+                }""");
     }
 
     @Test
     void testReplacesInstantiatorProviderImportInterfaceDeclaration() {
         doQuickFixTest("Replace with InstantiatorProvider2", "ReplaceInstantiatorProviderTest.java",
-            "import org.mockito.plugins.InstantiatorProvider;\n" +
-                "\n" +
-                "public interface CustomInstantiatorProvider extends Instanti<caret>atorProvider {\n" +
-                "}",
-            "import org.mockito.plugins.InstantiatorProvider;\n" +
-                "import org.mockito.plugins.InstantiatorProvider2;\n" +
-                "\n" +
-                "public interface CustomInstantiatorProvider extends InstantiatorProvider2 {\n" +
-                "}");
+            """
+                import org.mockito.plugins.InstantiatorProvider;
+
+                public interface CustomInstantiatorProvider extends Instanti<caret>atorProvider {
+                }""",
+            """
+                import org.mockito.plugins.InstantiatorProvider;
+                import org.mockito.plugins.InstantiatorProvider2;
+
+                public interface CustomInstantiatorProvider extends InstantiatorProvider2 {
+                }""");
     }
 
     @Test
     void testReplacesInstantiatorProviderFullyQualifiedNameWithoutNameCollision() {
         doQuickFixTest("Replace with InstantiatorProvider2", "ReplaceInstantiatorProviderTest.java",
-            "public class ReplaceInstantiatorProviderTest {\n" +
-                "    public void testMethod() {\n" +
-                "        org.mockito.plugins.Instanti<caret>atorProvider provider;\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.plugins.InstantiatorProvider2;\n" +
-                "\n" +
-                "public class ReplaceInstantiatorProviderTest {\n" +
-                "    public void testMethod() {\n" +
-                "        InstantiatorProvider2 provider;\n" +
-                "    }\n" +
-                "}");
+            """
+                public class ReplaceInstantiatorProviderTest {
+                    public void testMethod() {
+                        org.mockito.plugins.Instanti<caret>atorProvider provider;
+                    }
+                }""",
+            """
+                import org.mockito.plugins.InstantiatorProvider2;
+
+                public class ReplaceInstantiatorProviderTest {
+                    public void testMethod() {
+                        InstantiatorProvider2 provider;
+                    }
+                }""");
     }
 
     @Test
     void testReplacesAllNonFqnOccurrencesOfInstantiatorProvider() {
         doQuickFixTest("Replace with InstantiatorProvider2", "ReplaceInstantiatorProviderTest.java",
-            "import org.mockito.plugins.InstantiatorProvider;\n" +
-                "\n" +
-                "public class ReplaceInstantiatorProviderTest {\n" +
-                "    private Instanti<caret>atorProvider engineField;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        InstantiatorProvider engineVar;\n" +
-                "    }\n" +
-                "\n" +
-                "    private void method(org.mockito.plugins.InstantiatorProvider eng) {\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.plugins.InstantiatorProvider;\n" +
-                "import org.mockito.plugins.InstantiatorProvider2;\n" +
-                "\n" +
-                "public class ReplaceInstantiatorProviderTest {\n" +
-                "    private InstantiatorProvider2 engineField;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        InstantiatorProvider engineVar;\n" +
-                "    }\n" +
-                "\n" +
-                "    private void method(org.mockito.plugins.InstantiatorProvider eng) {\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.plugins.InstantiatorProvider;
+
+                public class ReplaceInstantiatorProviderTest {
+                    private Instanti<caret>atorProvider engineField;
+
+                    public void testMethod() {
+                        InstantiatorProvider engineVar;
+                    }
+
+                    private void method(org.mockito.plugins.InstantiatorProvider eng) {
+                    }
+                }""",
+            """
+                import org.mockito.plugins.InstantiatorProvider;
+                import org.mockito.plugins.InstantiatorProvider2;
+
+                public class ReplaceInstantiatorProviderTest {
+                    private InstantiatorProvider2 engineField;
+
+                    public void testMethod() {
+                        InstantiatorProvider engineVar;
+                    }
+
+                    private void method(org.mockito.plugins.InstantiatorProvider eng) {
+                    }
+                }""");
     }
 }

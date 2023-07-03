@@ -33,66 +33,69 @@ class ConvertFromMockedStaticVerifyIntentionTest extends EnforceConventionAwareI
     @Test
     void testNotAvailableForNonMethodCallIdentifier() {
         checkIntentionIsNotAvailable(
-            "class NotAvailable {\n" +
-                "    private String fiel<caret>d;\n" +
-                "}");
+            """
+                class NotAvailable {
+                    private String fiel<caret>d;
+                }""");
     }
 
     @Test
     void testAvailableOnNonVerifyMethod() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        Mockito.mo<caret>ck(Object.class);\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                        Mockito.mo<caret>ck(Object.class);
+                    }
+                }""");
     }
 
     @Test
     void testAvailableOnNonMockedStaticVerifyMethod() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        Object mock = Mockito.mock(Object.class);\n" +
-                "        Mockito.veri<caret>fy(mock);\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                        Object mock = Mockito.mock(Object.class);
+                        Mockito.veri<caret>fy(mock);
+                    }
+                }""");
     }
 
     @Test
     void testAvailableOnMockedStaticVerifyMethod() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.MockedStatic;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {\n" +
-                "            mock.veri<caret>fy(List::of);\n" +
-                "        }" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.MockedStatic;
+                import java.util.List;
+
+                class Available {
+                    void testMethod(){
+                        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {
+                            mock.veri<caret>fy(List::of);
+                        }    }
+                }""");
     }
 
     @Test
     void testAvailableOnMockedStaticVerifyWithVerificationModeMethod() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.MockedStatic;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {\n" +
-                "            mock.ve<caret>rify(List::of, Mockito.times(2));\n" +
-                "        }" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.MockedStatic;
+                import java.util.List;
+
+                class Available {
+                    void testMethod(){
+                        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {
+                            mock.ve<caret>rify(List::of, Mockito.times(2));
+                        }    }
+                }""");
     }
 
     //Action selection options
@@ -100,13 +103,14 @@ class ConvertFromMockedStaticVerifyIntentionTest extends EnforceConventionAwareI
     @Test
     void testReturnsAvailableActions() {
         getFixture().configureByText("Options.java",
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class Options {\n" +
-                "    void testMethod(){\n" +
-                "        Mockito.ve<caret>rify(Mockito.mock(Object.class)).doSomething();\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class Options {
+                    void testMethod(){
+                        Mockito.ve<caret>rify(Mockito.mock(Object.class)).doSomething();
+                    }
+                }""");
         List<Class<?>> actions = new ConvertFromMockedStaticVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 

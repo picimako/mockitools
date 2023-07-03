@@ -34,113 +34,120 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
     @Test
     void testNotAvailableForNonMethodCallIdentifier() {
         checkIntentionIsNotAvailable(
-            "class NotAvailable {\n" +
-                "    private String fiel<caret>d;\n" +
-                "}");
+            """
+                class NotAvailable {
+                    private String fiel<caret>d;
+                }""");
     }
 
     @Test
     void testNotAvailableOnNonInOrderVerifyMethod() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        Mockito.mo<caret>ck(Object.class);\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                        Mockito.mo<caret>ck(Object.class);
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableWhenInOrderVerifyHasNoSubsequentMethodCall() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.InOrder;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
-                "        inOrder.ve<caret>rify(mockObject);\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.InOrder;
+
+                class NotAvailable {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        InOrder inOrder = Mockito.inOrder(mockObject);
+                        inOrder.ve<caret>rify(mockObject);
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableOnInOrderVerifyWithNoArgument() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.InOrder;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
-                "        inOrder.ve<caret>rify();\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.InOrder;
+
+                class NotAvailable {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        InOrder inOrder = Mockito.inOrder(mockObject);
+                        inOrder.ve<caret>rify();
+                    }
+                }""");
     }
 
     @Test
     void testAvailableWhenMockitoIsEnforced() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.MOCKITO);
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.InOrder;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
-                "        inOrder.ve<caret>rify(mockObject).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.InOrder;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        InOrder inOrder = Mockito.inOrder(mockObject);
+                        inOrder.ve<caret>rify(mockObject).doSomething();
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testAvailableForInOrderVerifyWithoutVerificationMode() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.InOrder;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
-                "        inOrder.ve<caret>rify(mockObject).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.InOrder;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        InOrder inOrder = Mockito.inOrder(mockObject);
+                        inOrder.ve<caret>rify(mockObject).doSomething();
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testAvailableForInOrderVerifyWithVerificationMode() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.InOrder;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
-                "        inOrder.ve<caret>rify(mockObject, Mockito.times(2)).doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.InOrder;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        InOrder inOrder = Mockito.inOrder(mockObject);
+                        inOrder.ve<caret>rify(mockObject, Mockito.times(2)).doSomething();
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     //Action selection options - non-MockedStatic
@@ -149,16 +156,17 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
     void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedMockitoIsNotEnforced() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
         getFixture().configureByText("Options.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.InOrder;\n" +
-                "\n" +
-                "class Options {\n" +
-                "    void testMethod(){\n" +
-                "        Object mock = Mockito.mock(Object.class);\n" +
-                "        InOrder inOrder = Mockito.inOrder(mock);\n" +
-                "        inOrder.ve<caret>rify(mock).doSomething();\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.InOrder;
+
+                class Options {
+                    void testMethod(){
+                        Object mock = Mockito.mock(Object.class);
+                        InOrder inOrder = Mockito.inOrder(mock);
+                        inOrder.ve<caret>rify(mock).doSomething();
+                    }
+                }""");
         List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
@@ -172,16 +180,17 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
     void testReturnsAvailableActionsWhenBDDMockitoIsNotEnforcedMockitoIsEnforced() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.MOCKITO);
         getFixture().configureByText("Options.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.InOrder;\n" +
-                "\n" +
-                "class Options {\n" +
-                "    void testMethod(){\n" +
-                "        Object mock = Mockito.mock(Object.class);\n" +
-                "        InOrder inOrder = Mockito.inOrder(mock);\n" +
-                "        inOrder.ve<caret>rify(mock).doSomething();\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.InOrder;
+
+                class Options {
+                    void testMethod(){
+                        Object mock = Mockito.mock(Object.class);
+                        InOrder inOrder = Mockito.inOrder(mock);
+                        inOrder.ve<caret>rify(mock).doSomething();
+                    }
+                }""");
         List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
@@ -191,16 +200,17 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
     @Test
     void testReturnsAvailableActionsWhenNothingIsEnforced() {
         getFixture().configureByText("Options.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.InOrder;\n" +
-                "\n" +
-                "class Options {\n" +
-                "    void testMethod(){\n" +
-                "        Object mock = Mockito.mock(Object.class);\n" +
-                "        InOrder inOrder = Mockito.inOrder(mock);\n" +
-                "        inOrder.ve<caret>rify(mock).doSomething();\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.InOrder;
+
+                class Options {
+                    void testMethod(){
+                        Object mock = Mockito.mock(Object.class);
+                        InOrder inOrder = Mockito.inOrder(mock);
+                        inOrder.ve<caret>rify(mock).doSomething();
+                    }
+                }""");
         List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
@@ -216,17 +226,17 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
     @Test
     void testReturnsAvailableActionsForMockedStatic() {
         getFixture().configureByText("Options.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.MockedStatic;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "class Options {\n" +
-                "    void testMethod(){\n" +
-                "        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {\n" +
-                "            mock.ve<caret>rify(List::of);\n" +
-                "        }" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.MockedStatic;
+                import java.util.List;
+
+                class Options {
+                    void testMethod(){
+                        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {
+                            mock.ve<caret>rify(List::of);
+                        }    }
+                }""");
         List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
@@ -236,17 +246,17 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
     @Test
     void testReturnsAvailableActionsForMockedStaticWithVerificationMode() {
         getFixture().configureByText("Options.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.MockedStatic;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "class Options {\n" +
-                "    void testMethod(){\n" +
-                "        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {\n" +
-                "            mock.ver<caret>ify(List::copyOf, Mockito.times(3));\n" +
-                "        }" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.MockedStatic;
+                import java.util.List;
+
+                class Options {
+                    void testMethod(){
+                        try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {
+                            mock.ver<caret>ify(List::copyOf, Mockito.times(3));
+                        }    }
+                }""");
         List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 

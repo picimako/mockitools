@@ -29,203 +29,215 @@ class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConventionAwar
     @Test
     void testNotAvailableWithSelectionShorterThanMinRequiredLength() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        <selection>Mockito</selection>.mock(Object.class);\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                        <selection>Mockito</selection>.mock(Object.class);
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableForOnlyWhitespaceSelection() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "<selection>                </selection>Mockito.mock(Object.class);\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                <selection>                </selection>Mockito.mock(Object.class);
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableForIncorrectSelectionEndDot() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.BDDMockito;\n" +
-                "import org.mockito.InOrder;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        <selection>BDDMockito.then(mockObject).</selection>should().doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.BDDMockito;
+                import org.mockito.InOrder;
+
+                class NotAvailable {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        <selection>BDDMockito.then(mockObject).</selection>should().doSomething();
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableOnNonBDDMockitoThenChain() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        <selection>Mockito.mock(Object.class);</selection>\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                        <selection>Mockito.mock(Object.class);</selection>
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableWhenBDDMockitoThenHasNoSubsequentMethodCall() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.BDDMockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        <selection>BDDMockito.then(mockObject);</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.BDDMockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        <selection>BDDMockito.then(mockObject);</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableOnBDDMockitoThenWithNoArgument() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.BDDMockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        <selection>BDDMockito.then().should();</selection>\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.BDDMockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        <selection>BDDMockito.then().should();</selection>
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableOnMultipleMixedVerificationSelected() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.BDDMockito;\n" +
-                "\n" +
-                "class NotAvailable {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        MockObject mockObject2 = Mockito.mock(MockObject.class);\n" +
-                "        <selection>BDDMockito.then(mockObject).should(Mockito.times(2)).doSomething();\n" +
-                "        Mockito.verify(mockObject2).doSomething();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.BDDMockito;
+
+                class NotAvailable {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        MockObject mockObject2 = Mockito.mock(MockObject.class);
+                        <selection>BDDMockito.then(mockObject).should(Mockito.times(2)).doSomething();
+                        Mockito.verify(mockObject2).doSomething();</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testAvailableWhenMockitoIsEnforced() {
         addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.BDDMockito;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        <selection>BDDMockito.then(mockObject).should().doSomething();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.BDDMockito;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        <selection>BDDMockito.then(mockObject).should().doSomething();</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testAvailableForBDDMockitoThenWithoutVerificationMode() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.BDDMockito;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        <selection>BDDMockito.then(mockObject).should().doSomething();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.BDDMockito;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        <selection>BDDMockito.then(mockObject).should().doSomething();</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testAvailableForBDDMockitoThenWithVerificationMode() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.BDDMockito;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        <selection>BDDMockito.then(mockObject).should(Mockito.times(2)).doSomething();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.BDDMockito;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        <selection>BDDMockito.then(mockObject).should(Mockito.times(2)).doSomething();</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testAvailableOnSingleBDDMockitoThenSelected() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.BDDMockito;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        MockObject mockObject2 = Mockito.mock(MockObject.class);\n" +
-                "        <selection>BDDMockito.then(mockObject).should(Mockito.times(2)).doSomething();</selection>\n" +
-                "        BDDMockito.then(mockObject2).should().doSomething();\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.BDDMockito;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        MockObject mockObject2 = Mockito.mock(MockObject.class);
+                        <selection>BDDMockito.then(mockObject).should(Mockito.times(2)).doSomething();</selection>
+                        BDDMockito.then(mockObject2).should().doSomething();
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     @Test
     void testAvailableOnMultipleBDDMockitoThenSelected() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.BDDMockito;\n" +
-                "\n" +
-                "class Available {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        MockObject mockObject2 = Mockito.mock(MockObject.class);\n" +
-                "        <selection>BDDMockito.then(mockObject).should(Mockito.times(2)).doSomething();\n" +
-                "        BDDMockito.then(mockObject2).should().doSomething();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.BDDMockito;
+
+                class Available {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        MockObject mockObject2 = Mockito.mock(MockObject.class);
+                        <selection>BDDMockito.then(mockObject).should(Mockito.times(2)).doSomething();
+                        BDDMockito.then(mockObject2).should().doSomething();</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
     }
 
     //Action selection options
@@ -233,19 +245,20 @@ class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConventionAwar
     @Test
     void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedAllVerificationsWithoutInOrder() {
         getFixture().configureByText("Options.java",
-            "import org.mockito.BDDMockito;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class Options {\n" +
-                "    void testMethod(){\n" +
-                "        <selection>BDDMockito.then(Mockito.mock(Object.class)).should().doSomething();\n" +
-                "        BDDMockito.then(Mockito.mock(Object.class)).should().doSomething();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.BDDMockito;
+                import org.mockito.Mockito;
+
+                class Options {
+                    void testMethod(){
+                        <selection>BDDMockito.then(Mockito.mock(Object.class)).should().doSomething();
+                        BDDMockito.then(Mockito.mock(Object.class)).should().doSomething();</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
         List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
@@ -258,22 +271,23 @@ class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConventionAwar
     @Test
     void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedAllVerificationsWithInOrder() {
         getFixture().configureByText("Options.java",
-            "import org.mockito.BDDMockito;\n" +
-                "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class Options {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
-                "        <selection>BDDMockito.then(mockObject).should(inOrder).doSomething();\n" +
-                "        BDDMockito.then(mockObject).should(inOrder).doSomething();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.BDDMockito;
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+
+                class Options {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        InOrder inOrder = Mockito.inOrder(mockObject);
+                        <selection>BDDMockito.then(mockObject).should(inOrder).doSomething();
+                        BDDMockito.then(mockObject).should(inOrder).doSomething();</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
         List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
@@ -285,22 +299,23 @@ class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConventionAwar
     @Test
     void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedVerificationsMixedWithAndWithoutInOrder() {
         getFixture().configureByText("Options.java",
-            "import org.mockito.BDDMockito;\n" +
-                "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class Options {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
-                "        <selection>BDDMockito.then(mockObject).should(inOrder).doSomething();\n" +
-                "        BDDMockito.then(Mockito.mock(Object.class)).should().doSomething();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.BDDMockito;
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+
+                class Options {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        InOrder inOrder = Mockito.inOrder(mockObject);
+                        <selection>BDDMockito.then(mockObject).should(inOrder).doSomething();
+                        BDDMockito.then(Mockito.mock(Object.class)).should().doSomething();</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
         List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
@@ -310,23 +325,24 @@ class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConventionAwar
     @Test
     void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedVerificationsMultipleDifferentInOrders() {
         getFixture().configureByText("Options.java",
-            "import org.mockito.BDDMockito;\n" +
-                "import org.mockito.InOrder;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "class Options {\n" +
-                "    void testMethod(){\n" +
-                "        MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-                "        InOrder inOrder = Mockito.inOrder(mockObject);\n" +
-                "        InOrder inOrde2 = Mockito.inOrder(mockObject);\n" +
-                "        <selection>BDDMockito.then(mockObject).should(inOrder).doSomething();\n" +
-                "        BDDMockito.then(mockObject).should(inOrder2).doSomething();</selection>\n" +
-                "    }\n" +
-                "    private static class MockObject {\n" +
-                "        public void doSomething() {\n" +
-                "        }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.BDDMockito;
+                import org.mockito.InOrder;
+                import org.mockito.Mockito;
+
+                class Options {
+                    void testMethod(){
+                        MockObject mockObject = Mockito.mock(MockObject.class);
+                        InOrder inOrder = Mockito.inOrder(mockObject);
+                        InOrder inOrde2 = Mockito.inOrder(mockObject);
+                        <selection>BDDMockito.then(mockObject).should(inOrder).doSomething();
+                        BDDMockito.then(mockObject).should(inOrder2).doSomething();</selection>
+                    }
+                    private static class MockObject {
+                        public void doSomething() {
+                        }
+                    }
+                }""");
         List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
             .stream().map(Object::getClass).collect(toList());
 
