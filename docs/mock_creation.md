@@ -121,6 +121,33 @@ Additional resources:
 
 ----
 
+## Spying on mock objects
+
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.11.0-blue) [![](https://img.shields.io/badge/implementation-SpyOnMockInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/SpyOnMockInspection.java)
+
+This inspection reports spy creation on mock objects, for example
+```java
+
+class SpyOnMockTest {
+    
+    @Mock
+    MockObject mock;
+    
+    @Test
+    void testMethod() {
+      var spiedLocal = Mockito.spy(Mockito.mock(MockObject.class));
+      var spiedField = Mockito.spy(mock);
+    }
+}
+```
+
+The corresponding feature was introduced in Mockito 5.4.0, but this inspection does not do a library version check,
+and validates test code regardless of the Mockito version.
+   
+**NOTE:** variables with `Mockito.mock()` initializers passed into `Mockito.spy()` are not recognized as mocks yet.
+
+----
+
 ## Mockito/MockedStatic.reset() is used
 
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-CallOnMockitoResetInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/CallOnMockitoResetInspection.java)

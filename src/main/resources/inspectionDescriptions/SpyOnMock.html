@@ -1,0 +1,22 @@
+<html>
+<body>
+<!-- tooltip end -->
+This inspection reports spy creation on mock objects, for example
+<pre>
+    <code>
+Mockito.spy(Mockito.mock(...))
+    </code>
+</pre>
+    or
+    <pre>
+    <code>
+Mockito.spy(&lt;object annotated with @Mock>)
+    </code>
+</pre>
+<p>
+    The corresponding feature was introduced in Mockito 5.4.0, but this inspection does not do a library version check,
+    and validates test code regardless of the Mockito version.
+<p>
+    NOTE: variables with Mockito.mock() initializers are not recognized as mocks yet.
+</body>
+</html>

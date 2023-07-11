@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+## [0.11.0]
+### Added
+- [#56](https://github.com/picimako/mockitools/issues/56): Added an inspection to detect spying on mock objects, i.e. `Mockito.spy(Mockito.mock(...))` and `Mockito.spy(<object annotated with @Mock>)`.
+
+### Changed 
+- Plugin configuration updates, and code improvements specific to migrating from Java 11 to 17.
+
 ## [0.10.0]
 ### Changed
 - New support range of IDEs: 2022.2-2023.2
