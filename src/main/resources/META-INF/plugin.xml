@@ -110,7 +110,12 @@
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.SpyOnMockInspection"
                 id="mockitools.spy.on.mock" language="JAVA"
-                displayName="Spying on mock" groupPath="Java"
+                displayName="Spying on mock objects" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.ClasslessMockAndSpyCreationInspection"
+                id="mockitools.arg.in.classless.mock.spy.creation" language="JAVA"
+                displayName="Argument in classless mock()/spy() creation" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
 
         <!-- v4 migration aids -->
