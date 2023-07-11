@@ -1,0 +1,15 @@
+<html>
+<body>
+<!-- tooltip end -->
+This inspection reports arguments passed into <code>Mockito.mock()</code> and <code>Mockito.spy()</code> which are designed to determine the mock type based on
+the variable's type they are assigned to, and not by the type passed into them.
+<p>
+    For example:
+<pre>
+    <code>
+MockObject mockWithAnswer = Mockito.mock(Answers.CALLS_REAL_METHODS, someOtherObject);
+MockObject spied = Mockito.spy(new MockObject(), new MockObject());
+    </code>
+</pre>
+</body>
+</html>

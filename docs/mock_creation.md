@@ -6,6 +6,8 @@
 * [Mockito cannot mock certain types](#mockito-cannot-mock-certain-types)
   * [Non-annotation based validation](#non-annotation-based-validation)
   * [@DoNotMock annotated types](#donotmock-annotated-types)
+* [Spying on mock objects](#spying-on-mock-objects)
+* [Mock/Spy creation without specifying class](#mockspy-creation-without-specifying-class)
 * [Mockito/MockedStatic.reset() is used](#mockitomockedstaticreset-is-used)
 * [Convert @Mock/@Spy fields to Mockito.mock()/spy() calls](#convert-mockspy-fields-to-mockitomockspy-calls)
     * [Determining the target method](#determining-the-target-method)
@@ -126,6 +128,7 @@ Additional resources:
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.11.0-blue) [![](https://img.shields.io/badge/implementation-SpyOnMockInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/SpyOnMockInspection.java)
 
 This inspection reports spy creation on mock objects, for example
+
 ```java
 
 class SpyOnMockTest {
@@ -141,10 +144,33 @@ class SpyOnMockTest {
 }
 ```
 
-The corresponding feature was introduced in Mockito 5.4.0, but this inspection does not do a library version check,
+The corresponding feature was introduced in [Mockito 5.4.0](https://github.com/mockito/mockito/releases/tag/v5.4.0), but this inspection does not do a library version check,
 and validates test code regardless of the Mockito version.
    
 **NOTE:** variables with `Mockito.mock()` initializers passed into `Mockito.spy()` are not recognized as mocks yet.
+
+----
+
+## Mock/Spy creation without specifying class
+
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.11.0-blue) [![](https://img.shields.io/badge/implementation-ClasslessMockAndSpyCreationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/ClasslessMockAndSpyCreationInspection.java)
+
+[Mockito 4.9.0](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#mock_without_class) introduced an enhancement to `Mockito.mock()` and `Mockito.spy()`
+based mock/spy creation, so that the mock type is not determined by the class passed in, instead the variable/field it is assigned to.
+
+These variants of `mock()` and `spy()` throw an exception if objects other configuration are passed in, thus this inspection reports
+these calls when it finds at least one such argument.
+
+```java
+class MockWithoutSpecifyingClassTest {
+
+    @Test
+    void testMethod() {
+        MockObject mockWithAnswer = Mockito.mock(Answers.CALLS_REAL_METHODS, someOtherObject); //someOtherObject is highlighted
+        MockObject spied = Mockito.spy(new MockObject(), new MockObject()); //The entire argument list is highlighted
+    }
+}
+```
 
 ----
 

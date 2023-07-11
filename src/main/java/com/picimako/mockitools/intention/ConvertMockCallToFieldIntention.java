@@ -3,6 +3,7 @@
 package com.picimako.mockitools.intention;
 
 import static com.google.common.collect.Iterables.getLast;
+import static com.picimako.mockitools.MockitoMockMatchers.*;
 import static com.picimako.mockitools.MockitoQualifiedNames.MOCK_MAKER;
 import static com.picimako.mockitools.MockitoQualifiedNames.STRICTNESS;
 import static com.picimako.mockitools.MockitoQualifiedNames.WITHOUT_ANNOTATIONS;
@@ -13,7 +14,6 @@ import static com.picimako.mockitools.MockitoQualifiedNames.DEFAULT_ANSWER;
 import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
 import static com.picimako.mockitools.MockitoQualifiedNames.LENIENT;
 import static com.picimako.mockitools.MockitoQualifiedNames.NAME;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ANSWER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ANSWERS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
@@ -21,7 +21,6 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK_SER
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK_SETTINGS;
 import static com.picimako.mockitools.MockitoQualifiedNames.SERIALIZABLE;
 import static com.picimako.mockitools.MockitoQualifiedNames.STUB_ONLY;
-import static com.picimako.mockitools.MockitoolsPsiUtil.MOCKITO_MOCK;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromLast;
 import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
@@ -37,7 +36,6 @@ import static java.util.stream.Collectors.joining;
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.CommonClassNames;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiElement;
@@ -48,6 +46,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
+import com.picimako.mockitools.MockitoMockMatchers;
 import com.picimako.mockitools.MockitoQualifiedNames;
 import com.picimako.mockitools.util.PsiClassUtil;
 import com.siyeh.ig.callMatcher.CallMatcher;
@@ -91,11 +90,6 @@ import java.util.function.Supplier;
  * @since 0.4.0
  */
 public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionBase {
-    private static final String JAVA_LANG_CLASS = "java.lang.Class<T>";
-    private static final CallMatcher MOCK = MOCKITO_MOCK.parameterTypes(JAVA_LANG_CLASS);
-    private static final CallMatcher MOCK_WITH_NAME = MOCKITO_MOCK.parameterTypes(JAVA_LANG_CLASS, CommonClassNames.JAVA_LANG_STRING);
-    private static final CallMatcher MOCK_WITH_ANSWER = MOCKITO_MOCK.parameterTypes(JAVA_LANG_CLASS, ORG_MOCKITO_ANSWER);
-    private static final CallMatcher MOCK_WITH_SETTINGS = MOCKITO_MOCK.parameterTypes(JAVA_LANG_CLASS, ORG_MOCKITO_MOCK_SETTINGS);
     private static final CallMatcher MOCKITO_WITH_SETTINGS = staticCall(ORG_MOCKITO_MOCKITO, "withSettings");
 
     private static final CallMatcher MOCK_SETTINGS_SERIALIZABLE_WITH_MODE = instanceCall(ORG_MOCKITO_MOCK_SETTINGS, SERIALIZABLE).parameterTypes(ORG_MOCKITO_MOCK_SERIALIZABLE_MODE);
@@ -125,7 +119,7 @@ public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntention
             .filter(call -> MockitoQualifiedNames.MOCK.equals(getMethodName(call)))
             .map(call -> {
                 if (isMockableTypeInAnyWay(getOperandType(/*mockTypeArg*/getFirstArgument(call)))) {
-                    if (MOCK.matches(call)) return hasOneArgument(call);
+                    if (MockitoMockMatchers.MOCK.matches(call)) return hasOneArgument(call);
                     if (MOCK_WITH_NAME.matches(call) || MOCK_WITH_ANSWER.matches(call))
                         return hasTwoArguments(call);
                     if (MOCK_WITH_SETTINGS.matches(call))
