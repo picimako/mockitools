@@ -9,7 +9,6 @@ import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
 import static com.siyeh.ig.psiutils.TypeUtils.typeEquals;
-import static java.util.stream.Collectors.toList;
 
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.LocalInspectionToolSession;
@@ -60,7 +59,7 @@ public class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loc
                         var mocksInMockitoInOrder = getArguments(mockitoInOrder);
 
                         //The mock arguments from each 'InOrder.verify()' and 'BDDMockito.then().should(InOrder)' call
-                        var mocksInVerificationsAsString = mocksInVerifications.stream().map(PsiElement::getText).collect(toList());
+                        var mocksInVerificationsAsString = mocksInVerifications.stream().map(PsiElement::getText).toList();
                         //Report all mocks in 'Mockito.inOrder()' that are not used in a verification
                         for (var mockInInOrder : mocksInMockitoInOrder) {
                             //Exclude Type.class-type arguments that are (most probably) used in MockedStatic verifications
@@ -70,7 +69,7 @@ public class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loc
                         }
 
                         //The mock arguments as Strings from 'Mockito.inOrder()'
-                        var mocksInMockitoInOrderAsString = Arrays.stream(mocksInMockitoInOrder).map(PsiElement::getText).collect(toList());
+                        var mocksInMockitoInOrderAsString = Arrays.stream(mocksInMockitoInOrder).map(PsiElement::getText).toList();
                         //Report all mocks in verifications that are not configured in 'Mockito.inOrder()'
                         //This corresponds to the 'inOrderRequiresFamiliarMock()' method in
                         // https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java

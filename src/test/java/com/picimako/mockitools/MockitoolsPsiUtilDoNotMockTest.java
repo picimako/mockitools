@@ -37,7 +37,7 @@ class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 """);
 
         var doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
-        assertThat(doNotMock.get().reason).isEqualTo("Create a real instance instead.");
+        assertThat(doNotMock.get().reason()).isEqualTo("Create a real instance instead.");
     }
 
     @Test
@@ -58,7 +58,7 @@ class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 """);
 
         var doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
-        assertThat(doNotMock.get().reason).isEqualTo("A custom reason");
+        assertThat(doNotMock.get().reason()).isEqualTo("A custom reason");
     }
 
     @Test
@@ -79,7 +79,7 @@ class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 """);
 
         var doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
-        assertThat(doNotMock.get().reason).isEmpty();
+        assertThat(doNotMock.get().reason()).isEmpty();
     }
 
     @Test
@@ -101,7 +101,7 @@ class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 """);
 
         var doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
-        assertThat(doNotMock.get().reason).isEqualTo("Default reason");
+        assertThat(doNotMock.get().reason()).isEqualTo("Default reason");
     }
 
     @Test
@@ -123,7 +123,7 @@ class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 """);
 
         var doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
-        assertThat(doNotMock.get().reason).isEqualTo("Custom reason");
+        assertThat(doNotMock.get().reason()).isEqualTo("Custom reason");
     }
 
     @Test
@@ -145,7 +145,7 @@ class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 """);
 
         var doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
-        assertThat(doNotMock.get().reason).isEmpty();
+        assertThat(doNotMock.get().reason()).isEmpty();
     }
 
     //isMockableTypeInAnyWay

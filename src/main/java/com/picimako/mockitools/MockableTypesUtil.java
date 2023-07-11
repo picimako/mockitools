@@ -11,7 +11,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.util.TypeConversionUtil;
-import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -112,11 +111,7 @@ public final class MockableTypesUtil {
         //Utility class
     }
 
-    @AllArgsConstructor
-    public static final class DoNotMockType {
-        @Nullable
-        public final String reason;
-
+    public record DoNotMockType(@Nullable String reason) {
         public boolean hasReason() {
             return reason != null && !reason.isBlank();
         }

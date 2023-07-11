@@ -79,7 +79,7 @@ public class MockTypeInspection extends MockitoolsBaseInspection {
     private void checkForDoNotMockType(PsiType type, @NotNull ProblemsHolder holder, PsiElement toHighlight) {
         getDoNotMockTypeInHierarchy(type).ifPresent(doNotMockType ->
             holder.registerProblem(toHighlight, doNotMockType.hasReason()
-                ? MockitoolsBundle.inspection("non.mockable.type.do.not.mock.reason", doNotMockType.reason)
+                ? MockitoolsBundle.inspection("non.mockable.type.do.not.mock.reason", doNotMockType.reason())
                 : MockitoolsBundle.inspection("non.mockable.type.do.not.mock.no.reason")));
     }
 }

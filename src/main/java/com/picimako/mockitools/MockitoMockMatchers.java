@@ -5,7 +5,9 @@ package com.picimako.mockitools;
 import com.intellij.psi.CommonClassNames;
 import com.siyeh.ig.callMatcher.CallMatcher;
 
-import static com.picimako.mockitools.MockitoQualifiedNames.*;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ANSWER;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK_SETTINGS;
 import static com.picimako.mockitools.MockitoQualifiedNames.SPY;
 import static com.picimako.mockitools.MockitoolsPsiUtil.MOCKITO_MOCK;
 import static com.siyeh.ig.callMatcher.CallMatcher.anyOf;

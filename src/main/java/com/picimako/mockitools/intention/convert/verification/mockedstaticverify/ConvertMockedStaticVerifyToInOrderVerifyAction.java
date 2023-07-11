@@ -9,7 +9,6 @@ import static com.picimako.mockitools.util.PsiMethodUtil.getQualifier;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 import static com.siyeh.ig.psiutils.ExpressionUtils.getFirstExpressionInList;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
@@ -67,7 +66,7 @@ public class ConvertMockedStaticVerifyToInOrderVerifyAction extends ConvertVerif
         var verificationCallChains = statementsInSelection.stream()
             .map(this::getVerificationCall)
             .map(verify -> collectCallsInChainFromFirst(verify, true))
-            .collect(toList());
+            .toList();
 
         //The mocked class types concatenated with commas. E.g. 'List.class' for a single class, or 'List.class, Set.class' for multiple ones.
         String mockedClassTypes = verificationCallChains.stream()
