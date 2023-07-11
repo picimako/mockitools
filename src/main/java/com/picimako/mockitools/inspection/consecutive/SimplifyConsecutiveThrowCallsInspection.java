@@ -73,7 +73,7 @@ public class SimplifyConsecutiveThrowCallsInspection extends SimplifyConsecutive
 
     @Override
     protected Predicate<PsiMethodCallExpression> extraCondition() {
-        return PsiMethodUtil::hasAtLeastOneArgument;
+        return PsiMethodUtil::hasArgument;
     }
 
     /**

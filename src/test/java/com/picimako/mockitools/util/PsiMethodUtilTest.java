@@ -54,7 +54,7 @@ class PsiMethodUtilTest extends MockitoolsTestBase {
         assertThat(PsiMethodUtil.hasOneArgument(methodCall)).isFalse();
     }
 
-    //hasAtLeastOneArgument
+    //hasArgument
 
     @Test
     void testDoesntHaveAtLeastOneArgumentForZero() {
@@ -70,7 +70,7 @@ class PsiMethodUtilTest extends MockitoolsTestBase {
 
         PsiMethodCallExpression methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
 
-        assertThat(PsiMethodUtil.hasAtLeastOneArgument(methodCall)).isFalse();
+        assertThat(PsiMethodUtil.hasArgument(methodCall)).isFalse();
     }
 
     @Test
@@ -87,7 +87,7 @@ class PsiMethodUtilTest extends MockitoolsTestBase {
 
         PsiMethodCallExpression methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
 
-        assertThat(PsiMethodUtil.hasAtLeastOneArgument(methodCall)).isTrue();
+        assertThat(PsiMethodUtil.hasArgument(methodCall)).isTrue();
     }
 
     @Test
@@ -104,7 +104,7 @@ class PsiMethodUtilTest extends MockitoolsTestBase {
 
         PsiMethodCallExpression methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
 
-        assertThat(PsiMethodUtil.hasAtLeastOneArgument(methodCall)).isTrue();
+        assertThat(PsiMethodUtil.hasArgument(methodCall)).isTrue();
     }
 
     @Test
@@ -121,7 +121,7 @@ class PsiMethodUtilTest extends MockitoolsTestBase {
 
         PsiMethodCallExpression methodCall = (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
 
-        assertThat(PsiMethodUtil.hasAtLeastOneArgument(methodCall)).isFalse();
+        assertThat(PsiMethodUtil.hasArgument(methodCall)).isFalse();
     }
 
     //hasSubsequentMethodCall

@@ -54,13 +54,6 @@ public final class PsiMethodUtil {
     }
 
     /**
-     * Gets whether the argument method call has at least one argument of any kind.
-     */
-    public static boolean hasAtLeastOneArgument(@NotNull PsiMethodCallExpression methodCall) {
-        return methodCall.getArgumentList() != null && methodCall.getArgumentList().getExpressionCount() >= 1;
-    }
-
-    /**
      * Use this instead of {@link #getMethodCallAtCaretOrEmpty(PsiFile, Editor)}, when you are sure
      * (you've probably made sure beforehand), that the caret is at a method call identifier.
      */

@@ -8,9 +8,8 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_SPY;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoMock;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoSpy;
-import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.util.PsiMethodUtil.hasAtLeastOneArgument;
 import static com.picimako.mockitools.util.EvaluationHelper.evaluateClassObjectOrNewExpressionType;
+import static com.picimako.mockitools.util.PsiMethodUtil.*;
 import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
@@ -53,7 +52,7 @@ public class MockTypeInspection extends MockitoolsBaseInspection {
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         //Mockito.spy method has overloads only with single arguments
-        if (isMockitoSpy(expression) || (isMockitoMock(expression) && hasAtLeastOneArgument(expression))) {
+        if (isMockitoSpy(expression) || (isMockitoMock(expression) && hasArgument(expression))) {
             var typeToMock = getFirstArgument(expression);
             var type = evaluateClassObjectOrNewExpressionType(typeToMock);
             if (type != null) registerIfNotMockable(type, typeToMock, holder);
