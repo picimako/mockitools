@@ -209,8 +209,8 @@ public final class MockitoolsPsiUtil {
     public static boolean isOfTypeArgumentCaptor(PsiField field) {
         PsiTypeElement typeElement = field.getTypeElement();
         return typeElement != null
-            && typeElement.getType() instanceof PsiClassReferenceType
-            && ORG_MOCKITO_ARGUMENT_CAPTOR.equals(((PsiClassReferenceType) typeElement.getType()).rawType().getCanonicalText());
+            && typeElement.getType() instanceof PsiClassReferenceType type
+            && ORG_MOCKITO_ARGUMENT_CAPTOR.equals(type.rawType().getCanonicalText());
     }
 
     private MockitoolsPsiUtil() {

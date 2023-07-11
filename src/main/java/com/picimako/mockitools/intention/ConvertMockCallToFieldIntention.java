@@ -212,14 +212,14 @@ public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntention
      * Returns whether the argument Answer expression is a reference to {@code org.mockito.Answers.RETURNS_DEFAULTS}.
      */
     public static boolean isDefaultAnswer(PsiExpression answer) {
-        return answer instanceof PsiReferenceExpression
-            && isEnumConstant(((PsiReferenceExpression) answer).resolve(), ORG_MOCKITO_ANSWERS, "RETURNS_DEFAULTS");
+        return answer instanceof PsiReferenceExpression answerExpr
+            && isEnumConstant(answerExpr.resolve(), ORG_MOCKITO_ANSWERS, "RETURNS_DEFAULTS");
     }
 
-    private static boolean isEnumConstant(PsiElement constant, String enumClassName, String enumConstantName) {
-        return constant instanceof PsiEnumConstant
-            && enumClassName.equals(((PsiEnumConstant) constant).getContainingClass().getQualifiedName())
-            && enumConstantName.equals(((PsiEnumConstant) constant).getName());
+    private static boolean isEnumConstant(PsiElement element, String enumClassName, String enumConstantName) {
+        return element instanceof PsiEnumConstant constant
+            && enumClassName.equals(constant.getContainingClass().getQualifiedName())
+            && enumConstantName.equals(constant.getName());
     }
 
     /**
