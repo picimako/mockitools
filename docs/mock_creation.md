@@ -8,6 +8,7 @@
   * [@DoNotMock annotated types](#donotmock-annotated-types)
 * [Spying on mock objects](#spying-on-mock-objects)
 * [Mock/Spy creation without specifying class](#mockspy-creation-without-specifying-class)
+* [Mismatch between mocked type and type of spied instance](#mismatch-between-mocked-type-and-type-of-spied-instance)
 * [Mockito/MockedStatic.reset() is used](#mockitomockedstaticreset-is-used)
 * [Convert @Mock/@Spy fields to Mockito.mock()/spy() calls](#convert-mockspy-fields-to-mockitomockspy-calls)
     * [Determining the target method](#determining-the-target-method)
@@ -168,6 +169,61 @@ class MockWithoutSpecifyingClassTest {
     void testMethod() {
         MockObject mockWithAnswer = Mockito.mock(Answers.CALLS_REAL_METHODS, someOtherObject); //someOtherObject is highlighted
         MockObject spied = Mockito.spy(new MockObject(), new MockObject()); //The entire argument list is highlighted
+    }
+}
+```
+
+----
+
+## Mismatch between mocked type and type of spied instance
+
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.11.0-blue)
+[![](https://img.shields.io/badge/implementation-MockSpiedInstanceTypeMismatchInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/MockSpiedInstanceTypeMismatchInspection.java)
+
+This inspection reports when the mocked type and the type of the spied instance don't match in a `mock(Type.class, withSettings().spiedInstance(...));`-type mock creation.
+   
+Limitations: since validation for all possible cases would need the runtime type of both the mocked type and the
+spied instance, the inspection checks the mock creation only when the mock type is a `<type>.class`-type
+expression e.g. `SomeObject.class`, and when the spied instance is a 'new' expression e.g. `new SomeObject<>()`.
+
+Based on Mockito's behaviour, in case of mocking/spying type with generic types, only the raw type is taken into account when determining the mismatch.
+
+**Examples:**
+
+```java
+class MockSpiedInstanceTypeMismatch {
+
+    void typeComparison() {
+        //Matching types, are not reported
+        var matchesWithoutGenerics = mock(ArrayList.class, withSettings().spiedInstance(new ArrayList()));
+        var matchesWithGenerics = mock(ArrayList.class, withSettings().spiedInstance(new ArrayList<>()));
+    
+        //Mismatching types, are reported
+        var doesNotMatchWithSubType = mock(List.class, withSettings().spiedInstance(new ArrayList<>()));
+        var doesNotMatchWithSuperType = mock(SomeType.class, withSettings().spiedInstance(new SuperType()));
+        var doesNotMatchWithOtherType = mock(List.class, withSettings().spiedInstance(new HashSet<>()));
+    
+        //Cases that are not reported due to requiring runtime type
+        var doesNotMatchTypeForStaticFactoryMethod = mock(List.class, withSettings().spiedInstance(List.of()));
+        var matchesRuntimeType = mock(ArrayList.class, withSettings().spiedInstance(createSpiedInstance()));
+        var matchesRawTypes2 = mock(getMockType(), withSettings().spiedInstance(new ArrayList<Boolean>()));
+    }
+  
+    private List<?> createSpiedInstance() {
+        var arrayList = new ArrayList<String>();
+        //...
+        return arrayList;
+    }
+  
+    private Class<ArrayList<String>> getMockType() {
+        var strings = new ArrayList<String>();
+        return (Class<ArrayList<String>>) strings.getClass();
+    }
+  
+    private static final class SomeType extends SuperType {
+    }
+  
+    private static class SuperType {
     }
 }
 ```

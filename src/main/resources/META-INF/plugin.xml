@@ -117,6 +117,11 @@
                 id="mockitools.arg.in.classless.mock.spy.creation" language="JAVA"
                 displayName="Argument in classless mock()/spy() creation" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.MockSpiedInstanceTypeMismatchInspection"
+                id="mockitools.mock.spied.instance.type.mismatch" language="JAVA"
+                displayName="Mocked type and spied instance type mismatch" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
 
         <!-- v4 migration aids -->
         <localInspection

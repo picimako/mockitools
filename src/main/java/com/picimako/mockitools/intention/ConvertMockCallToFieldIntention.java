@@ -93,6 +93,11 @@ public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntention
     private static final CallMatcher MOCKITO_WITH_SETTINGS = staticCall(ORG_MOCKITO_MOCKITO, "withSettings");
 
     private static final CallMatcher MOCK_SETTINGS_SERIALIZABLE_WITH_MODE = instanceCall(ORG_MOCKITO_MOCK_SETTINGS, SERIALIZABLE).parameterTypes(ORG_MOCKITO_MOCK_SERIALIZABLE_MODE);
+    /**
+     * {@code MockSettings.spiedInstance()} could be a special case for converting into a {@code @Spy} field,
+     * but {@code @Mock} doesn't support such configuration, and there is also the actual object instance that is passed in,
+     * because of which the field could not be created.
+     */
     private static final Set<String> SUPPORTED_MOCK_SETTINGS_METHODS =
         Set.of(DEFAULT_ANSWER, STUB_ONLY, NAME, EXTRA_INTERFACES, LENIENT, STRICTNESS, MOCK_MAKER, WITHOUT_ANNOTATIONS);
 
@@ -260,15 +265,13 @@ public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntention
         }
 
         private void configureStrictness(PsiMethodCallExpression call) {
-            var strictness = getFirstArgument(call);
+            var strictnessArg = getFirstArgument(call);
             //null value passed into MockSettings.strictness() is not handled since it is invalid anyway.
-            if (strictness instanceof PsiReferenceExpression) {
-                var resolved = ((PsiReferenceExpression) strictness).resolve();
-                if (resolved instanceof PsiEnumConstant) {
-                    String strictnessName = ((PsiEnumConstant) resolved).getName();
+            if (strictnessArg instanceof PsiReferenceExpression strictnessExpr
+                && strictnessExpr.resolve() instanceof PsiEnumConstant strictness) {
                     PsiClassUtil.importClass("org.mockito.Mock.Strictness", mockAnnotation);
-                    mockAnnotation.setDeclaredAttributeValue(STRICTNESS, attributeValue("Mock.Strictness." + strictnessName));
-                }
+                    mockAnnotation.setDeclaredAttributeValue(STRICTNESS, attributeValue("Mock.Strictness." + strictness.getName()));
+
             }
         }
 

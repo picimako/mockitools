@@ -1,0 +1,15 @@
+<html>
+<body>
+<!-- tooltip end -->
+This inspection reports when the mocked type and the type of the spied instance don't match
+in a <code>mock(Type.class, withSettings().spiedInstance(...));</code>-type mock creation.
+<p>
+    Limitations: since validation for all possible cases would need the runtime type of both the mocked type and the
+    spied instance, the inspection checks the mock creation only when the mock type is a <code>&lt;type>.class</code>-type
+    expression e.g. <code>SomeObject.class</code>, and when the spied instance is a 'new' expression e.g. <code>new
+    SomeObject<>()</code>.
+<p>
+    Based on Mockito's behaviour, in case of mocking/spying type with generic types, only the raw type is taken into
+    account when determining the mismatch.
+</body>
+</html>

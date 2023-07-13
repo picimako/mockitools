@@ -6,6 +6,7 @@
 
 ## [0.11.0]
 ### Added
+- [#53](https://github.com/picimako/mockitools/issues/53): Added an inspection to report when the mocked type and the type of the spied instance don't match in a `mock(Type.class, withSettings().spiedInstance(...));`-type mock creation.
 - [#56](https://github.com/picimako/mockitools/issues/56): Added an inspection to report spying on mock objects, i.e. `Mockito.spy(Mockito.mock(...))` and `Mockito.spy(<object annotated with @Mock>)`
 - [#57](https://github.com/picimako/mockitools/issues/57): Added an inspection to report arguments passed into `Mockito.mock()` and `Mockito.spy()` which are designed to determine the mock type based on
 the variable's type they are assigned to, and not by the type passed into them. See [Mocking/spying without specifying class](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#mock_without_class).
