@@ -4,8 +4,8 @@ package com.picimako.mockitools.intention.convert.stub;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.StubbingApproach.MOCKITO_WHEN;
-import static com.picimako.mockitools.inspection.EnforceConventionInspection.isBDDMockitoEnforced;
-import static com.picimako.mockitools.inspection.EnforceConventionInspection.isMockitoEnforced;
+import static com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection.isBDDMockitoEnforced;
+import static com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection.isMockitoEnforced;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_THEN;
 
 import com.intellij.openapi.actionSystem.AnAction;

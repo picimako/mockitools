@@ -1,6 +1,6 @@
 //Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.picimako.mockitools.inspection;
+package com.picimako.mockitools.inspection.mocking;
 
 import static com.picimako.mockitools.MockableTypesUtil.getDoNotMockTypeInHierarchy;
 import static com.picimako.mockitools.MockableTypesUtil.isMockableType;
@@ -19,6 +19,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiType;
+import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 

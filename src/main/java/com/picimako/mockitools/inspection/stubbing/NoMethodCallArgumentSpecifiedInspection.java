@@ -1,6 +1,6 @@
 //Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.picimako.mockitools.inspection;
+package com.picimako.mockitools.inspection.stubbing;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.IN_ORDER;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_NO_INTERACTIONS;
@@ -18,6 +18,7 @@ import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
 

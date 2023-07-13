@@ -4,7 +4,7 @@ package com.picimako.mockitools.intention.convert.verification.mockitoverify;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.testFramework.RunsInEdt;
-import com.picimako.mockitools.inspection.EnforceConventionInspection;
+import com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
 import org.junit.jupiter.api.Test;
 

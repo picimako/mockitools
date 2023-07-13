@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.testFramework.RunsInEdt;
-import com.picimako.mockitools.inspection.EnforceConventionInspection;
+import com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
 import com.picimako.mockitools.intention.convert.verification.NoActionAvailableAction;
 import org.junit.jupiter.api.Test;

@@ -18,7 +18,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- Inspections for Mockito end-users -->
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.InconsistentArgumentMatcherUsageInspection"
+                implementationClass="com.picimako.mockitools.inspection.stubbing.InconsistentArgumentMatcherUsageInspection"
                 id="mockitools.inconsistentArgumentMatcherUsage" language="JAVA"
                 displayName="Inconsistent argument matcher usage" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
@@ -43,12 +43,12 @@
                 displayName="Mockito.times() argument validations" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="WARNING"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.ExtraInterfacesInspection"
+                implementationClass="com.picimako.mockitools.inspection.stubbing.ExtraInterfacesInspection"
                 id="mockitools.extraInterfaces" language="JAVA"
                 displayName="@Mock#extraInterfaces and MockSettings.extraInterfaces() validations" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.MockTypeInspection"
+                implementationClass="com.picimako.mockitools.inspection.mocking.MockTypeInspection"
                 id="mockitools.mockType" language="JAVA"
                 displayName="Mocking/spying non-mockable types" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
@@ -58,12 +58,12 @@
                 displayName="Call on Mockito.reset()" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="WARNING"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.NoMethodCallArgumentSpecifiedInspection"
+                implementationClass="com.picimako.mockitools.inspection.stubbing.NoMethodCallArgumentSpecifiedInspection"
                 id="mockitools.noMethodCallArgument" language="JAVA"
                 displayName="No Mockito method call argument specified" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.ThrowsCheckedExceptionStubbingInspection"
+                implementationClass="com.picimako.mockitools.inspection.stubbing.ThrowsCheckedExceptionStubbingInspection"
                 id="mockitools.methodSignatureBasedThrowsExceptionStubbing" language="JAVA"
                 displayName="Checked exception stubbing based on method throws clause" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
@@ -78,7 +78,7 @@
                 displayName="Consecutive *Throw() stubbing calls can be simplified" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="WARNING"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.EnforceConventionInspection"
+                implementationClass="com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection"
                 id="mockitools.enforce.convention" language="JAVA"
                 displayName="Enforce conventions" groupPath="Java"
                 groupName="Mockito" enabledByDefault="false" level="ERROR"/>
@@ -93,7 +93,7 @@
                 displayName="Unused or unconfigured mock objects in InOrder verifications" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="WARNING"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.StubbingAndMethodReturnTypeMismatchInspection"
+                implementationClass="com.picimako.mockitools.inspection.stubbing.StubbingAndMethodReturnTypeMismatchInspection"
                 id="mockitools.stubbing.method.return.type.mismatch" language="JAVA"
                 displayName="Stubbing calls and stubbed method's return type don't match" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
@@ -108,17 +108,17 @@
                 displayName="Stub-only mock used in verification" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.SpyOnMockInspection"
+                implementationClass="com.picimako.mockitools.inspection.mocking.SpyOnMockInspection"
                 id="mockitools.spy.on.mock" language="JAVA"
                 displayName="Spying on mock objects" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.ClasslessMockAndSpyCreationInspection"
+                implementationClass="com.picimako.mockitools.inspection.mocking.ClasslessMockAndSpyCreationInspection"
                 id="mockitools.arg.in.classless.mock.spy.creation" language="JAVA"
                 displayName="Argument in classless mock()/spy() creation" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.MockSpiedInstanceTypeMismatchInspection"
+                implementationClass="com.picimako.mockitools.inspection.mocking.MockSpiedInstanceTypeMismatchInspection"
                 id="mockitools.mock.spied.instance.type.mismatch" language="JAVA"
                 displayName="Mocked type and spied instance type mismatch" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>

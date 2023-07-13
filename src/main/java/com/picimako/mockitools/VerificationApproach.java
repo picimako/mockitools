@@ -20,7 +20,7 @@ import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.inspection.EnforceConventionInspection;
+import com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import lombok.RequiredArgsConstructor;
 

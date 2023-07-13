@@ -7,7 +7,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_S
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.inspection.ExceptionStubber;
+import com.picimako.mockitools.inspection.stubbing.ExceptionStubber;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
