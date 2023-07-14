@@ -18,21 +18,25 @@ import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
  */
 public final class MockitoMockMatchers {
 
+    //Mock
+
     private static final String JAVA_LANG_CLASS = "java.lang.Class<T>";
     public static final CallMatcher MOCK = MOCKITO_MOCK.parameterTypes(JAVA_LANG_CLASS);
     public static final CallMatcher MOCK_WITH_NAME = MOCKITO_MOCK.parameterTypes(JAVA_LANG_CLASS, CommonClassNames.JAVA_LANG_STRING);
     public static final CallMatcher MOCK_WITH_ANSWER = MOCKITO_MOCK.parameterTypes(JAVA_LANG_CLASS, ORG_MOCKITO_ANSWER);
     public static final CallMatcher MOCK_WITH_SETTINGS = MOCKITO_MOCK.parameterTypes(JAVA_LANG_CLASS, ORG_MOCKITO_MOCK_SETTINGS);
 
+    //Spy
+
+    public static final CallMatcher MOCKITO_SPY_T = staticCall(ORG_MOCKITO_MOCKITO, SPY).parameterTypes("T");
+
     //Since Mockito 4.9.0
 
     public static final CallMatcher MOCK_REIFIED = MOCKITO_MOCK.parameterTypes("T...");
     public static final CallMatcher SPY_REIFIED = staticCall(ORG_MOCKITO_MOCKITO, SPY).parameterTypes("T...");
-
     private static final CallMatcher MOCK_WITH_NAME_REIFIED = MOCKITO_MOCK.parameterTypes(CommonClassNames.JAVA_LANG_STRING, "T...");
     private static final CallMatcher MOCK_WITH_ANSWER_REIFIED = MOCKITO_MOCK.parameterTypes(ORG_MOCKITO_ANSWER, "T...");
     private static final CallMatcher MOCK_WITH_SETTINGS_REIFIED = MOCKITO_MOCK.parameterTypes(ORG_MOCKITO_MOCK_SETTINGS, "T...");
-
     public static final CallMatcher MOCKS_REIFIED_WITH_CONFIG = anyOf(MOCK_WITH_NAME_REIFIED, MOCK_WITH_ANSWER_REIFIED, MOCK_WITH_SETTINGS_REIFIED);
 
     private MockitoMockMatchers() {

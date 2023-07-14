@@ -14,6 +14,7 @@
     * [Determining the target method](#determining-the-target-method)
 * [Convert Mockito.mock()/spy() calls to @Mock/@Spy fields](#convert-mockitomockspy-calls-to-mockspy-fields)
 * [Simplify mock creation](#simplify-mock-creation)
+* [Expand mock creation](#expand-mock-creation)
 <!-- TOC -->
 
 ## Non-interface type(s) passed into extraInterfaces
@@ -491,6 +492,7 @@ Clazz spy = Mockito.spy(clazz);
 
 This inspection reports `Mockito.mock(..., withSettings()...)` mock creations that have convenience methods
 or simpler variants, and provides a quick fix to replace them with their corresponding simpler versions.
+This is essentially the opposite direction of what [Expand mock creation](#expand-mock-creation) does. 
 
 Currently `spiedInstance()`, `name()` and `defaultAnswer()` are supported in `MockSettings`.
 
@@ -503,4 +505,29 @@ from: Mockito.mock(MockObject.class, withSettings().name(name))
 
 from: Mockito.mock(MockObject.class, withSettings().defaultAnswer(answer))
   to: Mockito.mock(MockObject.class, answer)
+```
+
+## Expand mock creation
+
+![](https://img.shields.io/badge/intention-orange)
+![](https://img.shields.io/badge/since-0.11.0-blue) [![](https://img.shields.io/badge/implementation-ExpandMockCreationIntention-blue)](../src/main/java/com/picimako/mockitools/intention/mocking/ExpandMockCreationIntention.java)
+
+This intention action expands certain mock/spy creation calls to use concrete `MockSettings` configuration,
+and aims to simplify the process of converting mock creation logic when further mock settings need to be added.
+This is essentially the opposite direction of what [Simplify mock creation](#simplify-mock-creation) does.
+
+The intention is available on `Mockito.mock()` and `Mockito.spy()` calls. and the following conversions/expansions are supported:
+
+```java
+//From:
+var spiedInstance = new SpiedType<Object>();
+var spy = Mockito.spy(spiedInstance);
+//to:
+var spy = Mockito.mock(SpiedType.class, withSettings().spiedInstance(spiedInstance));
+
+from: Mockito.mock(MockType.class, "some mock name")
+  to: Mockito.mock(MockType.class, withSettings().name("some mock name"))
+
+from: Mockito.mock(MockType.class, Answers.RETURNS_MOCKS)
+  to: Mockito.mock(MockType.class, withSettings().defaultAnswer(Answers.RETURNS_MOCKS))
 ```

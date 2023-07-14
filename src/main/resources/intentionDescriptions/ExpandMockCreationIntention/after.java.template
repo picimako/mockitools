@@ -1,0 +1,2 @@
+var spiedInstance = new SpiedType<Object>();
+var spy = <spot>Mockito.mock(SpiedType.class, withSettings().spiedInstance(spiedInstance));</spot>

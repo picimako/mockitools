@@ -28,6 +28,7 @@ import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
  * <p>
  * Currently {@code spiedInstance}, {@code code} and {@code defaultAnswer} are supported in {@code MockSettings}.
  *
+ * @see com.picimako.mockitools.intention.mocking.ExpandMockCreationIntention
  * @since 0.11.0
  */
 public class SimplifyMockCreationInspection extends MockitoolsBaseInspection {
