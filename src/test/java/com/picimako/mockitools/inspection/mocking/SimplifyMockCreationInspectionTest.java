@@ -137,7 +137,7 @@ class SimplifyMockCreationInspectionTest extends MockitoolsInspectionTestBase {
                 
                 class SimplifyMockCreation {
                     void testName() {
-                        var name = "some name"; 
+                        var name = "some name";
                         var mock = mock(MockObject.class, w<caret>ithSettings().name(name));
                     }
                     
