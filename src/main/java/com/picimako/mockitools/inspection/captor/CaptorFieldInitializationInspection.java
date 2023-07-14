@@ -42,7 +42,7 @@ public class CaptorFieldInitializationInspection extends MockitoolsBaseInspectio
     @Override
     protected void checkField(PsiField field, @NotNull ProblemsHolder holder) {
         if (field.hasAnnotation(ORG_MOCKITO_CAPTOR) && isOfTypeArgumentCaptor(field) && field.hasInitializer()) {
-            holder.registerProblem(field.getInitializer(), MockitoolsBundle.inspection("captor.field.init.not.required"),
+            holder.registerProblem(field.getInitializer(), MockitoolsBundle.message("inspection.captor.field.init.not.required"),
                 new RemoveArgumentCaptorInitQuickFix());
         }
     }
@@ -51,7 +51,7 @@ public class CaptorFieldInitializationInspection extends MockitoolsBaseInspectio
 
         @Override
         public @IntentionName @NotNull String getName() {
-            return MockitoolsBundle.quickFix("captor.field.remove.init");
+            return MockitoolsBundle.message("quick.fix.captor.field.remove.init");
         }
 
         @Override

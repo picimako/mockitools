@@ -45,7 +45,7 @@ public class CaptorFieldOfTypeArgumentCaptorInspection extends MockitoolsBaseIns
     @Override
     protected void checkField(PsiField field, @NotNull ProblemsHolder holder) {
         if (field.hasAnnotation(ORG_MOCKITO_CAPTOR) && !isOfTypeArgumentCaptor(field)) {
-            holder.registerProblem(field.getNameIdentifier(), MockitoolsBundle.inspection("captor.field.must.be.argument.captor"),
+            holder.registerProblem(field.getNameIdentifier(), MockitoolsBundle.message("inspection.captor.field.must.be.argument.captor"),
                 new ConvertFieldTypeToArgumentCaptorQuickFix());
         }
     }
@@ -59,7 +59,7 @@ public class CaptorFieldOfTypeArgumentCaptorInspection extends MockitoolsBaseIns
 
         @Override
         public @IntentionName @NotNull String getName() {
-            return MockitoolsBundle.quickFix("captor.field.convert.to.argumentcaptor");
+            return MockitoolsBundle.message("quick.fix.captor.field.convert.to.argumentcaptor");
         }
 
         @Override

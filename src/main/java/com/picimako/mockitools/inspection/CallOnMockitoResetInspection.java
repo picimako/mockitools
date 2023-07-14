@@ -24,9 +24,9 @@ public class CallOnMockitoResetInspection extends MockitoolsBaseInspection {
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         if (getReferenceNameElement(expression) != null) {
             if (isReset(expression)) {
-                holder.registerProblem(getReferenceNameElement(expression), MockitoolsBundle.inspection("call.to.reset", "Mockito"));
+                holder.registerProblem(getReferenceNameElement(expression), MockitoolsBundle.message("inspection.call.to.reset", "Mockito"));
             } else if (isMockedStaticReset(expression)) {
-                holder.registerProblem(getReferenceNameElement(expression), MockitoolsBundle.inspection("call.to.reset", "MockedStatic"));
+                holder.registerProblem(getReferenceNameElement(expression), MockitoolsBundle.message("inspection.call.to.reset", "MockedStatic"));
             }
         }
     }

@@ -43,7 +43,7 @@ public class SingleInOrderVerificationInspection extends LocalInspectionTool {
                             var verifyOrShould = getParentOfType((PsiReferenceExpression) ref, PsiMethodCallExpression.class);
                             //If the only usage is a method call to InOrder.verify() or BDDMockito.should(InOrder)
                             if (VerificationApproach.INORDER_VERIFY.isVerifiedBy(verifyOrShould) || VerificationApproach.BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(verifyOrShould))
-                                holder.registerProblem(variable.getNameIdentifier(), MockitoolsBundle.inspection("in.order.is.used.only.once"));
+                                holder.registerProblem(variable.getNameIdentifier(), MockitoolsBundle.message("inspection.in.order.is.used.only.once"));
                         }
                     }
 

@@ -65,7 +65,7 @@ public class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loc
                             //Exclude Type.class-type arguments that are (most probably) used in MockedStatic verifications
                             if (mockInInOrder instanceof PsiClassObjectAccessExpression) continue;
                             if (!mocksInVerificationsAsString.contains(mockInInOrder.getText()))
-                                holder.registerProblem(mockInInOrder, MockitoolsBundle.inspection("no.in.order.verification.for.mock"));
+                                holder.registerProblem(mockInInOrder, MockitoolsBundle.message("inspection.no.in.order.verification.for.mock"));
                         }
 
                         //The mock arguments as Strings from 'Mockito.inOrder()'
@@ -75,7 +75,7 @@ public class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loc
                         // https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java
                         for (var mockInVerification : mocksInVerifications) {
                             if (!mocksInMockitoInOrderAsString.contains(mockInVerification.getText()))
-                                holder.registerProblem(mockInVerification, MockitoolsBundle.inspection("mock.is.not.configured.in.in.order"));
+                                holder.registerProblem(mockInVerification, MockitoolsBundle.message("inspection.mock.is.not.configured.in.in.order"));
                         }
                     }
 

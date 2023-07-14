@@ -33,7 +33,7 @@ public class StubOnlyMockInVerificationInspection extends MockitoolsBaseInspecti
             .map(MockObject::isStubOnly)
             .ifPresent(isStubOnly -> {
                 if (isStubOnly)
-                    holder.registerProblem(verifiedMock.get(), MockitoolsBundle.inspection("stub.only.mock.used.in.verification"));
+                    holder.registerProblem(verifiedMock.get(), MockitoolsBundle.message("inspection.stub.only.mock.used.in.verification"));
             });
     }
 }

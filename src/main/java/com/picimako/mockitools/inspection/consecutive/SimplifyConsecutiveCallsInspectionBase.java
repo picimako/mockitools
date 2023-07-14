@@ -89,6 +89,6 @@ public abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsB
 
     protected void doRegister(ConsecutiveCallRegistrarContext registrar, @NotNull ProblemsHolder holder, InspectionGadgetsFix... quickFixes) {
         holder.registerProblem(getReferenceNameElement(registrar.getLastConsecutiveCall()),
-            MockitoolsBundle.inspection("can.merge.with.previous.consecutive.calls", registrar.consecutiveMethodName), quickFixes);
+            MockitoolsBundle.message("inspection.can.merge.with.previous.consecutive.calls", registrar.consecutiveMethodName), quickFixes);
     }
 }

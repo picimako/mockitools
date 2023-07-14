@@ -77,7 +77,7 @@ public class InconsistentArgumentMatcherUsageInspection extends MockitoolsBaseIn
                     hasNonMatcher = true;
                 }
                 if (hasNonMatcher && hasMatcher) {
-                    holder.registerProblem(arguments, MockitoolsBundle.inspection("inconsistent.argument.matchers"));
+                    holder.registerProblem(arguments, MockitoolsBundle.message("inspection.inconsistent.argument.matchers"));
                     break;
                 }
             }

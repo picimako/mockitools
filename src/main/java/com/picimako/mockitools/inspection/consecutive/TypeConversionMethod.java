@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 public enum TypeConversionMethod {
-    TO_CLASSES(MockitoolsBundle.quickFix("to.class.objects")) {
+    TO_CLASSES(MockitoolsBundle.message("quick.fix.to.class.objects")) {
         @Override
         public PsiElement convert(PsiExpression expression) {
             return expression instanceof PsiNewExpression
@@ -26,7 +26,7 @@ public enum TypeConversionMethod {
                 : super.convert(expression);
         }
     },
-    TO_THROWABLES(MockitoolsBundle.quickFix("to.throwables")) {
+    TO_THROWABLES(MockitoolsBundle.message("quick.fix.to.throwables")) {
         @Override
         public PsiElement convert(PsiExpression expression) {
             return expression instanceof PsiClassObjectAccessExpression

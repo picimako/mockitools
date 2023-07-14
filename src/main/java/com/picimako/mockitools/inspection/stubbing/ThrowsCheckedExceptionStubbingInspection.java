@@ -79,7 +79,7 @@ public class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInsp
                     if (isCheckedException(stubbedException)
                         && Arrays.stream(exceptionTypesInThrowsClause).noneMatch(type -> type.equals(evaluateType(stubbedException)))) {
                         holder.registerProblem(stubbedException,
-                            MockitoolsBundle.inspection("invalid.checked.exception.in.stubbing"),
+                            MockitoolsBundle.message("inspection.invalid.checked.exception.in.stubbing"),
                             new AddExceptionToThrowsClauseQuickFix(toPointer(stubbedMethod)));
                     }
                 }
@@ -148,7 +148,7 @@ public class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInsp
 
         @Override
         public @IntentionFamilyName @NotNull String getFamilyName() {
-            return MockitoolsBundle.quickFix("add.exception.to.method.throws.clause");
+            return MockitoolsBundle.message("quick.fix.add.exception.to.method.throws.clause");
         }
     }
 }

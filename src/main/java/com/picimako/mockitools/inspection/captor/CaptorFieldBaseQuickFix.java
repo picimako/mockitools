@@ -15,6 +15,6 @@ public abstract class CaptorFieldBaseQuickFix extends InspectionGadgetsFix {
 
     @Override
     public @IntentionFamilyName @NotNull String getFamilyName() {
-        return MockitoolsBundle.quickFix("captor.field.family.name");
+        return MockitoolsBundle.message("quick.fix.captor.field.family.name");
     }
 }

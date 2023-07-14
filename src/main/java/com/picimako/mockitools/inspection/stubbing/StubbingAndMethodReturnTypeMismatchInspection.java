@@ -84,7 +84,7 @@ public class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBas
             .ifPresent(__ -> {
                 for (var doNothing : doNothingMethodCalls) {
                     holder.registerProblem(getReferenceNameElement(doNothing),
-                        MockitoolsBundle.inspection("void.method.is.stubbed.to.do.nothing", getMethodName(stubbedMethod.get())));
+                        MockitoolsBundle.message("inspection.void.method.is.stubbed.to.do.nothing", getMethodName(stubbedMethod.get())));
                 }
             });
     }
@@ -103,7 +103,7 @@ public class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBas
             .ifPresent(__ -> {
                 for (var doReturn : doReturnMethodCalls) {
                     holder.registerProblem(getReferenceNameElement(doReturn),
-                        MockitoolsBundle.inspection("non.void.method.is.stubbed.with.return.value", getMethodName(stubbedMethod.get())));
+                        MockitoolsBundle.message("inspection.non.void.method.is.stubbed.with.return.value", getMethodName(stubbedMethod.get())));
                 }
             });
     }

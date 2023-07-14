@@ -49,6 +49,6 @@ public class NoMethodCallArgumentSpecifiedInspection extends MockitoolsBaseInspe
 
     private void registerProblem(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder, ProblemHighlightType problemHighlightType) {
         PsiElement elementToHighlight = Optional.ofNullable(getReferenceNameElement(expression)).orElseGet(expression::getMethodExpression);
-        holder.registerProblem(elementToHighlight, MockitoolsBundle.inspection("method.call.no.argument.specified", getMethodName(expression)), problemHighlightType);
+        holder.registerProblem(elementToHighlight, MockitoolsBundle.message("inspection.method.call.no.argument.specified", getMethodName(expression)), problemHighlightType);
     }
 }

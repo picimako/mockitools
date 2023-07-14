@@ -71,7 +71,7 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
     @Override
     public JComponent createOptionsPanel() {
         final var panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 5, true, false));
-        panel.add(new JLabel(MockitoolsBundle.inspectionOption("enforce.stubbing.and.verification.label")));
+        panel.add(new JLabel(MockitoolsBundle.message("inspection.option.enforce.stubbing.and.verification.label")));
 
         var group = new ButtonGroup();
         for (var convention : Convention.values()) {
@@ -95,7 +95,7 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
 
     private void register(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         holder.registerProblem(Optional.ofNullable(getReferenceNameElement(expression)).orElse(expression),
-            MockitoolsBundle.inspection("stubbing.and.verification.must.be.performed.via.x", conventionToEnforce.getClassFqn()));
+            MockitoolsBundle.message("inspection.stubbing.and.verification.must.be.performed.via.x", conventionToEnforce.getClassFqn()));
     }
 
     // Static helpers

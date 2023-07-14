@@ -75,8 +75,8 @@ public class TimesVerificationModeInspection extends MockitoolsBaseInspection {
     @Override
     public @Nullable JComponent createOptionsPanel() {
         final MultipleCheckboxOptionsPanel panel = new MultipleCheckboxOptionsPanel(this);
-        panel.addCheckbox(MockitoolsBundle.inspectionOption("report.times.zero.to.never"), "reportTimesZeroToNever");
-        panel.addCheckbox(MockitoolsBundle.inspectionOption("report.times.one.to.omit"), "reportTimesOneCanBeOmitted");
+        panel.addCheckbox(MockitoolsBundle.message("inspection.option.report.times.zero.to.never"), "reportTimesZeroToNever");
+        panel.addCheckbox(MockitoolsBundle.message("inspection.option.report.times.one.to.omit"), "reportTimesOneCanBeOmitted");
         return panel;
     }
 
@@ -89,7 +89,7 @@ public class TimesVerificationModeInspection extends MockitoolsBaseInspection {
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         //times(0) can be replaced with never() wherever it is used
         if (reportTimesZeroToNever && isTimesWithValueEqualTo(expression, 0)) {
-            holder.registerProblem(expression, MockitoolsBundle.inspection("times.zero.can.be.replaced.with.never"), new ReplaceTimesZeroWithNeverQuickFix());
+            holder.registerProblem(expression, MockitoolsBundle.message("inspection.times.zero.can.be.replaced.with.never"), new ReplaceTimesZeroWithNeverQuickFix());
             return;
         }
 
@@ -100,7 +100,7 @@ public class TimesVerificationModeInspection extends MockitoolsBaseInspection {
             if (verificationModeCalls.size() == 1) {
                 var timesMode = verificationModeCalls.get(0);
                 if (isTimesWithValueEqualTo(timesMode, 1))
-                    holder.registerProblem(timesMode, MockitoolsBundle.inspection("times.one.can.be.omitted"), ProblemHighlightType.LIKE_UNUSED_SYMBOL, new DeleteTimesOneQuickFix());
+                    holder.registerProblem(timesMode, MockitoolsBundle.message("inspection.times.one.can.be.omitted"), ProblemHighlightType.LIKE_UNUSED_SYMBOL, new DeleteTimesOneQuickFix());
             }
         }
     }
@@ -136,7 +136,7 @@ public class TimesVerificationModeInspection extends MockitoolsBaseInspection {
 
         @Override
         public @IntentionName @NotNull String getName() {
-            return MockitoolsBundle.quickFix("times.zero.replace.with.never");
+            return MockitoolsBundle.message("quick.fix.times.zero.replace.with.never");
         }
     }
 
@@ -153,14 +153,14 @@ public class TimesVerificationModeInspection extends MockitoolsBaseInspection {
 
         @Override
         public @IntentionName @NotNull String getName() {
-            return MockitoolsBundle.quickFix("times.one.delete.call");
+            return MockitoolsBundle.message("quick.fix.times.one.delete.call");
         }
     }
 
     private abstract static class TimesQuickFix extends InspectionGadgetsFix {
         @Override
         public @IntentionFamilyName @NotNull String getFamilyName() {
-            return MockitoolsBundle.quickFix("times.family.name");
+            return MockitoolsBundle.message("quick.fix.times.family.name");
         }
     }
 }

@@ -50,14 +50,14 @@ public class UsageOfDeprecatedVerifyInspection extends MigrationAidBase.V3ToV4Ba
         if (MOCKITO_VERIFY_ZERO_INTERACTIONS.matches(expression)) {
             holder.registerProblem(
                 getReferenceNameElement(expression), //referenceName null value is already checked by the CallMatcher
-                MockitoolsBundle.inspection("migration.aid.v4.use.no.more.interactions"),
+                MockitoolsBundle.message("inspection.migration.aid.v4.use.no.more.interactions"),
                 new ReplaceZeroInteractionsWithNoMoreInteractionsQuickFix());
             return;
         }
         if (MOCKED_STATIC_VERIFY.matches(expression)) {
             holder.registerProblem(
                 getReferenceNameElement(expression), //referenceName null value is already checked by the CallMatcher
-                MockitoolsBundle.inspection("migration.aid.v4.mocked.static.verify"),
+                MockitoolsBundle.message("inspection.migration.aid.v4.mocked.static.verify"),
                 new SwitchMockedStaticVerifyArgumentsQuickFix());
         }
     }
@@ -66,7 +66,7 @@ public class UsageOfDeprecatedVerifyInspection extends MigrationAidBase.V3ToV4Ba
 
         @Override
         public @IntentionName @NotNull String getName() {
-            return MockitoolsBundle.quickFix("migration.aid.v4.switch.mocked.static.verify.args");
+            return MockitoolsBundle.message("quick.fix.migration.aid.v4.switch.mocked.static.verify.args");
         }
 
         @Override
@@ -85,7 +85,7 @@ public class UsageOfDeprecatedVerifyInspection extends MigrationAidBase.V3ToV4Ba
 
         @Override
         public @IntentionName @NotNull String getName() {
-            return MockitoolsBundle.quickFix("migration.aid.v4.replace.zero.interactions.with.no.more.interactions");
+            return MockitoolsBundle.message("quick.fix.migration.aid.v4.replace.zero.interactions.with.no.more.interactions");
         }
 
         @Override

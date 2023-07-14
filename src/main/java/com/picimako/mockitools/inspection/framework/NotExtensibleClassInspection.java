@@ -47,11 +47,11 @@ public class NotExtensibleClassInspection extends LocalInspectionTool {
                     if (Arrays.stream(aClass.getExtendsListTypes())
                         .anyMatch(superInterface -> Optional.ofNullable(superInterface.resolve()).map(i -> i.hasAnnotation(ORG_MOCKITO_NOT_EXTENSIBLE)).orElse(false))) {
                         //at this point the name identifier should not be null
-                        holder.registerProblem(aClass.getNameIdentifier(), MockitoolsBundle.inspection("interface.extends.not.extensible"));
+                        holder.registerProblem(aClass.getNameIdentifier(), MockitoolsBundle.message("inspection.interface.extends.not.extensible"));
                     }
                 } else if (aClass.getSuperClass() != null && aClass.getSuperClass().hasAnnotation(ORG_MOCKITO_NOT_EXTENSIBLE)) {
                     //at this point the name identifier should not be null
-                    holder.registerProblem(aClass.getNameIdentifier(), MockitoolsBundle.inspection("class.extends.not.extensible"));
+                    holder.registerProblem(aClass.getNameIdentifier(), MockitoolsBundle.message("inspection.class.extends.not.extensible"));
                 }
             }
         };

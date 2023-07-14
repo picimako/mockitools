@@ -15,9 +15,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiJavaCodeReferenceElement;
 import com.intellij.psi.PsiJavaFile;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.mockitools.resources.MockitoolsBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * Replaces code reference elements with the predefined class ({@link #replacementClassFqn}).
@@ -28,19 +30,16 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  * If the reference is qualified, the reference is replaced with the predefined fully qualified name,
  * otherwise it is the import statement of the reference that is replaced.
  */
+@RequiredArgsConstructor
 public class NameCollisionAwareReferenceReplacerQuickFix extends MigrationAidV4BaseQuickFix {
 
+    @PropertyKey(resourceBundle = "messages.MockitoolsBundle")
     private final String nameMessageKey;
     private final String replacementClassFqn;
 
-    public NameCollisionAwareReferenceReplacerQuickFix(String nameMessageKey, String replacementClassFqn) {
-        this.nameMessageKey = nameMessageKey;
-        this.replacementClassFqn = replacementClassFqn;
-    }
-
     @Override
     public @IntentionName @NotNull String getName() {
-        return MockitoolsBundle.quickFix(nameMessageKey);
+        return MockitoolsBundle.message(nameMessageKey);
     }
 
     @Override

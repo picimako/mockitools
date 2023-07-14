@@ -32,6 +32,6 @@ public class CannotVerifyToStringInspection extends MockitoolsBaseInspection {
             .findFirst()
             .flatMap(approach -> approach.getVerifiedMethodCall(collectCallsInChainFromFirst(expression, true)))
             .filter(call -> "toString".equals(getMethodName(call)))
-            .ifPresent(verifiedMethodCall -> holder.registerProblem(getReferenceNameElement(verifiedMethodCall), MockitoolsBundle.inspection("cannot.verify.to.string")));
+            .ifPresent(verifiedMethodCall -> holder.registerProblem(getReferenceNameElement(verifiedMethodCall), MockitoolsBundle.message("inspection.cannot.verify.to.string")));
     }
 }

@@ -56,7 +56,7 @@ public class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBas
 
     @Override
     public @Nullable JComponent createOptionsPanel() {
-        return new SingleIntegerFieldOptionsPanel(MockitoolsBundle.inspection("timeout.max.threshold.config.title"), this, "timeoutMaxThreshold");
+        return new SingleIntegerFieldOptionsPanel(MockitoolsBundle.message("inspection.timeout.max.threshold.config.title"), this, "timeoutMaxThreshold");
     }
 
     @Override
@@ -77,7 +77,7 @@ public class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBas
 
         if (argValue != null && argValue < upperLimit) {
             holder.registerProblem(verificationModeArgument,
-                MockitoolsBundle.inspection("verification.mode.value.less.than.allowed", getMethodName(methodCall), upperLimit));
+                MockitoolsBundle.message("inspection.verification.mode.value.less.than.allowed", getMethodName(methodCall), upperLimit));
         }
     }
 
@@ -88,10 +88,10 @@ public class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBas
         if (argValue != null) {
             if (argValue < upperLimit) {
                 holder.registerProblem(verificationModeArgument,
-                    MockitoolsBundle.inspection("verification.mode.value.less.than.allowed", getMethodName(methodCall), upperLimit));
+                    MockitoolsBundle.message("inspection.verification.mode.value.less.than.allowed", getMethodName(methodCall), upperLimit));
             }
             if (isTimeout && argValue > timeoutMaxThreshold) {
-                holder.registerProblem(verificationModeArgument, MockitoolsBundle.inspection("timeout.value.more.than.allowed", timeoutMaxThreshold));
+                holder.registerProblem(verificationModeArgument, MockitoolsBundle.message("inspection.timeout.value.more.than.allowed", timeoutMaxThreshold));
             }
         }
     }
