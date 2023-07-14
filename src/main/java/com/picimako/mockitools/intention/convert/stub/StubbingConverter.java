@@ -3,6 +3,7 @@
 package com.picimako.mockitools.intention.convert.stub;
 
 import static com.google.common.collect.Iterables.getLast;
+import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.getQualifier;
@@ -10,37 +11,30 @@ import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement
 import static com.picimako.mockitools.util.Ranges.endOffsetOf;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
-import com.intellij.openapi.command.WriteCommandAction;
+import java.util.List;
+
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.picimako.mockitools.StubType;
 import com.picimako.mockitools.StubbingApproach;
 import com.picimako.mockitools.util.PsiClassUtil;
-import com.picimako.mockitools.StubType;
-
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Converts stubbing call chains between the different approaches.
  * <p>
  * {@code Mockito.lenient()} is not supported at the moment.
  */
+@RequiredArgsConstructor
 public final class StubbingConverter {
 
     private final Project project;
     private final Document document;
     private final PsiFile file;
-    private final PsiDocumentManager documentManager;
-
-    public StubbingConverter(Project project, Document document, PsiFile file) {
-        this.project = project;
-        this.document = document;
-        this.file = file;
-        documentManager = PsiDocumentManager.getInstance(project);
-    }
 
     /**
      * Converts the call chain started by the argument {@code firstCallInChain} to the target stubbing approach.
@@ -54,7 +48,7 @@ public final class StubbingConverter {
         if (from.hasSameStubTypeAs(to) && from.methodCallStubber.equals(to.methodCallStubber))
             return;
 
-        WriteCommandAction.runWriteCommandAction(project, () -> {
+        runWriteCommandAction(project, () -> {
             var calls = collectCallsInChainFromFirst(firstCallInChain, true);
 
             if (from.hasSameStubTypeAs(to)) convertSameType(calls, from, to);
@@ -93,8 +87,8 @@ public final class StubbingConverter {
     private void convertToStubber(List<PsiMethodCallExpression> calls, StubbingApproach from, StubbingApproach to) {
         //These have to be saved before the base conversion, so their values are kept properly
         var stubbedCall = ((PsiMethodCallExpression) getFirstArgument(calls.get(0))); //mock.doSomething()
-        String stubbedCallQualifier = getQualifier(stubbedCall).getText(); //"mock"
-        String stubbedCallText = stubbedCall.getText(); //"mock.doSomething()"
+        var stubbedCallQualifier = getQualifier(stubbedCall).getText(); //"mock"
+        var stubbedCallText = stubbedCall.getText(); //"mock.doSomething()"
 
         //At this point the example chain becomes 'Mockito.do*();'
         doBaseConversion(from, to, calls, endOffsetOf(calls.get(0)), to.getBeginningOfStubbing(from));
@@ -191,6 +185,6 @@ public final class StubbingConverter {
 
     private void replaceString(int startOffset, int endOffset, String replacement) {
         document.replaceString(startOffset, endOffset, replacement);
-        documentManager.commitDocument(document);
+        PsiDocumentManager.getInstance(project).commitDocument(document);
     }
 }
