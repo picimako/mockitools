@@ -1,0 +1,24 @@
+<html>
+<body>
+<!-- tooltip end -->
+This inspection reports <code>Mockito.mock(..., withSettings()...)</code> mock creations that have convenience methods
+or simpler variants, and provides a quick fix to replace them with their corresponding simpler versions.
+<p>
+    Currently <code>spiedInstance()</code>, <code>name()</code> and <code>defaultAnswer()</code> are supported in <code>MockSettings</code>.
+<pre>
+<code>
+Mockito.mock(&lt;type>, withSettings().spiedInstance(instance))
+//can be replaced with
+Mockito.spy(instance)
+
+Mockito.mock(&lt;type>, withSettings().name(name))
+//can be replaced with
+Mockito.mock(&lt;type>, name)
+
+Mockito.mock(&lt;type>, withSettings().defaultAnswer(answer))
+//can be replaced with
+Mockito.mock(&lt;type>, answer)
+</code>
+</pre>
+</body>
+</html>

@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 import static com.picimako.mockitools.MockitoMockMatchers.MOCK_WITH_SETTINGS;
+import static com.picimako.mockitools.MockitoQualifiedNames.SPIED_INSTANCE;
 import static com.picimako.mockitools.util.PsiMethodUtil.*;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
@@ -25,10 +26,10 @@ import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
  * e.g. {@code <type>.class}, and when the spied instance is a 'new' expression e.g. {@code new SomeObject<>()}.
  * <p>
  * Based on Mockito's behaviour, in case of mocking/spying type with generic types, only the raw type is taken into account when determining the mismatch.
+ *
+ * @since 0.11.0
  */
 public class MockSpiedInstanceTypeMismatchInspection extends MockitoolsBaseInspection {
-
-    private static final String SPIED_INSTANCE = "spiedInstance";
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

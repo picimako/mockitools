@@ -13,6 +13,7 @@
 * [Convert @Mock/@Spy fields to Mockito.mock()/spy() calls](#convert-mockspy-fields-to-mockitomockspy-calls)
     * [Determining the target method](#determining-the-target-method)
 * [Convert Mockito.mock()/spy() calls to @Mock/@Spy fields](#convert-mockitomockspy-calls-to-mockspy-fields)
+* [Simplify mock creation](#simplify-mock-creation)
 <!-- TOC -->
 
 ## Non-interface type(s) passed into extraInterfaces
@@ -481,4 +482,25 @@ It is not yet supported to convert `spy()` calls in which an already created obj
 ```java
 Clazz clazz = new Clazz();
 Clazz spy = Mockito.spy(clazz); 
+```
+
+## Simplify mock creation
+
+![](https://img.shields.io/badge/inspection-orange)
+![](https://img.shields.io/badge/since-0.11.0-blue) [![](https://img.shields.io/badge/implementation-SimplifyMockCreationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/mocking/SimplifyMockCreationInspection.java)
+
+This inspection reports `Mockito.mock(..., withSettings()...)` mock creations that have convenience methods
+or simpler variants, and provides a quick fix to replace them with their corresponding simpler versions.
+
+Currently `spiedInstance()`, `name()` and `defaultAnswer()` are supported in `MockSettings`.
+
+```java
+from: Mockito.mock(MockObject.class, withSettings().spiedInstance(instance))
+  to: Mockito.spy(instance)
+
+from: Mockito.mock(MockObject.class, withSettings().name(name))
+  to: Mockito.mock(MockObject.class, name)
+
+from: Mockito.mock(MockObject.class, withSettings().defaultAnswer(answer))
+  to: Mockito.mock(MockObject.class, answer)
 ```

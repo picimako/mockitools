@@ -95,7 +95,7 @@
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.stubbing.StubbingAndMethodReturnTypeMismatchInspection"
                 id="mockitools.stubbing.method.return.type.mismatch" language="JAVA"
-                displayName="Stubbing calls and stubbed method's return type don't match" groupPath="Java"
+                displayName="Stubbing call's and stubbed method's return type don't match" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.verification.CannotVerifyToStringInspection"
@@ -122,6 +122,11 @@
                 id="mockitools.mock.spied.instance.type.mismatch" language="JAVA"
                 displayName="Mocked type and spied instance type mismatch" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.mocking.SimplifyMockCreationInspection"
+                id="mockitools.simplify.mock.creation" language="JAVA"
+                displayName="Simplify mock creation" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="INFO"/>
 
         <!-- v4 migration aids -->
         <localInspection
