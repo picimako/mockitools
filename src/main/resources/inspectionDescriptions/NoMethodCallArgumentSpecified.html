@@ -4,7 +4,7 @@
 Reports Mockito method calls that has no argument passed.
 There are a couple of methods in Mockito that must be passed at least one argument (usually these methods take varargs as argument).
 <pre>
-    <code>
+<code>
 @Test
 void testMethod() {
     AnObject mock = Mockito.mock(AnObject.class, Mockito.withSettings().extraInterfaces());
@@ -15,7 +15,7 @@ void testMethod() {
     Mockito.ignoreStubs();
     Mockito.inOrder();
 }
-    </code>
+</code>
 </pre>
 </body>
 </html>

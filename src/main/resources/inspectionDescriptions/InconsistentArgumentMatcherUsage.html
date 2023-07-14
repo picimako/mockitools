@@ -3,15 +3,15 @@
 Argument matchers are used incorrectly when, during stubbing, matcher and non-matcher arguments are used in a
 mixed manner. That is not permitted by Mockito. For example:
 <pre>
-    <code>
+<code>
 Mockito.when(mock.method(eq("some string"), 25)).thenReturn(10);
-    </code>
+</code>
 </pre>
 or
 <pre>
-    <code>
+<code>
 Mockito.when(mock.method("some string", geq(25))).thenReturn(10);
-    </code>
+</code>
 </pre>
 As per Mockito documentation: <i>If you are using argument matchers, all arguments have to be provided by matchers.</i>
 <!-- tooltip end -->

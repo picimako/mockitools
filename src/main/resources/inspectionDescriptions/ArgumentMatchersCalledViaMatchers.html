@@ -8,22 +8,22 @@ quick fix to replace the call to be via <code>org.mockito.ArgumentMatchers</code
     The inspection is applied only when the Mockito version included on the module classpath of the currently
     inspected file is 2.x or 3.x.
 <pre>
-    <code>
+<code>
 //from:
 Mockito.when(mock.method(org.mockito.Matchers.anyString())).thenReturn(10);
 
 //to: since Matchers was not referenced via import, ArgumentMatchers is kept that way too
 Mockito.when(mock.method(org.mockito.ArgumentMatchers.anyString())).thenReturn(10);
-    </code>
+</code>
 </pre>
 <pre>
-    <code>
+<code>
 //from:
 Mockito.when(mock.method(Matchers.anyString())).thenReturn(10);
 
 //to: org.mockito.ArgumentMatchers is also imported, if necessary
 Mockito.when(mock.method(ArgumentMatchers.anyString())).thenReturn(10);
-    </code>
+</code>
 </pre>
 </body>
 </html>

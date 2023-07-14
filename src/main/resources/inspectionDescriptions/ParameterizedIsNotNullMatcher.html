@@ -11,7 +11,7 @@ which are deprecated since Mockito v2, and are removed in v4.
 <p>
 <h4>Examples:</h4>
 <pre>
-    <code>
+<code>
 //from:
 Mockito.when(mock.method(ArgumentMatchers.isNull(String.class))).thenReturn(10);
 Mockito.when(mock.method(ArgumentMatchers.isNotNull(String.class))).thenReturn(10);
@@ -20,7 +20,7 @@ Mockito.when(mock.method(ArgumentMatchers.notNull(String.class))).thenReturn(10)
 Mockito.when(mock.method(ArgumentMatchers.isNull())).thenReturn(10);
 Mockito.when(mock.method(ArgumentMatchers.isNotNull())).thenReturn(10);
 Mockito.when(mock.method(ArgumentMatchers.notNull())).thenReturn(10);
-    </code>
+</code>
 </pre>
 <br>
 Furthermore, if the matcher is referenced via <code>org.mockito.Matchers</code>, it is also replaced with the <code>org.mockito.ArgumentMatchers</code>
