@@ -18,7 +18,6 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiType;
-import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import org.jetbrains.annotations.NotNull;
@@ -64,13 +63,13 @@ public class CaptorFieldOfTypeArgumentCaptorInspection extends MockitoolsBaseIns
 
         @Override
         protected void doFix(Project project, ProblemDescriptor descriptor) {
-            PsiElement context = descriptor.getPsiElement().getContext();
-            if (context instanceof PsiField) {
-                PsiTypeElement fieldType = ((PsiField) context).getTypeElement();
+            var context = descriptor.getPsiElement().getContext();
+            if (context instanceof PsiField field) {
+                var fieldType = field.getTypeElement();
                 if (fieldType != null) {
                     PsiType type = fieldType.getType();
                     //If the field type is a primitive, then it converts it to its boxed type, otherwise leaves it as it is.
-                    PsiType boxedType = type instanceof PsiPrimitiveType ? ((PsiPrimitiveType) type).getBoxedType(context) : type;
+                    PsiType boxedType = type instanceof PsiPrimitiveType primitiveType ? primitiveType.getBoxedType(context) : type;
                     if (boxedType != null) {
                         PsiElement replaced = fieldType.replace(JavaPsiFacade.getElementFactory(project)
                             .createTypeElementFromText(ORG_MOCKITO_ARGUMENT_CAPTOR + "<" + boxedType.getCanonicalText() + ">", context));

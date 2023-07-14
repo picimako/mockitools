@@ -95,8 +95,8 @@ public class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loc
      */
     private boolean areAllVerifications(PsiReference[] inOrderRefs) {
         return Arrays.stream(inOrderRefs).allMatch(ref -> {
-            if (ref instanceof PsiReferenceExpression) {
-                var verifyOrShould = getParentOfType((PsiReferenceExpression) ref, PsiMethodCallExpression.class);
+            if (ref instanceof PsiReferenceExpression inOrderRef) {
+                var verifyOrShould = getParentOfType(inOrderRef, PsiMethodCallExpression.class);
                 return VerificationApproach.INORDER_VERIFY.isVerifiedBy(verifyOrShould) || VerificationApproach.BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(verifyOrShould);
             } else return false;
         });
@@ -109,8 +109,8 @@ public class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loc
         List<PsiExpression> mocksUsed = null;
 
         for (var ref : inOrderRefs) {
-            if (ref instanceof PsiReferenceExpression) {
-                var verifyOrShould = getParentOfType((PsiReferenceExpression) ref, PsiMethodCallExpression.class);
+            if (ref instanceof PsiReferenceExpression inOrderRef) {
+                var verifyOrShould = getParentOfType(inOrderRef, PsiMethodCallExpression.class);
                 if (VerificationApproach.INORDER_VERIFY.isVerifiedBy(verifyOrShould)) {
                     if (mocksUsed == null) mocksUsed = new SmartList<>();
                     saveMockFrom(verifyOrShould, mocksUsed);

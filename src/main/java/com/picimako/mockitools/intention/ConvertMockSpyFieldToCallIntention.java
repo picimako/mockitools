@@ -83,10 +83,10 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
     /**
      * Defines the annotation attributes and the conditions when they are allowed to be added to the Mockito.mock() call.
      * <p>
-     * These are used for Mockito.mock(Class, String) and Mockito.mock(Class, Answer).
+     * These are used for {@code Mockito.mock(Class, String)} and {@code Mockito.mock(Class, Answer)}.
      */
     private static final Map<String, Predicate<PsiAnnotationMemberValue>> MOCK_OVERLOAD_ARGS = Map.of(
-        "answer", value -> value instanceof PsiReferenceExpression && !isDefaultAnswer((PsiReferenceExpression) value),
+        "answer", value -> value instanceof PsiReferenceExpression memberValue && !isDefaultAnswer(memberValue),
         "name", value -> !isBlank(value)
     );
     private static final Set<String> BOOLEAN_ATTRIBUTES = Set.of("stubOnly", "serializable", "lenient", "withoutAnnotations");
@@ -275,8 +275,8 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
     }
 
     private Optional<PsiAnnotationMemberValue> valueOf(JvmAnnotationAttribute attribute) {
-        return attribute instanceof PsiNameValuePair && ((PsiNameValuePair) attribute).getValue() != null
-            ? Optional.ofNullable(((PsiNameValuePair) attribute).getValue())
+        return attribute instanceof PsiNameValuePair attributeNameValue && attributeNameValue.getValue() != null
+            ? Optional.ofNullable(attributeNameValue.getValue())
             : Optional.empty();
     }
 

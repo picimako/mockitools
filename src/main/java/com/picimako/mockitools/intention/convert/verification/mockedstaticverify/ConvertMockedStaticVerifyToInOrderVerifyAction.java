@@ -102,11 +102,10 @@ public class ConvertMockedStaticVerifyToInOrderVerifyAction extends ConvertVerif
      */
     @NotNull
     private Pair<String, PsiElement> getMockedVarAndClassType(List<PsiMethodCallExpression> calls) {
-        var mockVariableExpr = getQualifier(calls.get(0));
-        if (mockVariableExpr instanceof PsiReferenceExpression) {
-            var mockedStaticResourceVar = ((PsiReferenceExpression) mockVariableExpr).resolve();
-            if (mockedStaticResourceVar instanceof PsiResourceVariable) {
-                var mockStaticCall = ((PsiResourceVariable) mockedStaticResourceVar).getInitializer();
+        if (getQualifier(calls.get(0)) instanceof PsiReferenceExpression mockVariableRef) {
+            var mockedStaticResourceVar = mockVariableRef.resolve();
+            if (mockedStaticResourceVar instanceof PsiResourceVariable mockedStaticResourceVariable) {
+                var mockStaticCall = mockedStaticResourceVariable.getInitializer();
                 if (MOCK_STATIC.matches(mockStaticCall))
                     return Pair.create(getFirstArgument((PsiMethodCallExpression) mockStaticCall).getText(), mockedStaticResourceVar);
             }

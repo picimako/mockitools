@@ -29,8 +29,8 @@ public enum TypeConversionMethod {
     TO_THROWABLES(MockitoolsBundle.message("quick.fix.to.throwables")) {
         @Override
         public PsiElement convert(PsiExpression expression) {
-            return expression instanceof PsiClassObjectAccessExpression
-                ? createExpression(expression, "new " + ((PsiClassObjectAccessExpression) expression).getOperand().getType().getPresentableText() + "()")
+            return expression instanceof PsiClassObjectAccessExpression classObjectAccess
+                ? createExpression(expression, "new " + classObjectAccess.getOperand().getType().getPresentableText() + "()")
                 : super.convert(expression);
         }
     },

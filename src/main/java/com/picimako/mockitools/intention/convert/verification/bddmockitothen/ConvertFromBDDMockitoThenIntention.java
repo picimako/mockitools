@@ -52,11 +52,9 @@ public class ConvertFromBDDMockitoThenIntention extends ConvertVerificationInten
 
     @Override
     protected boolean isQualifierHaveCorrectType(PsiExpression qualifier) {
-        if (qualifier instanceof PsiReferenceExpression) {
-            var psiClass = ((PsiReferenceExpression) qualifier).resolve();
-            return psiClass instanceof PsiClass && ORG_MOCKITO_BDDMOCKITO.equals(((PsiClass) psiClass).getQualifiedName());
-        }
-        return false;
+        return qualifier instanceof PsiReferenceExpression qualifierAsRef
+            && qualifierAsRef.resolve() instanceof PsiClass qualifierClass
+            && ORG_MOCKITO_BDDMOCKITO.equals(qualifierClass.getQualifiedName());
     }
 
     @Override

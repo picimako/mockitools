@@ -31,8 +31,8 @@ public final class EvaluationHelper {
         PsiType elementType = null;
         if (element instanceof PsiClassObjectAccessExpression) {
             elementType = getOperandType(element);
-        } else if (element instanceof PsiNewExpression) {
-            elementType = ((PsiExpression) element).getType();
+        } else if (element instanceof PsiNewExpression newExpression) {
+            elementType = newExpression.getType();
         }
         return elementType;
     }

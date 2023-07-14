@@ -40,11 +40,9 @@ public class ConvertFromMockitoVerifyIntention extends ConvertVerificationIntent
 
     @Override
     protected boolean isQualifierHaveCorrectType(PsiExpression qualifier) {
-        if (qualifier instanceof PsiReferenceExpression) {
-            var psiClass = ((PsiReferenceExpression) qualifier).resolve();
-            return psiClass instanceof PsiClass && ORG_MOCKITO_MOCKITO.equals(((PsiClass) psiClass).getQualifiedName());
-        }
-        return false;
+        return qualifier instanceof PsiReferenceExpression qualifierAsRef
+            && qualifierAsRef.resolve() instanceof PsiClass qualifierClass
+            && ORG_MOCKITO_MOCKITO.equals(qualifierClass.getQualifiedName());
     }
 
     @Override
