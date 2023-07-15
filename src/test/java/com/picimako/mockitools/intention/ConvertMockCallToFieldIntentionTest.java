@@ -33,149 +33,161 @@ class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
     @Test
     void testNotAvailableForNotMockMethod() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class NotAvailable {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.sp<caret>y(Object.class);\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class NotAvailable {
+                    public void testMethod() {
+                        Mockito.sp<caret>y(Object.class);
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableForNotClassObjectAccessExpression() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class NotAvailable {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.sp<caret>y(new Object());\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class NotAvailable {
+                    public void testMethod() {
+                        Mockito.sp<caret>y(new Object());
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableForNotMockableType() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class NotAvailable {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.sp<caret>y(new String());\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class NotAvailable {
+                    public void testMethod() {
+                        Mockito.sp<caret>y(new String());
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableForNonMockitoWithSettings() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class NotAvailable {\n" +
-                "    public void testMethod() {\n" +
-                "        var mockSettings = Mockito.withSettings();\n" +
-                "        Mockito.mo<caret>ck(Object.class, mockSettings);\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class NotAvailable {
+                    public void testMethod() {
+                        var mockSettings = Mockito.withSettings();
+                        Mockito.mo<caret>ck(Object.class, mockSettings);
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableForNotSupportedMockSettings() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class NotAvailable {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().spiedInstance(new Object()));\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class NotAvailable {
+                    public void testMethod() {
+                        Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().spiedInstance(new Object()));
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableForNotSupportedMockSettingsSerializableWithMode() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.mock.SerializableMode;\n" +
-                "\n" +
-                "public class NotAvailable {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().serializable(SerializableMode.ACROSS_CLASSLOADERS));\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.mock.SerializableMode;
+
+                public class NotAvailable {
+                    public void testMethod() {
+                        Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().serializable(SerializableMode.ACROSS_CLASSLOADERS));
+                    }
+                }""");
     }
 
     @Test
     void testAvailableForMockitoMock() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class Available {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.mo<caret>ck(Object.class);\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class Available {
+                    public void testMethod() {
+                        Mockito.mo<caret>ck(Object.class);
+                    }
+                }""");
     }
 
     @Test
     void testAvailableForMockitoMockWithName() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class Available {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.mo<caret>ck(Object.class, \"some name\");\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class Available {
+                    public void testMethod() {
+                        Mockito.mo<caret>ck(Object.class, "some name");
+                    }
+                }""");
     }
 
     @Test
     void testAvailableForMockitoMockWithAnswer() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Answers;\n" +
-                "\n" +
-                "public class Available {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.mo<caret>ck(Object.class, Answers.CALLS_REAL_METHODS);\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Answers;
+
+                public class Available {
+                    public void testMethod() {
+                        Mockito.mo<caret>ck(Object.class, Answers.CALLS_REAL_METHODS);
+                    }
+                }""");
     }
 
     @Test
     void testAvailableForMockitoMockWithSettings() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "public class Available {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().extraInterfaces(List.class));\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import java.util.List;
+
+                public class Available {
+                    public void testMethod() {
+                        Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().extraInterfaces(List.class));
+                    }
+                }""");
     }
 
     @Test
     void testAvailableForNotSupportedMockSettingsSerializableWithoutMode() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class Available {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().serializable());\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class Available {
+                    public void testMethod() {
+                        Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().serializable());
+                    }
+                }""");
     }
 
     @Test
     void testAvailableForWithoutAnnotations() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class Available {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.mo<caret>ck(Object.class, Mockito.withSettings().withoutAnnotations());\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class Available {
+                    public void testMethod() {
+                        Mockito.mo<caret>ck(Object.class, Mockito.withSettings().withoutAnnotations());
+                    }
+                }""");
     }
 
     //Conversions
@@ -183,504 +195,544 @@ class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
     @Test
     void testConvertsMockitoMock() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.mo<caret>ck(Object.class));\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock\n" +
-                "    Object object;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(object);\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.mo<caret>ck(Object.class));
+                    }
+                    public void aMethod(Object object) { }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    @Mock
+                    Object object;
+
+                    public void testMethod() {
+                        aMethod(object);
+                    }
+                    public void aMethod(Object object) { }
+                }""");
     }
 
     @Test
     void testConvertsMockitoMockFromVariable() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        var mock = Mockito.mo<caret>ck(Object.class);\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock\n" +
-                "    Object mock;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        var mock = Mockito.mo<caret>ck(Object.class);
+                    }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    @Mock
+                    Object mock;
+
+                    public void testMethod() {
+                    }
+                }""");
     }
 
     @Test
     void testConvertsMockitoMockWithName() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.mo<caret>ck(Object.class, \"some name\"));\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock(name = \"some name\")\n" +
-                "    Object object;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(object);\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.mo<caret>ck(Object.class, "some name"));
+                    }
+                    public void aMethod(Object object) { }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    @Mock(name = "some name")
+                    Object object;
+
+                    public void testMethod() {
+                        aMethod(object);
+                    }
+                    public void aMethod(Object object) { }
+                }""");
     }
 
     @Test
     void testConvertsMockitoMockWithNameFromVariable() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        var mock = Mockito.mo<caret>ck(Object.class, \"some name\");\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock(name = \"some name\")\n" +
-                "    Object mock;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        var mock = Mockito.mo<caret>ck(Object.class, "some name");
+                    }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    @Mock(name = "some name")
+                    Object mock;
+
+                    public void testMethod() {
+                    }
+                }""");
     }
 
     @Test
     void testConvertsMockitoMockWithDefaultAnswer() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Answers;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.mo<caret>ck(Object.class, Answers.RETURNS_DEFAULTS));\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.Answers;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock\n" +
-                "    Object object;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(object);\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Answers;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.mo<caret>ck(Object.class, Answers.RETURNS_DEFAULTS));
+                    }
+                    public void aMethod(Object object) { }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+                import org.mockito.Answers;
+
+                public class ConversionTest {
+                    @Mock
+                    Object object;
+
+                    public void testMethod() {
+                        aMethod(object);
+                    }
+                    public void aMethod(Object object) { }
+                }""");
     }
 
     @Test
     void testConvertsMockitoMockWithDefaultAnswerFromVariable() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Answers;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        var mock = Mockito.mo<caret>ck(Object.class, Answers.RETURNS_DEFAULTS);\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.Answers;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock\n" +
-                "    Object mock;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Answers;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        var mock = Mockito.mo<caret>ck(Object.class, Answers.RETURNS_DEFAULTS);
+                    }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+                import org.mockito.Answers;
+
+                public class ConversionTest {
+                    @Mock
+                    Object mock;
+
+                    public void testMethod() {
+                    }
+                }""");
     }
 
     @Test
     void testConvertsMockitoMockWithNonDefaultAnswer() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Answers;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.mo<caret>ck(Object.class, Answers.RETURNS_SMART_NULLS));\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.Answers;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock(answer = Answers.RETURNS_SMART_NULLS)\n" +
-                "    Object object;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(object);\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Answers;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.mo<caret>ck(Object.class, Answers.RETURNS_SMART_NULLS));
+                    }
+                    public void aMethod(Object object) { }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+                import org.mockito.Answers;
+
+                public class ConversionTest {
+                    @Mock(answer = Answers.RETURNS_SMART_NULLS)
+                    Object object;
+
+                    public void testMethod() {
+                        aMethod(object);
+                    }
+                    public void aMethod(Object object) { }
+                }""");
     }
 
     @Test
     void testConvertsMockitoMockWithNonDefaultAnswerFromVariable() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Answers;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        var mock = Mockito.mo<caret>ck(Object.class, Answers.RETURNS_SMART_NULLS);\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.Answers;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock(answer = Answers.RETURNS_SMART_NULLS)\n" +
-                "    Object mock;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Answers;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        var mock = Mockito.mo<caret>ck(Object.class, Answers.RETURNS_SMART_NULLS);
+                    }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+                import org.mockito.Answers;
+
+                public class ConversionTest {
+                    @Mock(answer = Answers.RETURNS_SMART_NULLS)
+                    Object mock;
+
+                    public void testMethod() {
+                    }
+                }""");
     }
 
     @Test
     void testConvertsMockitoMockWithBooleanSettings() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().serializable().stubOnly().withoutAnnotations()));\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock(lenient = true, serializable = true, stubOnly = true, withoutAnnotations = true)\n" +
-                "    Object object;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(object);\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().serializable().stubOnly().withoutAnnotations()));
+                    }
+                    public void aMethod(Object object) { }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    @Mock(lenient = true, serializable = true, stubOnly = true, withoutAnnotations = true)
+                    Object object;
+
+                    public void testMethod() {
+                        aMethod(object);
+                    }
+                    public void aMethod(Object object) { }
+                }""");
     }
 
     @Test
     void testConvertsMockitoMockWithBooleanSettingsFromVariable() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        var mock = Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().serializable().stubOnly().withoutAnnotations());\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock(lenient = true, serializable = true, stubOnly = true, withoutAnnotations = true)\n" +
-                "    Object mock;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        var mock = Mockito.mo<caret>ck(Object.class, Mockito.withSettings().lenient().serializable().stubOnly().withoutAnnotations());
+                    }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    @Mock(lenient = true, serializable = true, stubOnly = true, withoutAnnotations = true)
+                    Object mock;
+
+                    public void testMethod() {
+                    }
+                }""");
     }
 
     @Test
     void testConvertsMockitoMockWithSettingsName() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().name(\"some name\")));\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock(name = \"some name\")\n" +
-                "    Object object;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(object);\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().name("some name")));
+                    }
+                    public void aMethod(Object object) { }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    @Mock(name = "some name")
+                    Object object;
+
+                    public void testMethod() {
+                        aMethod(object);
+                    }
+                    public void aMethod(Object object) { }
+                }""");
     }
 
     @Test
     void testConvertsMockitoMockWithSettingsNameFromVariable() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        var mock = Mockito.mo<caret>ck(Object.class, Mockito.withSettings().name(\"some name\"));\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock(name = \"some name\")\n" +
-                "    Object mock;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        var mock = Mockito.mo<caret>ck(Object.class, Mockito.withSettings().name("some name"));
+                    }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    @Mock(name = "some name")
+                    Object mock;
+
+                    public void testMethod() {
+                    }
+                }""");
     }
 
     @Test
     void testConvertsMockitoMockWithSettingsStrictness() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.quality.Strictness;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().strictness(Strictness.WARN)));\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.quality.Strictness;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock(strictness = Mock.Strictness.WARN)\n" +
-                "    Object object;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(object);\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.quality.Strictness;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().strictness(Strictness.WARN)));
+                    }
+                    public void aMethod(Object object) { }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+                import org.mockito.quality.Strictness;
+
+                public class ConversionTest {
+                    @Mock(strictness = Mock.Strictness.WARN)
+                    Object object;
+
+                    public void testMethod() {
+                        aMethod(object);
+                    }
+                    public void aMethod(Object object) { }
+                }""");
     }
 
     @Test
     void testConvertsMockitoMockWithSettingsMockMaker() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().mockMaker(\"mock-maker-inline\")));\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock(mockMaker = \"mock-maker-inline\")\n" +
-                "    Object object;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(object);\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().mockMaker("mock-maker-inline")));
+                    }
+                    public void aMethod(Object object) { }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    @Mock(mockMaker = "mock-maker-inline")
+                    Object object;
+
+                    public void testMethod() {
+                        aMethod(object);
+                    }
+                    public void aMethod(Object object) { }
+                }""");
     }
 
     @Test
     void testConvertsMockitoMockWithSettingsDefaultAnswer() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Answers;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().defaultAnswer(Answers.RETURNS_DEFAULTS)));\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.Answers;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock\n" +
-                "    Object object;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(object);\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Answers;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().defaultAnswer(Answers.RETURNS_DEFAULTS)));
+                    }
+                    public void aMethod(Object object) { }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+                import org.mockito.Answers;
+
+                public class ConversionTest {
+                    @Mock
+                    Object object;
+
+                    public void testMethod() {
+                        aMethod(object);
+                    }
+                    public void aMethod(Object object) { }
+                }""");
     }
 
     @Test
     void testConvertsMockitoMockWithSettingsDefaultAnswerFromVariable() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Answers;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        var mock = Mockito.mo<caret>ck(Object.class, Mockito.withSettings().defaultAnswer(Answers.RETURNS_DEFAULTS));\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.Answers;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock\n" +
-                "    Object mock;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Answers;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        var mock = Mockito.mo<caret>ck(Object.class, Mockito.withSettings().defaultAnswer(Answers.RETURNS_DEFAULTS));
+                    }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+                import org.mockito.Answers;
+
+                public class ConversionTest {
+                    @Mock
+                    Object mock;
+
+                    public void testMethod() {
+                    }
+                }""");
     }
 
     @Test
     void testConvertsMockitoMockWithSettingsNonDefaultAnswer() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Answers;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().defaultAnswer(Answers.RETURNS_SMART_NULLS)));\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.Answers;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock(answer = Answers.RETURNS_SMART_NULLS)\n" +
-                "    Object object;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(object);\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Answers;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().defaultAnswer(Answers.RETURNS_SMART_NULLS)));
+                    }
+                    public void aMethod(Object object) { }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+                import org.mockito.Answers;
+
+                public class ConversionTest {
+                    @Mock(answer = Answers.RETURNS_SMART_NULLS)
+                    Object object;
+
+                    public void testMethod() {
+                        aMethod(object);
+                    }
+                    public void aMethod(Object object) { }
+                }""");
     }
 
     @Test
     void testConvertsMockitoMockWithSettingsNonDefaultAnswerFromVariable() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Answers;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().defaultAnswer(Answers.RETURNS_SMART_NULLS)));\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.Answers;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock(answer = Answers.RETURNS_SMART_NULLS)\n" +
-                "    Object object;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(object);\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Answers;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().defaultAnswer(Answers.RETURNS_SMART_NULLS)));
+                    }
+                    public void aMethod(Object object) { }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+                import org.mockito.Answers;
+
+                public class ConversionTest {
+                    @Mock(answer = Answers.RETURNS_SMART_NULLS)
+                    Object object;
+
+                    public void testMethod() {
+                        aMethod(object);
+                    }
+                    public void aMethod(Object object) { }
+                }""");
     }
 
     @Test
     void testConvertsMockitoMockWithSettingsSingleExtraInterface() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().extraInterfaces(List.class)));\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock(extraInterfaces = List.class)\n" +
-                "    Object object;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(object);\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import java.util.List;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().extraInterfaces(List.class)));
+                    }
+                    public void aMethod(Object object) { }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+                import java.util.List;
+
+                public class ConversionTest {
+                    @Mock(extraInterfaces = List.class)
+                    Object object;
+
+                    public void testMethod() {
+                        aMethod(object);
+                    }
+                    public void aMethod(Object object) { }
+                }""");
     }
 
     @Test
     void testConvertsMockitoMockWithSettingsMultipleExtraInterfaces() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "import java.util.List;\n" +
-                "import java.util.Set;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().extraInterfaces(List.class, Set.class)));\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import java.util.List;\n" +
-                "import java.util.Set;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock(extraInterfaces = {List.class, Set.class})\n" +
-                "    Object object;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(object);\n" +
-                "    }\n" +
-                "    public void aMethod(Object object) { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import java.util.List;
+                import java.util.Set;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.mo<caret>ck(Object.class, Mockito.withSettings().extraInterfaces(List.class, Set.class)));
+                    }
+                    public void aMethod(Object object) { }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+                import java.util.List;
+                import java.util.Set;
+
+                public class ConversionTest {
+                    @Mock(extraInterfaces = {List.class, Set.class})
+                    Object object;
+
+                    public void testMethod() {
+                        aMethod(object);
+                    }
+                    public void aMethod(Object object) { }
+                }""");
     }
     
     //Generics
@@ -688,24 +740,26 @@ class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
     @Test
     void testConvertsMockitoMockWithGenericsFromVariable() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockable<String> mock = Mockito.mo<caret>ck(Mockable.class);\n" +
-                "    }\n" +
-                "    public static final class Mockable<T> { }\n" +
-                "}",
-            "import org.mockito.Mock;\n" +
-                "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Mock\n" +
-                "    Mockable<String> mock;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "    public static final class Mockable<T> { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        Mockable<String> mock = Mockito.mo<caret>ck(Mockable.class);
+                    }
+                    public static final class Mockable<T> { }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    @Mock
+                    Mockable<String> mock;
+
+                    public void testMethod() {
+                    }
+                    public static final class Mockable<T> { }
+                }""");
     }
 }

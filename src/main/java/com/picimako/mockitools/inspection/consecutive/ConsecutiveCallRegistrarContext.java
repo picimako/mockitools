@@ -7,7 +7,7 @@ import static com.google.common.collect.Iterables.getLast;
 import java.util.List;
 
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.inspection.ExceptionStubber;
+import com.picimako.mockitools.inspection.stubbing.ExceptionStubber;
 import org.jetbrains.annotations.NotNull;
 
 /**

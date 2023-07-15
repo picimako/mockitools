@@ -18,85 +18,90 @@ class UseArgumentMatchersInsteadOfMatchersInspectionTest extends MockitoolsInspe
     @Test
     void testUseArgumentMatchersInsteadOfMatchersWithFqn() {
         doQuickFixTest("Use matcher from ArgumentMatchers", "UseArgumentMatchersInsteadOfMatchersTest.java",
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class UseArgumentMatchersInsteadOfMatchersTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(org.mocki<caret>to.Matchers.anyString(), org.mockito.Matchers.eq(Integer.class));\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s, Class<? extends Object> clazz) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class UseArgumentMatchersInsteadOfMatchersTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(org.mockito.ArgumentMatchers.anyString(), org.mockito.Matchers.eq(Integer.class));\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s, Class<? extends Object> clazz) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class UseArgumentMatchersInsteadOfMatchersTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(org.mocki<caret>to.Matchers.anyString(), org.mockito.Matchers.eq(Integer.class));
+                   }
+                   private static final class MockObject {
+                       public int method(String s, Class<? extends Object> clazz) {
+                           return 0;
+                       }
+                   }
+                }""",
+            """
+                import org.mockito.Mockito;
+
+                public class UseArgumentMatchersInsteadOfMatchersTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(org.mockito.ArgumentMatchers.anyString(), org.mockito.Matchers.eq(Integer.class));
+                   }
+                   private static final class MockObject {
+                       public int method(String s, Class<? extends Object> clazz) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 
     @Test
     void testUseArgumentMatchersInsteadOfMatchersWithClassNameQualifier() {
         doQuickFixTest("Use matcher from ArgumentMatchers", "UseArgumentMatchersInsteadOfMatchersTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Matchers;\n" +
-                "\n" +
-                "public class UseArgumentMatchersInsteadOfMatchersTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(Matchers.anyString(), Matc<caret>hers.eq(Integer.class));\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s, Class<? extends Object> clazz) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}",
-            "import org.mockito.ArgumentMatchers;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.Matchers;\n" +
-                "\n" +
-                "public class UseArgumentMatchersInsteadOfMatchersTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(Matchers.anyString(), ArgumentMatchers.eq(Integer.class));\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s, Class<? extends Object> clazz) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Matchers;
+
+                public class UseArgumentMatchersInsteadOfMatchersTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(Matchers.anyString(), Matc<caret>hers.eq(Integer.class));
+                   }
+                   private static final class MockObject {
+                       public int method(String s, Class<? extends Object> clazz) {
+                           return 0;
+                       }
+                   }
+                }""",
+            """
+                import org.mockito.ArgumentMatchers;
+                import org.mockito.Mockito;
+                import org.mockito.Matchers;
+
+                public class UseArgumentMatchersInsteadOfMatchersTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(Matchers.anyString(), ArgumentMatchers.eq(Integer.class));
+                   }
+                   private static final class MockObject {
+                       public int method(String s, Class<? extends Object> clazz) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 
     @Test
     void testNoHighlightForStaticImportedMatcherFromArgumentMatchers() {
         doJavaTest("NoHighlightTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import static org.mockito.ArgumentMatchers.anyString;\n" +
-                "import static org.mockito.ArgumentMatchers.eq;\n" +
-                "\n" +
-                "public class NoHighlightTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(anyString(), eq(Integer.class));\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s, Class<? extends Object> clazz) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import static org.mockito.ArgumentMatchers.anyString;
+                import static org.mockito.ArgumentMatchers.eq;
+
+                public class NoHighlightTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(anyString(), eq(Integer.class));
+                   }
+                   private static final class MockObject {
+                       public int method(String s, Class<? extends Object> clazz) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 }

@@ -22,118 +22,130 @@ class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
     @Test
     void testReturnsDoNotMockedClassWithDefaultReason() {
         getFixture().configureByText("DoNotMockTest.java",
-            "import org.mockito.DoNotMock;\n" +
-                "import org.mockito.Mock;\n" +
-                "\n" +
-                "public class DoNotMockTest {\n" +
-                "\n" +
-                "    @Mock\n" +
-                "    NotMockable <caret>notMockable;\n" +
-                "\n" +
-                "    @DoNotMock\n" +
-                "    private static class NotMockable {}\n" +
-                "}\n");
+            """
+                import org.mockito.DoNotMock;
+                import org.mockito.Mock;
+
+                public class DoNotMockTest {
+
+                    @Mock
+                    NotMockable <caret>notMockable;
+
+                    @DoNotMock
+                    private static class NotMockable {}
+                }
+                """);
 
         var doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
-        assertThat(doNotMock.get().reason).isEqualTo("Create a real instance instead.");
+        assertThat(doNotMock.get().reason()).isEqualTo("Create a real instance instead.");
     }
 
     @Test
     void testReturnsDoNotMockedClassWithCustomReason() {
         getFixture().configureByText("DoNotMockTest.java",
-            "import org.mockito.DoNotMock;\n" +
-                "import org.mockito.Mock;\n" +
-                "\n" +
-                "public class DoNotMockTest {\n" +
-                "\n" +
-                "    @Mock\n" +
-                "    NotMockable <caret>notMockable;\n" +
-                "\n" +
-                "    @DoNotMock(reason = \"A custom reason\")\n" +
-                "    private static class NotMockable {}\n" +
-                "}\n");
+            """
+                import org.mockito.DoNotMock;
+                import org.mockito.Mock;
+
+                public class DoNotMockTest {
+
+                    @Mock
+                    NotMockable <caret>notMockable;
+
+                    @DoNotMock(reason = "A custom reason")
+                    private static class NotMockable {}
+                }
+                """);
 
         var doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
-        assertThat(doNotMock.get().reason).isEqualTo("A custom reason");
+        assertThat(doNotMock.get().reason()).isEqualTo("A custom reason");
     }
 
     @Test
     void testReturnsDoNotMockedClassWithEmptyReason() {
         getFixture().configureByText("DoNotMockTest.java",
-            "import org.mockito.DoNotMock;\n" +
-                "import org.mockito.Mock;\n" +
-                "\n" +
-                "public class DoNotMockTest {\n" +
-                "\n" +
-                "    @Mock\n" +
-                "    NotMockable <caret>notMockable;\n" +
-                "\n" +
-                "    @DoNotMock(reason = \"\")\n" +
-                "    private static class NotMockable {}\n" +
-                "}\n");
+            """
+                import org.mockito.DoNotMock;
+                import org.mockito.Mock;
+
+                public class DoNotMockTest {
+
+                    @Mock
+                    NotMockable <caret>notMockable;
+
+                    @DoNotMock(reason = "")
+                    private static class NotMockable {}
+                }
+                """);
 
         var doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
-        assertThat(doNotMock.get().reason).isEmpty();
+        assertThat(doNotMock.get().reason()).isEmpty();
     }
 
     @Test
     void testReturnsCustomDoNotMockedClassWithDefaultReason() {
         getFixture().copyFileToProject("DoNotMock.java");
         getFixture().configureByText("DoNotMockTest.java",
-            "import pm.org.mockito.DoNotMock;\n" +
-                "import org.mockito.Mock;\n" +
-                "\n" +
-                "public class DoNotMockTest {\n" +
-                "\n" +
-                "    @Mock\n" +
-                "    NotMockable <caret>notMockable;\n" +
-                "\n" +
-                "    @DoNotMock\n" +
-                "    private static class NotMockable {}\n" +
-                "}\n");
+            """
+                import pm.org.mockito.DoNotMock;
+                import org.mockito.Mock;
+
+                public class DoNotMockTest {
+
+                    @Mock
+                    NotMockable <caret>notMockable;
+
+                    @DoNotMock
+                    private static class NotMockable {}
+                }
+                """);
 
         var doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
-        assertThat(doNotMock.get().reason).isEqualTo("Default reason");
+        assertThat(doNotMock.get().reason()).isEqualTo("Default reason");
     }
 
     @Test
     void testReturnsCustomDoNotMockedClassWithCustomReason() {
         getFixture().copyFileToProject("DoNotMock.java");
         getFixture().configureByText("DoNotMockTest.java",
-            "import pm.org.mockito.DoNotMock;\n" +
-                "import org.mockito.Mock;\n" +
-                "\n" +
-                "public class DoNotMockTest {\n" +
-                "\n" +
-                "    @Mock\n" +
-                "    NotMockable <caret>notMockable;\n" +
-                "\n" +
-                "    @DoNotMock(reason = \"Custom reason\")\n" +
-                "    private static class NotMockable {}\n" +
-                "}\n");
+            """
+                import pm.org.mockito.DoNotMock;
+                import org.mockito.Mock;
+
+                public class DoNotMockTest {
+
+                    @Mock
+                    NotMockable <caret>notMockable;
+
+                    @DoNotMock(reason = "Custom reason")
+                    private static class NotMockable {}
+                }
+                """);
 
         var doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
-        assertThat(doNotMock.get().reason).isEqualTo("Custom reason");
+        assertThat(doNotMock.get().reason()).isEqualTo("Custom reason");
     }
 
     @Test
     void testReturnsCustomDoNotMockedClassWithEmptyReason() {
         getFixture().copyFileToProject("DoNotMock.java");
         getFixture().configureByText("DoNotMockTest.java",
-            "import pm.org.mockito.DoNotMock;\n" +
-                "import org.mockito.Mock;\n" +
-                "\n" +
-                "public class DoNotMockTest {\n" +
-                "\n" +
-                "    @Mock\n" +
-                "    NotMockable <caret>notMockable;\n" +
-                "\n" +
-                "    @DoNotMock(reason = \"\")\n" +
-                "    private static class NotMockable {}\n" +
-                "}\n");
+            """
+                import pm.org.mockito.DoNotMock;
+                import org.mockito.Mock;
+
+                public class DoNotMockTest {
+
+                    @Mock
+                    NotMockable <caret>notMockable;
+
+                    @DoNotMock(reason = "")
+                    private static class NotMockable {}
+                }
+                """);
 
         var doNotMock = getDoNotMockTypeInHierarchy(getField().getTypeElement().getType());
-        assertThat(doNotMock.get().reason).isEmpty();
+        assertThat(doNotMock.get().reason()).isEmpty();
     }
 
     //isMockableTypeInAnyWay
@@ -142,17 +154,19 @@ class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
     void testIsNotMockableTypeInAnyWayDoNotMock() {
         getFixture().copyFileToProject("DoNotMock.java");
         getFixture().configureByText("DoNotMockTest.java",
-            "import pm.org.mockito.DoNotMock;\n" +
-                "import org.mockito.Mock;\n" +
-                "\n" +
-                "public class DoNotMockTest {\n" +
-                "\n" +
-                "    @Mock\n" +
-                "    NotMockable <caret>notMockable;\n" +
-                "\n" +
-                "    @DoNotMock(reason = \"\")\n" +
-                "    private static class NotMockable {}\n" +
-                "}\n");
+            """
+                import pm.org.mockito.DoNotMock;
+                import org.mockito.Mock;
+
+                public class DoNotMockTest {
+
+                    @Mock
+                    NotMockable <caret>notMockable;
+
+                    @DoNotMock(reason = "")
+                    private static class NotMockable {}
+                }
+                """);
 
         assertThat(MockableTypesUtil.isMockableTypeInAnyWay(getField().getTypeElement().getType())).isFalse();
     }
@@ -160,13 +174,15 @@ class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
     @Test
     void testIsNotMockableTypeInAnyWay() {
         getFixture().configureByText("DoNotMockTest.java",
-            "import org.mockito.Mock;\n" +
-                "\n" +
-                "public class DoNotMockTest {\n" +
-                "\n" +
-                "    @Mock\n" +
-                "    String <caret>notMockable;\n" +
-                "}\n");
+            """
+                import org.mockito.Mock;
+
+                public class DoNotMockTest {
+
+                    @Mock
+                    String <caret>notMockable;
+                }
+                """);
 
         assertThat(MockableTypesUtil.isMockableTypeInAnyWay(getField().getTypeElement().getType())).isFalse();
     }

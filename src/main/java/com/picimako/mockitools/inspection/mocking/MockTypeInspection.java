@@ -1,6 +1,6 @@
 //Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.picimako.mockitools.inspection;
+package com.picimako.mockitools.inspection.mocking;
 
 import static com.picimako.mockitools.MockableTypesUtil.getDoNotMockTypeInHierarchy;
 import static com.picimako.mockitools.MockableTypesUtil.isMockableType;
@@ -8,9 +8,8 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_SPY;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoMock;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoSpy;
-import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.util.PsiMethodUtil.hasAtLeastOneArgument;
 import static com.picimako.mockitools.util.EvaluationHelper.evaluateClassObjectOrNewExpressionType;
+import static com.picimako.mockitools.util.PsiMethodUtil.*;
 import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
@@ -20,6 +19,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiType;
+import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,7 +53,7 @@ public class MockTypeInspection extends MockitoolsBaseInspection {
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         //Mockito.spy method has overloads only with single arguments
-        if (isMockitoSpy(expression) || (isMockitoMock(expression) && hasAtLeastOneArgument(expression))) {
+        if (isMockitoSpy(expression) || (isMockitoMock(expression) && hasArgument(expression))) {
             var typeToMock = getFirstArgument(expression);
             var type = evaluateClassObjectOrNewExpressionType(typeToMock);
             if (type != null) registerIfNotMockable(type, typeToMock, holder);
@@ -69,7 +69,7 @@ public class MockTypeInspection extends MockitoolsBaseInspection {
 
     private void registerIfNotMockable(PsiType type, PsiElement toHighlight, @NotNull ProblemsHolder holder) {
         if (!isMockableType(type))
-            holder.registerProblem(toHighlight, MockitoolsBundle.inspection("non.mockable.type"));
+            holder.registerProblem(toHighlight, MockitoolsBundle.message("inspection.non.mockable.type"));
         else checkForDoNotMockType(type, holder, toHighlight);
     }
 
@@ -80,7 +80,7 @@ public class MockTypeInspection extends MockitoolsBaseInspection {
     private void checkForDoNotMockType(PsiType type, @NotNull ProblemsHolder holder, PsiElement toHighlight) {
         getDoNotMockTypeInHierarchy(type).ifPresent(doNotMockType ->
             holder.registerProblem(toHighlight, doNotMockType.hasReason()
-                ? MockitoolsBundle.inspection("non.mockable.type.do.not.mock.reason", doNotMockType.reason)
-                : MockitoolsBundle.inspection("non.mockable.type.do.not.mock.no.reason")));
+                ? MockitoolsBundle.message("inspection.non.mockable.type.do.not.mock.reason", doNotMockType.reason())
+                : MockitoolsBundle.message("inspection.non.mockable.type.do.not.mock.no.reason")));
     }
 }

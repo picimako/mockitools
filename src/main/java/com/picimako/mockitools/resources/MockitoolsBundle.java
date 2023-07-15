@@ -24,44 +24,4 @@ public class MockitoolsBundle extends DynamicBundle {
     public static @Nls String message(@NotNull @PropertyKey(resourceBundle = MOCKITO_BUNDLE) String key, Object @NotNull ... params) {
         return INSTANCE.getMessage(key, params);
     }
-
-    /**
-     * Retrieves an inspection specific message for the provided id.
-     *
-     * @param id the suffix of the message key
-     * @return the actual message
-     */
-    public static String inspection(@NonNls String id, Object @NotNull ... params) {
-        return message("inspection." + id, params);
-    }
-    
-    /**
-     * Retrieves a quick fix specific message for the provided id.
-     *
-     * @param id the suffix of the message key
-     * @return the actual message
-     */
-    public static String quickFix(@NonNls String id, Object @NotNull ... params) {
-        return message("quick.fix." + id, params);
-    }
-
-    /**
-     * Retrieves a quick fix family specific message for the provided id.
-     *
-     * @param id the suffix of the message key
-     * @return the actual message
-     */
-    public static String quickFixFamily(@NonNls String id, Object @NotNull ... params) {
-        return message("quick.fix.family." + id, params);
-    }
-
-    /**
-     * Retrieves an inspection option specific message for the provided id.
-     *
-     * @param id the suffix of the message key
-     * @return the actual message
-     */
-    public static String inspectionOption(@NonNls String id, Object @NotNull ... params) {
-        return message("inspection.option." + id, params);
-    }
 }

@@ -6,7 +6,7 @@ import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.testFramework.InspectionsKt;
 
-import com.picimako.mockitools.inspection.EnforceConventionInspection;
+import com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection;
 import com.picimako.mockitools.intention.MockitoolsIntentionTestBase;
 
 /**

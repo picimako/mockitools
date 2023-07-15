@@ -26,98 +26,110 @@ class UsageOfOldJUnitRunnerInspectionTest extends MockitoolsInspectionTestBase.M
     @Test
     void testReplaceConsoleSpammingMockitoJUnitRunner() {
         doQuickFixTest("Replace with org.mockito.junit.MockitoJUnitRunner", "ReplaceOldRunnerTest.java",
-            "import org.junit.runner.RunWith;\n" +
-                "import org.mockito.runners.ConsoleSpammingMockitoJUnitRunner;\n" +
-                "\n" +
-                "@RunWith(ConsoleSpammingMockitoJU<caret>nitRunner.class)\n" +
-                "public class ReplaceOldRunnerTest {\n" +
-                "}",
-            "import org.junit.runner.RunWith;\n" +
-                "import org.mockito.junit.MockitoJUnitRunner;\n" +
-                "import org.mockito.runners.ConsoleSpammingMockitoJUnitRunner;\n" +
-                "\n" +
-                "@RunWith(MockitoJUnitRunner.class)\n" +
-                "public class ReplaceOldRunnerTest {\n" +
-                "}");
+            """
+                import org.junit.runner.RunWith;
+                import org.mockito.runners.ConsoleSpammingMockitoJUnitRunner;
+
+                @RunWith(ConsoleSpammingMockitoJU<caret>nitRunner.class)
+                public class ReplaceOldRunnerTest {
+                }""",
+            """
+                import org.junit.runner.RunWith;
+                import org.mockito.junit.MockitoJUnitRunner;
+                import org.mockito.runners.ConsoleSpammingMockitoJUnitRunner;
+
+                @RunWith(MockitoJUnitRunner.class)
+                public class ReplaceOldRunnerTest {
+                }""");
     }
 
     @Test
     void testReplaceVerboseMockitoJUnitRunner() {
         doQuickFixTest("Replace with org.mockito.junit.MockitoJUnitRunner", "ReplaceOldRunnerTest.java",
-            "import org.junit.runner.RunWith;\n" +
-                "import org.mockito.runners.VerboseMockitoJUnitRunner;\n" +
-                "\n" +
-                "@RunWith(VerboseMoc<caret>kitoJUnitRunner.class)\n" +
-                "public class ReplaceOldRunnerTest {\n" +
-                "}",
-            "import org.junit.runner.RunWith;\n" +
-                "import org.mockito.junit.MockitoJUnitRunner;\n" +
-                "import org.mockito.runners.VerboseMockitoJUnitRunner;\n" +
-                "\n" +
-                "@RunWith(MockitoJUnitRunner.class)\n" +
-                "public class ReplaceOldRunnerTest {\n" +
-                "}");
+            """
+                import org.junit.runner.RunWith;
+                import org.mockito.runners.VerboseMockitoJUnitRunner;
+
+                @RunWith(VerboseMoc<caret>kitoJUnitRunner.class)
+                public class ReplaceOldRunnerTest {
+                }""",
+            """
+                import org.junit.runner.RunWith;
+                import org.mockito.junit.MockitoJUnitRunner;
+                import org.mockito.runners.VerboseMockitoJUnitRunner;
+
+                @RunWith(MockitoJUnitRunner.class)
+                public class ReplaceOldRunnerTest {
+                }""");
     }
 
     @Test
     void testReplaceMockitoJUnitRunner() {
         doQuickFixTest("Replace with org.mockito.junit.MockitoJUnitRunner", "ReplaceOldRunnerTest.java",
-            "import org.junit.runner.RunWith;\n" +
-                "import org.mockito.runners.MockitoJUnitRunner;\n" +
-                "\n" +
-                "@RunWith(MockitoJUni<caret>tRunner.class)\n" +
-                "public class ReplaceOldRunnerTest {\n" +
-                "}",
-            "import org.junit.runner.RunWith;\n" +
-                "import org.mockito.junit.MockitoJUnitRunner;\n" +
-                "\n" +
-                "@RunWith(MockitoJUnitRunner.class)\n" +
-                "public class ReplaceOldRunnerTest {\n" +
-                "}");
+            """
+                import org.junit.runner.RunWith;
+                import org.mockito.runners.MockitoJUnitRunner;
+
+                @RunWith(MockitoJUni<caret>tRunner.class)
+                public class ReplaceOldRunnerTest {
+                }""",
+            """
+                import org.junit.runner.RunWith;
+                import org.mockito.junit.MockitoJUnitRunner;
+
+                @RunWith(MockitoJUnitRunner.class)
+                public class ReplaceOldRunnerTest {
+                }""");
     }
 
     @Test
     void testReplaceConsoleSpammingMockitoJUnitRunnerWithFqn() {
         doQuickFixTest("Replace with org.mockito.junit.MockitoJUnitRunner", "ReplaceOldRunnerTest.java",
-            "import org.junit.runner.RunWith;\n" +
-                "@RunWith(org.mockito.runners.ConsoleSpammingMockitoJU<caret>nitRunner.class)\n" +
-                "public class ReplaceOldRunnerTest {\n" +
-                "}",
-            "import org.junit.runner.RunWith;\n" +
-                "import org.mockito.junit.MockitoJUnitRunner;\n" +
-                "\n" +
-                "@RunWith(MockitoJUnitRunner.class)\n" +
-                "public class ReplaceOldRunnerTest {\n" +
-                "}");
+            """
+                import org.junit.runner.RunWith;
+                @RunWith(org.mockito.runners.ConsoleSpammingMockitoJU<caret>nitRunner.class)
+                public class ReplaceOldRunnerTest {
+                }""",
+            """
+                import org.junit.runner.RunWith;
+                import org.mockito.junit.MockitoJUnitRunner;
+
+                @RunWith(MockitoJUnitRunner.class)
+                public class ReplaceOldRunnerTest {
+                }""");
     }
 
     @Test
     void testReplaceVerboseMockitoJUnitRunnerWithFqn() {
         doQuickFixTest("Replace with org.mockito.junit.MockitoJUnitRunner", "ReplaceOldRunnerTest.java",
-            "import org.junit.runner.RunWith;\n" +
-                "@RunWith(org.mockito.runners.VerboseMoc<caret>kitoJUnitRunner.class)\n" +
-                "public class ReplaceOldRunnerTest {\n" +
-                "}",
-            "import org.junit.runner.RunWith;\n" +
-                "import org.mockito.junit.MockitoJUnitRunner;\n" +
-                "\n" +
-                "@RunWith(MockitoJUnitRunner.class)\n" +
-                "public class ReplaceOldRunnerTest {\n" +
-                "}");
+            """
+                import org.junit.runner.RunWith;
+                @RunWith(org.mockito.runners.VerboseMoc<caret>kitoJUnitRunner.class)
+                public class ReplaceOldRunnerTest {
+                }""",
+            """
+                import org.junit.runner.RunWith;
+                import org.mockito.junit.MockitoJUnitRunner;
+
+                @RunWith(MockitoJUnitRunner.class)
+                public class ReplaceOldRunnerTest {
+                }""");
     }
 
     @Test
     void testReplaceMockitoJUnitRunnerWithFqn() {
         doQuickFixTest("Replace with org.mockito.junit.MockitoJUnitRunner", "ReplaceOldRunnerTest.java",
-            "import org.junit.runner.RunWith;\n" +
-                "@RunWith(org.mockito.runners.MockitoJUni<caret>tRunner.class)\n" +
-                "public class ReplaceOldRunnerTest {\n" +
-                "}",
-            "import org.junit.runner.RunWith;\n" +
-                "import org.mockito.junit.MockitoJUnitRunner;\n" +
-                "\n" +
-                "@RunWith(MockitoJUnitRunner.class)\n" +
-                "public class ReplaceOldRunnerTest {\n" +
-                "}");
+            """
+                import org.junit.runner.RunWith;
+                @RunWith(org.mockito.runners.MockitoJUni<caret>tRunner.class)
+                public class ReplaceOldRunnerTest {
+                }""",
+            """
+                import org.junit.runner.RunWith;
+                import org.mockito.junit.MockitoJUnitRunner;
+
+                @RunWith(MockitoJUnitRunner.class)
+                public class ReplaceOldRunnerTest {
+                }""");
     }
 }

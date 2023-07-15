@@ -2,9 +2,7 @@
 
 package com.picimako.mockitools.dsl;
 
-import static com.intellij.psi.CommonClassNames.JAVA_LANG_CLASS;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK_SETTINGS;
-import static com.picimako.mockitools.MockitoolsPsiUtil.MOCKITO_MOCK;
+import static com.picimako.mockitools.MockitoMockMatchers.MOCK_WITH_SETTINGS;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromLast;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
@@ -13,7 +11,6 @@ import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiVariable;
 import com.picimako.mockitools.util.PsiMethodUtil;
-import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -24,8 +21,6 @@ import java.util.Optional;
  * @since 0.8.0
  */
 public final class MockSettings {
-
-    private static final CallMatcher MOCK_WITH_SETTINGS = MOCKITO_MOCK.parameterTypes(JAVA_LANG_CLASS, ORG_MOCKITO_MOCK_SETTINGS);
 
     /**
      * Returns the PSI expression representing the {@code MockSettings} call chain from the provided

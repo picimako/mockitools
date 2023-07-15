@@ -23,7 +23,7 @@ import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNewExpression;
 import com.intellij.util.IncorrectOperationException;
 import com.picimako.mockitools.StubbingApproach;
-import com.picimako.mockitools.inspection.ExceptionStubber;
+import com.picimako.mockitools.inspection.stubbing.ExceptionStubber;
 import com.picimako.mockitools.inspection.consecutive.TypeConversionMethod;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;

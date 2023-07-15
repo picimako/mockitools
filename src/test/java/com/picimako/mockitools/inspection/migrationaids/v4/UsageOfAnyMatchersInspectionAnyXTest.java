@@ -18,212 +18,224 @@ class UsageOfAnyMatchersInspectionAnyXTest extends MockitoolsInspectionTestBase.
     @Test
     void testArgumentMatchersAnyIterableOfReplacedWithAnyIterable() {
         doQuickFixTest("Replace with ArgumentMatchers.anyIterable()", "UseAnyIterableInsteadOfAnyIterableOfTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.ArgumentMatchers;\n" +
-                "\n" +
-                "public class UseAnyIterableInsteadOfAnyIterableOfTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.anyIterable<caret>Of(String.class));\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(Iterable<String> s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.ArgumentMatchers;\n" +
-                "\n" +
-                "public class UseAnyIterableInsteadOfAnyIterableOfTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.anyIterable());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(Iterable<String> s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.ArgumentMatchers;
+
+                public class UseAnyIterableInsteadOfAnyIterableOfTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.anyIterable<caret>Of(String.class));
+                   }
+                   private static final class MockObject {
+                       public int method(Iterable<String> s) {
+                           return 0;
+                       }
+                   }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.ArgumentMatchers;
+
+                public class UseAnyIterableInsteadOfAnyIterableOfTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.anyIterable());
+                   }
+                   private static final class MockObject {
+                       public int method(Iterable<String> s) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 
     @Test
     void testArgumentMatchersAnyMapOfReplacedWithAnyMap() {
         doQuickFixTest("Replace with ArgumentMatchers.anyMap()", "UseAnyMapInsteadOfAnyMapOfTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.ArgumentMatchers;\n" +
-                "import java.util.Map;\n" +
-                "\n" +
-                "public class UseAnyMapInsteadOfAnyMapOfTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.anyMap<caret>Of(String.class, String.class));\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(Map<String, String> s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.ArgumentMatchers;\n" +
-                "import java.util.Map;\n" +
-                "\n" +
-                "public class UseAnyMapInsteadOfAnyMapOfTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.anyMap());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(Map<String, String> s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.ArgumentMatchers;
+                import java.util.Map;
+
+                public class UseAnyMapInsteadOfAnyMapOfTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.anyMap<caret>Of(String.class, String.class));
+                   }
+                   private static final class MockObject {
+                       public int method(Map<String, String> s) {
+                           return 0;
+                       }
+                   }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.ArgumentMatchers;
+                import java.util.Map;
+
+                public class UseAnyMapInsteadOfAnyMapOfTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.anyMap());
+                   }
+                   private static final class MockObject {
+                       public int method(Map<String, String> s) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 
     @Test
     void testArgumentMatchersAnyIterableOfReplacedWithAnyIterableForStaticImport() {
         doQuickFixTest("Replace with ArgumentMatchers.anyIterable()", "UseAnyIterableInsteadOfAnyIterableOfTest.java",
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "import static org.mockito.ArgumentMatchers.anyIterableOf;\n" +
-                "\n" +
-                "public class UseAnyIterableInsteadOfAnyIterableOfTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(anyIterable<caret>Of(String.class));\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(Iterable<String> s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "import static org.mockito.ArgumentMatchers.anyIterable;\n" +
-                "import static org.mockito.ArgumentMatchers.anyIterableOf;\n" +
-                "\n" +
-                "public class UseAnyIterableInsteadOfAnyIterableOfTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(anyIterable());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(Iterable<String> s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                import static org.mockito.ArgumentMatchers.anyIterableOf;
+
+                public class UseAnyIterableInsteadOfAnyIterableOfTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(anyIterable<caret>Of(String.class));
+                   }
+                   private static final class MockObject {
+                       public int method(Iterable<String> s) {
+                           return 0;
+                       }
+                   }
+                }""",
+            """
+                import org.mockito.Mockito;
+
+                import static org.mockito.ArgumentMatchers.anyIterable;
+                import static org.mockito.ArgumentMatchers.anyIterableOf;
+
+                public class UseAnyIterableInsteadOfAnyIterableOfTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(anyIterable());
+                   }
+                   private static final class MockObject {
+                       public int method(Iterable<String> s) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 
     @Test
     void testArgumentMatchersAnyMapOfReplacedWithAnyMapForStaticImport() {
         doQuickFixTest("Replace with ArgumentMatchers.anyMap()", "UseAnyMapInsteadOfAnyMapOfTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import java.util.Map;\n" +
-                "\n" +
-                "import static org.mockito.ArgumentMatchers.anyMapOf;\n" +
-                "\n" +
-                "public class UseAnyMapInsteadOfAnyMapOfTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(anyMap<caret>Of(String.class, String.class));\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(Map<String, String> s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import java.util.Map;\n" +
-                "\n" +
-                "import static org.mockito.ArgumentMatchers.anyMap;\n" +
-                "import static org.mockito.ArgumentMatchers.anyMapOf;\n" +
-                "\n" +
-                "public class UseAnyMapInsteadOfAnyMapOfTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(anyMap());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(Map<String, String> s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import java.util.Map;
+
+                import static org.mockito.ArgumentMatchers.anyMapOf;
+
+                public class UseAnyMapInsteadOfAnyMapOfTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(anyMap<caret>Of(String.class, String.class));
+                   }
+                   private static final class MockObject {
+                       public int method(Map<String, String> s) {
+                           return 0;
+                       }
+                   }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import java.util.Map;
+
+                import static org.mockito.ArgumentMatchers.anyMap;
+                import static org.mockito.ArgumentMatchers.anyMapOf;
+
+                public class UseAnyMapInsteadOfAnyMapOfTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(anyMap());
+                   }
+                   private static final class MockObject {
+                       public int method(Map<String, String> s) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 
     @Test
     void testMatchersAnyIterableOfReplacedWithAnyIterable() {
         doQuickFixTest("Replace with ArgumentMatchers.anyIterable()", "UseAnyIterableInsteadOfAnyIterableOfTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Matchers;\n" +
-                "\n" +
-                "public class UseAnyIterableInsteadOfAnyIterableOfTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(Matchers.anyIterable<caret>Of(String.class));\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(Iterable<String> s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}",
-            "import org.mockito.ArgumentMatchers;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.Matchers;\n" +
-                "\n" +
-                "public class UseAnyIterableInsteadOfAnyIterableOfTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.anyIterable());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(Iterable<String> s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Matchers;
+
+                public class UseAnyIterableInsteadOfAnyIterableOfTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(Matchers.anyIterable<caret>Of(String.class));
+                   }
+                   private static final class MockObject {
+                       public int method(Iterable<String> s) {
+                           return 0;
+                       }
+                   }
+                }""",
+            """
+                import org.mockito.ArgumentMatchers;
+                import org.mockito.Mockito;
+                import org.mockito.Matchers;
+
+                public class UseAnyIterableInsteadOfAnyIterableOfTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.anyIterable());
+                   }
+                   private static final class MockObject {
+                       public int method(Iterable<String> s) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 
     @Test
     void testMatchersAnyMapOfReplacedWithAnyMap() {
         doQuickFixTest("Replace with ArgumentMatchers.anyMap()", "UseAnyMapInsteadOfAnyMapOfTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Matchers;\n" +
-                "import java.util.Map;\n" +
-                "\n" +
-                "public class UseAnyMapInsteadOfAnyMapOfTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(Matchers.anyMap<caret>Of(String.class, String.class));\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(Map<String, String> s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}",
-            "import org.mockito.ArgumentMatchers;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.Matchers;\n" +
-                "import java.util.Map;\n" +
-                "\n" +
-                "public class UseAnyMapInsteadOfAnyMapOfTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.anyMap());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(Map<String, String> s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Matchers;
+                import java.util.Map;
+
+                public class UseAnyMapInsteadOfAnyMapOfTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(Matchers.anyMap<caret>Of(String.class, String.class));
+                   }
+                   private static final class MockObject {
+                       public int method(Map<String, String> s) {
+                           return 0;
+                       }
+                   }
+                }""",
+            """
+                import org.mockito.ArgumentMatchers;
+                import org.mockito.Mockito;
+                import org.mockito.Matchers;
+                import java.util.Map;
+
+                public class UseAnyMapInsteadOfAnyMapOfTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.anyMap());
+                   }
+                   private static final class MockObject {
+                       public int method(Map<String, String> s) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 }

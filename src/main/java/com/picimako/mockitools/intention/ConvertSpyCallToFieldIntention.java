@@ -85,9 +85,11 @@ public class ConvertSpyCallToFieldIntention extends ConvertCallToFieldIntentionB
         return getMethodCallAtCaretOrEmpty(file, editor)
             .filter(call -> isMockitoSpy(call) && hasOneArgument(call))
             .map(PsiMethodUtil::getFirstArgument)
-            .map(spiedType -> spiedType instanceof PsiNewExpression
-                ? !((PsiNewExpression) spiedType).isArrayCreation() && isMockableTypeInAnyWay(spiedType.getType())
-                : isMockableTypeInAnyWay(getOperandType(spiedType)))
+            .map(spiedTypeOrInstance -> spiedTypeOrInstance instanceof PsiNewExpression newSpiedInstance
+                //e.g. Mockito.spy(new ObjectToSpy())
+                ? !newSpiedInstance.isArrayCreation() && isMockableTypeInAnyWay(spiedTypeOrInstance.getType())
+                //e.g. Mockito.spy(ObjectToSpy.class)
+                : isMockableTypeInAnyWay(getOperandType(spiedTypeOrInstance)))
             .orElse(false);
     }
     

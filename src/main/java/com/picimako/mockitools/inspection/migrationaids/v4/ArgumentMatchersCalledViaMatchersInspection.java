@@ -41,7 +41,7 @@ public class ArgumentMatchersCalledViaMatchersInspection extends MigrationAidBas
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         if (isMatchers(expression) && expression.getMethodExpression().isQualified()) {
-            holder.registerProblem(getQualifier(expression), MockitoolsBundle.inspection("migration.aid.v4.use.argument.matchers.instead.of.matchers"),
+            holder.registerProblem(getQualifier(expression), MockitoolsBundle.message("inspection.migration.aid.v4.use.argument.matchers.instead.of.matchers"),
                 new ReplaceMatchersWithArgumentMatchersQuickFix());
         }
     }
@@ -49,7 +49,7 @@ public class ArgumentMatchersCalledViaMatchersInspection extends MigrationAidBas
     public static final class ReplaceMatchersWithArgumentMatchersQuickFix extends MigrationAidV4BaseQuickFix {
         @Override
         public @IntentionName @NotNull String getName() {
-            return MockitoolsBundle.quickFix("migration.aid.v4.use.argument.matchers.instead.of.matchers");
+            return MockitoolsBundle.message("quick.fix.migration.aid.v4.use.argument.matchers.instead.of.matchers");
         }
 
         @Override

@@ -5,18 +5,11 @@ fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
 
 plugins {
-    // Java support
-    id("java")
-    // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.8.21"
-    // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.14.1"
-    // Gradle Changelog Plugin
-    id("org.jetbrains.changelog") version "2.0.0"
-    // Gradle Qodana Plugin
-    id("org.jetbrains.qodana") version "0.1.13"
-    //Lombok
-    id("io.freefair.lombok") version "6.5.0.3"
+    id("java") // Java support
+    alias(libs.plugins.kotlin) // Kotlin support
+    alias(libs.plugins.gradleIntelliJPlugin) // Gradle IntelliJ Plugin
+    alias(libs.plugins.changelog) // Gradle Changelog Plugin
+    alias(libs.plugins.lombok) // Lombok
 }
 
 group = properties("pluginGroup").get()
@@ -44,17 +37,17 @@ intellij {
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
 changelog {
-    version.set(properties("pluginVersion"))
     groups.empty()
+    repositoryUrl = properties("pluginRepositoryUrl")
 }
 
 // Configure Gradle Qodana Plugin - read more: https://github.com/JetBrains/gradle-qodana-plugin
-qodana {
-    cachePath = provider { file(".qodana").canonicalPath }
-    reportPath = provider { file("build/reports/inspections").canonicalPath }
-    saveReport = true
-    showReport = environment("QODANA_SHOW_REPORT").map { it.toBoolean() }.getOrElse(false)
-}
+//qodana {
+//    cachePath = provider { file(".qodana").canonicalPath }
+//    reportPath = provider { file("build/reports/inspections").canonicalPath }
+//    saveReport = true
+//    showReport = environment("QODANA_SHOW_REPORT").map { it.toBoolean() }.getOrElse(false)
+//}
 
 dependencies {
     testImplementation("org.assertj:assertj-core:3.23.1")
@@ -82,7 +75,11 @@ tasks {
                 if (!containsAll(listOf(start, end))) {
                     throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
                 }
-                subList(indexOf(start) + 1, indexOf(end)).joinToString("\n").let(::markdownToHTML)
+                subList(indexOf(start) + 1, indexOf(end))
+                        .joinToString("\n")
+                        //In order to be able to open documentation links in the plugin description from the IDE Plugin page and the JetBrains Marketplace
+                        .replace("docs/", "https://github.com/picimako/mockitools/blob/main/docs/")
+                        .let(::markdownToHTML)
             }
         }
 

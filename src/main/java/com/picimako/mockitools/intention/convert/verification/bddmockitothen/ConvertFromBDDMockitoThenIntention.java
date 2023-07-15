@@ -6,8 +6,8 @@ import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
 import static com.picimako.mockitools.VerificationApproach.BDDMOCKITO_THEN_SHOULD;
-import static com.picimako.mockitools.inspection.EnforceConventionInspection.isBDDMockitoEnforced;
-import static com.picimako.mockitools.inspection.EnforceConventionInspection.isMockitoEnforced;
+import static com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection.isBDDMockitoEnforced;
+import static com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection.isMockitoEnforced;
 import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;
 import static com.picimako.mockitools.util.PsiMethodUtil.getSubsequentMethodCall;
@@ -52,11 +52,9 @@ public class ConvertFromBDDMockitoThenIntention extends ConvertVerificationInten
 
     @Override
     protected boolean isQualifierHaveCorrectType(PsiExpression qualifier) {
-        if (qualifier instanceof PsiReferenceExpression) {
-            var psiClass = ((PsiReferenceExpression) qualifier).resolve();
-            return psiClass instanceof PsiClass && ORG_MOCKITO_BDDMOCKITO.equals(((PsiClass) psiClass).getQualifiedName());
-        }
-        return false;
+        return qualifier instanceof PsiReferenceExpression qualifierAsRef
+            && qualifierAsRef.resolve() instanceof PsiClass qualifierClass
+            && ORG_MOCKITO_BDDMOCKITO.equals(qualifierClass.getQualifiedName());
     }
 
     @Override

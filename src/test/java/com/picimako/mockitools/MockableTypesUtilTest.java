@@ -17,12 +17,14 @@ class MockableTypesUtilTest extends MockitoolsTestBase {
     @Test
     void testIsMockableType() {
         getFixture().configureByText("IsMockableTypeTest.java",
-            "import org.mockito.Mock;\n" +
-                "\n" +
-                "public class IsMockableTypeTest {\n" +
-                "    @Mock\n" +
-                "    public List<String> <caret>mock;\n" +
-                "}\n");
+            """
+                import org.mockito.Mock;
+
+                public class IsMockableTypeTest {
+                    @Mock
+                    public List<String> <caret>mock;
+                }
+                """);
 
         assertThat(MockableTypesUtil.isMockableType(getField().getTypeElement().getType())).isTrue();
     }
@@ -30,12 +32,14 @@ class MockableTypesUtilTest extends MockitoolsTestBase {
     @Test
     void testIsNotMockableTypePrimitive() {
         getFixture().configureByText("IsNotMockableTypePrimitiveTest.java",
-            "import org.mockito.Mock;\n" +
-                "\n" +
-                "public class IsNotMockableTypePrimitiveTest {\n" +
-                "    @Mock\n" +
-                "    public int <caret>mock;\n" +
-                "}\n");
+            """
+                import org.mockito.Mock;
+
+                public class IsNotMockableTypePrimitiveTest {
+                    @Mock
+                    public int <caret>mock;
+                }
+                """);
 
         assertThat(MockableTypesUtil.isMockableType(getField().getTypeElement().getType())).isFalse();
     }
@@ -43,12 +47,14 @@ class MockableTypesUtilTest extends MockitoolsTestBase {
     @Test
     void testIsNotMockableTypeWrapper() {
         getFixture().configureByText("IsNotMockableTypeWrapperTest.java",
-            "import org.mockito.Mock;\n" +
-                "\n" +
-                "public class IsNotMockableTypeWrapperTest {\n" +
-                "    @Mock\n" +
-                "    public String <caret>mock;\n" +
-                "}\n");
+            """
+                import org.mockito.Mock;
+
+                public class IsNotMockableTypeWrapperTest {
+                    @Mock
+                    public String <caret>mock;
+                }
+                """);
 
         assertThat(MockableTypesUtil.isMockableType(getField().getTypeElement().getType())).isFalse();
     }

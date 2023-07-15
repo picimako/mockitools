@@ -1,6 +1,6 @@
 //Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.picimako.mockitools.inspection;
+package com.picimako.mockitools.inspection.stubbing;
 
 import static com.intellij.codeInsight.AnnotationUtil.arrayAttributeValues;
 import static com.intellij.psi.impl.PsiImplUtil.findAttributeValue;
@@ -18,8 +18,10 @@ import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.PropertyKey;
 
 import java.util.Optional;
 
@@ -51,7 +53,7 @@ public class ExtraInterfacesInspection extends MockitoolsBaseInspection {
         if (annotation.hasQualifiedName(ORG_MOCKITO_MOCK)) {
             //e.g. @Mock(extraInterfaces = {Set.class, Object.class}), or @Mock(extraInterfaces = Set.class)
             for (var initializer : arrayAttributeValues(findAttributeValue(annotation, EXTRA_INTERFACES))) {
-                checkAndReportNonInterfaceArgument(initializer, "annotation.extra.interfaces.not.interface", holder);
+                checkAndReportNonInterfaceArgument(initializer, "inspection.annotation.extra.interfaces.not.interface", holder);
             }
         }
     }
@@ -60,18 +62,20 @@ public class ExtraInterfacesInspection extends MockitoolsBaseInspection {
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         if (isExtraInterfaces(expression)) {
             for (var argument : getArguments(expression)) {
-                checkAndReportNonInterfaceArgument(argument, "extra.interfaces.not.interface", holder);
+                checkAndReportNonInterfaceArgument(argument, "inspection.extra.interfaces.not.interface", holder);
             }
         }
     }
 
-    private void checkAndReportNonInterfaceArgument(PsiElement argument, String inspectionMessageKey, @NotNull ProblemsHolder holder) {
+    private void checkAndReportNonInterfaceArgument(PsiElement argument,
+                                                    @PropertyKey(resourceBundle = "messages.MockitoolsBundle") String inspectionMessageKey,
+                                                    @NotNull ProblemsHolder holder) {
         //e.g. argument: List.class, operandType: List
         Optional.ofNullable(getOperandType(argument))
             .filter(PsiClassType.class::isInstance)
             .map(PsiClassType.class::cast)
             .map(PsiClassType::resolve)
             .filter(psiClass -> !psiClass.isInterface())
-            .ifPresent(__ -> holder.registerProblem(argument, MockitoolsBundle.inspection(inspectionMessageKey)));
+            .ifPresent(__ -> holder.registerProblem(argument, MockitoolsBundle.message(inspectionMessageKey)));
     }
 }

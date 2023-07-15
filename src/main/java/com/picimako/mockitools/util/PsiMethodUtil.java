@@ -54,13 +54,6 @@ public final class PsiMethodUtil {
     }
 
     /**
-     * Gets whether the argument method call has at least one argument of any kind.
-     */
-    public static boolean hasAtLeastOneArgument(@NotNull PsiMethodCallExpression methodCall) {
-        return methodCall.getArgumentList() != null && methodCall.getArgumentList().getExpressionCount() >= 1;
-    }
-
-    /**
      * Use this instead of {@link #getMethodCallAtCaretOrEmpty(PsiFile, Editor)}, when you are sure
      * (you've probably made sure beforehand), that the caret is at a method call identifier.
      */
@@ -113,12 +106,11 @@ public final class PsiMethodUtil {
     @Nullable
     public static PsiMethodCallExpression getSubsequentMethodCall(@Nullable PsiMethodCallExpression methodCall) {
         if (methodCall == null) return null;
+
         PsiElement parent = methodCall.getParent();
-        if (parent instanceof PsiReferenceExpression) {
-            PsiElement grandParent = parent.getParent();
-            if (grandParent instanceof PsiMethodCallExpression) return (PsiMethodCallExpression) grandParent;
-        }
-        return null;
+        return parent instanceof PsiReferenceExpression && parent.getParent() instanceof PsiMethodCallExpression grandParent
+            ? grandParent
+            : null;
     }
 
     /**
@@ -179,8 +171,8 @@ public final class PsiMethodUtil {
      */
     public static boolean isIdentifierOfMethodCall(PsiElement element) {
         return element instanceof PsiIdentifier
-            && element.getParent() instanceof PsiReferenceExpression
-            && element.getParent().getParent() instanceof PsiMethodCallExpression;
+            && element.getParent() instanceof PsiReferenceExpression parentRef
+            && parentRef.getParent() instanceof PsiMethodCallExpression;
     }
 
     /**
@@ -196,8 +188,8 @@ public final class PsiMethodUtil {
      */
     public static Optional<PsiMethodCallExpression> findCallUpwardsInChain(@NotNull PsiExpression aCallInChain, String methodNameToFind) {
         PsiElement current = aCallInChain;
-        while (current.getFirstChild() instanceof PsiReferenceExpression) {
-            PsiElement previousCall = current.getFirstChild().getFirstChild();
+        while (current.getFirstChild() instanceof PsiReferenceExpression previousCallRef) {
+            PsiElement previousCall = previousCallRef.getFirstChild();
             if (isMethodCall(previousCall)) {
                 var prevCall = (PsiMethodCallExpression) previousCall;
                 if (methodNameToFind.equals(getMethodName(prevCall))) {
@@ -235,8 +227,8 @@ public final class PsiMethodUtil {
     public static List<PsiMethodCallExpression> collectCallsInChainFromLast(@NotNull PsiExpression lastCallInChain) {
         var calls = new SmartList<PsiElement>(lastCallInChain);
         PsiElement current = lastCallInChain;
-        while (current.getFirstChild() instanceof PsiReferenceExpression) {
-            PsiElement previousCall = current.getFirstChild().getFirstChild();
+        while (current.getFirstChild() instanceof PsiReferenceExpression previousCallRef) {
+            PsiElement previousCall = previousCallRef.getFirstChild();
             if (previousCall instanceof PsiMethodCallExpression) {
                 calls.add(previousCall);
                 current = previousCall;
@@ -263,9 +255,9 @@ public final class PsiMethodUtil {
      * a non-default constructor call.
      */
     public static boolean containsCallToNonDefaultConstructor(PsiExpression[] arguments) {
-        for (PsiExpression argument : arguments) {
-            if (argument instanceof PsiNewExpression) {
-                var argumentList = ((PsiNewExpression) argument).getArgumentList();
+        for (var argument : arguments) {
+            if (argument instanceof PsiNewExpression constructorCall) {
+                var argumentList = constructorCall.getArgumentList();
                 if (argumentList != null && !argumentList.isEmpty()) return true;
             }
         }

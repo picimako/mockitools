@@ -1,6 +1,6 @@
 //Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.picimako.mockitools.inspection;
+package com.picimako.mockitools.inspection.stubbing;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ADDITIONAL_MATCHERS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT_MATCHERS;
@@ -9,14 +9,16 @@ import static com.picimako.mockitools.StubbingApproach.BDDMOCKITO_GIVEN;
 import static com.picimako.mockitools.StubbingApproach.MOCKITO_DO_X;
 import static com.picimako.mockitools.StubbingApproach.MOCKITO_WHEN;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
+import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiExpressionList;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.picimako.mockitools.inspection.HasSonarLintAlternative;
+import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.callMatcher.CallMatcher;
-import com.siyeh.ig.psiutils.MethodCallUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,14 +70,13 @@ public class InconsistentArgumentMatcherUsageInspection extends MockitoolsBaseIn
             boolean hasMatcher = false;
             //Iterates through the list of arguments, and if there is at least one matcher and non-matcher, then the arguments are invalid
             for (var arg : arguments.getExpressions()) {
-                if (arg instanceof PsiMethodCallExpression) {
-                    String methodName = MethodCallUtils.getMethodName((PsiMethodCallExpression) arg);
-                    hasMatcher = isArgumentMatcher(arg, methodName);
+                if (arg instanceof PsiMethodCallExpression potentialMatcher) {
+                    hasMatcher = isArgumentMatcher(arg, getMethodName(potentialMatcher));
                 } else {
                     hasNonMatcher = true;
                 }
                 if (hasNonMatcher && hasMatcher) {
-                    holder.registerProblem(arguments, MockitoolsBundle.inspection("inconsistent.argument.matchers"));
+                    holder.registerProblem(arguments, MockitoolsBundle.message("inspection.inconsistent.argument.matchers"));
                     break;
                 }
             }

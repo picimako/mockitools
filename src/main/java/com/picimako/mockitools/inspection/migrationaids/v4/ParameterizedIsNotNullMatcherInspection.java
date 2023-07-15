@@ -44,11 +44,11 @@ public class ParameterizedIsNotNullMatcherInspection extends MigrationAidBase.V2
             var qualifier = PsiMethodUtil.getQualifier(expression);
             String methodName = getMethodName(expression);
             String quickFixName = qualifier != null && (qualifier.textMatches(ORG_MOCKITO_MATCHERS) || qualifier.textMatches(MATCHERS))
-                ? MockitoolsBundle.quickFix("migration.aid.v4.replace.with", methodName)
-                : MockitoolsBundle.quickFix("migration.aid.v4.use.non.parameterized.null.matcher");
+                ? MockitoolsBundle.message("quick.fix.migration.aid.v4.replace.with", methodName)
+                : MockitoolsBundle.message("quick.fix.migration.aid.v4.use.non.parameterized.null.matcher");
             holder.registerProblem(
                 getReferenceNameElement(expression), //referenceName null value is already checked by the CallMatcher
-                MockitoolsBundle.inspection("migration.aid.v4.use.non.parameterized.null.matcher", methodName),
+                MockitoolsBundle.message("inspection.migration.aid.v4.use.non.parameterized.null.matcher", methodName),
                 new ReplaceNullMatcherWithNonParameterizedVariantQuickfix(quickFixName));
         }
     }

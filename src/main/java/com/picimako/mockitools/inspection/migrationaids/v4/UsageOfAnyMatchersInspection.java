@@ -55,14 +55,14 @@ public class UsageOfAnyMatchersInspection extends MigrationAidBase.V23ToV4BaseIn
         if (ANY_OBJECT_OR_ANY_VARARG.matches(expression)) {
             holder.registerProblem(
                 getReferenceNameElement(expression), //referenceName null value is already checked by the CallMatcher
-                MockitoolsBundle.inspection("migration.aid.v4.use.any", getMethodName(expression)),
+                MockitoolsBundle.message("inspection.migration.aid.v4.use.any", getMethodName(expression)),
                 new ReplaceAnyObjectOrAnyVarargWithAnyQuickFix());
             return;
         }
         if (ANY_COLLECTION.matches(expression)) {
             holder.registerProblem(
                 getReferenceNameElement(expression), //referenceName null value is already checked by the CallMatcher
-                MockitoolsBundle.inspection("migration.aid.v4.use.any.collection.type", getMethodName(expression)),
+                MockitoolsBundle.message("inspection.migration.aid.v4.use.any.collection.type", getMethodName(expression)),
                 new ReplaceAnyXOfWithAnyXQuickFix(getMethodName(expression)));
         }
     }
@@ -70,7 +70,7 @@ public class UsageOfAnyMatchersInspection extends MigrationAidBase.V23ToV4BaseIn
     private static final class ReplaceAnyObjectOrAnyVarargWithAnyQuickFix extends MigrationAidV4BaseQuickFix {
         @Override
         public @IntentionName @NotNull String getName() {
-            return MockitoolsBundle.quickFix("migration.aid.v4.replace.with", ANY);
+            return MockitoolsBundle.message("quick.fix.migration.aid.v4.replace.with", ANY);
         }
 
         @Override
@@ -93,7 +93,7 @@ public class UsageOfAnyMatchersInspection extends MigrationAidBase.V23ToV4BaseIn
 
         @Override
         public @IntentionName @NotNull String getName() {
-            return MockitoolsBundle.quickFix("migration.aid.v4.replace.with", anyX);
+            return MockitoolsBundle.message("quick.fix.migration.aid.v4.replace.with", anyX);
         }
 
         @Override

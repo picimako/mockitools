@@ -21,7 +21,7 @@ public abstract class MigrationAidV4BaseQuickFix extends InspectionGadgetsFix {
 
     @Override
     public @IntentionFamilyName @NotNull String getFamilyName() {
-        return MockitoolsBundle.quickFixFamily("migration.aid.v4");
+        return MockitoolsBundle.message("quick.fix.family.migration.aid.v4");
     }
 
     /**

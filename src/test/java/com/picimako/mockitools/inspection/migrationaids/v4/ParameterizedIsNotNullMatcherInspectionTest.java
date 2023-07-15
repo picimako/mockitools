@@ -19,201 +19,213 @@ class ParameterizedIsNotNullMatcherInspectionTest extends MockitoolsInspectionTe
     @Test
     void testArgumentMatchersIsNotNullIsReplaced() {
         doQuickFixTest("Remove matcher argument", "ArgumentMatchersIsNotNullIsReplacedTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.ArgumentMatchers;\n" +
-                "\n" +
-                "public class ArgumentMatchersIsNotNullIsReplacedTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.isNot<caret>Null(String.class));\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.ArgumentMatchers;\n" +
-                "\n" +
-                "public class ArgumentMatchersIsNotNullIsReplacedTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.isNotNull());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.ArgumentMatchers;
+
+                public class ArgumentMatchersIsNotNullIsReplacedTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.isNot<caret>Null(String.class));
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.ArgumentMatchers;
+
+                public class ArgumentMatchersIsNotNullIsReplacedTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.isNotNull());
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 
     @Test
     void testArgumentMatchersNotNullIsReplaced() {
         doQuickFixTest("Remove matcher argument", "ArgumentMatchersNotNullIsReplacedTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.ArgumentMatchers;\n" +
-                "\n" +
-                "public class ArgumentMatchersNotNullIsReplacedTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.not<caret>Null(String.class));\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.ArgumentMatchers;\n" +
-                "\n" +
-                "public class ArgumentMatchersNotNullIsReplacedTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.notNull());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.ArgumentMatchers;
+
+                public class ArgumentMatchersNotNullIsReplacedTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.not<caret>Null(String.class));
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.ArgumentMatchers;
+
+                public class ArgumentMatchersNotNullIsReplacedTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.notNull());
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 
     @Test
     void testArgumentMatchersIsNullIsReplaced() {
         doQuickFixTest("Remove matcher argument", "ArgumentMatchersIsNullIsReplacedTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.ArgumentMatchers;\n" +
-                "\n" +
-                "public class ArgumentMatchersIsNullIsReplacedTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.is<caret>Null(String.class));\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.ArgumentMatchers;\n" +
-                "\n" +
-                "public class ArgumentMatchersIsNullIsReplacedTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.isNull());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.ArgumentMatchers;
+
+                public class ArgumentMatchersIsNullIsReplacedTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.is<caret>Null(String.class));
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.ArgumentMatchers;
+
+                public class ArgumentMatchersIsNullIsReplacedTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.isNull());
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 
     @Test
     void testMatchersIsNotNullIsReplaced() {
         doQuickFixTest("Replace with ArgumentMatchers.isNotNull()", "ArgumentMatchersIsNotNullIsReplacedTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Matchers;\n" +
-                "\n" +
-                "public class ArgumentMatchersIsNotNullIsReplacedTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(Matchers.isNot<caret>Null(String.class));\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}",
-            "import org.mockito.ArgumentMatchers;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.Matchers;\n" +
-                "\n" +
-                "public class ArgumentMatchersIsNotNullIsReplacedTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.isNotNull());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Matchers;
+
+                public class ArgumentMatchersIsNotNullIsReplacedTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(Matchers.isNot<caret>Null(String.class));
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""",
+            """
+                import org.mockito.ArgumentMatchers;
+                import org.mockito.Mockito;
+                import org.mockito.Matchers;
+
+                public class ArgumentMatchersIsNotNullIsReplacedTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.isNotNull());
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 
     @Test
     void testMatchersNotNullIsReplaced() {
         doQuickFixTest("Replace with ArgumentMatchers.notNull()", "ArgumentMatchersNotNullIsReplacedTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Matchers;\n" +
-                "\n" +
-                "public class ArgumentMatchersNotNullIsReplacedTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(Matchers.not<caret>Null(String.class));\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}",
-            "import org.mockito.ArgumentMatchers;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.Matchers;\n" +
-                "\n" +
-                "public class ArgumentMatchersNotNullIsReplacedTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.notNull());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Matchers;
+
+                public class ArgumentMatchersNotNullIsReplacedTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(Matchers.not<caret>Null(String.class));
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""",
+            """
+                import org.mockito.ArgumentMatchers;
+                import org.mockito.Mockito;
+                import org.mockito.Matchers;
+
+                public class ArgumentMatchersNotNullIsReplacedTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.notNull());
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 
     @Test
     void testMatchersIsNullIsReplaced() {
         doQuickFixTest("Replace with ArgumentMatchers.isNull()", "ArgumentMatchersIsNullIsReplacedTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Matchers;\n" +
-                "\n" +
-                "public class ArgumentMatchersIsNullIsReplacedTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(Matchers.is<caret>Null(String.class));\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}",
-            "import org.mockito.ArgumentMatchers;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.Matchers;\n" +
-                "\n" +
-                "public class ArgumentMatchersIsNullIsReplacedTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.isNull());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Matchers;
+
+                public class ArgumentMatchersIsNullIsReplacedTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(Matchers.is<caret>Null(String.class));
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""",
+            """
+                import org.mockito.ArgumentMatchers;
+                import org.mockito.Mockito;
+                import org.mockito.Matchers;
+
+                public class ArgumentMatchersIsNullIsReplacedTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.isNull());
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 }

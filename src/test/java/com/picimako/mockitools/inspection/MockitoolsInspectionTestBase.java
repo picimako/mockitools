@@ -23,12 +23,16 @@ public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
      */
     protected abstract InspectionProfileEntry getInspection();
 
+    protected void doJavaTest() {
+        doJavaTest(getInspection(), false);
+    }
+
     /**
      * Tests highlighting for the pre-configured inspection against the java file matching the test method's name
      * without the 'test' prefix.
      */
-    protected void doJavaTest() {
-        doJavaTest(getInspection());
+    protected void doJavaTest(boolean checkInfos) {
+        doJavaTest(getInspection(), checkInfos);
     }
 
     /**
@@ -39,6 +43,16 @@ public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
         getFixture().configureByFile(getTestName(false) + ".java");
         getFixture().enableInspections(inspection);
         getFixture().testHighlighting(true, false, false);
+    }
+
+    /**
+     * Tests highlighting for the argument inspection against the java file matching the test method's name
+     * without the 'test' prefix.
+     */
+    protected void doJavaTest(InspectionProfileEntry inspection, boolean checkInfos) {
+        getFixture().configureByFile(getTestName(false) + ".java");
+        getFixture().enableInspections(inspection);
+        getFixture().testHighlighting(true, checkInfos, true);
     }
 
     protected void doJavaTest(String filename, String text) {

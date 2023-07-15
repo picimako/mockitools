@@ -40,16 +40,16 @@ public class UsageOfOldJUnitRunnerInspection extends MigrationAidBase.V23ToV4Bas
                 if (ORG_MOCKITO_RUNNERS_CONSOLE_SPAMMING_MOCKITO_JUNIT_RUNNER.equals(reference.getQualifiedName())
                     || ORG_MOCKITO_RUNNERS_VERBOSE_MOCKITO_JUNIT_RUNNER.equals(reference.getQualifiedName())) {
                     holder.registerProblem(reference,
-                        MockitoolsBundle.inspection("migration.aid.v4.org.mockito.runners.is.removed"),
-                        new NameCollisionlessReferenceReplacerQuickFix("migration.aid.v4.replace.with.mockito.junit.runner",
+                        MockitoolsBundle.message("inspection.migration.aid.v4.org.mockito.runners.is.removed"),
+                        new NameCollisionlessReferenceReplacerQuickFix("quick.fix.migration.aid.v4.replace.with.mockito.junit.runner",
                             ORG_MOCKITO_JUNIT_MOCKITO_JUNIT_RUNNER));
                     return;
                 }
                 
                 if (ORG_MOCKITO_RUNNERS_MOCKITO_JUNIT_RUNNER.equals(reference.getQualifiedName())) {
                     holder.registerProblem(reference,
-                        MockitoolsBundle.inspection("migration.aid.v4.org.mockito.runners.is.removed"),
-                        new NameCollisionAwareReferenceReplacerQuickFix("migration.aid.v4.replace.with.mockito.junit.runner",
+                        MockitoolsBundle.message("inspection.migration.aid.v4.org.mockito.runners.is.removed"),
+                        new NameCollisionAwareReferenceReplacerQuickFix("quick.fix.migration.aid.v4.replace.with.mockito.junit.runner",
                             ORG_MOCKITO_JUNIT_MOCKITO_JUNIT_RUNNER));
                 }
             }

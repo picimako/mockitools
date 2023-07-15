@@ -31,7 +31,7 @@ public class NameCollisionlessReferenceReplacerQuickFix extends MigrationAidV4Ba
 
     @Override
     public @IntentionName @NotNull String getName() {
-        return MockitoolsBundle.quickFix(nameMessageKey);
+        return MockitoolsBundle.message(nameMessageKey);
     }
 
     @Override

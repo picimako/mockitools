@@ -24,86 +24,102 @@ class CaptorFieldOfTypeArgumentCaptorInspectionTest extends MockitoolsInspection
     @Test
     void testCaptorFieldConvertToArgumentCaptorArrayTest() {
         doQuickFixTest("Convert field type to ArgumentCaptor<>", "CaptorFieldConvertToArgumentCaptorArrayTest.java",
-            "import org.mockito.Captor;\n" +
-                "\n" +
-                "public class CaptorFieldConvertToArgumentCaptorArrayTest {\n" +
-                "\n" +
-                "    @Captor\n" +
-                "    public String[] <caret>captor;\n" +
-                "}\n",
-            "import org.mockito.ArgumentCaptor;\n" +
-                "import org.mockito.Captor;\n" +
-                "\n" +
-                "public class CaptorFieldConvertToArgumentCaptorArrayTest {\n" +
-                "\n" +
-                "    @Captor\n" +
-                "    public ArgumentCaptor<String[]> captor;\n" +
-                "}\n");
+            """
+                import org.mockito.Captor;
+
+                public class CaptorFieldConvertToArgumentCaptorArrayTest {
+
+                    @Captor
+                    public String[] <caret>captor;
+                }
+                """,
+            """
+                import org.mockito.ArgumentCaptor;
+                import org.mockito.Captor;
+
+                public class CaptorFieldConvertToArgumentCaptorArrayTest {
+
+                    @Captor
+                    public ArgumentCaptor<String[]> captor;
+                }
+                """);
     }
 
     @Test
     void testCaptorFieldConvertToArgumentCaptorPrimitiveTest() {
         doQuickFixTest("Convert field type to ArgumentCaptor<>", "CaptorFieldConvertToArgumentCaptorPrimitiveTest.java",
-            "import org.mockito.Captor;\n" +
-                "\n" +
-                "public class CaptorFieldConvertToArgumentCaptorPrimitiveTest {\n" +
-                "\n" +
-                "    @Captor\n" +
-                "    public char <caret>captor;\n" +
-                "}\n",
-            "import org.mockito.ArgumentCaptor;\n" +
-                "import org.mockito.Captor;\n" +
-                "\n" +
-                "public class CaptorFieldConvertToArgumentCaptorPrimitiveTest {\n" +
-                "\n" +
-                "    @Captor\n" +
-                "    public ArgumentCaptor<Character> captor;\n" +
-                "}\n");
+            """
+                import org.mockito.Captor;
+
+                public class CaptorFieldConvertToArgumentCaptorPrimitiveTest {
+
+                    @Captor
+                    public char <caret>captor;
+                }
+                """,
+            """
+                import org.mockito.ArgumentCaptor;
+                import org.mockito.Captor;
+
+                public class CaptorFieldConvertToArgumentCaptorPrimitiveTest {
+
+                    @Captor
+                    public ArgumentCaptor<Character> captor;
+                }
+                """);
     }
 
     @Test
     void testCaptorFieldConvertToArgumentCaptorGenericsTest() {
         doQuickFixTest("Convert field type to ArgumentCaptor<>", "CaptorFieldConvertToArgumentCaptorGenericsTest.java",
-            "import org.mockito.Captor;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "public class CaptorFieldConvertToArgumentCaptorGenericsTest {\n" +
-                "\n" +
-                "    @Captor\n" +
-                "    public List<List<String>> <caret>captor;\n" +
-                "}\n",
-            "import org.mockito.ArgumentCaptor;\n" +
-                "import org.mockito.Captor;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "public class CaptorFieldConvertToArgumentCaptorGenericsTest {\n" +
-                "\n" +
-                "    @Captor\n" +
-                "    public ArgumentCaptor<List<List<String>>> captor;\n" +
-                "}\n");
+            """
+                import org.mockito.Captor;
+                import java.util.List;
+
+                public class CaptorFieldConvertToArgumentCaptorGenericsTest {
+
+                    @Captor
+                    public List<List<String>> <caret>captor;
+                }
+                """,
+            """
+                import org.mockito.ArgumentCaptor;
+                import org.mockito.Captor;
+                import java.util.List;
+
+                public class CaptorFieldConvertToArgumentCaptorGenericsTest {
+
+                    @Captor
+                    public ArgumentCaptor<List<List<String>>> captor;
+                }
+                """);
     }
 
     @Test
     void testCaptorFieldConvertToArgumentCaptorWildcardGenericsTest() {
         doQuickFixTest("Convert field type to ArgumentCaptor<>", "CaptorFieldConvertToArgumentCaptorWildcardGenericsTest.java",
-            "import org.mockito.Captor;\n" +
-                "import java.util.List;\n" +
-                "import java.util.Map;\n" +
-                "\n" +
-                "public class CaptorFieldConvertToArgumentCaptorWildcardGenericsTest {\n" +
-                "\n" +
-                "    @Captor\n" +
-                "    public Map<List<String>, List<?>> <caret>captor;\n" +
-                "}\n",
-            "import org.mockito.ArgumentCaptor;\n" +
-                "import org.mockito.Captor;\n" +
-                "import java.util.List;\n" +
-                "import java.util.Map;\n" +
-                "\n" +
-                "public class CaptorFieldConvertToArgumentCaptorWildcardGenericsTest {\n" +
-                "\n" +
-                "    @Captor\n" +
-                "    public ArgumentCaptor<Map<List<String>, List<?>>> captor;\n" +
-                "}\n");
+            """
+                import org.mockito.Captor;
+                import java.util.List;
+                import java.util.Map;
+
+                public class CaptorFieldConvertToArgumentCaptorWildcardGenericsTest {
+
+                    @Captor
+                    public Map<List<String>, List<?>> <caret>captor;
+                }
+                """,
+            """
+                import org.mockito.ArgumentCaptor;
+                import org.mockito.Captor;
+                import java.util.List;
+                import java.util.Map;
+
+                public class CaptorFieldConvertToArgumentCaptorWildcardGenericsTest {
+
+                    @Captor
+                    public ArgumentCaptor<Map<List<String>, List<?>>> captor;
+                }
+                """);
     }
 }

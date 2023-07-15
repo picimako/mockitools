@@ -39,28 +39,20 @@ class MockitoolsPsiUtilv3Test extends MockitoolsTestBase {
     private Stream<TestData> specificMethodData() {
         return Stream.of(
             new TestData("IsMatchersTest.java",
-                "import org.mockito.Matchers;\n" +
-                    "\n" +
-                    "public class IsMatchersTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Matchers.anyS<caret>tring();\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isMatchers(getMethodCall())));
+                """
+                    import org.mockito.Matchers;
+
+                    public class IsMatchersTest {
+                        public void testMethod() {
+                            Matchers.anyS<caret>tring();
+                        }
+                    }""", () -> MockitoolsPsiUtil.isMatchers(getMethodCall())));
     }
 
     private PsiMethodCallExpression getMethodCall() {
         return (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
     }
 
-    private static final class TestData {
-        final String fileName;
-        final String fileContent;
-        final Supplier<Boolean> isSpecificMethod;
-
-        public TestData(String fileName, String fileContent, Supplier<Boolean> isSpecificMethod) {
-            this.fileName = fileName;
-            this.fileContent = fileContent;
-            this.isSpecificMethod = isSpecificMethod;
-        }
+    private record TestData(String fileName, String fileContent, Supplier<Boolean> isSpecificMethod) {
     }
 }

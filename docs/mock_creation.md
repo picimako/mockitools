@@ -6,10 +6,15 @@
 * [Mockito cannot mock certain types](#mockito-cannot-mock-certain-types)
   * [Non-annotation based validation](#non-annotation-based-validation)
   * [@DoNotMock annotated types](#donotmock-annotated-types)
+* [Spying on mock objects](#spying-on-mock-objects)
+* [Mock/Spy creation without specifying class](#mockspy-creation-without-specifying-class)
+* [Mismatch between mocked type and type of spied instance](#mismatch-between-mocked-type-and-type-of-spied-instance)
 * [Mockito/MockedStatic.reset() is used](#mockitomockedstaticreset-is-used)
 * [Convert @Mock/@Spy fields to Mockito.mock()/spy() calls](#convert-mockspy-fields-to-mockitomockspy-calls)
     * [Determining the target method](#determining-the-target-method)
 * [Convert Mockito.mock()/spy() calls to @Mock/@Spy fields](#convert-mockitomockspy-calls-to-mockspy-fields)
+* [Simplify mock creation](#simplify-mock-creation)
+* [Expand mock creation](#expand-mock-creation)
 <!-- TOC -->
 
 ## Non-interface type(s) passed into extraInterfaces
@@ -118,6 +123,112 @@ class MockTypesTest {
 Additional resources:
 - [@DoNotMock javadoc](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/DoNotMock.html)
 - [Mockito pull request: Add annotation to mark a type as DoNotMock](https://github.com/mockito/mockito/pull/1833/files)
+
+----
+
+## Spying on mock objects
+
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.11.0-blue) [![](https://img.shields.io/badge/implementation-SpyOnMockInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/SpyOnMockInspection.java)
+
+This inspection reports spy creation on mock objects, for example
+
+```java
+
+class SpyOnMockTest {
+    
+    @Mock
+    MockObject mock;
+    
+    @Test
+    void testMethod() {
+      var spiedLocal = Mockito.spy(Mockito.mock(MockObject.class));
+      var spiedField = Mockito.spy(mock);
+    }
+}
+```
+
+The corresponding feature was introduced in [Mockito 5.4.0](https://github.com/mockito/mockito/releases/tag/v5.4.0), but this inspection does not do a library version check,
+and validates test code regardless of the Mockito version.
+   
+**NOTE:** variables with `Mockito.mock()` initializers passed into `Mockito.spy()` are not recognized as mocks yet.
+
+----
+
+## Mock/Spy creation without specifying class
+
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.11.0-blue) [![](https://img.shields.io/badge/implementation-ClasslessMockAndSpyCreationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/ClasslessMockAndSpyCreationInspection.java)
+
+[Mockito 4.9.0](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#mock_without_class) introduced an enhancement to `Mockito.mock()` and `Mockito.spy()`
+based mock/spy creation, so that the mock type is not determined by the class passed in, instead the variable/field it is assigned to.
+
+These variants of `mock()` and `spy()` throw an exception if objects other configuration are passed in, thus this inspection reports
+these calls when it finds at least one such argument.
+
+```java
+class MockWithoutSpecifyingClassTest {
+
+    @Test
+    void testMethod() {
+        MockObject mockWithAnswer = Mockito.mock(Answers.CALLS_REAL_METHODS, someOtherObject); //someOtherObject is highlighted
+        MockObject spied = Mockito.spy(new MockObject(), new MockObject()); //The entire argument list is highlighted
+    }
+}
+```
+
+----
+
+## Mismatch between mocked type and type of spied instance
+
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.11.0-blue)
+[![](https://img.shields.io/badge/implementation-MockSpiedInstanceTypeMismatchInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/MockSpiedInstanceTypeMismatchInspection.java)
+
+This inspection reports when the mocked type and the type of the spied instance don't match in a `mock(Type.class, withSettings().spiedInstance(...));`-type mock creation.
+   
+Limitations: since validation for all possible cases would need the runtime type of both the mocked type and the
+spied instance, the inspection checks the mock creation only when the mock type is a `<type>.class`-type
+expression e.g. `SomeObject.class`, and when the spied instance is a 'new' expression e.g. `new SomeObject<>()`.
+
+Based on Mockito's behaviour, in case of mocking/spying type with generic types, only the raw type is taken into account when determining the mismatch.
+
+**Examples:**
+
+```java
+class MockSpiedInstanceTypeMismatch {
+
+    void typeComparison() {
+        //Matching types, are not reported
+        var matchesWithoutGenerics = mock(ArrayList.class, withSettings().spiedInstance(new ArrayList()));
+        var matchesWithGenerics = mock(ArrayList.class, withSettings().spiedInstance(new ArrayList<>()));
+    
+        //Mismatching types, are reported
+        var doesNotMatchWithSubType = mock(List.class, withSettings().spiedInstance(new ArrayList<>()));
+        var doesNotMatchWithSuperType = mock(SomeType.class, withSettings().spiedInstance(new SuperType()));
+        var doesNotMatchWithOtherType = mock(List.class, withSettings().spiedInstance(new HashSet<>()));
+    
+        //Cases that are not reported due to requiring runtime type
+        var doesNotMatchTypeForStaticFactoryMethod = mock(List.class, withSettings().spiedInstance(List.of()));
+        var matchesRuntimeType = mock(ArrayList.class, withSettings().spiedInstance(createSpiedInstance()));
+        var matchesRawTypes2 = mock(getMockType(), withSettings().spiedInstance(new ArrayList<Boolean>()));
+    }
+  
+    private List<?> createSpiedInstance() {
+        var arrayList = new ArrayList<String>();
+        //...
+        return arrayList;
+    }
+  
+    private Class<ArrayList<String>> getMockType() {
+        var strings = new ArrayList<String>();
+        return (Class<ArrayList<String>>) strings.getClass();
+    }
+  
+    private static final class SomeType extends SuperType {
+    }
+  
+    private static class SuperType {
+    }
+}
+```
 
 ----
 
@@ -372,4 +483,51 @@ It is not yet supported to convert `spy()` calls in which an already created obj
 ```java
 Clazz clazz = new Clazz();
 Clazz spy = Mockito.spy(clazz); 
+```
+
+## Simplify mock creation
+
+![](https://img.shields.io/badge/inspection-orange)
+![](https://img.shields.io/badge/since-0.11.0-blue) [![](https://img.shields.io/badge/implementation-SimplifyMockCreationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/mocking/SimplifyMockCreationInspection.java)
+
+This inspection reports `Mockito.mock(..., withSettings()...)` mock creations that have convenience methods
+or simpler variants, and provides a quick fix to replace them with their corresponding simpler versions.
+This is essentially the opposite direction of what [Expand mock creation](#expand-mock-creation) does. 
+
+Currently `spiedInstance()`, `name()` and `defaultAnswer()` are supported in `MockSettings`.
+
+```java
+from: Mockito.mock(MockObject.class, withSettings().spiedInstance(instance))
+  to: Mockito.spy(instance)
+
+from: Mockito.mock(MockObject.class, withSettings().name(name))
+  to: Mockito.mock(MockObject.class, name)
+
+from: Mockito.mock(MockObject.class, withSettings().defaultAnswer(answer))
+  to: Mockito.mock(MockObject.class, answer)
+```
+
+## Expand mock creation
+
+![](https://img.shields.io/badge/intention-orange)
+![](https://img.shields.io/badge/since-0.11.0-blue) [![](https://img.shields.io/badge/implementation-ExpandMockCreationIntention-blue)](../src/main/java/com/picimako/mockitools/intention/mocking/ExpandMockCreationIntention.java)
+
+This intention action expands certain mock/spy creation calls to use concrete `MockSettings` configuration,
+and aims to simplify the process of converting mock creation logic when further mock settings need to be added.
+This is essentially the opposite direction of what [Simplify mock creation](#simplify-mock-creation) does.
+
+The intention is available on `Mockito.mock()` and `Mockito.spy()` calls. and the following conversions/expansions are supported:
+
+```java
+//From:
+var spiedInstance = new SpiedType<Object>();
+var spy = Mockito.spy(spiedInstance);
+//to:
+var spy = Mockito.mock(SpiedType.class, withSettings().spiedInstance(spiedInstance));
+
+from: Mockito.mock(MockType.class, "some mock name")
+  to: Mockito.mock(MockType.class, withSettings().name("some mock name"))
+
+from: Mockito.mock(MockType.class, Answers.RETURNS_MOCKS)
+  to: Mockito.mock(MockType.class, withSettings().defaultAnswer(Answers.RETURNS_MOCKS))
 ```

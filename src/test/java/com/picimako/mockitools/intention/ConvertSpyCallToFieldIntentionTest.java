@@ -34,122 +34,131 @@ class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
     @Test
     void testNotAvailableForNonMockitoSpyCall() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class NotAvailable {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.mo<caret>ck(Object.class);\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class NotAvailable {
+                    public void testMethod() {
+                        Mockito.mo<caret>ck(Object.class);
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableForMockitoSpyCallWithNotOneArgument() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class NotAvailable {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.sp<caret>y(new Object(), \"\");\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class NotAvailable {
+                    public void testMethod() {
+                        Mockito.sp<caret>y(new Object(), "");
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableForNonNewExpressionOrNonClassObjectAccessExpression() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class NotAvailable {\n" +
-                "    public void testMethod() {\n" +
-                "        Object object = new Object();\n" +
-                "        Mockito.sp<caret>y(object);\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class NotAvailable {
+                    public void testMethod() {
+                        Object object = new Object();
+                        Mockito.sp<caret>y(object);
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableForNonMockableTypeNewExpression() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class NotAvailable {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.sp<caret>y(new String());\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class NotAvailable {
+                    public void testMethod() {
+                        Mockito.sp<caret>y(new String());
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableForNonMockableTypeClassObjectAccess() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class NotAvailable {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.sp<caret>y(String.class);\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class NotAvailable {
+                    public void testMethod() {
+                        Mockito.sp<caret>y(String.class);
+                    }
+                }""");
     }
 
     @Test
     void testNotAvailableForDoNotMockAnnotatedTypeNewExpression() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.DoNotMock;\n" +
-                "\n" +
-                "public class NotAvailable {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.sp<caret>y(new NotMockable());\n" +
-                "    }\n" +
-                "\n" +
-                "    @DoNotMock\n" +
-                "    public static class NotMockable { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.DoNotMock;
+
+                public class NotAvailable {
+                    public void testMethod() {
+                        Mockito.sp<caret>y(new NotMockable());
+                    }
+
+                    @DoNotMock
+                    public static class NotMockable { }
+                }""");
     }
 
     @Test
     void testNotAvailableForDoNotMockAnnotatedTypeClassObjectAccess() {
         checkIntentionIsNotAvailable(
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.DoNotMock;\n" +
-                "\n" +
-                "public class NotAvailable {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.sp<caret>y(NotMockable.class);\n" +
-                "    }\n" +
-                "\n" +
-                "    @DoNotMock\n" +
-                "    public static class NotMockable { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.DoNotMock;
+
+                public class NotAvailable {
+                    public void testMethod() {
+                        Mockito.sp<caret>y(NotMockable.class);
+                    }
+
+                    @DoNotMock
+                    public static class NotMockable { }
+                }""");
     }
 
     @Test
     void testAvailableForNewExpression() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class Available {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockable spy = Mockito.sp<caret>y(new Mockable());\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class Available {
+                    public void testMethod() {
+                        Mockable spy = Mockito.sp<caret>y(new Mockable());
+                    }
+
+                    public static final class Mockable { }
+                }""");
     }
 
     @Test
     void testNotAvailableForClassObjectAccessExpression() {
         checkIntentionIsAvailable(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class Available {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockable spy = Mockito.s<caret>py(Mockable.class);\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class Available {
+                    public void testMethod() {
+                        Mockable spy = Mockito.s<caret>py(Mockable.class);
+                    }
+
+                    public static final class Mockable { }
+                }""");
     }
 
     //Conversion - standalone spy call + new expression
@@ -157,168 +166,184 @@ class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
     @Test
     void testConvertsStandaloneSpyCallNewExpressionDefaultToExplicitDefaultConstructor() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.s<caret>py(new Mockable()));\n" +
-                "    }\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable() { }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable mockable;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(mockable);\n" +
-                "    }\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable() { }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.s<caret>py(new Mockable()));
+                    }
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable {\s
+                        public Mockable() { }
+                    }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable mockable;
+
+                    public void testMethod() {
+                        aMethod(mockable);
+                    }
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable {\s
+                        public Mockable() { }
+                    }
+                }""");
     }
 
     @Test
     void testConvertsStandaloneSpyCallNewExpressionDefaultToNonDefaultConstructor() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.s<caret>py(new Mockable()));\n" +
-                "    }\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}\n",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable mockable = new Mockable();\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(mockable);\n" +
-                "    }\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}\n");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.s<caret>py(new Mockable()));
+                    }
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable {\s
+                        public Mockable(String string) { }
+                    }
+                }
+                """,
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable mockable = new Mockable();
+
+                    public void testMethod() {
+                        aMethod(mockable);
+                    }
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable {\s
+                        public Mockable(String string) { }
+                    }
+                }
+                """);
     }
 
     @Test
     void testConvertsStandaloneSpyCallNewExpressionNonDefaultMatchingConstructor() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.s<caret>py(new Mockable(\"\")));\n" +
-                "    }\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}\n",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable mockable = new Mockable(\"\");\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(mockable);\n" +
-                "    }\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}\n");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.s<caret>py(new Mockable("")));
+                    }
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable {\s
+                        public Mockable(String string) { }
+                    }
+                }
+                """,
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable mockable = new Mockable("");
+
+                    public void testMethod() {
+                        aMethod(mockable);
+                    }
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable {\s
+                        public Mockable(String string) { }
+                    }
+                }
+                """);
     }
 
     @Test
     void testConvertsStandaloneSpyCallNewExpressionNonDefaultToNonMatchingConstructor() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.s<caret>py(new Mockable(\"\")));\n" +
-                "    }\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable(int number) { }\n" +
-                "    }\n" +
-                "}\n",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable mockable = new Mockable(\"\");\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(mockable);\n" +
-                "    }\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable(int number) { }\n" +
-                "    }\n" +
-                "}\n");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.s<caret>py(new Mockable("")));
+                    }
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable {\s
+                        public Mockable(int number) { }
+                    }
+                }
+                """,
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable mockable = new Mockable("");
+
+                    public void testMethod() {
+                        aMethod(mockable);
+                    }
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable {\s
+                        public Mockable(int number) { }
+                    }
+                }
+                """);
     }
 
     @Test
     void testConvertsStandaloneSpyCallNewExpressionNonDefaultToDefaultAndNonMatchingConstructor() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.s<caret>py(new Mockable(\"\")));\n" +
-                "    }\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable() { }\n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable mockable = new Mockable(\"\");\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(mockable);\n" +
-                "    }\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable() { }\n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.s<caret>py(new Mockable("")));
+                    }
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable {\s
+                        public Mockable() { }
+                        public Mockable(String string) { }
+                    }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable mockable = new Mockable("");
+
+                    public void testMethod() {
+                        aMethod(mockable);
+                    }
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable {\s
+                        public Mockable() { }
+                        public Mockable(String string) { }
+                    }
+                }""");
     }
 
     //---
@@ -326,102 +351,108 @@ class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
     @Test
     void testConvertsStandaloneSpyCallNewExpressionDefaultToAutoGenDefaultConstructor() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.s<caret>py(new Mockable()));\n" +
-                "    }\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable { }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable mockable;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(mockable);\n" +
-                "    }\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.s<caret>py(new Mockable()));
+                    }
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable { }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable mockable;
+
+                    public void testMethod() {
+                        aMethod(mockable);
+                    }
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable { }
+                }""");
     }
 
     @Test
     void testConvertsStandaloneSpyCallNewExpressionDefaultToMultipleNonDefaultConstructors() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.s<caret>py(new Mockable()));\n" +
-                "    }\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable(int number) { }\n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable mockable = new Mockable();\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(mockable);\n" +
-                "    }\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable(int number) { }\n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.s<caret>py(new Mockable()));
+                    }
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable {\s
+                        public Mockable(int number) { }
+                        public Mockable(String string) { }
+                    }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable mockable = new Mockable();
+
+                    public void testMethod() {
+                        aMethod(mockable);
+                    }
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable {\s
+                        public Mockable(int number) { }
+                        public Mockable(String string) { }
+                    }
+                }""");
     }
 
     @Test
     void testConvertsStandaloneSpyCallNewExpressionNonDefaultToDefaultAndMultipleNonDefaultConstructors() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.s<caret>py(new Mockable(\"\")));\n" +
-                "    }\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable() { }\n" +
-                "        public Mockable(int number) { }\n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable mockable = new Mockable(\"\");\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(mockable);\n" +
-                "    }\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable() { }\n" +
-                "        public Mockable(int number) { }\n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.s<caret>py(new Mockable("")));
+                    }
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable {\s
+                        public Mockable() { }
+                        public Mockable(int number) { }
+                        public Mockable(String string) { }
+                    }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable mockable = new Mockable("");
+
+                    public void testMethod() {
+                        aMethod(mockable);
+                    }
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable {\s
+                        public Mockable() { }
+                        public Mockable(int number) { }
+                        public Mockable(String string) { }
+                    }
+                }""");
     }
 
     //--- Generics
@@ -429,30 +460,32 @@ class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
     @Test
     void testConvertsStandaloneSpyCallNewExpressionGenerics() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.s<caret>py(new Mockable<String>()));\n" +
-                "    }\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable<T> { }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable<String> mockable;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(mockable);\n" +
-                "    }\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable<T> { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.s<caret>py(new Mockable<String>()));
+                    }
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable<T> { }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable<String> mockable;
+
+                    public void testMethod() {
+                        aMethod(mockable);
+                    }
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable<T> { }
+                }""");
     }
 
     //Conversion - standalone spy call + class object access expression
@@ -460,32 +493,34 @@ class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
     @Test
     void testConvertsStandaloneSpyCallClassObjectAccess() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(Mockito.s<caret>py(Mockable.class));\n" +
-                "    }\n" +
-                "\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable { }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable mockable;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        aMethod(mockable);\n" +
-                "    }\n" +
-                "\n" +
-                "    public void aMethod(Mockable mockable) { }\n" +
-                "\n" +
-                "    public static final class Mockable { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        aMethod(Mockito.s<caret>py(Mockable.class));
+                    }
+
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable { }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable mockable;
+
+                    public void testMethod() {
+                        aMethod(mockable);
+                    }
+
+                    public void aMethod(Mockable mockable) { }
+
+                    public static final class Mockable { }
+                }""");
     }
 
     //Conversion - local variable declaration + new expression
@@ -493,153 +528,169 @@ class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
     @Test
     void testConvertsLocalVariableDeclarationNewExpressionDefaultToExplicitDefaultConstructor() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockable spy = Mockito.s<caret>py(new Mockable());\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable() { }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable spy;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable() { }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        Mockable spy = Mockito.s<caret>py(new Mockable());
+                    }
+
+                    public static final class Mockable {\s
+                        public Mockable() { }
+                    }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable spy;
+
+                    public void testMethod() {
+                    }
+
+                    public static final class Mockable {\s
+                        public Mockable() { }
+                    }
+                }""");
     }
 
     @Test
     void testConvertsLocalVariableDeclarationNewExpressionDefaultToNonDefaultConstructor() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockable spy = Mockito.s<caret>py(new Mockable());\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}\n",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable spy = new Mockable();\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}\n");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        Mockable spy = Mockito.s<caret>py(new Mockable());
+                    }
+
+                    public static final class Mockable {\s
+                        public Mockable(String string) { }
+                    }
+                }
+                """,
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable spy = new Mockable();
+
+                    public void testMethod() {
+                    }
+
+                    public static final class Mockable {\s
+                        public Mockable(String string) { }
+                    }
+                }
+                """);
     }
 
     @Test
     void testConvertsLocalVariableDeclarationNewExpressionNonDefaultMatchingConstructor() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockable spy = Mockito.s<caret>py(new Mockable(\"\"));\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}\n",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable spy = new Mockable(\"\");\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}\n");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        Mockable spy = Mockito.s<caret>py(new Mockable(""));
+                    }
+
+                    public static final class Mockable {\s
+                        public Mockable(String string) { }
+                    }
+                }
+                """,
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable spy = new Mockable("");
+
+                    public void testMethod() {
+                    }
+
+                    public static final class Mockable {\s
+                        public Mockable(String string) { }
+                    }
+                }
+                """);
     }
 
     @Test
     void testConvertsLocalVariableDeclarationNewExpressionNonDefaultToNonMatchingConstructor() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockable spy = Mockito.s<caret>py(new Mockable(\"\"));\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable(int number) { }\n" +
-                "    }\n" +
-                "}\n",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable spy = new Mockable(\"\");\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable(int number) { }\n" +
-                "    }\n" +
-                "}\n");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        Mockable spy = Mockito.s<caret>py(new Mockable(""));
+                    }
+
+                    public static final class Mockable {\s
+                        public Mockable(int number) { }
+                    }
+                }
+                """,
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable spy = new Mockable("");
+
+                    public void testMethod() {
+                    }
+
+                    public static final class Mockable {\s
+                        public Mockable(int number) { }
+                    }
+                }
+                """);
     }
 
     @Test
     void testConvertsLocalVariableDeclarationNewExpressionNonDefaultToDefaultAndNonMatchingConstructor() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockable spy = Mockito.s<caret>py(new Mockable(\"\"));\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable() { }\n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable spy = new Mockable(\"\");\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable() { }\n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        Mockable spy = Mockito.s<caret>py(new Mockable(""));
+                    }
+
+                    public static final class Mockable {\s
+                        public Mockable() { }
+                        public Mockable(String string) { }
+                    }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable spy = new Mockable("");
+
+                    public void testMethod() {
+                    }
+
+                    public static final class Mockable {\s
+                        public Mockable() { }
+                        public Mockable(String string) { }
+                    }
+                }""");
     }
 
     //---
@@ -647,93 +698,99 @@ class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
     @Test
     void testConvertsLocalVariableDeclarationNewExpressionDefaultToAutoGenDefaultConstructor() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockable spy = Mockito.s<caret>py(new Mockable());\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable spy;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        Mockable spy = Mockito.s<caret>py(new Mockable());
+                    }
+
+                    public static final class Mockable { }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable spy;
+
+                    public void testMethod() {
+                    }
+
+                    public static final class Mockable { }
+                }""");
     }
 
     @Test
     void testConvertsLocalVariableDeclarationNewExpressionDefaultToMultipleNonDefaultConstructors() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockable spy = Mockito.s<caret>py(new Mockable());\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable(int number) { }\n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable spy = new Mockable();\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable(int number) { }\n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        Mockable spy = Mockito.s<caret>py(new Mockable());
+                    }
+
+                    public static final class Mockable {\s
+                        public Mockable(int number) { }
+                        public Mockable(String string) { }
+                    }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable spy = new Mockable();
+
+                    public void testMethod() {
+                    }
+
+                    public static final class Mockable {\s
+                        public Mockable(int number) { }
+                        public Mockable(String string) { }
+                    }
+                }""");
     }
 
     @Test
     void testConvertsLocalVariableDeclarationNewExpressionNonDefaultToDefaultAndMultipleNonDefaultConstructors() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockable spy = Mockito.s<caret>py(new Mockable(\"\"));\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable() { }\n" +
-                "        public Mockable(int number) { }\n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable spy = new Mockable(\"\");\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { \n" +
-                "        public Mockable() { }\n" +
-                "        public Mockable(int number) { }\n" +
-                "        public Mockable(String string) { }\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        Mockable spy = Mockito.s<caret>py(new Mockable(""));
+                    }
+
+                    public static final class Mockable {\s
+                        public Mockable() { }
+                        public Mockable(int number) { }
+                        public Mockable(String string) { }
+                    }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable spy = new Mockable("");
+
+                    public void testMethod() {
+                    }
+
+                    public static final class Mockable {\s
+                        public Mockable() { }
+                        public Mockable(int number) { }
+                        public Mockable(String string) { }
+                    }
+                }""");
     }
 
     //--- Generics
@@ -741,27 +798,29 @@ class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
     @Test
     void testConvertsLocalVariableDeclarationNewExpressionGenerics() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockable<String> spy = Mockito.s<caret>py(new Mockable<String>());\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable<T> { }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable<String> spy;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable<T> { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        Mockable<String> spy = Mockito.s<caret>py(new Mockable<String>());
+                    }
+
+                    public static final class Mockable<T> { }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable<String> spy;
+
+                    public void testMethod() {
+                    }
+
+                    public static final class Mockable<T> { }
+                }""");
     }
 
     //--- var keyword
@@ -769,53 +828,57 @@ class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
     @Test
     void testConvertsLocalVariableDeclarationWithVarKeywordWithNewExpressionNonGenerics() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        var spy = Mockito.s<caret>py(new Mockable());\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable spy;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        var spy = Mockito.s<caret>py(new Mockable());
+                    }
+
+                    public static final class Mockable { }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable spy;
+
+                    public void testMethod() {
+                    }
+
+                    public static final class Mockable { }
+                }""");
     }
 
     @Test
     void testConvertsLocalVariableDeclarationWithVarKeywordWithNewExpressionGenerics() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        var spy = Mockito.s<caret>py(new Mockable<String>());\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable<T> { }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable<String> spy;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable<T> { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        var spy = Mockito.s<caret>py(new Mockable<String>());
+                    }
+
+                    public static final class Mockable<T> { }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable<String> spy;
+
+                    public void testMethod() {
+                    }
+
+                    public static final class Mockable<T> { }
+                }""");
     }
 
     //Conversion - local variable declaration + class object access expression
@@ -823,27 +886,29 @@ class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
     @Test
     void testConvertsLocalVariableDeclarationClassObjectAccessExpression() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockable spy = Mockito.s<caret>py(Mockable.class);\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable spy;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        Mockable spy = Mockito.s<caret>py(Mockable.class);
+                    }
+
+                    public static final class Mockable { }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable spy;
+
+                    public void testMethod() {
+                    }
+
+                    public static final class Mockable { }
+                }""");
     }
 
     //--- Generics
@@ -851,27 +916,29 @@ class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
     @Test
     void testConvertsLocalVariableDeclarationClassObjectAccessExpressionGenerics() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockable<String> spy = Mockito.s<caret>py(Mockable.class);\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable<T> { }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable<String> spy;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable<T> { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        Mockable<String> spy = Mockito.s<caret>py(Mockable.class);
+                    }
+
+                    public static final class Mockable<T> { }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable<String> spy;
+
+                    public void testMethod() {
+                    }
+
+                    public static final class Mockable<T> { }
+                }""");
     }
 
     //--- var keyword
@@ -879,26 +946,28 @@ class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
     @Test
     void testConvertsLocalVariableDeclarationWithVarKeywordWithClassObjectAccessExpression() {
         checkIntentionRun(
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    public void testMethod() {\n" +
-                "        var spy = Mockito.s<caret>py(Mockable.class);\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Spy;\n" +
-                "\n" +
-                "public class ConversionTest {\n" +
-                "    @Spy\n" +
-                "    Mockable spy;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "    }\n" +
-                "\n" +
-                "    public static final class Mockable { }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        var spy = Mockito.s<caret>py(Mockable.class);
+                    }
+
+                    public static final class Mockable { }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable spy;
+
+                    public void testMethod() {
+                    }
+
+                    public static final class Mockable { }
+                }""");
     }
 }

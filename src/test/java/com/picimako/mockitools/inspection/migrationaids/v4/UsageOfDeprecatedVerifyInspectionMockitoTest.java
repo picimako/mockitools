@@ -19,66 +19,72 @@ class UsageOfDeprecatedVerifyInspectionMockitoTest extends MockitoolsInspectionT
     @Test
     void testVerifyZeroInteractionsIsReplacedWithVerifyNoMoreInteractionsNoArgument() {
         doQuickFixTest("Replace with verifyNoMoreInteractions()", "ReplaceVerifyZeroInteractionsTest.java",
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class VerifyArgumentsAreSwitchedTest {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.verifyZeroInt<caret>eractions();\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "public class VerifyArgumentsAreSwitchedTest {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.verifyNoMoreInteractions();\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+
+                public class VerifyArgumentsAreSwitchedTest {
+                    public void testMethod() {
+                        Mockito.verifyZeroInt<caret>eractions();
+                    }
+                }""",
+            """
+                import org.mockito.Mockito;
+
+                public class VerifyArgumentsAreSwitchedTest {
+                    public void testMethod() {
+                        Mockito.verifyNoMoreInteractions();
+                    }
+                }""");
     }
 
     @Test
     void testVerifyZeroInteractionsIsReplacedWithVerifyNoMoreInteractionsArguments() {
         doQuickFixTest("Replace with verifyNoMoreInteractions()", "ReplaceVerifyZeroInteractionsTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "public class VerifyArgumentsAreSwitchedTest {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.verifyZeroInt<caret>eractions(Mockito.mock(List.class), Mockito.mock(Object.class));\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "public class VerifyArgumentsAreSwitchedTest {\n" +
-                "    public void testMethod() {\n" +
-                "        Mockito.verifyNoMoreInteractions(Mockito.mock(List.class), Mockito.mock(Object.class));\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import java.util.List;
+
+                public class VerifyArgumentsAreSwitchedTest {
+                    public void testMethod() {
+                        Mockito.verifyZeroInt<caret>eractions(Mockito.mock(List.class), Mockito.mock(Object.class));
+                    }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import java.util.List;
+
+                public class VerifyArgumentsAreSwitchedTest {
+                    public void testMethod() {
+                        Mockito.verifyNoMoreInteractions(Mockito.mock(List.class), Mockito.mock(Object.class));
+                    }
+                }""");
     }
 
     @Test
     void testVerifyZeroInteractionsIsReplacedWithVerifyNoMoreInteractionsArgumentsStaticImported() {
         doQuickFixTest("Replace with verifyNoMoreInteractions()", "ReplaceVerifyZeroInteractionsTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "import static org.mockito.Mockito.verifyZeroInteractions;\n" +
-                "\n" +
-                "public class VerifyArgumentsAreSwitchedTest {\n" +
-                "    public void testMethod() {\n" +
-                "        verifyZeroInt<caret>eractions(Mockito.mock(List.class), Mockito.mock(Object.class));\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import java.util.List;\n" +
-                "\n" +
-                "import static org.mockito.Mockito.verifyNoMoreInteractions;\n" +
-                "import static org.mockito.Mockito.verifyZeroInteractions;\n" +
-                "\n" +
-                "public class VerifyArgumentsAreSwitchedTest {\n" +
-                "    public void testMethod() {\n" +
-                "        verifyNoMoreInteractions(Mockito.mock(List.class), Mockito.mock(Object.class));\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import java.util.List;
+
+                import static org.mockito.Mockito.verifyZeroInteractions;
+
+                public class VerifyArgumentsAreSwitchedTest {
+                    public void testMethod() {
+                        verifyZeroInt<caret>eractions(Mockito.mock(List.class), Mockito.mock(Object.class));
+                    }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import java.util.List;
+
+                import static org.mockito.Mockito.verifyNoMoreInteractions;
+                import static org.mockito.Mockito.verifyZeroInteractions;
+
+                public class VerifyArgumentsAreSwitchedTest {
+                    public void testMethod() {
+                        verifyNoMoreInteractions(Mockito.mock(List.class), Mockito.mock(Object.class));
+                    }
+                }""");
     }
 }

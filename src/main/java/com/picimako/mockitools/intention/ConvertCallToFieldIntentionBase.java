@@ -131,9 +131,8 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
     }
 
     protected void introduceField(ConversionContext ctx, Supplier<Pair<String, String>> typeAndFieldName, Supplier<String> initializer) {
-        if (ctx.spyOrMockCall.getParent() instanceof PsiLocalVariable) {
-            var variable = (PsiLocalVariable) ctx.spyOrMockCall.getParent();
-            var field = createField(variable.getType().getCanonicalText(), getLocalVariableName(ctx.spyOrMockCall.getParent()), initializer, ctx);
+        if (ctx.spyOrMockCall.getParent() instanceof PsiLocalVariable variable) {
+            var field = createField(variable.getType().getCanonicalText(), getLocalVariableName(variable), initializer, ctx);
             doIntroduceFieldForLocalVariable(ctx, field, variable);
         } else {
             var typeAndField = typeAndFieldName.get();

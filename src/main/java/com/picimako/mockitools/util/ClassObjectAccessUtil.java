@@ -22,8 +22,8 @@ public final class ClassObjectAccessUtil {
      */
     @Nullable
     public static PsiType getOperandType(@Nullable PsiElement element) {
-        return element instanceof PsiClassObjectAccessExpression
-            ? ((PsiClassObjectAccessExpression) element).getOperand().getType()
+        return element instanceof PsiClassObjectAccessExpression objectAccessExpr
+            ? objectAccessExpr.getOperand().getType()
             : null;
     }
 
@@ -42,11 +42,7 @@ public final class ClassObjectAccessUtil {
      */
     @Nullable
     public static PsiClass resolveOperandType(@NotNull PsiElement element) {
-        PsiType operandType = getOperandType(element);
-        if (operandType instanceof PsiClassType) {
-            return ((PsiClassType) operandType).resolve();
-        }
-        return null;
+        return getOperandType(element) instanceof PsiClassType operandType ? operandType.resolve() : null;
     }
 
     private ClassObjectAccessUtil() {

@@ -11,6 +11,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.siyeh.ig.InspectionGadgetsFix;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.mockitools.resources.MockitoolsBundle;
@@ -19,29 +20,24 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  * Quick fix that merges consecutive {@code *Throw()} or {@code *Return()} calls, respectively.
  * Only a single section of consecutive calls is merged if there are multiple.
  */
+@RequiredArgsConstructor
 public class MergeConsecutiveStubbingCallsQuickFix extends InspectionGadgetsFix {
     private final ConsecutiveCallQuickFixContext context;
     private final TypeConversionMethod argumentTypeConverter;
 
-    public MergeConsecutiveStubbingCallsQuickFix(ConsecutiveCallQuickFixContext context, TypeConversionMethod argumentTypeConverter) {
-        this.context = context;
-        this.argumentTypeConverter = argumentTypeConverter;
-    }
-
     @Override
     public @IntentionName @NotNull String getName() {
-        switch (argumentTypeConverter) {
-            case NO_CONVERSION:
-            case TO_THROWABLES_SIMPLE:
-                return MockitoolsBundle.quickFix("merge.with.previous.consecutive.calls", context.consecutiveMethodName);
-            default:
-                return MockitoolsBundle.quickFix("merge.with.previous.consecutive.calls.and.convert.params", argumentTypeConverter.message);
-        }
+        return switch (argumentTypeConverter) {
+            case NO_CONVERSION, TO_THROWABLES_SIMPLE ->
+                MockitoolsBundle.message("quick.fix.merge.with.previous.consecutive.calls", context.consecutiveMethodName);
+            default ->
+                MockitoolsBundle.message("quick.fix.merge.with.previous.consecutive.calls.and.convert.params", argumentTypeConverter.message);
+        };
     }
 
     @Override
     public @IntentionFamilyName @NotNull String getFamilyName() {
-        return MockitoolsBundle.quickFixFamily("simplify.consecutive.stubbing.calls");
+        return MockitoolsBundle.message("quick.fix.family.simplify.consecutive.stubbing.calls");
     }
 
     @Override

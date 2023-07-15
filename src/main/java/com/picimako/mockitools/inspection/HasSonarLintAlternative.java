@@ -16,7 +16,8 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface HasSonarLintAlternative {
     /**
-     * The URL of the SonarLint rule documentation. 
+     * The URL of the SonarLint rule documentation,
+     * e.g. {@code https://rules.sonarsource.com/java/tag/mockito/RSPEC-6073}.
      */
     String value();
 }

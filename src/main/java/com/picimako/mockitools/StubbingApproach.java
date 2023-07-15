@@ -30,7 +30,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
-import com.picimako.mockitools.inspection.ExceptionStubber;
+import com.picimako.mockitools.inspection.stubbing.ExceptionStubber;
 import com.picimako.mockitools.util.PsiMethodUtil;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import lombok.Getter;

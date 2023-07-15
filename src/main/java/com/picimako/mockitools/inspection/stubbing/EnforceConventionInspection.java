@@ -1,6 +1,6 @@
 //Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.picimako.mockitools.inspection;
+package com.picimako.mockitools.inspection.stubbing;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
@@ -17,6 +17,7 @@ import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.util.ui.JBUI;
+import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.callMatcher.CallMatcher;
@@ -70,7 +71,7 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
     @Override
     public JComponent createOptionsPanel() {
         final var panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 5, true, false));
-        panel.add(new JLabel(MockitoolsBundle.inspectionOption("enforce.stubbing.and.verification.label")));
+        panel.add(new JLabel(MockitoolsBundle.message("inspection.option.enforce.stubbing.and.verification.label")));
 
         var group = new ButtonGroup();
         for (var convention : Convention.values()) {
@@ -94,7 +95,7 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
 
     private void register(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         holder.registerProblem(Optional.ofNullable(getReferenceNameElement(expression)).orElse(expression),
-            MockitoolsBundle.inspection("stubbing.and.verification.must.be.performed.via.x", conventionToEnforce.getClassFqn()));
+            MockitoolsBundle.message("inspection.stubbing.and.verification.must.be.performed.via.x", conventionToEnforce.getClassFqn()));
     }
 
     // Static helpers

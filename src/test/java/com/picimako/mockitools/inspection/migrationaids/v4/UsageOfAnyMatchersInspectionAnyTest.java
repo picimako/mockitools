@@ -18,208 +18,220 @@ class UsageOfAnyMatchersInspectionAnyTest extends MockitoolsInspectionTestBase.M
     @Test
     void testArgumentMatchersAnyObjectIsReplacedWithAny() {
         doQuickFixTest("Replace with ArgumentMatchers.any()", "UseAnyInsteadOfAnyObjectTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.ArgumentMatchers;\n" +
-                "\n" +
-                "public class UseAnyInsteadOfAnyObjectTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.anyObjec<caret>t());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.ArgumentMatchers;\n" +
-                "\n" +
-                "public class UseAnyInsteadOfAnyObjectTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.any());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.ArgumentMatchers;
+
+                public class UseAnyInsteadOfAnyObjectTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.anyObjec<caret>t());
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.ArgumentMatchers;
+
+                public class UseAnyInsteadOfAnyObjectTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.any());
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 
     @Test
     void testArgumentMatchersAnyVarargIsReplacedWithAny() {
         doQuickFixTest("Replace with ArgumentMatchers.any()", "UseAnyInsteadOfAnyVarargTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.ArgumentMatchers;\n" +
-                "\n" +
-                "public class UseAnyInsteadOfAnyVarargTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.anyVar<caret>arg());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.ArgumentMatchers;\n" +
-                "\n" +
-                "public class UseAnyInsteadOfAnyVarargTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.any());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.ArgumentMatchers;
+
+                public class UseAnyInsteadOfAnyVarargTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.anyVar<caret>arg());
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.ArgumentMatchers;
+
+                public class UseAnyInsteadOfAnyVarargTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.any());
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 
     @Test
     void testMatchersAnyObjectIsReplacedWithAny() {
         doQuickFixTest("Replace with ArgumentMatchers.any()", "UseAnyInsteadOfAnyObjectTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Matchers;\n" +
-                "\n" +
-                "public class UseAnyInsteadOfAnyObjectTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(Matchers.anyObjec<caret>t());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}",
-            "import org.mockito.ArgumentMatchers;\n" +
-                "import org.mockito.Mockito;\n" +
-                "import org.mockito.Matchers;\n" +
-                "\n" +
-                "public class UseAnyInsteadOfAnyObjectTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.any());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Matchers;
+
+                public class UseAnyInsteadOfAnyObjectTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(Matchers.anyObjec<caret>t());
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""",
+            """
+                import org.mockito.ArgumentMatchers;
+                import org.mockito.Mockito;
+                import org.mockito.Matchers;
+
+                public class UseAnyInsteadOfAnyObjectTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.any());
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 
     @Test
     void testMatchersAnyVarargIsReplacedWithAny() {
         doQuickFixTest("Replace with ArgumentMatchers.any()", "UseAnyInsteadOfAnyVarargTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Matchers;\n" +
-                "import org.mockito.ArgumentMatchers;\n" +
-                "\n" +
-                "public class UseAnyInsteadOfAnyVarargTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(Matchers.anyVar<caret>arg());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.Matchers;\n" +
-                "import org.mockito.ArgumentMatchers;\n" +
-                "\n" +
-                "public class UseAnyInsteadOfAnyVarargTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.any());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Matchers;
+                import org.mockito.ArgumentMatchers;
+
+                public class UseAnyInsteadOfAnyVarargTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(Matchers.anyVar<caret>arg());
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Matchers;
+                import org.mockito.ArgumentMatchers;
+
+                public class UseAnyInsteadOfAnyVarargTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.any());
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 
     @Test
     void testAnyVarargIsReplacedWithAnyWithStaticImport() {
         doQuickFixTest("Replace with ArgumentMatchers.any()", "UseAnyInsteadOfAnyVarargStaticImportTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import static org.mockito.ArgumentMatchers.anyVararg;\n" +
-                "\n" +
-                "public class UseAnyInsteadOfAnyVarargStaticImportTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(anyVar<caret>arg());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}",
-            "import org.mockito.Mockito;\n" +
-                "\n" +
-                "import static org.mockito.ArgumentMatchers.any;\n" +
-                "import static org.mockito.ArgumentMatchers.anyVararg;\n" +
-                "\n" +
-                "public class UseAnyInsteadOfAnyVarargStaticImportTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(any());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import static org.mockito.ArgumentMatchers.anyVararg;
+
+                public class UseAnyInsteadOfAnyVarargStaticImportTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(anyVar<caret>arg());
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""",
+            """
+                import org.mockito.Mockito;
+
+                import static org.mockito.ArgumentMatchers.any;
+                import static org.mockito.ArgumentMatchers.anyVararg;
+
+                public class UseAnyInsteadOfAnyVarargStaticImportTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(any());
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 
     @Test
     void testAnyIsNotReported() {
         doJavaTest("AnyIsNotReportedTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import org.mockito.ArgumentMatchers;\n" +
-                "\n" +
-                "public class AnyIsNotReportedTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.any());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import org.mockito.ArgumentMatchers;
+
+                public class AnyIsNotReportedTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(ArgumentMatchers.any());
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 
     @Test
     void testAnyIsNotReportedWithStaticImport() {
         doJavaTest("AnyIsNotReportedTest.java",
-            "import org.mockito.Mockito;\n" +
-                "import static org.mockito.ArgumentMatchers.any;\n" +
-                "\n" +
-                "public class AnyIsNotReportedTest {\n" +
-                "   public void testMethod() {\n" +
-                "       MockObject mock = Mockito.mock(MockObject.class);\n" +
-                "       Mockito.doReturn(10).when(mock).method(any());\n" +
-                "   }\n" +
-                "   private static final class MockObject {\n" +
-                "       public int method(String s) {\n" +
-                "           return 0;\n" +
-                "       }\n" +
-                "   }\n" +
-                "}");
+            """
+                import org.mockito.Mockito;
+                import static org.mockito.ArgumentMatchers.any;
+
+                public class AnyIsNotReportedTest {
+                   public void testMethod() {
+                       MockObject mock = Mockito.mock(MockObject.class);
+                       Mockito.doReturn(10).when(mock).method(any());
+                   }
+                   private static final class MockObject {
+                       public int method(String s) {
+                           return 0;
+                       }
+                   }
+                }""");
     }
 }

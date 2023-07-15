@@ -19,99 +19,109 @@ class UsageOfDeprecatedPluginClassesInspectionAnnotationEngineTest extends Mocki
     @Test
     void testReplacesAnnotationEngineImport() {
         doQuickFixTest("Replace with org.mockito.plugins.AnnotationEngine", "ReplaceAnnotationEngineTest.java",
-            "import org.mockito.configuration.AnnotationEngine;\n" +
-                "\n" +
-                "public class ReplaceAnnotationEngineTest {\n" +
-                "    public void testMethod() {\n" +
-                "        Annotation<caret>Engine engine;\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.plugins.AnnotationEngine;\n" +
-                "\n" +
-                "public class ReplaceAnnotationEngineTest {\n" +
-                "    public void testMethod() {\n" +
-                "        AnnotationEngine engine;\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.configuration.AnnotationEngine;
+
+                public class ReplaceAnnotationEngineTest {
+                    public void testMethod() {
+                        Annotation<caret>Engine engine;
+                    }
+                }""",
+            """
+                import org.mockito.plugins.AnnotationEngine;
+
+                public class ReplaceAnnotationEngineTest {
+                    public void testMethod() {
+                        AnnotationEngine engine;
+                    }
+                }""");
     }
 
     @Test
     void testReplacesAnnotationEngineImportInterfaceDeclaration() {
         doQuickFixTest("Replace with org.mockito.plugins.AnnotationEngine", "ReplaceAnnotationEngineTest.java",
-            "import org.mockito.configuration.AnnotationEngine\n" +
-                "\n" +
-                "public interface CustomAnnotationEngine extends Annotatio<caret>nEngine {\n" +
-                "}",
-            "import org.mockito.plugins.AnnotationEngine\n" +
-                "\n" +
-                "public interface CustomAnnotationEngine extends AnnotationEngine {\n" +
-                "}");
+            """
+                import org.mockito.configuration.AnnotationEngine
+
+                public interface CustomAnnotationEngine extends Annotatio<caret>nEngine {
+                }""",
+            """
+                import org.mockito.plugins.AnnotationEngine
+
+                public interface CustomAnnotationEngine extends AnnotationEngine {
+                }""");
     }
 
     @Test
     void testReplacesAnnotationEngineFullyQualifiedNameWithoutNameCollision() {
         doQuickFixTest("Replace with org.mockito.plugins.AnnotationEngine", "ReplaceAnnotationEngineTest.java",
-            "public class ReplaceAnnotationEngineTest {\n" +
-                "    public void testMethod() {\n" +
-                "        org.mockito.configuration.Annotation<caret>Engine engine;\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.plugins.AnnotationEngine;\n" +
-                "\n" +
-                "public class ReplaceAnnotationEngineTest {\n" +
-                "    public void testMethod() {\n" +
-                "        AnnotationEngine engine;\n" +
-                "    }\n" +
-                "}");
+            """
+                public class ReplaceAnnotationEngineTest {
+                    public void testMethod() {
+                        org.mockito.configuration.Annotation<caret>Engine engine;
+                    }
+                }""",
+            """
+                import org.mockito.plugins.AnnotationEngine;
+
+                public class ReplaceAnnotationEngineTest {
+                    public void testMethod() {
+                        AnnotationEngine engine;
+                    }
+                }""");
     }
 
     @Test
     void testReplacesAnnotationEngineFullyQualifiedNameWithNameCollision() {
         doQuickFixTest("Replace with org.mockito.plugins.AnnotationEngine", "ReplaceAnnotationEngineTest.java",
-            "import org.mockito.configuration.AnnotationEngine;\n" +
-                "\n" +
-                "public class ReplaceAnnotationEngineTest {\n" +
-                "    public void testMethod() {\n" +
-                "        org.mockito.configuration.Annotation<caret>Engine engine;\n" +
-                "        AnnotationEngine eng;\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.configuration.AnnotationEngine;\n" +
-                "\n" +
-                "public class ReplaceAnnotationEngineTest {\n" +
-                "    public void testMethod() {\n" +
-                "        org.mockito.plugins.AnnotationEngine engine;\n" +
-                "        AnnotationEngine eng;\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.configuration.AnnotationEngine;
+
+                public class ReplaceAnnotationEngineTest {
+                    public void testMethod() {
+                        org.mockito.configuration.Annotation<caret>Engine engine;
+                        AnnotationEngine eng;
+                    }
+                }""",
+            """
+                import org.mockito.configuration.AnnotationEngine;
+
+                public class ReplaceAnnotationEngineTest {
+                    public void testMethod() {
+                        org.mockito.plugins.AnnotationEngine engine;
+                        AnnotationEngine eng;
+                    }
+                }""");
     }
 
     @Test
     void testReplacesAllNonFqnOccurrencesOfAnnotationEngine() {
         doQuickFixTest("Replace with org.mockito.plugins.AnnotationEngine", "ReplaceAnnotationEngineTest.java",
-            "import org.mockito.configuration.AnnotationEngine;\n" +
-                "\n" +
-                "public class ReplaceAnnotationEngineTest {\n" +
-                "    private Annotatio<caret>nEngine engineField;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        AnnotationEngine engineVar;\n" +
-                "    }\n" +
-                "\n" +
-                "    private void method(org.mockito.configuration.AnnotationEngine eng) {\n" +
-                "    }\n" +
-                "}",
-            "import org.mockito.plugins.AnnotationEngine;\n" +
-                "\n" +
-                "public class ReplaceAnnotationEngineTest {\n" +
-                "    private AnnotationEngine engineField;\n" +
-                "\n" +
-                "    public void testMethod() {\n" +
-                "        AnnotationEngine engineVar;\n" +
-                "    }\n" +
-                "\n" +
-                "    private void method(org.mockito.configuration.AnnotationEngine eng) {\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.configuration.AnnotationEngine;
+
+                public class ReplaceAnnotationEngineTest {
+                    private Annotatio<caret>nEngine engineField;
+
+                    public void testMethod() {
+                        AnnotationEngine engineVar;
+                    }
+
+                    private void method(org.mockito.configuration.AnnotationEngine eng) {
+                    }
+                }""",
+            """
+                import org.mockito.plugins.AnnotationEngine;
+
+                public class ReplaceAnnotationEngineTest {
+                    private AnnotationEngine engineField;
+
+                    public void testMethod() {
+                        AnnotationEngine engineVar;
+                    }
+
+                    private void method(org.mockito.configuration.AnnotationEngine eng) {
+                    }
+                }""");
     }
 }

@@ -9,7 +9,6 @@ import static com.picimako.mockitools.util.PsiMethodUtil.getQualifier;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 import static com.siyeh.ig.psiutils.ExpressionUtils.getFirstExpressionInList;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
@@ -67,7 +66,7 @@ public class ConvertMockedStaticVerifyToInOrderVerifyAction extends ConvertVerif
         var verificationCallChains = statementsInSelection.stream()
             .map(this::getVerificationCall)
             .map(verify -> collectCallsInChainFromFirst(verify, true))
-            .collect(toList());
+            .toList();
 
         //The mocked class types concatenated with commas. E.g. 'List.class' for a single class, or 'List.class, Set.class' for multiple ones.
         String mockedClassTypes = verificationCallChains.stream()
@@ -103,11 +102,10 @@ public class ConvertMockedStaticVerifyToInOrderVerifyAction extends ConvertVerif
      */
     @NotNull
     private Pair<String, PsiElement> getMockedVarAndClassType(List<PsiMethodCallExpression> calls) {
-        var mockVariableExpr = getQualifier(calls.get(0));
-        if (mockVariableExpr instanceof PsiReferenceExpression) {
-            var mockedStaticResourceVar = ((PsiReferenceExpression) mockVariableExpr).resolve();
-            if (mockedStaticResourceVar instanceof PsiResourceVariable) {
-                var mockStaticCall = ((PsiResourceVariable) mockedStaticResourceVar).getInitializer();
+        if (getQualifier(calls.get(0)) instanceof PsiReferenceExpression mockVariableRef) {
+            var mockedStaticResourceVar = mockVariableRef.resolve();
+            if (mockedStaticResourceVar instanceof PsiResourceVariable mockedStaticResourceVariable) {
+                var mockStaticCall = mockedStaticResourceVariable.getInitializer();
                 if (MOCK_STATIC.matches(mockStaticCall))
                     return Pair.create(getFirstArgument((PsiMethodCallExpression) mockStaticCall).getText(), mockedStaticResourceVar);
             }

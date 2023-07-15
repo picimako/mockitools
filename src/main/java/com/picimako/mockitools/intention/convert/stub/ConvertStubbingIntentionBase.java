@@ -56,11 +56,9 @@ public abstract class ConvertStubbingIntentionBase extends ConversionIntentionBa
      */
     @Override
     protected boolean isQualifierHaveCorrectType(PsiExpression qualifier) {
-        if (qualifier instanceof PsiReferenceExpression) {
-            var psiClass = ((PsiReferenceExpression) qualifier).resolve();
-            return psiClass instanceof PsiClass && qualifierType.equals(((PsiClass) psiClass).getQualifiedName());
-        }
-        return false;
+        return qualifier instanceof PsiReferenceExpression qualifierAsRef
+            && qualifierAsRef.resolve() instanceof PsiClass qualifierClass
+            && qualifierType.equals(qualifierClass.getQualifiedName());
     }
 
     protected boolean doAllCallChainsMatch(CallChainAnalyzer analyzer, boolean isBulkMode, Editor editor, PsiFile file) {

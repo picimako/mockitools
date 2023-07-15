@@ -1,6 +1,6 @@
 //Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.picimako.mockitools.inspection;
+package com.picimako.mockitools.inspection.stubbing;
 
 import static com.picimako.mockitools.StubbingApproach.BDDMOCKITO_WILL_X;
 import static com.picimako.mockitools.StubbingApproach.MOCKITO_DO_X;
@@ -15,6 +15,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiType;
 import com.picimako.mockitools.StubbingApproach;
+import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
@@ -83,7 +84,7 @@ public class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBas
             .ifPresent(__ -> {
                 for (var doNothing : doNothingMethodCalls) {
                     holder.registerProblem(getReferenceNameElement(doNothing),
-                        MockitoolsBundle.inspection("void.method.is.stubbed.to.do.nothing", getMethodName(stubbedMethod.get())));
+                        MockitoolsBundle.message("inspection.void.method.is.stubbed.to.do.nothing", getMethodName(stubbedMethod.get())));
                 }
             });
     }
@@ -102,7 +103,7 @@ public class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBas
             .ifPresent(__ -> {
                 for (var doReturn : doReturnMethodCalls) {
                     holder.registerProblem(getReferenceNameElement(doReturn),
-                        MockitoolsBundle.inspection("non.void.method.is.stubbed.with.return.value", getMethodName(stubbedMethod.get())));
+                        MockitoolsBundle.message("inspection.non.void.method.is.stubbed.with.return.value", getMethodName(stubbedMethod.get())));
                 }
             });
     }

@@ -9,7 +9,6 @@ import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
 import static com.siyeh.ig.psiutils.TypeUtils.typeEquals;
-import static java.util.stream.Collectors.toList;
 
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.LocalInspectionToolSession;
@@ -60,23 +59,23 @@ public class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loc
                         var mocksInMockitoInOrder = getArguments(mockitoInOrder);
 
                         //The mock arguments from each 'InOrder.verify()' and 'BDDMockito.then().should(InOrder)' call
-                        var mocksInVerificationsAsString = mocksInVerifications.stream().map(PsiElement::getText).collect(toList());
+                        var mocksInVerificationsAsString = mocksInVerifications.stream().map(PsiElement::getText).toList();
                         //Report all mocks in 'Mockito.inOrder()' that are not used in a verification
                         for (var mockInInOrder : mocksInMockitoInOrder) {
                             //Exclude Type.class-type arguments that are (most probably) used in MockedStatic verifications
                             if (mockInInOrder instanceof PsiClassObjectAccessExpression) continue;
                             if (!mocksInVerificationsAsString.contains(mockInInOrder.getText()))
-                                holder.registerProblem(mockInInOrder, MockitoolsBundle.inspection("no.in.order.verification.for.mock"));
+                                holder.registerProblem(mockInInOrder, MockitoolsBundle.message("inspection.no.in.order.verification.for.mock"));
                         }
 
                         //The mock arguments as Strings from 'Mockito.inOrder()'
-                        var mocksInMockitoInOrderAsString = Arrays.stream(mocksInMockitoInOrder).map(PsiElement::getText).collect(toList());
+                        var mocksInMockitoInOrderAsString = Arrays.stream(mocksInMockitoInOrder).map(PsiElement::getText).toList();
                         //Report all mocks in verifications that are not configured in 'Mockito.inOrder()'
                         //This corresponds to the 'inOrderRequiresFamiliarMock()' method in
                         // https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java
                         for (var mockInVerification : mocksInVerifications) {
                             if (!mocksInMockitoInOrderAsString.contains(mockInVerification.getText()))
-                                holder.registerProblem(mockInVerification, MockitoolsBundle.inspection("mock.is.not.configured.in.in.order"));
+                                holder.registerProblem(mockInVerification, MockitoolsBundle.message("inspection.mock.is.not.configured.in.in.order"));
                         }
                     }
 
@@ -96,8 +95,8 @@ public class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loc
      */
     private boolean areAllVerifications(PsiReference[] inOrderRefs) {
         return Arrays.stream(inOrderRefs).allMatch(ref -> {
-            if (ref instanceof PsiReferenceExpression) {
-                var verifyOrShould = getParentOfType((PsiReferenceExpression) ref, PsiMethodCallExpression.class);
+            if (ref instanceof PsiReferenceExpression inOrderRef) {
+                var verifyOrShould = getParentOfType(inOrderRef, PsiMethodCallExpression.class);
                 return VerificationApproach.INORDER_VERIFY.isVerifiedBy(verifyOrShould) || VerificationApproach.BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(verifyOrShould);
             } else return false;
         });
@@ -110,8 +109,8 @@ public class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loc
         List<PsiExpression> mocksUsed = null;
 
         for (var ref : inOrderRefs) {
-            if (ref instanceof PsiReferenceExpression) {
-                var verifyOrShould = getParentOfType((PsiReferenceExpression) ref, PsiMethodCallExpression.class);
+            if (ref instanceof PsiReferenceExpression inOrderRef) {
+                var verifyOrShould = getParentOfType(inOrderRef, PsiMethodCallExpression.class);
                 if (VerificationApproach.INORDER_VERIFY.isVerifiedBy(verifyOrShould)) {
                     if (mocksUsed == null) mocksUsed = new SmartList<>();
                     saveMockFrom(verifyOrShould, mocksUsed);

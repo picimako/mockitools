@@ -27,7 +27,7 @@ public final class ThirdPartyLibraryLoader {
     }
 
     public static void loadMockito5(@NotNull Disposable projectDisposable, @NotNull Module module) {
-        loadLibrary(projectDisposable, module, "Mockito 5 Core", "mockito-core-5.3.1.jar");
+        loadLibrary(projectDisposable, module, "Mockito 5 Core", "mockito-core-5.4.0.jar");
     }
 
     public static void loadJUnit4(@NotNull Disposable projectDisposable, @NotNull Module module) {

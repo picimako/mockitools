@@ -11,7 +11,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.util.TypeConversionUtil;
-import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -39,8 +38,8 @@ public final class MockableTypesUtil {
      * @return the optional reason of the @DoNotMock annotation, or empty optional if no @DoNotMock annotation is found
      */
     public static Optional<DoNotMockType> getDoNotMockTypeInHierarchy(@Nullable PsiType type) {
-        if (type instanceof PsiClassType) {
-            PsiClass referencedClass = ((PsiClassType) type).resolve();
+        if (type instanceof PsiClassType classType) {
+            PsiClass referencedClass = classType.resolve();
             if (referencedClass != null) {
                 //Checks if the use class type is annotated
                 var doNotMock = getDoNotMockAnnotationOn(referencedClass);
@@ -98,8 +97,8 @@ public final class MockableTypesUtil {
      * @since 0.2.0
      */
     private static boolean isDoNotMockAnnotatedInHierarchy(@Nullable PsiType type) {
-        if (type instanceof PsiClassType) {
-            PsiClass referencedClass = ((PsiClassType) type).resolve();
+        if (type instanceof PsiClassType classType) {
+            PsiClass referencedClass = classType.resolve();
             if (referencedClass != null) {
                 return getDoNotMockAnnotationOn(referencedClass).isPresent()
                     || getSuperClasses(referencedClass).stream().anyMatch(cls -> getDoNotMockAnnotationOn(cls).isPresent());
@@ -112,11 +111,7 @@ public final class MockableTypesUtil {
         //Utility class
     }
 
-    @AllArgsConstructor
-    public static final class DoNotMockType {
-        @Nullable
-        public final String reason;
-
+    public record DoNotMockType(@Nullable String reason) {
         public boolean hasReason() {
             return reason != null && !reason.isBlank();
         }

@@ -33,9 +33,7 @@ public final class PsiClassUtil {
         var parentClasses = new SmartList<PsiClass>();
         PsiElement parent = Optional.ofNullable(expression.getUserData(ElementToWorkOn.PARENT)).orElseGet(expression::getParent);
         while (parent != null) {
-            if (parent instanceof PsiClass) {
-                parentClasses.add((PsiClass) parent);
-            }
+            if (parent instanceof PsiClass parentClass) parentClasses.add(parentClass);
             parent = PsiTreeUtil.getParentOfType(parent, PsiClass.class);
         }
         return parentClasses;

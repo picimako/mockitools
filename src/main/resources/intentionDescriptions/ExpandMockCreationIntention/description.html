@@ -1,0 +1,28 @@
+<html>
+<body>
+<!-- tooltip end -->
+This intention action expands certain mock/spy creation calls to use concrete <code>MockSettings</code>
+configuration, and aims to simplify the process of converting mock creation logic when further mock settings need to be
+added.
+<p>
+    The following conversions/expansions are supported:
+<pre>
+<code>
+//From:
+Mockito.spy(&lt;spiedInstance>)
+//to:
+Mockito.mock(&lt;raw type of spiedInstance>, withSettings().spiedInstance(&lt;spiedInstance>))
+
+//From:
+Mockito.mock(&lt;type>.class, &lt;name>)
+//to:
+Mockito.mock(&lt;type>.class, withSettings().name(&lt;name>))
+
+//From:
+Mockito.mock(&lt;type>.class, &lt;answer>)
+//to:
+Mockito.mock(&lt;type>.class, withSettings().defaultAnswer(&lt;answer>))
+</code>
+</pre>
+</body>
+</html>

@@ -1,0 +1,18 @@
+[versions]
+# libraries
+annotations = "24.0.1"
+
+# plugins
+kotlin = "1.8.22"
+changelog = "2.1.0"
+gradleIntelliJPlugin = "1.14.2"
+lombok = "8.1.0"
+
+[libraries]
+annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
+
+[plugins]
+changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
+gradleIntelliJPlugin = { id = "org.jetbrains.intellij", version.ref = "gradleIntelliJPlugin" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+lombok = { id = "io.freefair.lombok", version.ref = "lombok" }

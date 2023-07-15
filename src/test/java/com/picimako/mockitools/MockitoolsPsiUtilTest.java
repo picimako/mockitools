@@ -35,96 +35,106 @@ class MockitoolsPsiUtilTest extends MockitoolsTestBase {
     private Stream<TestData> specificMethodData() {
         return Stream.of(
             new TestData("IsMockitoMockTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "\n" +
-                    "public class IsMockitoMockTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.<caret>mock(Object.class);\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isMockitoMock(getMethodCall())),
+                """
+                    import org.mockito.Mockito;
+
+                    public class IsMockitoMockTest {
+                        public void testMethod() {
+                            Object mock = Mockito.<caret>mock(Object.class);
+                        }
+                    }""", () -> MockitoolsPsiUtil.isMockitoMock(getMethodCall())),
             new TestData("IsMockitoSpyTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "\n" +
-                    "public class IsMockitoSpyTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.<caret>spy(Object.class);\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isMockitoSpy(getMethodCall())),
+                """
+                    import org.mockito.Mockito;
+
+                    public class IsMockitoSpyTest {
+                        public void testMethod() {
+                            Object mock = Mockito.<caret>spy(Object.class);
+                        }
+                    }""", () -> MockitoolsPsiUtil.isMockitoSpy(getMethodCall())),
             new TestData("IsAdditionalMatchersTest.java",
-                "import org.mockito.BDDMockito;\n" +
-                    "import org.mockito.AdditionalMatchers;\n" +
-                    "\n" +
-                    "public class IsAdditionalMatchersTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.mock(Object.class);\n" +
-                    "        BDDMockito.given(mock.equals(AdditionalMatchers.<caret>cmpEq(new Object()))).willReturn(10);\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isAdditionalMatchers(getMethodCall())),
+                """
+                    import org.mockito.BDDMockito;
+                    import org.mockito.AdditionalMatchers;
+
+                    public class IsAdditionalMatchersTest {
+                        public void testMethod() {
+                            Object mock = Mockito.mock(Object.class);
+                            BDDMockito.given(mock.equals(AdditionalMatchers.<caret>cmpEq(new Object()))).willReturn(10);
+                        }
+                    }""", () -> MockitoolsPsiUtil.isAdditionalMatchers(getMethodCall())),
             new TestData("IsTimesTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "import static org.mockito.Mockito.times;\n" +
-                    "\n" +
-                    "public class IsTimesTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.mock(Object.class);\n" +
-                    "        Mockito.verify(mock, <caret>times(1)).toString();\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isTimes(getMethodCall())),
+                """
+                    import org.mockito.Mockito;
+                    import static org.mockito.Mockito.times;
+
+                    public class IsTimesTest {
+                        public void testMethod() {
+                            Object mock = Mockito.mock(Object.class);
+                            Mockito.verify(mock, <caret>times(1)).toString();
+                        }
+                    }""", () -> MockitoolsPsiUtil.isTimes(getMethodCall())),
             new TestData("IsCallsTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "import static org.mockito.Mockito.calls;\n" +
-                    "\n" +
-                    "public class IsCallsTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.mock(Object.class);\n" +
-                    "        Mockito.verify(mock, <caret>calls(1)).toString();\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isCalls(getMethodCall())),
+                """
+                    import org.mockito.Mockito;
+                    import static org.mockito.Mockito.calls;
+
+                    public class IsCallsTest {
+                        public void testMethod() {
+                            Object mock = Mockito.mock(Object.class);
+                            Mockito.verify(mock, <caret>calls(1)).toString();
+                        }
+                    }""", () -> MockitoolsPsiUtil.isCalls(getMethodCall())),
             new TestData("IsAfterTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "import static org.mockito.Mockito.after;\n" +
-                    "\n" +
-                    "public class IsAfterTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.mock(Object.class);\n" +
-                    "        Mockito.verify(mock, <caret>after(1)).toString();\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isAfter(getMethodCall())),
+                """
+                    import org.mockito.Mockito;
+                    import static org.mockito.Mockito.after;
+
+                    public class IsAfterTest {
+                        public void testMethod() {
+                            Object mock = Mockito.mock(Object.class);
+                            Mockito.verify(mock, <caret>after(1)).toString();
+                        }
+                    }""", () -> MockitoolsPsiUtil.isAfter(getMethodCall())),
             new TestData("IsTimeoutTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "import static org.mockito.Mockito.timeout;\n" +
-                    "\n" +
-                    "public class IsTimeoutTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.mock(Object.class);\n" +
-                    "        Mockito.verify(mock, <caret>timeout(1)).toString();\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isTimeout(getMethodCall())),
+                """
+                    import org.mockito.Mockito;
+                    import static org.mockito.Mockito.timeout;
+
+                    public class IsTimeoutTest {
+                        public void testMethod() {
+                            Object mock = Mockito.mock(Object.class);
+                            Mockito.verify(mock, <caret>timeout(1)).toString();
+                        }
+                    }""", () -> MockitoolsPsiUtil.isTimeout(getMethodCall())),
             new TestData("IsExtraInterfacesTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "import java.util.List;\n" +
-                    "\n" +
-                    "public class IsExtraInterfacesTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.mock(Object.class, Mockito.withSettings().<caret>extraInterfaces(List.class));\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isExtraInterfaces(getMethodCall())),
+                """
+                    import org.mockito.Mockito;
+                    import java.util.List;
+
+                    public class IsExtraInterfacesTest {
+                        public void testMethod() {
+                            Object mock = Mockito.mock(Object.class, Mockito.withSettings().<caret>extraInterfaces(List.class));
+                        }
+                    }""", () -> MockitoolsPsiUtil.isExtraInterfaces(getMethodCall())),
             new TestData("IsResetTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "\n" +
-                    "public class IsResetTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Mockito.re<caret>set(Mockito.mock(Object.class));\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isReset(getMethodCall())),
+                """
+                    import org.mockito.Mockito;
+
+                    public class IsResetTest {
+                        public void testMethod() {
+                            Mockito.re<caret>set(Mockito.mock(Object.class));
+                        }
+                    }""", () -> MockitoolsPsiUtil.isReset(getMethodCall())),
             new TestData("IsIgnoreStubsTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "\n" +
-                    "public class IsIgnoreStubsTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Mockito.ignore<caret>Stubs(Mockito.mock(Object.class));\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isIgnoreStubs(getMethodCall())));
+                """
+                    import org.mockito.Mockito;
+
+                    public class IsIgnoreStubsTest {
+                        public void testMethod() {
+                            Mockito.ignore<caret>Stubs(Mockito.mock(Object.class));
+                        }
+                    }""", () -> MockitoolsPsiUtil.isIgnoreStubs(getMethodCall())));
     }
 
     @ParameterizedTest
@@ -137,13 +147,14 @@ class MockitoolsPsiUtilTest extends MockitoolsTestBase {
     }
 
     private Stream<TestData> notASpecifiedMethodData() {
-        String fileContent = "import org.mockito.Mockito;\n" +
-            "\n" +
-            "public class %s {\n" +
-            "    public void testMethod() {\n" +
-            "        String toString = new Object().<caret>toString();\n" +
-            "    }\n" +
-            "}";
+        String fileContent = """
+            import org.mockito.Mockito;
+
+            public class %s {
+                public void testMethod() {
+                    String toString = new Object().<caret>toString();
+                }
+            }""";
         return Stream.of(
             new TestData("IsNotMockitoMockTest.java", String.format(fileContent, "IsNotMockitoMockTest"), () -> MockitoolsPsiUtil.isMockitoMock(getMethodCall())),
             new TestData("IsNotMockitoSpyTest.java", String.format(fileContent, "IsNotMockitoSpyTest"), () -> MockitoolsPsiUtil.isMockitoSpy(getMethodCall())),
@@ -170,137 +181,146 @@ class MockitoolsPsiUtilTest extends MockitoolsTestBase {
     private Stream<TestData> isCalledTheSameButNotTheSpecificMethodData() {
         return Stream.of(
             new TestData("IsMockNotMockitoMockTest.java",
-                "\n" +
-                    "public class IsMockNotMockitoMockTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Mock.<caret>mock(Object.class);\n" +
-                    "    }\n" +
-                    "\n" +
-                    "    private static final class Mock {\n" +
-                    "        public static Mock mock(Object object) {\n" +
-                    "            return new Mock();\n" +
-                    "        }\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isMockitoMock(getMethodCall())),
+                """
+
+                    public class IsMockNotMockitoMockTest {
+                        public void testMethod() {
+                            Mock.<caret>mock(Object.class);
+                        }
+
+                        private static final class Mock {
+                            public static Mock mock(Object object) {
+                                return new Mock();
+                            }
+                        }
+                    }""", () -> MockitoolsPsiUtil.isMockitoMock(getMethodCall())),
             new TestData("IsSpyNotMockitoSpyTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "\n" +
-                    "public class IsSpyNotMockitoSpyTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Spy.<caret>spy(Object.class);\n" +
-                    "    }\n" +
-                    "\n" +
-                    "    private static final class Spy {\n" +
-                    "        public static Spy spy(Object object) {\n" +
-                    "            return new Spy();\n" +
-                    "        }\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isMockitoSpy(getMethodCall())),
+                """
+                    import org.mockito.Mockito;
+
+                    public class IsSpyNotMockitoSpyTest {
+                        public void testMethod() {
+                            Spy.<caret>spy(Object.class);
+                        }
+
+                        private static final class Spy {
+                            public static Spy spy(Object object) {
+                                return new Spy();
+                            }
+                        }
+                    }""", () -> MockitoolsPsiUtil.isMockitoSpy(getMethodCall())),
             new TestData("IsTimesNotMockitoTimesTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "\n" +
-                    "public class IsTimesNotMockitoTimesTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.mock(Object.class);\n" +
-                    "        Mockito.verify(mock, Times.<caret>times(1)).toString();\n" +
-                    "    }\n" +
-                    "\n" +
-                    "    private static final class Times {\n" +
-                    "        public static Times times(Object object) {\n" +
-                    "            return new Times();\n" +
-                    "        }\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isTimes(getMethodCall())),
+                """
+                    import org.mockito.Mockito;
+
+                    public class IsTimesNotMockitoTimesTest {
+                        public void testMethod() {
+                            Object mock = Mockito.mock(Object.class);
+                            Mockito.verify(mock, Times.<caret>times(1)).toString();
+                        }
+
+                        private static final class Times {
+                            public static Times times(Object object) {
+                                return new Times();
+                            }
+                        }
+                    }""", () -> MockitoolsPsiUtil.isTimes(getMethodCall())),
             new TestData("IsCallsNotMockitoCallsTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "\n" +
-                    "public class IsCallsNotMockitoCallsTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.mock(Object.class);\n" +
-                    "        Mockito.verify(mock, Times.<caret>calls(1)).toString();\n" +
-                    "    }\n" +
-                    "\n" +
-                    "    private static final class Calls {\n" +
-                    "        public static Calls calls(Object object) {\n" +
-                    "            return new Calls();\n" +
-                    "        }\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isCalls(getMethodCall())),
+                """
+                    import org.mockito.Mockito;
+
+                    public class IsCallsNotMockitoCallsTest {
+                        public void testMethod() {
+                            Object mock = Mockito.mock(Object.class);
+                            Mockito.verify(mock, Times.<caret>calls(1)).toString();
+                        }
+
+                        private static final class Calls {
+                            public static Calls calls(Object object) {
+                                return new Calls();
+                            }
+                        }
+                    }""", () -> MockitoolsPsiUtil.isCalls(getMethodCall())),
             new TestData("IsAfterNotMockitoAfterTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "\n" +
-                    "public class IsAfterNotMockitoAfterTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.mock(Object.class);\n" +
-                    "        Mockito.verify(mock, Times.<caret>after(1)).toString();\n" +
-                    "    }\n" +
-                    "\n" +
-                    "    private static final class After {\n" +
-                    "        public static After after(Object object) {\n" +
-                    "            return new After();\n" +
-                    "        }\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isAfter(getMethodCall())),
+                """
+                    import org.mockito.Mockito;
+
+                    public class IsAfterNotMockitoAfterTest {
+                        public void testMethod() {
+                            Object mock = Mockito.mock(Object.class);
+                            Mockito.verify(mock, Times.<caret>after(1)).toString();
+                        }
+
+                        private static final class After {
+                            public static After after(Object object) {
+                                return new After();
+                            }
+                        }
+                    }""", () -> MockitoolsPsiUtil.isAfter(getMethodCall())),
             new TestData("IsTimeoutNotMockitoTimeoutTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "\n" +
-                    "public class IsTimeoutNotMockitoTimeoutTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.mock(Object.class);\n" +
-                    "        Mockito.verify(mock, Times.<caret>timeout(1)).toString();\n" +
-                    "    }\n" +
-                    "\n" +
-                    "    private static final class Timeout {\n" +
-                    "        public static Timeout timeout(Object object) {\n" +
-                    "            return new Timeout();\n" +
-                    "        }\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isTimeout(getMethodCall())),
+                """
+                    import org.mockito.Mockito;
+
+                    public class IsTimeoutNotMockitoTimeoutTest {
+                        public void testMethod() {
+                            Object mock = Mockito.mock(Object.class);
+                            Mockito.verify(mock, Times.<caret>timeout(1)).toString();
+                        }
+
+                        private static final class Timeout {
+                            public static Timeout timeout(Object object) {
+                                return new Timeout();
+                            }
+                        }
+                    }""", () -> MockitoolsPsiUtil.isTimeout(getMethodCall())),
             new TestData("IsExtraInterfacesNotMockitoSettingsExtraInterfacesTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "\n" +
-                    "public class IsExtraInterfacesNotMockitoSettingsExtraInterfacesTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.mock(Object.class);\n" +
-                    "        Mockito.verify(mock, ExtraInterfaces.<caret>extraInterfaces(1)).toString();\n" +
-                    "    }\n" +
-                    "\n" +
-                    "    private static final class ExtraInterfaces {\n" +
-                    "        public static ExtraInterfaces extraInterfaces(Object object) {\n" +
-                    "            return new ExtraInterfaces();\n" +
-                    "        }\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isExtraInterfaces(getMethodCall())),
+                """
+                    import org.mockito.Mockito;
+
+                    public class IsExtraInterfacesNotMockitoSettingsExtraInterfacesTest {
+                        public void testMethod() {
+                            Object mock = Mockito.mock(Object.class);
+                            Mockito.verify(mock, ExtraInterfaces.<caret>extraInterfaces(1)).toString();
+                        }
+
+                        private static final class ExtraInterfaces {
+                            public static ExtraInterfaces extraInterfaces(Object object) {
+                                return new ExtraInterfaces();
+                            }
+                        }
+                    }""", () -> MockitoolsPsiUtil.isExtraInterfaces(getMethodCall())),
             new TestData("IsResetNotMockitoResetTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "\n" +
-                    "public class IsResetNotMockitoResetTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.mock(Object.class);\n" +
-                    "        Reset.re<caret>set(mock);\n" +
-                    "    }\n" +
-                    "\n" +
-                    "    private static final class Reset {\n" +
-                    "        public static Reset reset(Object object) {\n" +
-                    "            return new Reset();\n" +
-                    "        }\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isReset(getMethodCall())),
+                """
+                    import org.mockito.Mockito;
+
+                    public class IsResetNotMockitoResetTest {
+                        public void testMethod() {
+                            Object mock = Mockito.mock(Object.class);
+                            Reset.re<caret>set(mock);
+                        }
+
+                        private static final class Reset {
+                            public static Reset reset(Object object) {
+                                return new Reset();
+                            }
+                        }
+                    }""", () -> MockitoolsPsiUtil.isReset(getMethodCall())),
             new TestData("IsIgnoreStubsNotMockitoIgnoreStubsTest.java",
-                "import org.mockito.Mockito;\n" +
-                    "\n" +
-                    "public class IsIgnoreStubsNotMockitoIgnoreStubsTest {\n" +
-                    "    public void testMethod() {\n" +
-                    "        Object mock = Mockito.mock(Object.class);\n" +
-                    "        IgnoreStubs.ignore<caret>Stubs(mock);\n" +
-                    "    }\n" +
-                    "\n" +
-                    "    private static final class IgnoreStubs {\n" +
-                    "        public static IgnoreStubs ignoreStubs(Object object) {\n" +
-                    "            return new IgnoreStubs();\n" +
-                    "        }\n" +
-                    "    }\n" +
-                    "}", () -> MockitoolsPsiUtil.isIgnoreStubs(getMethodCall()))
+                """
+                    import org.mockito.Mockito;
+
+                    public class IsIgnoreStubsNotMockitoIgnoreStubsTest {
+                        public void testMethod() {
+                            Object mock = Mockito.mock(Object.class);
+                            IgnoreStubs.ignore<caret>Stubs(mock);
+                        }
+
+                        private static final class IgnoreStubs {
+                            public static IgnoreStubs ignoreStubs(Object object) {
+                                return new IgnoreStubs();
+                            }
+                        }
+                    }""", () -> MockitoolsPsiUtil.isIgnoreStubs(getMethodCall()))
         );
     }
 
@@ -309,13 +329,15 @@ class MockitoolsPsiUtilTest extends MockitoolsTestBase {
     @Test
     void testIsArgumentCaptor() {
         getFixture().configureByText("IsArgumentCaptorTest.java",
-            "import org.mockito.ArgumentCaptor;\n" +
-                "import org.mockito.Captor;\n" +
-                "\n" +
-                "public class IsArgumentCaptorTest {\n" +
-                "    @Captor\n" +
-                "    public ArgumentCaptor<String> <caret>captor;\n" +
-                "}\n");
+            """
+                import org.mockito.ArgumentCaptor;
+                import org.mockito.Captor;
+
+                public class IsArgumentCaptorTest {
+                    @Captor
+                    public ArgumentCaptor<String> <caret>captor;
+                }
+                """);
 
         assertThat(MockitoolsPsiUtil.isOfTypeArgumentCaptor(getField())).isTrue();
     }
@@ -323,13 +345,15 @@ class MockitoolsPsiUtilTest extends MockitoolsTestBase {
     @Test
     void testIsNotArgumentCaptor() {
         getFixture().configureByText("IsNotArgumentCaptorTest.java",
-            "import org.mockito.ArgumentCaptor;\n" +
-                "import org.mockito.Captor;\n" +
-                "\n" +
-                "public class IsNotArgumentCaptorTest {\n" +
-                "    @Captor\n" +
-                "    public String <caret>captor;\n" +
-                "}\n");
+            """
+                import org.mockito.ArgumentCaptor;
+                import org.mockito.Captor;
+
+                public class IsNotArgumentCaptorTest {
+                    @Captor
+                    public String <caret>captor;
+                }
+                """);
 
         assertThat(MockitoolsPsiUtil.isOfTypeArgumentCaptor(getField())).isFalse();
     }
@@ -339,13 +363,14 @@ class MockitoolsPsiUtilTest extends MockitoolsTestBase {
     @Test
     void testIsNotMatchers() {
         getFixture().configureByText("isNotMatchersTest.java",
-            "import org.mockito.ArgumentMatchers;\n" +
-                "\n" +
-                "public class isNotMatchersTest {\n" +
-                "    public void testMethod() {\n" +
-                "        ArgumentMatchers.anyS<caret>tring();\n" +
-                "    }\n" +
-                "}");
+            """
+                import org.mockito.ArgumentMatchers;
+
+                public class isNotMatchersTest {
+                    public void testMethod() {
+                        ArgumentMatchers.anyS<caret>tring();
+                    }
+                }""");
 
         assertThat(MockitoolsPsiUtil.isMatchers(getMethodCall())).isFalse();
     }
@@ -358,15 +383,6 @@ class MockitoolsPsiUtilTest extends MockitoolsTestBase {
         return (PsiField) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent();
     }
 
-    private static final class TestData {
-        final String fileName;
-        final String fileContent;
-        final Supplier<Boolean> isSpecificMethod;
-
-        public TestData(String fileName, String fileContent, Supplier<Boolean> isSpecificMethod) {
-            this.fileName = fileName;
-            this.fileContent = fileContent;
-            this.isSpecificMethod = isSpecificMethod;
-        }
+    private record TestData(String fileName, String fileContent, Supplier<Boolean> isSpecificMethod) {
     }
 }

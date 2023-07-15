@@ -3,6 +3,7 @@
 package com.picimako.mockitools.intention;
 
 import static com.google.common.collect.Iterables.getLast;
+import static com.picimako.mockitools.MockitoMockMatchers.*;
 import static com.picimako.mockitools.MockitoQualifiedNames.MOCK_MAKER;
 import static com.picimako.mockitools.MockitoQualifiedNames.STRICTNESS;
 import static com.picimako.mockitools.MockitoQualifiedNames.WITHOUT_ANNOTATIONS;
@@ -13,7 +14,6 @@ import static com.picimako.mockitools.MockitoQualifiedNames.DEFAULT_ANSWER;
 import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
 import static com.picimako.mockitools.MockitoQualifiedNames.LENIENT;
 import static com.picimako.mockitools.MockitoQualifiedNames.NAME;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ANSWER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ANSWERS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
@@ -21,7 +21,6 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK_SER
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK_SETTINGS;
 import static com.picimako.mockitools.MockitoQualifiedNames.SERIALIZABLE;
 import static com.picimako.mockitools.MockitoQualifiedNames.STUB_ONLY;
-import static com.picimako.mockitools.MockitoolsPsiUtil.MOCKITO_MOCK;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromLast;
 import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
@@ -37,7 +36,6 @@ import static java.util.stream.Collectors.joining;
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.CommonClassNames;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiElement;
@@ -48,6 +46,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
+import com.picimako.mockitools.MockitoMockMatchers;
 import com.picimako.mockitools.MockitoQualifiedNames;
 import com.picimako.mockitools.util.PsiClassUtil;
 import com.siyeh.ig.callMatcher.CallMatcher;
@@ -91,14 +90,14 @@ import java.util.function.Supplier;
  * @since 0.4.0
  */
 public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionBase {
-    private static final String JAVA_LANG_CLASS = "java.lang.Class<T>";
-    private static final CallMatcher MOCK = MOCKITO_MOCK.parameterTypes(JAVA_LANG_CLASS);
-    private static final CallMatcher MOCK_WITH_NAME = MOCKITO_MOCK.parameterTypes(JAVA_LANG_CLASS, CommonClassNames.JAVA_LANG_STRING);
-    private static final CallMatcher MOCK_WITH_ANSWER = MOCKITO_MOCK.parameterTypes(JAVA_LANG_CLASS, ORG_MOCKITO_ANSWER);
-    private static final CallMatcher MOCK_WITH_SETTINGS = MOCKITO_MOCK.parameterTypes(JAVA_LANG_CLASS, ORG_MOCKITO_MOCK_SETTINGS);
     private static final CallMatcher MOCKITO_WITH_SETTINGS = staticCall(ORG_MOCKITO_MOCKITO, "withSettings");
 
     private static final CallMatcher MOCK_SETTINGS_SERIALIZABLE_WITH_MODE = instanceCall(ORG_MOCKITO_MOCK_SETTINGS, SERIALIZABLE).parameterTypes(ORG_MOCKITO_MOCK_SERIALIZABLE_MODE);
+    /**
+     * {@code MockSettings.spiedInstance()} could be a special case for converting into a {@code @Spy} field,
+     * but {@code @Mock} doesn't support such configuration, and there is also the actual object instance that is passed in,
+     * because of which the field could not be created.
+     */
     private static final Set<String> SUPPORTED_MOCK_SETTINGS_METHODS =
         Set.of(DEFAULT_ANSWER, STUB_ONLY, NAME, EXTRA_INTERFACES, LENIENT, STRICTNESS, MOCK_MAKER, WITHOUT_ANNOTATIONS);
 
@@ -125,7 +124,7 @@ public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntention
             .filter(call -> MockitoQualifiedNames.MOCK.equals(getMethodName(call)))
             .map(call -> {
                 if (isMockableTypeInAnyWay(getOperandType(/*mockTypeArg*/getFirstArgument(call)))) {
-                    if (MOCK.matches(call)) return hasOneArgument(call);
+                    if (MockitoMockMatchers.MOCK.matches(call)) return hasOneArgument(call);
                     if (MOCK_WITH_NAME.matches(call) || MOCK_WITH_ANSWER.matches(call))
                         return hasTwoArguments(call);
                     if (MOCK_WITH_SETTINGS.matches(call))
@@ -218,27 +217,20 @@ public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntention
      * Returns whether the argument Answer expression is a reference to {@code org.mockito.Answers.RETURNS_DEFAULTS}.
      */
     public static boolean isDefaultAnswer(PsiExpression answer) {
-        return answer instanceof PsiReferenceExpression
-            && isEnumConstant(((PsiReferenceExpression) answer).resolve(), ORG_MOCKITO_ANSWERS, "RETURNS_DEFAULTS");
+        return answer instanceof PsiReferenceExpression answerExpr
+            && isEnumConstant(answerExpr.resolve(), ORG_MOCKITO_ANSWERS, "RETURNS_DEFAULTS");
     }
 
-    private static boolean isEnumConstant(PsiElement constant, String enumClassName, String enumConstantName) {
-        return constant instanceof PsiEnumConstant
-            && enumClassName.equals(((PsiEnumConstant) constant).getContainingClass().getQualifiedName())
-            && enumConstantName.equals(((PsiEnumConstant) constant).getName());
+    private static boolean isEnumConstant(PsiElement element, String enumClassName, String enumConstantName) {
+        return element instanceof PsiEnumConstant constant
+            && enumClassName.equals(constant.getContainingClass().getQualifiedName())
+            && enumConstantName.equals(constant.getName());
     }
 
     /**
      * Helper class to set the attributes of the @Mock annotation being created.
      */
-    private static final class MockSettingsBasedAnnotationConfigurer {
-        private final Project project;
-        private final PsiAnnotation mockAnnotation;
-
-        private MockSettingsBasedAnnotationConfigurer(Project project, PsiAnnotation mockAnnotation) {
-            this.project = project;
-            this.mockAnnotation = mockAnnotation;
-        }
+    private record MockSettingsBasedAnnotationConfigurer(Project project, PsiAnnotation mockAnnotation) {
 
         private void configureBooleanAttribute(String attributeName) {
             mockAnnotation.setDeclaredAttributeValue(attributeName, attributeValue("true"));
@@ -273,15 +265,13 @@ public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntention
         }
 
         private void configureStrictness(PsiMethodCallExpression call) {
-            var strictness = getFirstArgument(call);
+            var strictnessArg = getFirstArgument(call);
             //null value passed into MockSettings.strictness() is not handled since it is invalid anyway.
-            if (strictness instanceof PsiReferenceExpression) {
-                var resolved = ((PsiReferenceExpression) strictness).resolve();
-                if (resolved instanceof PsiEnumConstant) {
-                    String strictnessName = ((PsiEnumConstant) resolved).getName();
+            if (strictnessArg instanceof PsiReferenceExpression strictnessExpr
+                && strictnessExpr.resolve() instanceof PsiEnumConstant strictness) {
                     PsiClassUtil.importClass("org.mockito.Mock.Strictness", mockAnnotation);
-                    mockAnnotation.setDeclaredAttributeValue(STRICTNESS, attributeValue("Mock.Strictness." + strictnessName));
-                }
+                    mockAnnotation.setDeclaredAttributeValue(STRICTNESS, attributeValue("Mock.Strictness." + strictness.getName()));
+
             }
         }
 

@@ -83,10 +83,10 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
     /**
      * Defines the annotation attributes and the conditions when they are allowed to be added to the Mockito.mock() call.
      * <p>
-     * These are used for Mockito.mock(Class, String) and Mockito.mock(Class, Answer).
+     * These are used for {@code Mockito.mock(Class, String)} and {@code Mockito.mock(Class, Answer)}.
      */
     private static final Map<String, Predicate<PsiAnnotationMemberValue>> MOCK_OVERLOAD_ARGS = Map.of(
-        "answer", value -> value instanceof PsiReferenceExpression && !isDefaultAnswer((PsiReferenceExpression) value),
+        "answer", value -> value instanceof PsiReferenceExpression memberValue && !isDefaultAnswer(memberValue),
         "name", value -> !isBlank(value)
     );
     private static final Set<String> BOOLEAN_ATTRIBUTES = Set.of("stubOnly", "serializable", "lenient", "withoutAnnotations");
@@ -198,8 +198,7 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
                 //Handle extraInterfaces attribute.
                 //This needs special care because the attribute value may be an individual value or an array initializer.
                 valueOf(mockAnnotation.findAttribute(EXTRA_INTERFACES)).ifPresent(extraInterfacesValue -> {
-                    if (extraInterfacesValue instanceof PsiArrayInitializerMemberValue) {
-                        var attributeValue = (PsiArrayInitializerMemberValue) extraInterfacesValue;
+                    if (extraInterfacesValue instanceof PsiArrayInitializerMemberValue attributeValue) {
                         //In case of empty extraInterfaces - @Mock(extraInterfaces = {}) - don't add the .extraInterfaces() call to the mock settings
                         if (attributeValue.getInitializers().length > 0) {
                             String interfaces = Arrays.stream(attributeValue.getInitializers()).map(PsiElement::getText).collect(joining(","));
@@ -211,10 +210,10 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
                 });
 
                 valueOf(mockAnnotation.findAttribute(STRICTNESS)).ifPresent(value -> {
-                    if (value instanceof PsiReferenceExpression) {
-                        var resolved = ((PsiReferenceExpression) value).resolve();
-                        if (resolved instanceof PsiEnumConstant) {
-                            String strictnessName = ((PsiEnumConstant) resolved).getName();
+                    if (value instanceof PsiReferenceExpression expression) {
+                        var resolved = expression.resolve();
+                        if (resolved instanceof PsiEnumConstant resolvedConst) {
+                            String strictnessName = resolvedConst.getName();
                             //Mock.Strictness.TEST_LEVEL_DEFAULT has no matching enum constant in Strictness, thus we'll ignore it.
                             if (!"TEST_LEVEL_DEFAULT".equals(strictnessName)) {
                                 runWriteCommandAction(file.getProject(),
@@ -276,8 +275,8 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
     }
 
     private Optional<PsiAnnotationMemberValue> valueOf(JvmAnnotationAttribute attribute) {
-        return attribute instanceof PsiNameValuePair && ((PsiNameValuePair) attribute).getValue() != null
-            ? Optional.ofNullable(((PsiNameValuePair) attribute).getValue())
+        return attribute instanceof PsiNameValuePair attributeNameValue && attributeNameValue.getValue() != null
+            ? Optional.ofNullable(attributeNameValue.getValue())
             : Optional.empty();
     }
 

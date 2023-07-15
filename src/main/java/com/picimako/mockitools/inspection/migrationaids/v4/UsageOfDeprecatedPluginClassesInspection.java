@@ -40,16 +40,16 @@ public class UsageOfDeprecatedPluginClassesInspection extends MigrationAidBase.V
             public void visitReferenceElement(PsiJavaCodeReferenceElement reference) {
                 if (ORG_MOCKITO_CONFIGURATION_ANNOTATION_ENGINE.equals(reference.getQualifiedName())) {
                     holder.registerProblem(reference,
-                        MockitoolsBundle.inspection("migration.aid.v4.plugin.configuration.annotation.engine"),
-                        new NameCollisionAwareReferenceReplacerQuickFix("migration.aid.v4.replace.with.org.mockito.plugins.AnnotationEngine",
+                        MockitoolsBundle.message("inspection.migration.aid.v4.plugin.configuration.annotation.engine"),
+                        new NameCollisionAwareReferenceReplacerQuickFix("quick.fix.migration.aid.v4.replace.with.org.mockito.plugins.AnnotationEngine",
                             ORG_MOCKITO_PLUGINS_ANNOTATION_ENGINE));
                     return;
                 }
 
                 if (ORG_MOCKITO_PLUGINS_INSTANTIATOR_PROVIDER.equals(reference.getQualifiedName())) {
                     holder.registerProblem(reference,
-                        MockitoolsBundle.inspection("migration.aid.v4.plugin.instantiator.provider"),
-                        new NameCollisionlessReferenceReplacerQuickFix("migration.aid.v4.replace.with.instantiator.provider.2",
+                        MockitoolsBundle.message("inspection.migration.aid.v4.plugin.instantiator.provider"),
+                        new NameCollisionlessReferenceReplacerQuickFix("quick.fix.migration.aid.v4.replace.with.instantiator.provider.2",
                             ORG_MOCKITO_PLUGINS_INSTANTIATOR_PROVIDER_2));
                 }
             }

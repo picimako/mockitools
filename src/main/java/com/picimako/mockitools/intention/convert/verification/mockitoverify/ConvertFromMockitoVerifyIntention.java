@@ -3,8 +3,8 @@
 package com.picimako.mockitools.intention.convert.verification.mockitoverify;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
-import static com.picimako.mockitools.inspection.EnforceConventionInspection.isBDDMockitoEnforced;
-import static com.picimako.mockitools.inspection.EnforceConventionInspection.isMockitoEnforced;
+import static com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection.isBDDMockitoEnforced;
+import static com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection.isMockitoEnforced;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.Editor;
@@ -40,11 +40,9 @@ public class ConvertFromMockitoVerifyIntention extends ConvertVerificationIntent
 
     @Override
     protected boolean isQualifierHaveCorrectType(PsiExpression qualifier) {
-        if (qualifier instanceof PsiReferenceExpression) {
-            var psiClass = ((PsiReferenceExpression) qualifier).resolve();
-            return psiClass instanceof PsiClass && ORG_MOCKITO_MOCKITO.equals(((PsiClass) psiClass).getQualifiedName());
-        }
-        return false;
+        return qualifier instanceof PsiReferenceExpression qualifierAsRef
+            && qualifierAsRef.resolve() instanceof PsiClass qualifierClass
+            && ORG_MOCKITO_MOCKITO.equals(qualifierClass.getQualifiedName());
     }
 
     @Override
