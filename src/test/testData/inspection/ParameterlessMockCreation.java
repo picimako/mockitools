@@ -45,6 +45,6 @@ class ClasslessMockCreation {
         Mockito.spy(<error descr="This type of mock creation must not have any value passed in.">new MockObject(), new MockObject()</error>);
     }
 
-    private static class MockObject {
+    private static final class MockObject {
     }
 }

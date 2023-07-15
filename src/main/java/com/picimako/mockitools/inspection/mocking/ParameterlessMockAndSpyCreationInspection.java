@@ -19,10 +19,10 @@ import static com.picimako.mockitools.util.Ranges.endOffsetOf;
  * This inspection reports arguments passed into {@code Mockito.mock()} and {@code Mockito.spy()} which are designed to determine the mock type based on
  * the variable's type they are assigned to, and not by the type passed into them.
  *
- * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#mock_without_class">Mocking/Spying without specifying class</a>
+ * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#54">Mocking/Spying without specifying class</a>
  * @since 0.11.0
  */
-public class ClasslessMockAndSpyCreationInspection extends MockitoolsBaseInspection {
+public class ParameterlessMockAndSpyCreationInspection extends MockitoolsBaseInspection {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

@@ -7,17 +7,17 @@ import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
 import org.junit.jupiter.api.Test;
 
 /**
- * Integration test for {@link ClasslessMockAndSpyCreationInspection}.
+ * Integration test for {@link ParameterlessMockAndSpyCreationInspection}.
  */
-class ClasslessMockAndSpyCreationInspectionTest extends MockitoolsInspectionTestBase {
+class ParameterlessMockAndSpyCreationInspectionTest extends MockitoolsInspectionTestBase {
 
     @Override
     protected InspectionProfileEntry getInspection() {
-        return new ClasslessMockAndSpyCreationInspection();
+        return new ParameterlessMockAndSpyCreationInspection();
     }
 
     @Test
-    void testClasslessMockCreation() {
+    void testParameterlessMockCreation() {
         doJavaTest();
     }
 }
