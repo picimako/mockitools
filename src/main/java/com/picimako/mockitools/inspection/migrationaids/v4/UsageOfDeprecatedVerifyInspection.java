@@ -7,7 +7,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_S
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY;
-import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_NO_MORE_INTERACTION;
+import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_NO_MORE_INTERACTIONS;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_ZERO_INTERACTIONS;
 import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.util.PsiMethodUtil.getParentCall;
@@ -92,9 +92,9 @@ public class UsageOfDeprecatedVerifyInspection extends MigrationAidBase.V3ToV4Ba
         protected void doFix(Project project, ProblemDescriptor descriptor) {
             var parentCall = getParentCall(descriptor.getPsiElement());
             if (parentCall != null) {
-                PsiElement elementAfterReplace = descriptor.getPsiElement().replace(PsiElementFactory.getInstance(project).createIdentifier(VERIFY_NO_MORE_INTERACTION));
+                PsiElement elementAfterReplace = descriptor.getPsiElement().replace(PsiElementFactory.getInstance(project).createIdentifier(VERIFY_NO_MORE_INTERACTIONS));
                 if (!parentCall.getMethodExpression().isQualified()) {
-                    staticImport(parentCall, ORG_MOCKITO_MOCKITO, VERIFY_NO_MORE_INTERACTION, elementAfterReplace);
+                    staticImport(parentCall, ORG_MOCKITO_MOCKITO, VERIFY_NO_MORE_INTERACTIONS, elementAfterReplace);
                 }
             }
         }

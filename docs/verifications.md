@@ -7,6 +7,7 @@
 * [InOrder with a single verification](#inorder-with-a-single-verification)
 * [Misconfigured InOrder verifications](#misconfigured-inorder-verifications)
 * [Convert between various verification approaches](#convert-between-various-verification-approaches)
+* [Code complete mock objects](#code-complete-mock-objects)
 <!-- TOC -->
 
 ## Verification mode arguments must be between limits
@@ -260,20 +261,42 @@ Spies and MockedStatic mocks are ignored since they have no stub-only configurat
 ```java
 public class StubOnlyMockInVerification {
 
-  @Mock(stubOnly = true)
-  SomeType stubOnly;
-  @Mock
-  SomeType notStubOnly;
-  
-  @Test
-  void testMethod() {
-    SomeType localStubOnly = Mockito.mock(SomeType.class, Mockito.withSettings().stubOnly());
-    SomeType localNotStubOnly = Mockito.mock(SomeType.class);
+    @Mock(stubOnly = true)
+    SomeType stubOnly;
+    @Mock
+    SomeType notStubOnly;
 
-    Mockito.verify(stubOnly).doesSomething(); //'stubOnly' is reported
-    Mockito.verify(localStubOnly).doesSomething(); //'localStubOnly' is reported
+    @Test
+    void testMethod() {
+        SomeType localStubOnly = Mockito.mock(SomeType.class, Mockito.withSettings().stubOnly());
+        SomeType localNotStubOnly = Mockito.mock(SomeType.class);
 
-    BDDMockito.then(notStubOnly).should().doesSomething(); //not reported
-    BDDMockito.then(localNotStubOnly).should().doesSomething(); //not reported
-  }
+        Mockito.verify(stubOnly).doesSomething(); //'stubOnly' is reported
+        Mockito.verify(localStubOnly).doesSomething(); //'localStubOnly' is reported
+
+        BDDMockito.then(notStubOnly).should().doesSomething(); //not reported
+        BDDMockito.then(localNotStubOnly).should().doesSomething(); //not reported
+    }
+}
 ```
+
+## Code complete mock objects
+
+![](https://img.shields.io/badge/codecompletion-orange) ![](https://img.shields.io/badge/since-0.12.0-blue)
+[![](https://img.shields.io/badge/impl-MockCompletionContributor-blue)](../src/main/java/com/picimako/mockitools/completion/MockCompletionContributor.java)
+
+There are certain methods provided by Mockito that accept mock objects for verification, and related functionality.
+
+To help selecting to pass mocks into these methods, code completion suggests only `@Mock`, `@Spy` and `@InjectMocks`-annotated fields from the current class,
+as well as `Mockito.mock()` and `Mockito.spy()`-created mocks from the current method.
+
+The list of supported methods:
+- `reset()`
+- `clearInvocations()`
+- `verifyNoInteractions()`
+- `verifyNoMoreInteractions()`
+- `verifyZeroInteractions()`
+
+As additional information, the type of the mock creation is also displayed on the right side of each completion item.
+
+![mock_object_code_completion](assets/mock_object_code_completion.png)

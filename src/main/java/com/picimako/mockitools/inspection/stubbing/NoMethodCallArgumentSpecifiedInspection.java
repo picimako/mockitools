@@ -4,7 +4,7 @@ package com.picimako.mockitools.inspection.stubbing;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.IN_ORDER;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_NO_INTERACTIONS;
-import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_NO_MORE_INTERACTION;
+import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_NO_MORE_INTERACTIONS;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_ZERO_INTERACTIONS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isExtraInterfaces;
@@ -34,7 +34,7 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
 public class NoMethodCallArgumentSpecifiedInspection extends MockitoolsBaseInspection {
 
     private static final CallMatcher VERIFY_CALLS =
-        CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, VERIFY_NO_INTERACTIONS, VERIFY_NO_MORE_INTERACTION, VERIFY_ZERO_INTERACTIONS, IN_ORDER);
+        CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, VERIFY_NO_INTERACTIONS, VERIFY_NO_MORE_INTERACTIONS, VERIFY_ZERO_INTERACTIONS, IN_ORDER);
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

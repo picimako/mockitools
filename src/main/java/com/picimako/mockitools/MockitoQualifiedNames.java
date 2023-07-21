@@ -74,7 +74,7 @@ public final class MockitoQualifiedNames {
     public static final String RESET = "reset";
     public static final String IN_ORDER = "inOrder";
     public static final String VERIFY_NO_INTERACTIONS = "verifyNoInteractions";
-    public static final String VERIFY_NO_MORE_INTERACTION = "verifyNoMoreInteractions";
+    public static final String VERIFY_NO_MORE_INTERACTIONS = "verifyNoMoreInteractions";
     public static final String VERIFY_ZERO_INTERACTIONS = "verifyZeroInteractions";
     public static final String IGNORE_STUBS = "ignoreStubs";
     public static final String VERIFY = "verify";
@@ -104,6 +104,7 @@ public final class MockitoQualifiedNames {
     public static final String ORG_MOCKITO_MOCK = "org.mockito.Mock";
     public static final String ORG_MOCKITO_SPY = "org.mockito.Spy";
     public static final String ORG_MOCKITO_DO_NOT_MOCK = "org.mockito.DoNotMock";
+    public static final String ORG_MOCKITO_INJECT_MOCKS = "org.mockito.InjectMocks";
 
     //Method calls
     public static final String ORG_MOCKITO_MOCKITO_NEVER = "org.mockito.Mockito.never";
