@@ -28,10 +28,6 @@ import java.util.Optional;
  */
 public final class PsiMethodUtil {
 
-    public static boolean isMethodCall(PsiElement call) {
-        return call instanceof PsiMethodCallExpression;
-    }
-
     /**
      * Returns whether the argument method call has any argument.
      */
@@ -171,8 +167,8 @@ public final class PsiMethodUtil {
      */
     public static boolean isIdentifierOfMethodCall(PsiElement element) {
         return element instanceof PsiIdentifier
-            && element.getParent() instanceof PsiReferenceExpression parentRef
-            && parentRef.getParent() instanceof PsiMethodCallExpression;
+               && element.getParent() instanceof PsiReferenceExpression parentRef
+               && parentRef.getParent() instanceof PsiMethodCallExpression;
     }
 
     /**
@@ -189,13 +185,11 @@ public final class PsiMethodUtil {
     public static Optional<PsiMethodCallExpression> findCallUpwardsInChain(@NotNull PsiExpression aCallInChain, String methodNameToFind) {
         PsiElement current = aCallInChain;
         while (current.getFirstChild() instanceof PsiReferenceExpression previousCallRef) {
-            PsiElement previousCall = previousCallRef.getFirstChild();
-            if (isMethodCall(previousCall)) {
-                var prevCall = (PsiMethodCallExpression) previousCall;
+            if (previousCallRef.getFirstChild() instanceof PsiMethodCallExpression prevCall) {
                 if (methodNameToFind.equals(getMethodName(prevCall))) {
                     return Optional.of(prevCall);
                 }
-                current = previousCall;
+                current = prevCall;
             } else break;
         }
         return Optional.empty();
@@ -228,8 +222,7 @@ public final class PsiMethodUtil {
         var calls = new SmartList<PsiElement>(lastCallInChain);
         PsiElement current = lastCallInChain;
         while (current.getFirstChild() instanceof PsiReferenceExpression previousCallRef) {
-            PsiElement previousCall = previousCallRef.getFirstChild();
-            if (previousCall instanceof PsiMethodCallExpression) {
+            if (previousCallRef.getFirstChild() instanceof PsiMethodCallExpression previousCall) {
                 calls.add(previousCall);
                 current = previousCall;
             } else break;
