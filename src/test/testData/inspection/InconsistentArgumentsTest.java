@@ -1,3 +1,4 @@
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 
@@ -33,7 +34,9 @@ public class InconsistentArgumentsTest {
 
         BDDMockito.given(mock.method()).willReturn(10);
         BDDMockito.given(mock.methodWithParam(anyString())).willReturn(10);
+        BDDMockito.given(mock.methodWithParam((String) any())).willReturn(10);
         BDDMockito.given(mock.methodWithParams(anyString(), eq(Integer.class))).willReturn(10);
+        BDDMockito.given(mock.methodWithParams(anyString(), (Class<Integer>) eq(Integer.class))).willReturn(10);
         BDDMockito.given(mock.methodWithParam("some string")).willReturn(10);
         BDDMockito.given(mock.methodWithParams("some string", Integer.class)).willReturn(10);
 

@@ -12,6 +12,8 @@ The list only shows `@Mock`, `@Spy` and `@InjectMocks` annotated fields, as well
 ### Fixed
 - Fixed an issue that stubbed checked exceptions were marked mistakenly as having no matching checked exception in the stubbed method's `throws` clause,
 even if the throws clause contained `Exception` or `Throwable`.
+- Fixed an issue that when analyzing mixed matcher/non-matcher arguments of stubbed methods, type cast constructs like `(SomeObject) any()` were not considered matchers by the plugin,
+and marked falsely.
 
 ## [0.11.0]
 ### Added

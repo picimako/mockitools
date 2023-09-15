@@ -15,6 +15,7 @@ import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiExpressionList;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.intellij.psi.PsiTypeCastExpression;
 import com.picimako.mockitools.inspection.HasSonarLintAlternative;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;
@@ -70,11 +71,17 @@ public class InconsistentArgumentMatcherUsageInspection extends MockitoolsBaseIn
             boolean hasMatcher = false;
             //Iterates through the list of arguments, and if there is at least one matcher and non-matcher, then the arguments are invalid
             for (var arg : arguments.getExpressions()) {
+                //To support matcher calls like 'any()'
                 if (arg instanceof PsiMethodCallExpression potentialMatcher) {
+                    hasMatcher = isArgumentMatcher(arg, getMethodName(potentialMatcher));
+                }
+                //To support constructs like '(Object) any()', and consider them as matchers. Mockito doesn't fail on these type of usages of matchers.
+                else if (arg instanceof PsiTypeCastExpression typeCast && typeCast.getOperand() instanceof PsiMethodCallExpression potentialMatcher) {
                     hasMatcher = isArgumentMatcher(arg, getMethodName(potentialMatcher));
                 } else {
                     hasNonMatcher = true;
                 }
+
                 if (hasNonMatcher && hasMatcher) {
                     holder.registerProblem(arguments, MockitoolsBundle.message("inspection.inconsistent.argument.matchers"));
                     break;
