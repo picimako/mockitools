@@ -39,6 +39,10 @@ public final class MockitoMockMatchers {
     private static final CallMatcher MOCK_WITH_SETTINGS_REIFIED = MOCKITO_MOCK.parameterTypes(ORG_MOCKITO_MOCK_SETTINGS, "T...");
     public static final CallMatcher MOCKS_REIFIED_WITH_CONFIG = anyOf(MOCK_WITH_NAME_REIFIED, MOCK_WITH_ANSWER_REIFIED, MOCK_WITH_SETTINGS_REIFIED);
 
+    //Other
+
+    public static final CallMatcher MOCKITO_MOCK_OR_SPY = staticCall(ORG_MOCKITO_MOCKITO, MockitoQualifiedNames.MOCK, SPY);
+
     private MockitoMockMatchers() {
         //Utility class
     }

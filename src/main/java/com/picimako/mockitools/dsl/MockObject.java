@@ -2,6 +2,9 @@
 
 package com.picimako.mockitools.dsl;
 
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INJECT_MOCKS;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_SPY;
 import static com.picimako.mockitools.MockitoQualifiedNames.STUB_ONLY;
 import static com.picimako.mockitools.dsl.MockAnnotation.isAttributeEnabledOnMockAnnotation;
 import static com.picimako.mockitools.dsl.MockAnnotation.isMockAnnotation;
@@ -9,8 +12,11 @@ import static com.picimako.mockitools.dsl.MockSettings.hasCallTo;
 
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiLocalVariable;
+import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceExpression;
+import com.picimako.mockitools.MockitoMockMatchers;
+import com.picimako.mockitools.MockitoolsPsiUtil;
 
 import java.util.Optional;
 
@@ -20,6 +26,26 @@ import java.util.Optional;
  * @since 0.8.0
  */
 public final class MockObject {
+
+    public static boolean isAnyKindOfMock(PsiField field) {
+        return field.hasAnnotation(ORG_MOCKITO_MOCK) || field.hasAnnotation(ORG_MOCKITO_SPY) || field.hasAnnotation(ORG_MOCKITO_INJECT_MOCKS);
+    }
+
+    public static boolean isAnyKindOfMock(PsiLocalVariable localVariable) {
+        return localVariable.getInitializer() instanceof PsiMethodCallExpression varInit && MockitoMockMatchers.MOCKITO_MOCK_OR_SPY.matches(varInit);
+    }
+
+    public static String getMockAnnotationName(PsiField field) {
+        if (field.hasAnnotation(ORG_MOCKITO_MOCK)) return "@Mock";
+        if (field.hasAnnotation(ORG_MOCKITO_SPY)) return "@Spy";
+        return "@InjectMocks";
+    }
+
+    public static String getMockInitializerAsString(PsiLocalVariable localVariable) {
+        if (MockitoolsPsiUtil.isMockitoMock((PsiMethodCallExpression) localVariable.getInitializer())) return "mock()";
+        if (MockitoolsPsiUtil.isMockitoSpy((PsiMethodCallExpression) localVariable.getInitializer())) return "spy()";
+        return "";
+    }
 
     /**
      * Returns whether the mock object referenced by the argument expression is configured as stub only.

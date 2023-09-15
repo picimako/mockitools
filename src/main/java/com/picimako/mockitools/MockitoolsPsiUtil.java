@@ -56,6 +56,9 @@ public final class MockitoolsPsiUtil {
     public static final CallMatcher.Simple MOCKED_STATIC_VERIFY = instanceCall(ORG_MOCKITO_MOCKED_STATIC, VERIFY);
     private static final CallMatcher MOCK_SETTING_EXTRA_INTERFACES = instanceCall(ORG_MOCKITO_MOCK_SETTINGS, EXTRA_INTERFACES);
 
+    //Argument: T...
+    public static final CallMatcher MOCK_OBJECT_PARAMETER_HOLDER = staticCall(ORG_MOCKITO_MOCKITO, RESET, "clearInvocations");
+
     /**
      * Gets whether the argument expression is an {@code org.mockito.Mockito.mock} method call.
      *

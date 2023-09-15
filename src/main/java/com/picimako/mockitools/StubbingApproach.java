@@ -22,7 +22,6 @@ import static com.picimako.mockitools.util.PsiMethodUtil.findCallDownwardsInChai
 import static com.picimako.mockitools.util.PsiMethodUtil.findCallUpwardsInChain;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.hasSubsequentMethodCall;
-import static com.picimako.mockitools.util.PsiMethodUtil.isMethodCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 
@@ -96,7 +95,7 @@ public enum StubbingApproach {
 
         @Override
         public boolean isValidStubbingArgument(PsiExpression mockObjectOrCallToStubbedMethod) {
-            return isMethodCall(mockObjectOrCallToStubbedMethod);
+            return mockObjectOrCallToStubbedMethod instanceof PsiMethodCallExpression;
         }
 
         @NotNull
@@ -207,7 +206,7 @@ public enum StubbingApproach {
 
         @Override
         public boolean isValidStubbingArgument(PsiExpression mockObjectOrCallToStubbedMethod) {
-            return isMethodCall(mockObjectOrCallToStubbedMethod);
+            return mockObjectOrCallToStubbedMethod instanceof PsiMethodCallExpression;
         }
 
         @NotNull

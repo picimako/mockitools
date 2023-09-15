@@ -4,6 +4,17 @@
 
 ## [Unreleased]
 
+## [0.12.0]
+### Added
+- [#52](https://github.com/picimako/mockitools/issues/52): Added code completion for parameters of methods in the `Mockito` class that need mock objects to be passed in (e.g. `reset()` or `verifyNoMoreInteractions()`).
+The list only shows `@Mock`, `@Spy` and `@InjectMocks` annotated fields, as well as local variables created with `Mockito.mock()` or `Mockito.spy()`.
+
+### Fixed
+- Fixed an issue that stubbed checked exceptions were marked mistakenly as having no matching checked exception in the stubbed method's `throws` clause,
+even if the throws clause contained `Exception` or `Throwable`.
+- Fixed an issue that when analyzing mixed matcher/non-matcher arguments of stubbed methods, type cast constructs like `(SomeObject) any()` were not considered matchers by the plugin,
+and marked falsely.
+
 ## [0.11.0]
 ### Added
 - [#53](https://github.com/picimako/mockitools/issues/53): Added an inspection to report when the mocked type and the type of the spied instance don't match in a `mock(Type.class, withSettings().spiedInstance(...));`-type mock creation.

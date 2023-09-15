@@ -3,13 +3,13 @@
 ## Technology stack
 
 This project builds on the [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template) that uses
-Gradle as its build system, GitHub Actions for the CI/CD pipeline, and Java 11. 
+Gradle as its build system, GitHub Actions for the CI/CD pipeline, and Java 17.
 
 ## Environment setup
 
 ### JDK
 
-Install Java JDK 11 and configure the project to use that JDK if not automatically configured.
+Install Java JDK 17 and configure the project to use that JDK if not automatically configured.
 
 ### Setup Mockitools
 
@@ -31,7 +31,7 @@ There are a few base classes that can be used to implement the different plugin 
 
 ## Mockito DSL types
 
-Functionality is (getting) organized using DSL specific classes:
+Functionality is organized into DSL specific classes:
 - classes in the `com.picimako.mockitools.dsl` package
 - [StubbingApproach](src/main/java/com/picimako/mockitools/StubbingApproach.java)
 - [VerificationApproach](src/main/java/com/picimako/mockitools/VerificationApproach.java)
@@ -61,6 +61,7 @@ Mockitools base test classes:
 - [MockitoolsTestBase](src/test/java/com/picimako/mockitools/MockitoolsTestBase.java) as the common base test class
 - [MockitoolsInspectionTestBase](src/test/java/com/picimako/mockitools/inspection/MockitoolsInspectionTestBase.java) for inspections
 - [MockitoolsIntentionTestBase](src/test/java/com/picimako/mockitools/intention/MockitoolsIntentionTestBase.java) for intention actions
+- [MockitoolsCodeCompletionTestBase](src/test/java/com/picimako/mockitools/completion/MockitoolsCodeCompletionTestBase.java) for completion contributors
 
 Other resources: [IntelliJ Platform Plugin SDK - Testing Overview](https://plugins.jetbrains.com/docs/intellij/testing-plugins.html)
 

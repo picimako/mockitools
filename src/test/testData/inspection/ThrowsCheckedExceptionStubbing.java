@@ -102,10 +102,12 @@ Each checked exception in a thenThrow()/doThrow()/willThrow() call must match on
 Each checked exception in a thenThrow()/doThrow()/willThrow() call must match one of the exceptions in the stubbed method's 'throws' clause.">new ClassNotFoundException()</error>, new IllegalArgumentException()).given(mockObject).doSomething();
     }
 
-    public void testWithThrowsClause() throws NoSuchMethodException, InstantiationException {
+    public void testWithThrowsClause() throws NoSuchMethodException, InstantiationException, Exception, Throwable {
             //Mockito.when().thenThrow()
             Mockito.when(mockObject.doAnotherThing()).thenThrow();
             Mockito.when(mockObject.doAnotherThing()).thenThrow(NoSuchMethodError.class);
+            Mockito.when(mockObject.doAnotherThingWithBaseException()).thenThrow(ClassNotFoundException.class);
+            Mockito.when(mockObject.doAnotherThingWithThrowable()).thenThrow(ClassNotFoundException.class);
             Mockito.when(mockObject.doAnotherThing()).thenThrow(<error descr="This checked exception is invalid for the stubbed method.
 Each checked exception in a thenThrow()/doThrow()/willThrow() call must match one of the exceptions in the stubbed method's 'throws' clause.">ClassNotFoundException.class</error>, IllegalArgumentException.class, NoSuchMethodException.class);
             Mockito.when(mockObject.doAnotherThing()).thenThrow(<error descr="This checked exception is invalid for the stubbed method.
@@ -139,6 +141,14 @@ Each checked exception in a thenThrow()/doThrow()/willThrow() call must match on
         }
         
         public int doAnotherThing() throws NoSuchMethodException, InstantiationException {
+            return 1;
+        }
+
+        public int doAnotherThingWithBaseException() throws Exception {
+            return 1;
+        }
+
+        public int doAnotherThingWithThrowable() throws Throwable {
             return 1;
         }
     }
