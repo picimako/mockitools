@@ -2,11 +2,26 @@
 
 package com.picimako.mockitools.inspection.stubbing;
 
+import static com.intellij.psi.CommonClassNames.JAVA_LANG_EXCEPTION;
+import static com.intellij.psi.CommonClassNames.JAVA_LANG_THROWABLE;
+import static com.picimako.mockitools.util.EvaluationHelper.evaluateClassObjectOrNewExpressionType;
+import static com.picimako.mockitools.util.EvaluationHelper.evaluateType;
+import static com.picimako.mockitools.util.ExceptionUtil.isCheckedException;
+import static com.picimako.mockitools.util.PointersUtil.toPointer;
+import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
+import static com.picimako.mockitools.util.PsiMethodUtil.getSubsequentMethodCall;
+
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiCall;
+import com.intellij.psi.PsiClassType;
+import com.intellij.psi.PsiExpression;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiMethodCallExpression;
+import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.picimako.mockitools.StubType;
 import com.picimako.mockitools.StubbingApproach;
@@ -19,13 +34,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Optional;
-
-import static com.picimako.mockitools.util.EvaluationHelper.evaluateClassObjectOrNewExpressionType;
-import static com.picimako.mockitools.util.EvaluationHelper.evaluateType;
-import static com.picimako.mockitools.util.ExceptionUtil.isCheckedException;
-import static com.picimako.mockitools.util.PointersUtil.toPointer;
-import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
-import static com.picimako.mockitools.util.PsiMethodUtil.getSubsequentMethodCall;
 
 /**
  * Reports exception references in {@code *Throw()} stubbing methods based on Mockito's rule on checked exceptions:
@@ -77,12 +85,27 @@ public class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInsp
                 for (var stubbedException : stubbedExceptions) {
                     //If the stubbed exception is a checked one, and it is not present in the method's throws clause
                     if (isCheckedException(stubbedException)
-                        && Arrays.stream(exceptionTypesInThrowsClause).noneMatch(type -> type.equals(evaluateType(stubbedException)))) {
+                        && doesntHaveMatchingCheckedExceptionInThrowsClause(exceptionTypesInThrowsClause, stubbedException)
+                        && doesntHaveExceptionOrThrowableInThrowsClause(exceptionTypesInThrowsClause)) {
                         holder.registerProblem(stubbedException,
                             MockitoolsBundle.message("inspection.invalid.checked.exception.in.stubbing"),
                             new AddExceptionToThrowsClauseQuickFix(toPointer(stubbedMethod)));
                     }
                 }
+            });
+    }
+
+    private static boolean doesntHaveMatchingCheckedExceptionInThrowsClause(PsiClassType[] exceptionTypesInThrowsClause, PsiExpression stubbedException) {
+        var stubbedExceptionType = evaluateType(stubbedException);
+        return stubbedExceptionType != null && Arrays.stream(exceptionTypesInThrowsClause).noneMatch(type -> type.getCanonicalText().equals(stubbedExceptionType.getCanonicalText()));
+    }
+
+    private static boolean doesntHaveExceptionOrThrowableInThrowsClause(PsiClassType[] exceptionTypesInThrowsClause) {
+        return Arrays.stream(exceptionTypesInThrowsClause)
+            .noneMatch(type -> {
+                String typeCanonicalText = type.getCanonicalText();
+                //Checking java.lang.Exception because it might be more likely to be used in a throws clause than java.lang.Throwable
+                return typeCanonicalText.equals(JAVA_LANG_EXCEPTION) || typeCanonicalText.equals(JAVA_LANG_THROWABLE);
             });
     }
 

@@ -7,7 +7,11 @@
 ## [0.12.0]
 ### Added
 - [#52](https://github.com/picimako/mockitools/issues/52): Added code completion for parameters of methods in the `Mockito` class that need mock objects to be passed in (e.g. `reset()` or `verifyNoMoreInteractions()`).
-The list only shows `@Mock`, `@Spy` and `@InjectMocks` annotated fields, as well as local variables created with `Mockito.mock()` or `Mockito.spy()`. 
+The list only shows `@Mock`, `@Spy` and `@InjectMocks` annotated fields, as well as local variables created with `Mockito.mock()` or `Mockito.spy()`.
+
+### Fixed
+- Fixed an issue that stubbed checked exceptions were marked mistakenly as having no matching checked exception in the stubbed method's `throws` clause,
+even if the throws clause contained `Exception` or `Throwable`.
 
 ## [0.11.0]
 ### Added
