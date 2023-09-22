@@ -6,7 +6,7 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.testFramework.RunsInEdt;
+import com.intellij.testFramework.junit5.RunInEdt;
 import com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Functional test for {@link ConvertFromInOrderVerifyIntention}.
  */
-@RunsInEdt
+@RunInEdt
 class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntentionTestBase {
 
     @Override

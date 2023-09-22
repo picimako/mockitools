@@ -3,14 +3,14 @@
 package com.picimako.mockitools.intention.mocking;
 
 import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.testFramework.RunsInEdt;
+import com.intellij.testFramework.junit5.RunInEdt;
 import com.picimako.mockitools.intention.MockitoolsIntentionTestBase;
 import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link ExpandMockCreationIntention}.
  */
-@RunsInEdt
+@RunInEdt
 class ExpandMockCreationIntentionTest extends MockitoolsIntentionTestBase {
 
     @Override

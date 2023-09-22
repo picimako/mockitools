@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.testFramework.RunsInEdt;
+import com.intellij.testFramework.junit5.RunInEdt;
 import com.picimako.mockitools.MockitoolsTestBase;
 import com.picimako.mockitools.util.PsiMethodUtil;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Functional test for {@link PsiMethodUtil}.
  */
-@RunsInEdt
+@RunInEdt
 class PsiMethodUtilTest extends MockitoolsTestBase {
 
     //hasOneArgument

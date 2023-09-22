@@ -3,14 +3,14 @@
 package com.picimako.mockitools.intention.convert.verification.mockedstaticverify;
 
 import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.testFramework.RunsInEdt;
+import com.intellij.testFramework.junit5.RunInEdt;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
 import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link ConvertFromMockedStaticVerifyIntention}.
  */
-@RunsInEdt
+@RunInEdt
 class ConvertFromMockedStaticVerifyIntentionInBulkTest extends EnforceConventionAwareIntentionTestBase {
 
     @Override
