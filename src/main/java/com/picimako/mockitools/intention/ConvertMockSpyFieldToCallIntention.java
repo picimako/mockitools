@@ -25,7 +25,6 @@ import static java.util.stream.Collectors.joining;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
-import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.lang.jvm.annotation.JvmAnnotationAttribute;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -109,25 +108,23 @@ public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
 
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-        if (file.getFileType().equals(JavaFileType.INSTANCE)) {
-            final var element = file.findElementAt(editor.getCaretModel().getOffset());
-            //If the caret is at a field identifier and the parent class has at least one method
-            if (isIdentifierOfField(element)) {
-                PsiField field = (PsiField) element.getParent();
-                if (field.getContainingClass().getMethods().length == 0) return false;
+        final var element = file.findElementAt(editor.getCaretModel().getOffset());
+        //If the caret is at a field identifier and the parent class has at least one method
+        if (isIdentifierOfField(element)) {
+            PsiField field = (PsiField) element.getParent();
+            if (field.getContainingClass().getMethods().length == 0) return false;
 
-                boolean hasMock;
-                if ((hasMock = field.hasAnnotation(ORG_MOCKITO_MOCK)) && field.hasAnnotation(ORG_MOCKITO_SPY)) {
-                    return false;
-                }
-                if (hasMock) {
-                    mockingCall = MockitoQualifiedNames.MOCK;
-                    return true;
-                }
-                if (field.hasAnnotation(ORG_MOCKITO_SPY)) {
-                    mockingCall = MockitoQualifiedNames.SPY;
-                    return true;
-                }
+            boolean hasMock;
+            if ((hasMock = field.hasAnnotation(ORG_MOCKITO_MOCK)) && field.hasAnnotation(ORG_MOCKITO_SPY)) {
+                return false;
+            }
+            if (hasMock) {
+                mockingCall = MockitoQualifiedNames.MOCK;
+                return true;
+            }
+            if (field.hasAnnotation(ORG_MOCKITO_SPY)) {
+                mockingCall = MockitoQualifiedNames.SPY;
+                return true;
             }
         }
         return false;

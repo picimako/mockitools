@@ -9,7 +9,6 @@ import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoSpy;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaretOrEmpty;
 import static com.picimako.mockitools.util.PsiMethodUtil.hasOneArgument;
 
-import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
@@ -80,8 +79,6 @@ public class ConvertSpyCallToFieldIntention extends ConvertCallToFieldIntentionB
     
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-        if (!file.getFileType().equals(JavaFileType.INSTANCE)) return false;
-
         return getMethodCallAtCaretOrEmpty(file, editor)
             .filter(call -> isMockitoSpy(call) && hasOneArgument(call))
             .map(PsiMethodUtil::getFirstArgument)

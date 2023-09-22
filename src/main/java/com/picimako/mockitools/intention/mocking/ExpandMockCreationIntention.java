@@ -17,7 +17,6 @@ import java.util.function.Supplier;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
-import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
@@ -57,8 +56,6 @@ public class ExpandMockCreationIntention implements IntentionAction {
 
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-        if (!file.getFileType().equals(JavaFileType.INSTANCE)) return false;
-
         return getMethodCallAtCaretOrEmpty(file, editor)
             .map(call -> {
                 if (MOCKITO_SPY_T.matches(call)) return hasArgument(call);
