@@ -4,7 +4,7 @@
 
 ## [Unreleased]
 
-## [0.13.0]
+## [1.0.0]
 ### Changed
 - New support range of IDEs: 2022.3-2023.3
 - Various code optimizations based on new IntelliJ Platform inspections.
