@@ -77,7 +77,7 @@ import java.util.function.Predicate;
  * @since 0.2.0
  */
 @SuppressWarnings("UnstableApiUsage")
-public class ConvertMockSpyFieldToCallIntention implements IntentionAction {
+final class ConvertMockSpyFieldToCallIntention implements IntentionAction {
 
     /**
      * Defines the annotation attributes and the conditions when they are allowed to be added to the Mockito.mock() call.

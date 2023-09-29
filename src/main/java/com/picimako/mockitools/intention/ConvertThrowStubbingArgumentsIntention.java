@@ -48,7 +48,7 @@ import java.util.Arrays;
  *
  * @since 0.4.0
  */
-public class ConvertThrowStubbingArgumentsIntention implements IntentionAction {
+final class ConvertThrowStubbingArgumentsIntention implements IntentionAction {
     private String message;
 
     @Override

@@ -26,7 +26,7 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  *
  * @since 0.1.0
  */
-public class UsageOfDeprecatedPluginClassesInspection extends MigrationAidBase.V23ToV4BaseInspection {
+final class UsageOfDeprecatedPluginClassesInspection extends MigrationAidBase.V23ToV4BaseInspection {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {

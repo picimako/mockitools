@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.testFramework.junit5.RunInEdt;
-import com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection;
+import com.picimako.mockitools.Convention;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
 import com.picimako.mockitools.intention.convert.verification.NoActionAvailableAction;
 import org.junit.jupiter.api.Test;
@@ -111,7 +111,7 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
 
     @Test
     void testAvailableWhenBDDMockitoIsEnforced() {
-        addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
+        addEnforceConventionInspection(Convention.BDD_MOCKITO);
         checkIntentionIsAvailable(
             """
                 import org.mockito.BDDMockito;
@@ -171,7 +171,7 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
 
     @Test
     void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedWithoutInOrder() {
-        addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
+        addEnforceConventionInspection(Convention.BDD_MOCKITO);
         getFixture().configureByText("Options.java",
             """
                 import org.mockito.BDDMockito;
@@ -190,7 +190,7 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
 
     @Test
     void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedWithInOrder() {
-        addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
+        addEnforceConventionInspection(Convention.BDD_MOCKITO);
         getFixture().configureByText("Options.java",
             """
                 import org.mockito.BDDMockito;
@@ -210,7 +210,7 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
 
     @Test
     void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedWithoutInOrderInSelection() {
-        addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
+        addEnforceConventionInspection(Convention.BDD_MOCKITO);
         getFixture().configureByText("Options.java",
             """
                 import org.mockito.BDDMockito;
@@ -230,7 +230,7 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
 
     @Test
     void testReturnsAvailableActionsWhenMockitoIsEnforcedWithoutInOrder() {
-        addEnforceConventionInspection(EnforceConventionInspection.Convention.MOCKITO);
+        addEnforceConventionInspection(Convention.MOCKITO);
         getFixture().configureByText("Options.java",
             """
                 import org.mockito.BDDMockito;
@@ -252,7 +252,7 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
 
     @Test
     void testReturnsAvailableActionsWhenMockitoIsEnforcedWithInOrder() {
-        addEnforceConventionInspection(EnforceConventionInspection.Convention.MOCKITO);
+        addEnforceConventionInspection(Convention.MOCKITO);
         getFixture().configureByText("Options.java",
             """
                 import org.mockito.BDDMockito;

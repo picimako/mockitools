@@ -29,7 +29,7 @@ import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
  *
  * @since 0.11.0
  */
-public class MockSpiedInstanceTypeMismatchInspection extends MockitoolsBaseInspection {
+final class MockSpiedInstanceTypeMismatchInspection extends MockitoolsBaseInspection {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

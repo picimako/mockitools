@@ -7,8 +7,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.testFramework.junit5.RunInEdt;
+import com.picimako.mockitools.Convention;
 import com.picimako.mockitools.StubbingApproach;
-import com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -204,7 +204,7 @@ class ConvertFromMockitoDoIntentionTest extends EnforceConventionAwareIntentionT
 
     @Test
     void testOptionsWhenBDDMockitoIsEnforced() {
-        addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
+        addEnforceConventionInspection(Convention.BDD_MOCKITO);
 
         getFixture().configureByText("Options.java",
             """
@@ -227,7 +227,7 @@ class ConvertFromMockitoDoIntentionTest extends EnforceConventionAwareIntentionT
 
     @Test
     void testOptionsWhenMockitoIsEnforced() {
-        addEnforceConventionInspection(EnforceConventionInspection.Convention.MOCKITO);
+        addEnforceConventionInspection(Convention.MOCKITO);
 
         getFixture().configureByText("Options.java",
             """
@@ -313,7 +313,7 @@ class ConvertFromMockitoDoIntentionTest extends EnforceConventionAwareIntentionT
 
     @Test
     void testOptionsWhenBDDMockitoIsEnforcedAndCallChainContainsDoNothing() {
-        addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
+        addEnforceConventionInspection(Convention.BDD_MOCKITO);
 
         getFixture().configureByText("Options.java",
             """
@@ -336,7 +336,7 @@ class ConvertFromMockitoDoIntentionTest extends EnforceConventionAwareIntentionT
 
     @Test
     void testOptionsWhenBDDMockitoIsEnforcedAndCallChainDoesntContainDoNothing() {
-        addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
+        addEnforceConventionInspection(Convention.BDD_MOCKITO);
 
         getFixture().configureByText("Options.java",
             """

@@ -3,6 +3,7 @@
 package com.picimako.mockitools.inspection.stubbing;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
+import com.picimako.mockitools.Convention;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,7 @@ class EnforceConventionInspectionBDDMockitoV3Test extends MockitoolsInspectionTe
     @Override
     protected InspectionProfileEntry getInspection() {
         EnforceConventionInspection inspection = new EnforceConventionInspection();
-        inspection.conventionToEnforce = EnforceConventionInspection.Convention.BDD_MOCKITO;
+        inspection.conventionToEnforce = Convention.BDD_MOCKITO;
         return inspection;
     }
 

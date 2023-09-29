@@ -28,7 +28,7 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/NotExtensible.html">@NotExtensible javadoc</a>
  * @since 0.1.0
  */
-public class NotExtensibleClassInspection extends LocalInspectionTool {
+final class NotExtensibleClassInspection extends LocalInspectionTool {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {

@@ -69,7 +69,7 @@ import java.util.function.Supplier;
  * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Spy.html">@Spy annotation javadoc</a>
  * @since 0.2.0
  */
-public class ConvertSpyCallToFieldIntention extends ConvertCallToFieldIntentionBase {
+final class ConvertSpyCallToFieldIntention extends ConvertCallToFieldIntentionBase {
     
     public ConvertSpyCallToFieldIntention() {
         super(SPY, "@Spy");

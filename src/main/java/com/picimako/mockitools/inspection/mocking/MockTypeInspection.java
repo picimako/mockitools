@@ -43,7 +43,7 @@ import org.jetbrains.annotations.NotNull;
  * @see <a href="https://github.com/mockito/mockito/pull/1833/files">Mockito: Add annotation to mark a type as DoNotMock</a>
  * @since 0.1.0
  */
-public class MockTypeInspection extends MockitoolsBaseInspection {
+final class MockTypeInspection extends MockitoolsBaseInspection {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {

@@ -88,7 +88,7 @@ import java.util.function.Supplier;
  * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mock.html">@Mock annotation javadoc</a>
  * @since 0.4.0
  */
-public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionBase {
+final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionBase {
     private static final CallMatcher MOCKITO_WITH_SETTINGS = staticCall(ORG_MOCKITO_MOCKITO, "withSettings");
 
     private static final CallMatcher MOCK_SETTINGS_SERIALIZABLE_WITH_MODE = instanceCall(ORG_MOCKITO_MOCK_SETTINGS, SERIALIZABLE).parameterTypes(ORG_MOCKITO_MOCK_SERIALIZABLE_MODE);

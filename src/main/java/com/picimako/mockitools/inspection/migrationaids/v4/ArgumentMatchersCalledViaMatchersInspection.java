@@ -36,7 +36,7 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  *
  * @since 0.1.0
  */
-public class ArgumentMatchersCalledViaMatchersInspection extends MigrationAidBase.V23ToV4BaseInspection {
+final class ArgumentMatchersCalledViaMatchersInspection extends MigrationAidBase.V23ToV4BaseInspection {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

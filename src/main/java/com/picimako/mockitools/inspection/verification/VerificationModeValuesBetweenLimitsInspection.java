@@ -47,7 +47,7 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  *
  * @since 0.1.0
  */
-public class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBaseInspection {
+final class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBaseInspection {
 
     private static final CallMatcher MOCKITO_OCCURRENCE_BASED_VERIFICATION_MODES = staticCall(ORG_MOCKITO_MOCKITO, TIMES, AT_LEAST, AT_MOST).parameterCount(1);
 

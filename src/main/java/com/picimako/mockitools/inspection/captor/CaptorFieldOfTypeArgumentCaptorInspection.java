@@ -34,7 +34,7 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  *
  * @since 0.1.0
  */
-public class CaptorFieldOfTypeArgumentCaptorInspection extends MockitoolsBaseInspection {
+final class CaptorFieldOfTypeArgumentCaptorInspection extends MockitoolsBaseInspection {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {

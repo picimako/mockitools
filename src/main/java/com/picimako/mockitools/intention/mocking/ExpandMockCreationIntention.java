@@ -38,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
  * @see com.picimako.mockitools.inspection.mocking.SimplifyMockCreationInspection
  * @since 0.11.0
  */
-public class ExpandMockCreationIntention implements IntentionAction {
+final class ExpandMockCreationIntention implements IntentionAction {
 
     //Intention name
 

@@ -2,10 +2,10 @@
 
 package com.picimako.mockitools.intention.convert.stub;
 
+import static com.picimako.mockitools.EnforceConventionUtil.isBDDMockitoEnforced;
+import static com.picimako.mockitools.EnforceConventionUtil.isMockitoEnforced;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.StubbingApproach.MOCKITO_WHEN;
-import static com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection.isBDDMockitoEnforced;
-import static com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection.isMockitoEnforced;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_THEN;
 
 import com.intellij.openapi.actionSystem.AnAction;
@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @since 0.6.0
  */
-public class ConvertFromMockitoWhenIntention extends ConvertStubbingIntentionBase {
+final class ConvertFromMockitoWhenIntention extends ConvertStubbingIntentionBase {
 
     public ConvertFromMockitoWhenIntention() {
         super("Mockito.when()", ORG_MOCKITO_MOCKITO);

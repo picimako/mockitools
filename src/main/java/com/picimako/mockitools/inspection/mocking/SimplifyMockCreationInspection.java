@@ -31,7 +31,7 @@ import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
  * @see com.picimako.mockitools.intention.mocking.ExpandMockCreationIntention
  * @since 0.11.0
  */
-public class SimplifyMockCreationInspection extends MockitoolsBaseInspection {
+final class SimplifyMockCreationInspection extends MockitoolsBaseInspection {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

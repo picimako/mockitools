@@ -2,9 +2,9 @@
 
 package com.picimako.mockitools.intention.convert.verification.mockitoverify;
 
+import static com.picimako.mockitools.EnforceConventionUtil.isBDDMockitoEnforced;
+import static com.picimako.mockitools.EnforceConventionUtil.isMockitoEnforced;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
-import static com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection.isBDDMockitoEnforced;
-import static com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection.isMockitoEnforced;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.Editor;
@@ -32,7 +32,7 @@ import java.util.List;
  * @see ConvertMockitoVerifyToInOrderVerifyAction
  * @since 0.5.0
  */
-public class ConvertFromMockitoVerifyIntention extends ConvertVerificationIntentionBase {
+final class ConvertFromMockitoVerifyIntention extends ConvertVerificationIntentionBase {
 
     public ConvertFromMockitoVerifyIntention() {
         super(VerificationApproach.MOCKITO_VERIFY);

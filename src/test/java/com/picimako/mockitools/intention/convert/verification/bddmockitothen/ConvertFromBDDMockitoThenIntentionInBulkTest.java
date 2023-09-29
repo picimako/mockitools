@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.testFramework.junit5.RunInEdt;
-import com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection;
+import com.picimako.mockitools.Convention;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
 import org.junit.jupiter.api.Test;
 
@@ -142,7 +142,7 @@ class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConventionAwar
 
     @Test
     void testAvailableWhenMockitoIsEnforced() {
-        addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
+        addEnforceConventionInspection(Convention.BDD_MOCKITO);
         checkIntentionIsAvailable(
             """
                 import org.mockito.Mockito;

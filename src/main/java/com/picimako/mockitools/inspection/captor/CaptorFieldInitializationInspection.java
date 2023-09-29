@@ -32,7 +32,7 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  * @see <a href="https://www.baeldung.com/mockito-annotations">Baeldung - Mockito Annotations</a>
  * @since 0.1.0
  */
-public class CaptorFieldInitializationInspection extends MockitoolsBaseInspection {
+final class CaptorFieldInitializationInspection extends MockitoolsBaseInspection {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {

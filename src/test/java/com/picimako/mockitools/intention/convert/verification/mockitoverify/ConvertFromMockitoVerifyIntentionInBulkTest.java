@@ -4,7 +4,7 @@ package com.picimako.mockitools.intention.convert.verification.mockitoverify;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.testFramework.junit5.RunInEdt;
-import com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection;
+import com.picimako.mockitools.Convention;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
 import org.junit.jupiter.api.Test;
 
@@ -153,7 +153,7 @@ class ConvertFromMockitoVerifyIntentionInBulkTest extends EnforceConventionAware
 
     @Test
     void testAvailableWhenMockitoIsEnforced() {
-        addEnforceConventionInspection(EnforceConventionInspection.Convention.MOCKITO);
+        addEnforceConventionInspection(Convention.MOCKITO);
         checkIntentionIsAvailable(
             """
                 import org.mockito.Mockito;

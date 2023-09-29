@@ -36,7 +36,7 @@ import java.util.Set;
  *
  * @since 0.7.0
  */
-public class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBaseInspection {
+final class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBaseInspection {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

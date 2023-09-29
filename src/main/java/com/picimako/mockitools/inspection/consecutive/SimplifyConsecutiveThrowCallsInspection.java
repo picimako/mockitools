@@ -45,7 +45,7 @@ import java.util.function.Predicate;
  *
  * @since 0.4.0
  */
-public class SimplifyConsecutiveThrowCallsInspection extends SimplifyConsecutiveCallsInspectionBase {
+final class SimplifyConsecutiveThrowCallsInspection extends SimplifyConsecutiveCallsInspectionBase {
     private static final List<ConsecutiveCallAnalysisDescriptor> THROW_CALL_DESCRIPTORS = List.of(
         Builder.forMockito(DO_THROW)
             .exceptionStubbingVia(MOCKITO_DO_X.getExceptionStubber())

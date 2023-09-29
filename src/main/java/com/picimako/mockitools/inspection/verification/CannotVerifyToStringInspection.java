@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
  * @see <a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java#L719">Cannot verify toString()</a>
  * @since 0.7.0
  */
-public class CannotVerifyToStringInspection extends MockitoolsBaseInspection {
+final class CannotVerifyToStringInspection extends MockitoolsBaseInspection {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

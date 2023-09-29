@@ -43,7 +43,7 @@ import org.jetbrains.annotations.Nullable;
  * @since 0.1.0
  */
 @HasSonarLintAlternative("https://rules.sonarsource.com/java/tag/mockito/RSPEC-6073")
-public class InconsistentArgumentMatcherUsageInspection extends MockitoolsBaseInspection {
+final class InconsistentArgumentMatcherUsageInspection extends MockitoolsBaseInspection {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
