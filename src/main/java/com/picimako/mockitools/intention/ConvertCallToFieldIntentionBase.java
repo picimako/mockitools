@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassObjectAccessExpression;
@@ -113,9 +113,7 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
      */
     protected void introduceFieldForClassObjectAccess(ConversionContext ctx) {
         introduceField(ctx,
-            () -> Pair.create(
-                resolveOperandType(ctx.mockTypeOrObject).getName(),
-                toLowerCamel(resolveOperandType(ctx.mockTypeOrObject).getName())),
+            () -> Couple.of(resolveOperandType(ctx.mockTypeOrObject).getName(), toLowerCamel(resolveOperandType(ctx.mockTypeOrObject).getName())),
             NO_INITIALIZER);
     }
 
@@ -130,7 +128,7 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
         }
     }
 
-    protected void introduceField(ConversionContext ctx, Supplier<Pair<String, String>> typeAndFieldName, Supplier<String> initializer) {
+    protected void introduceField(ConversionContext ctx, Supplier<Couple<String>> typeAndFieldName, Supplier<String> initializer) {
         if (ctx.spyOrMockCall.getParent() instanceof PsiLocalVariable variable) {
             var field = createField(variable.getType().getCanonicalText(), getLocalVariableName(variable), initializer, ctx);
             doIntroduceFieldForLocalVariable(ctx, field, variable);
@@ -221,11 +219,11 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
      * new MockableObject&lt;String, Integer>(); -> Pair("MockableObject&lt;java.lang.String, java.lang.Integer>", "mockableObject")
      * </pre>
      */
-    protected Pair<String, String> constructFieldTypeAndName(PsiJavaCodeReferenceElement classReference) {
+    protected Couple<String> constructFieldTypeAndName(PsiJavaCodeReferenceElement classReference) {
         String fieldName = classReference.getTypeParameters().length == 0
             ? classReference.getReferenceName()
             : classReference.getReferenceName() + "<" + Arrays.stream(classReference.getTypeParameters()).map(PsiType::getCanonicalText).collect(joining(", ")) + ">";
-        return Pair.create(fieldName, toLowerCamel(classReference.getReferenceName()));
+        return Couple.of(fieldName, toLowerCamel(classReference.getReferenceName()));
     }
 
     private String toLowerCamel(String text) {
