@@ -4,10 +4,10 @@ package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
+import static com.picimako.mockitools.EnforceConventionUtil.isBDDMockitoEnforced;
+import static com.picimako.mockitools.EnforceConventionUtil.isMockitoEnforced;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
 import static com.picimako.mockitools.VerificationApproach.BDDMOCKITO_THEN_SHOULD;
-import static com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection.isBDDMockitoEnforced;
-import static com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection.isMockitoEnforced;
 import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;
 import static com.picimako.mockitools.util.PsiMethodUtil.getSubsequentMethodCall;
@@ -45,7 +45,7 @@ import java.util.List;
  * @see NoActionAvailableAction
  * @since 0.5.0
  */
-public class ConvertFromBDDMockitoThenIntention extends ConvertVerificationIntentionBase {
+final class ConvertFromBDDMockitoThenIntention extends ConvertVerificationIntentionBase {
     public ConvertFromBDDMockitoThenIntention() {
         super(BDDMOCKITO_THEN_SHOULD);
     }

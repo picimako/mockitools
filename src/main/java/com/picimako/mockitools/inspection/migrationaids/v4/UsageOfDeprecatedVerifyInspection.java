@@ -39,7 +39,7 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  *
  * @since 0.1.0
  */
-public class UsageOfDeprecatedVerifyInspection extends MigrationAidBase.V3ToV4BaseInspection {
+final class UsageOfDeprecatedVerifyInspection extends MigrationAidBase.V3ToV4BaseInspection {
 
     private static final CallMatcher MOCKED_STATIC_VERIFY =
         CallMatcher.instanceCall(ORG_MOCKITO_MOCKED_STATIC, VERIFY).parameterTypes(ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE, ORG_MOCKITO_MOCKED_STATIC_VERIFICATION);

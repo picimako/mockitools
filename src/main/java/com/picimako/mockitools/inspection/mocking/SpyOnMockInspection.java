@@ -26,7 +26,7 @@ import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
  *
  * @since 0.11.0
  */
-public class SpyOnMockInspection extends MockitoolsBaseInspection {
+final class SpyOnMockInspection extends MockitoolsBaseInspection {
 
     private static final CallMatcher MOCKITO_SPY = staticCall(ORG_MOCKITO_MOCKITO, SPY).parameterTypes("T");
 

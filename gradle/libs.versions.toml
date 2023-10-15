@@ -5,7 +5,7 @@ annotations = "24.0.1"
 # plugins
 kotlin = "1.8.22"
 changelog = "2.1.0"
-gradleIntelliJPlugin = "1.14.2"
+gradleIntelliJPlugin = "1.15.0"
 lombok = "8.1.0"
 
 [libraries]

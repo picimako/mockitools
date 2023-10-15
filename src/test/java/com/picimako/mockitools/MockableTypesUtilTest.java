@@ -5,13 +5,13 @@ package com.picimako.mockitools;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.psi.PsiField;
-import com.intellij.testFramework.RunsInEdt;
+import com.intellij.testFramework.junit5.RunInEdt;
 import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link MockableTypesUtil}.
  */
-@RunsInEdt
+@RunInEdt
 class MockableTypesUtilTest extends MockitoolsTestBase {
 
     @Test

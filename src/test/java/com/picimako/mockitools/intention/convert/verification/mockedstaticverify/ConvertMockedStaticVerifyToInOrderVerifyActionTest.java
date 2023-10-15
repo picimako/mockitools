@@ -2,14 +2,14 @@
 
 package com.picimako.mockitools.intention.convert.verification.mockedstaticverify;
 
-import com.intellij.testFramework.RunsInEdt;
+import com.intellij.testFramework.junit5.RunInEdt;
 import com.picimako.mockitools.MockitoolsActionTestBase;
 import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link ConvertMockedStaticVerifyToInOrderVerifyAction}.
  */
-@RunsInEdt
+@RunInEdt
 class ConvertMockedStaticVerifyToInOrderVerifyActionTest extends MockitoolsActionTestBase {
 
     //Caret based conversion

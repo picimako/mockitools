@@ -33,7 +33,7 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  *
  * @since 0.1.0
  */
-public class ParameterizedIsNotNullMatcherInspection extends MigrationAidBase.V23ToV4BaseInspection {
+final class ParameterizedIsNotNullMatcherInspection extends MigrationAidBase.V23ToV4BaseInspection {
 
     private static final CallMatcher ANY_OF_PARAMETERIZED_NULL_MATCHERS =
         CallMatcher.staticCall(ORG_MOCKITO_ARGUMENT_MATCHERS, IS_NULL, IS_NOT_NULL, NOT_NULL).parameterCount(1);

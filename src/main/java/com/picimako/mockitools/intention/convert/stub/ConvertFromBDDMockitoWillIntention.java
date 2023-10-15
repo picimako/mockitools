@@ -2,9 +2,9 @@
 
 package com.picimako.mockitools.intention.convert.stub;
 
+import static com.picimako.mockitools.EnforceConventionUtil.isBDDMockitoEnforced;
+import static com.picimako.mockitools.EnforceConventionUtil.isMockitoEnforced;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
-import static com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection.isBDDMockitoEnforced;
-import static com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection.isMockitoEnforced;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_WILL;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_WILL_DO_NOTHING;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
@@ -26,7 +26,7 @@ import java.util.List;
  *
  * @since 0.6.0
  */
-public class ConvertFromBDDMockitoWillIntention extends ConvertStubbingIntentionBase {
+final class ConvertFromBDDMockitoWillIntention extends ConvertStubbingIntentionBase {
 
     public ConvertFromBDDMockitoWillIntention() {
         super("BDDMockito.will*()", ORG_MOCKITO_BDDMOCKITO);

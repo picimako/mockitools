@@ -6,8 +6,8 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.testFramework.RunsInEdt;
-import com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection;
+import com.intellij.testFramework.junit5.RunInEdt;
+import com.picimako.mockitools.Convention;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Functional test for {@link ConvertFromInOrderVerifyIntention}.
  */
-@RunsInEdt
+@RunInEdt
 class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntentionTestBase {
 
     @Override
@@ -91,7 +91,7 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
 
     @Test
     void testAvailableWhenMockitoIsEnforced() {
-        addEnforceConventionInspection(EnforceConventionInspection.Convention.MOCKITO);
+        addEnforceConventionInspection(Convention.MOCKITO);
         checkIntentionIsAvailable(
             """
                 import org.mockito.Mockito;
@@ -154,7 +154,7 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
 
     @Test
     void testReturnsAvailableActionsWhenBDDMockitoIsEnforcedMockitoIsNotEnforced() {
-        addEnforceConventionInspection(EnforceConventionInspection.Convention.BDD_MOCKITO);
+        addEnforceConventionInspection(Convention.BDD_MOCKITO);
         getFixture().configureByText("Options.java",
             """
                 import org.mockito.Mockito;
@@ -178,7 +178,7 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
 
     @Test
     void testReturnsAvailableActionsWhenBDDMockitoIsNotEnforcedMockitoIsEnforced() {
-        addEnforceConventionInspection(EnforceConventionInspection.Convention.MOCKITO);
+        addEnforceConventionInspection(Convention.MOCKITO);
         getFixture().configureByText("Options.java",
             """
                 import org.mockito.Mockito;

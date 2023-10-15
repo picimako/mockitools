@@ -4,10 +4,10 @@ package com.picimako.mockitools.intention.convert.verification.inorderverify;
 
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
+import static com.picimako.mockitools.EnforceConventionUtil.isBDDMockitoEnforced;
+import static com.picimako.mockitools.EnforceConventionUtil.isMockitoEnforced;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
 import static com.picimako.mockitools.VerificationApproach.INORDER_VERIFY;
-import static com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection.isBDDMockitoEnforced;
-import static com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection.isMockitoEnforced;
 import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallForIdentifier;
 import static com.siyeh.ig.psiutils.TypeUtils.typeEquals;
@@ -44,7 +44,7 @@ import java.util.List;
  * @see ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction
  * @since 0.5.0
  */
-public class ConvertFromInOrderVerifyIntention extends ConvertVerificationIntentionBase {
+final class ConvertFromInOrderVerifyIntention extends ConvertVerificationIntentionBase {
     public ConvertFromInOrderVerifyIntention() {
         super(INORDER_VERIFY);
     }

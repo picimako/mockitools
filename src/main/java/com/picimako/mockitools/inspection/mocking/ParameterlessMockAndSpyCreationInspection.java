@@ -22,7 +22,7 @@ import static com.picimako.mockitools.util.Ranges.endOffsetOf;
  * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#54">Mocking/Spying without specifying class</a>
  * @since 0.11.0
  */
-public class ParameterlessMockAndSpyCreationInspection extends MockitoolsBaseInspection {
+final class ParameterlessMockAndSpyCreationInspection extends MockitoolsBaseInspection {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

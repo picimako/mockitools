@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.testFramework.RunsInEdt;
+import com.intellij.testFramework.junit5.RunInEdt;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 /**
  * Functional test for {@link MockitoolsPsiUtil}.
  */
-@RunsInEdt
+@RunInEdt
 //Per class lifecycle is required to use non-static MethodSources accessing the underlying fixture
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MockitoolsPsiUtilTest extends MockitoolsTestBase {

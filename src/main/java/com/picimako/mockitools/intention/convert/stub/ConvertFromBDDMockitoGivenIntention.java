@@ -2,9 +2,9 @@
 
 package com.picimako.mockitools.intention.convert.stub;
 
+import static com.picimako.mockitools.EnforceConventionUtil.isBDDMockitoEnforced;
+import static com.picimako.mockitools.EnforceConventionUtil.isMockitoEnforced;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
-import static com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection.isBDDMockitoEnforced;
-import static com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection.isMockitoEnforced;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_WILL;
 
 import com.intellij.openapi.actionSystem.AnAction;
@@ -24,7 +24,7 @@ import java.util.List;
  *
  * @since 0.6.0
  */
-public class ConvertFromBDDMockitoGivenIntention extends ConvertStubbingIntentionBase {
+final class ConvertFromBDDMockitoGivenIntention extends ConvertStubbingIntentionBase {
 
     public ConvertFromBDDMockitoGivenIntention() {
         super("BDDMockito.given()", ORG_MOCKITO_BDDMOCKITO);

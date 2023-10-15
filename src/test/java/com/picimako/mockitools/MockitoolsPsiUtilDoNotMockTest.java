@@ -6,14 +6,14 @@ import static com.picimako.mockitools.MockableTypesUtil.getDoNotMockTypeInHierar
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.psi.PsiField;
-import com.intellij.testFramework.RunsInEdt;
 import com.intellij.testFramework.TestDataPath;
+import com.intellij.testFramework.junit5.RunInEdt;
 import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link com.picimako.mockitools.MockitoolsPsiUtil}.
  */
-@RunsInEdt
+@RunInEdt
 @TestDataPath("$CONTENT_ROOT/testData/inspection/donotmockreason")
 class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
 

@@ -28,7 +28,7 @@ import java.util.List;
  *
  * @since 0.3.0
  */
-public class SimplifyConsecutiveReturnCallsInspection extends SimplifyConsecutiveCallsInspectionBase {
+final class SimplifyConsecutiveReturnCallsInspection extends SimplifyConsecutiveCallsInspectionBase {
     private static final List<ConsecutiveCallAnalysisDescriptor> RETURN_DESCRIPTORS = List.of(
         Builder.forMockito(DO_RETURN)
             .inCallChainsBeginningWith(DO_RETURN, DO_THROW, "doNothing", "doAnswer", "doCallRealMethod").build(),

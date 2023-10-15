@@ -12,7 +12,6 @@ import static com.picimako.mockitools.inspection.consecutive.TypeConversionMetho
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
-import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -49,7 +48,7 @@ import java.util.Arrays;
  *
  * @since 0.4.0
  */
-public class ConvertThrowStubbingArgumentsIntention implements IntentionAction {
+final class ConvertThrowStubbingArgumentsIntention implements IntentionAction {
     private String message;
 
     @Override
@@ -68,8 +67,6 @@ public class ConvertThrowStubbingArgumentsIntention implements IntentionAction {
 
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-        if (!file.getFileType().equals(JavaFileType.INSTANCE)) return false;
-
         return getMethodCallAtCaretOrEmpty(file, editor)
             .map(call -> StubbingApproach.findExceptionStubberApplicableTo(call)
                 .map(stubber -> isArgumentListConvertible(call, stubber))

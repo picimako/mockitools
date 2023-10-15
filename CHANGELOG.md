@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+## [1.0.0]
+### Changed
+- New support range of IDEs: 2022.3-2023.3
+- Various code optimizations based on new IntelliJ Platform inspections.
+
 ## [0.12.0]
 ### Added
 - [#52](https://github.com/picimako/mockitools/issues/52): Added code completion for parameters of methods in the `Mockito` class that need mock objects to be passed in (e.g. `reset()` or `verifyNoMoreInteractions()`).

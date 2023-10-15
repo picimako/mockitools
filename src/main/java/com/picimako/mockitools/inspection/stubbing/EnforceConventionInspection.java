@@ -3,26 +3,21 @@
 package com.picimako.mockitools.inspection.stubbing;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE;
 import static com.picimako.mockitools.MockitoolsPsiUtil.INORDER_VERIFY;
 import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.profile.codeInspection.InspectionProfileManager;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.util.ui.JBUI;
+import com.picimako.mockitools.Convention;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.callMatcher.CallMatcher;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -96,47 +91,5 @@ public class EnforceConventionInspection extends MockitoolsBaseInspection {
     private void register(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         holder.registerProblem(Optional.ofNullable(getReferenceNameElement(expression)).orElse(expression),
             MockitoolsBundle.message("inspection.stubbing.and.verification.must.be.performed.via.x", conventionToEnforce.getClassFqn()));
-    }
-
-    // Static helpers
-
-    /**
-     * Returns whether {@link EnforceConventionInspection} is enabled in the inspection profile currently active in the current project,
-     * and {@link Convention#MOCKITO} is being enforced.
-     *
-     * @param methodCall the method call the intention availability is being checked
-     */
-    public static boolean isMockitoEnforced(PsiElement methodCall) {
-        return isEnforced(methodCall, Convention.MOCKITO);
-    }
-
-    /**
-     * Returns whether {@link EnforceConventionInspection} is enabled in the inspection profile currently active in the current project,
-     * and {@link Convention#BDD_MOCKITO} is being enforced.
-     *
-     * @param methodCall the method call the intention availability is being checked
-     */
-    public static boolean isBDDMockitoEnforced(PsiElement methodCall) {
-        return isEnforced(methodCall, Convention.BDD_MOCKITO);
-    }
-
-    private static boolean isEnforced(PsiElement methodCall, Convention convention) {
-        var profile = InspectionProfileManager.getInstance(methodCall.getProject()).getCurrentProfile();
-        if (profile.isToolEnabled(HighlightDisplayKey.find(SHORT_NAME))) {
-            var enforceConvention = (EnforceConventionInspection) profile.getUnwrappedTool(SHORT_NAME, methodCall);
-            return enforceConvention != null && enforceConvention.conventionToEnforce == convention;
-        }
-        return false;
-    }
-
-    //Convention type
-
-    @Getter
-    @RequiredArgsConstructor
-    public enum Convention {
-        MOCKITO(ORG_MOCKITO_MOCKITO + " / " + ORG_MOCKITO_INORDER),
-        BDD_MOCKITO(ORG_MOCKITO_BDDMOCKITO);
-
-        private final String classFqn;
     }
 }

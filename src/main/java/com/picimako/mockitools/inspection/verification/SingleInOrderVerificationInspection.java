@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @since 0.5.0
  */
-public class SingleInOrderVerificationInspection extends LocalInspectionTool {
+final class SingleInOrderVerificationInspection extends LocalInspectionTool {
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
         if (isInTestSourceContent(session.getFile())) {

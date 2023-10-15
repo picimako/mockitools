@@ -56,7 +56,7 @@ import java.util.Objects;
  * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#exact_verification">Mockito exact verification documentation</a>
  * @since 0.1.0
  */
-public class TimesVerificationModeInspection extends MockitoolsBaseInspection {
+final class TimesVerificationModeInspection extends MockitoolsBaseInspection {
 
     private static final CallMatcher VERIFICATION = CallMatcher.anyOf(
         MockitoolsPsiUtil.MOCKITO_VERIFY.parameterTypes("T", ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE),

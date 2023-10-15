@@ -15,7 +15,6 @@ import static com.picimako.mockitools.util.Ranges.charSequenceInRange;
 import static com.picimako.mockitools.util.TokenTypes.isTokenType;
 
 import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -53,8 +52,6 @@ public abstract class ConversionIntentionBase implements IntentionAction {
 
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-        if (!file.getFileType().equals(JavaFileType.INSTANCE)) return false;
-
         if (!editor.getSelectionModel().hasSelection()) {
             final var element = file.findElementAt(editor.getCaretModel().getOffset());
             return isIdentifierOfMethodCall(element) && isAvailableFor(getMethodCallForIdentifier(element));

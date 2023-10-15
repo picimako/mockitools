@@ -43,7 +43,7 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  *
  * @since 0.1.0
  */
-public class UsageOfAnyMatchersInspection extends MigrationAidBase.V23ToV4BaseInspection {
+final class UsageOfAnyMatchersInspection extends MigrationAidBase.V23ToV4BaseInspection {
     private static final CallMatcher ANY_OBJECT_OR_ANY_VARARG = CallMatcher.staticCall(ORG_MOCKITO_ARGUMENT_MATCHERS, ANY_OBJECT, ANY_VARARG);
     private static final CallMatcher ANY_COLLECTION = CallMatcher.anyOf(
         CallMatcher.staticCall(ORG_MOCKITO_ARGUMENT_MATCHERS, ANY_COLLECTION_OF, ANY_ITERABLE_OF, ANY_LIST_OF, ANY_SET_OF).parameterCount(1),

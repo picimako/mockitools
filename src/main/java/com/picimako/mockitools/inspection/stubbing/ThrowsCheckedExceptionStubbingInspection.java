@@ -53,7 +53,7 @@ import java.util.Optional;
  *
  * @since 0.3.0
  */
-public class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInspection {
+final class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInspection {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

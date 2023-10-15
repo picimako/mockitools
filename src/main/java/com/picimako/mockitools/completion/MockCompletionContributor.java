@@ -41,7 +41,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @since 0.12.0
  */
-public class MockCompletionContributor extends CompletionContributor {
+final class MockCompletionContributor extends CompletionContributor {
 
     private static final Pattern MOCKITO_VERIFY_PATTERN = Pattern.compile("Mockito\\.(verifyNoInteractions|verifyNoMoreInteractions|verifyZeroInteractions)");
     private static final Pattern VERIFY_PATTERN = Pattern.compile("verifyNoInteractions|verifyNoMoreInteractions|verifyZeroInteractions");

@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @since 0.8.0
  */
-public class StubOnlyMockInVerificationInspection extends MockitoolsBaseInspection {
+final class StubOnlyMockInVerificationInspection extends MockitoolsBaseInspection {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

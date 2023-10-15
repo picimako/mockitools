@@ -33,7 +33,6 @@ import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 import static java.util.stream.Collectors.joining;
 
-import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
@@ -89,7 +88,7 @@ import java.util.function.Supplier;
  * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mock.html">@Mock annotation javadoc</a>
  * @since 0.4.0
  */
-public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionBase {
+final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionBase {
     private static final CallMatcher MOCKITO_WITH_SETTINGS = staticCall(ORG_MOCKITO_MOCKITO, "withSettings");
 
     private static final CallMatcher MOCK_SETTINGS_SERIALIZABLE_WITH_MODE = instanceCall(ORG_MOCKITO_MOCK_SETTINGS, SERIALIZABLE).parameterTypes(ORG_MOCKITO_MOCK_SERIALIZABLE_MODE);
@@ -118,8 +117,6 @@ public class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntention
      */
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-        if (!file.getFileType().equals(JavaFileType.INSTANCE)) return false;
-
         return getMethodCallAtCaretOrEmpty(file, editor)
             .filter(call -> MockitoQualifiedNames.MOCK.equals(getMethodName(call)))
             .map(call -> {

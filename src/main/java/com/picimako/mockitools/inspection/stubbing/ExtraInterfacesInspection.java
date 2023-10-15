@@ -41,7 +41,7 @@ import java.util.Optional;
  * @see <a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java">Report.java: look for extraInterfacesRequiresAtLeastOneInterface()</a>
  * @since 0.1.0
  */
-public class ExtraInterfacesInspection extends MockitoolsBaseInspection {
+final class ExtraInterfacesInspection extends MockitoolsBaseInspection {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {

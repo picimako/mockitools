@@ -27,7 +27,7 @@ import java.util.List;
  * @see ConvertMockedStaticVerifyToInOrderVerifyAction
  * @since 0.6.0
  */
-public class ConvertFromMockedStaticVerifyIntention extends ConvertVerificationIntentionBase {
+final class ConvertFromMockedStaticVerifyIntention extends ConvertVerificationIntentionBase {
     public ConvertFromMockedStaticVerifyIntention() {
         //Shortest is 'x.verify(Y::Z);'
         super(VerificationApproach.MOCKED_STATIC_VERIFY, 15);

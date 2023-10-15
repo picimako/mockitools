@@ -42,7 +42,7 @@ import java.util.List;
  *
  * @since 0.5.0
  */
-public class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends LocalInspectionTool {
+final class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends LocalInspectionTool {
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
         if (isInTestSourceContent(session.getFile())) {
