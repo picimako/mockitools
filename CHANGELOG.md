@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+## [1.1.0]
+### Changed
+- New support range of IDEs: 2023.1.5-2024.1-EAP.
+- Dependency updates.
+
 ## [1.0.0]
 ### Changed
 - New support range of IDEs: 2022.3-2023.3
