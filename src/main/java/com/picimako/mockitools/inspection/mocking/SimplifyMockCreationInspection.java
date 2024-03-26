@@ -2,6 +2,16 @@
 
 package com.picimako.mockitools.inspection.mocking;
 
+import static com.picimako.mockitools.MockitoMockMatchers.MOCK_WITH_SETTINGS;
+import static com.picimako.mockitools.MockitoQualifiedNames.DEFAULT_ANSWER;
+import static com.picimako.mockitools.MockitoQualifiedNames.NAME;
+import static com.picimako.mockitools.MockitoQualifiedNames.SPIED_INSTANCE;
+import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromLast;
+import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.hasTwoArguments;
+import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
+
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
@@ -15,12 +25,6 @@ import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.InspectionGadgetsFix;
 import org.jetbrains.annotations.NotNull;
-
-import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
-import static com.picimako.mockitools.MockitoMockMatchers.MOCK_WITH_SETTINGS;
-import static com.picimako.mockitools.MockitoQualifiedNames.*;
-import static com.picimako.mockitools.util.PsiMethodUtil.*;
-import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 /**
  * This inspection reports {@code Mockito.mock(..., withSettings()...)} mock creations that have convenience methods
@@ -78,18 +82,14 @@ final class SimplifyMockCreationInspection extends MockitoolsBaseInspection {
                 String settingsMethodName = getMethodName(settingsMethodCall);
 
                 if (SPIED_INSTANCE.equals(settingsMethodName)) {
-                    runWriteCommandAction(project, () -> {
-                        //org.mockito.Mockito.spy(<spiedInstance>)
-                        String mockitoSpy = "org.mockito.Mockito.spy(" + getFirstArgument(settingsMethodCall).getText() + ")";
-                        simplify(mockitoMock, mockitoSpy, project);
-                    });
+                    //org.mockito.Mockito.spy(<spiedInstance>)
+                    String mockitoSpy = "org.mockito.Mockito.spy(" + getFirstArgument(settingsMethodCall).getText() + ")";
+                    simplify(mockitoMock, mockitoSpy, project);
                 } else if (NAME.equals(settingsMethodName) || DEFAULT_ANSWER.equals(settingsMethodName)) {
-                    runWriteCommandAction(project, () -> {
-                        //org.mockito.Mockito.mock(<clazz>.class, <answer>)
-                        //org.mockito.Mockito.mock(<clazz>.class, <name>)
-                        String newMockitoMock = "org.mockito.Mockito.mock(" + getFirstArgument(mockitoMock).getText() + ", " + getFirstArgument(settingsMethodCall).getText() + ")";
-                        simplify(mockitoMock, newMockitoMock, project);
-                    });
+                    //org.mockito.Mockito.mock(<clazz>.class, <answer>)
+                    //org.mockito.Mockito.mock(<clazz>.class, <name>)
+                    String newMockitoMock = "org.mockito.Mockito.mock(" + getFirstArgument(mockitoMock).getText() + ", " + getFirstArgument(settingsMethodCall).getText() + ")";
+                    simplify(mockitoMock, newMockitoMock, project);
                 }
             }
         }
