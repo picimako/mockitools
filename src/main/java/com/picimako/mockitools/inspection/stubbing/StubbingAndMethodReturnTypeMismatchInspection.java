@@ -14,6 +14,7 @@ import com.intellij.psi.PsiCall;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiType;
+import com.intellij.psi.PsiTypes;
 import com.picimako.mockitools.StubbingApproach;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;
@@ -80,7 +81,7 @@ final class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBase
                                                              @NotNull ProblemsHolder holder) {
         stubbedMethod
             .flatMap(this::getReturnTypeOf)
-            .filter(type -> !type.equals(PsiType.VOID))
+            .filter(type -> !type.equals(PsiTypes.voidType()))
             .ifPresent(__ -> {
                 for (var doNothing : doNothingMethodCalls) {
                     holder.registerProblem(getReferenceNameElement(doNothing),
@@ -99,7 +100,7 @@ final class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBase
                                                           @NotNull ProblemsHolder holder) {
         stubbedMethod
             .flatMap(this::getReturnTypeOf)
-            .filter(type -> type.equals(PsiType.VOID))
+            .filter(type -> type.equals(PsiTypes.voidType()))
             .ifPresent(__ -> {
                 for (var doReturn : doReturnMethodCalls) {
                     holder.registerProblem(getReferenceNameElement(doReturn),
