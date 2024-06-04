@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools.intention.convert.verification.inorderverify;
 
+import static com.intellij.openapi.application.ReadAction.compute;
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static com.picimako.mockitools.EnforceConventionUtil.isBDDMockitoEnforced;
@@ -62,20 +63,20 @@ final class ConvertFromInOrderVerifyIntention extends ConvertVerificationIntenti
      */
     @Override
     protected boolean isQualifierHaveCorrectType(PsiExpression qualifier) {
-        return typeEquals(ORG_MOCKITO_INORDER, qualifier.getType());
+        return compute(() -> typeEquals(ORG_MOCKITO_INORDER, qualifier.getType()));
     }
 
     //Invocation
 
     @Override
     public List<AnAction> actionSelectionOptions(Editor editor, PsiFile file) {
-        boolean isBulkMode = editor.getSelectionModel().hasSelection();
+        boolean isBulkMode = compute(() -> editor.getSelectionModel().hasSelection());
 
         var verificationCall = !isBulkMode
             //the method call at the caret position. The identifier at this point cannot be null.
-            ? getMethodCallForIdentifier(file.findElementAt(editor.getCaretModel().getOffset()))
+            ? getMethodCallForIdentifier(file.findElementAt(compute(() -> editor.getCaretModel().getOffset())))
             //the method call of the first selected statement
-            : getParentOfType(findChildOfType(collectStatementsInSelection(editor, file).get(0), PsiIdentifier.class), PsiMethodCallExpression.class);
+            : compute(() -> getParentOfType(findChildOfType(collectStatementsInSelection(editor, file).get(0), PsiIdentifier.class), PsiMethodCallExpression.class));
 
         if (INORDER_VERIFY.isVerifiedBy(verificationCall)) {
             var actions = new ArrayList<AnAction>(3);

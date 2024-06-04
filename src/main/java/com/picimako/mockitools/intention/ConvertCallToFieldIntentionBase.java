@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools.intention;
 
+import static com.intellij.openapi.application.ReadAction.compute;
 import static com.picimako.mockitools.util.ClassObjectAccessUtil.resolveOperandType;
 import static com.picimako.mockitools.util.ListPopupHelper.selectItemAndRun;
 import static com.picimako.mockitools.util.PsiClassUtil.getParentClasses;
@@ -79,8 +80,10 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        final var element = file.findElementAt(editor.getCaretModel().getOffset());
-        var ctx = new ConversionContext((PsiMethodCallExpression) element.getParent().getParent(), editor, project);
+        var ctx = compute(() -> {
+            final var element = file.findElementAt(editor.getCaretModel().getOffset());
+            return new ConversionContext((PsiMethodCallExpression) element.getParent().getParent(), editor, project);
+        });
 
         if (ctx.mockTypeOrObject instanceof PsiClassObjectAccessExpression) {
             selectTargetClassAndIntroduceField(getParentClasses(ctx.mockTypeOrObject),
@@ -130,7 +133,7 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
 
     protected void introduceField(ConversionContext ctx, Supplier<Couple<String>> typeAndFieldName, Supplier<String> initializer) {
         if (ctx.spyOrMockCall.getParent() instanceof PsiLocalVariable variable) {
-            var field = createField(variable.getType().getCanonicalText(), getLocalVariableName(variable), initializer, ctx);
+            var field = createField(compute(() -> variable.getType().getCanonicalText()), getLocalVariableName(variable), initializer, ctx);
             doIntroduceFieldForLocalVariable(ctx, field, variable);
         } else {
             var typeAndField = typeAndFieldName.get();
@@ -150,10 +153,10 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
      * Field rename is triggered only when there is already a field existing with the to be introduced field's name.
      */
     private void doIntroduceFieldForLocalVariable(ConversionContext ctx, PsiElement fieldToAdd, PsiLocalVariable variableDeclaration) {
-        boolean hasFieldWithSameNameAlready = Arrays.stream(ctx.targetClass.getFields()).anyMatch(f -> ((PsiField) fieldToAdd).getName().equals(f.getName()));
+        boolean hasFieldWithSameNameAlready = Arrays.stream(compute(() -> ctx.targetClass.getFields())).anyMatch(f -> ((PsiField) fieldToAdd).getName().equals(f.getName()));
         if (hasFieldWithSameNameAlready && !ApplicationManager.getApplication().isUnitTestMode()) {
             //Moving the caret to the identifier is needed, so that rename doesn't run into an underlying NPE
-            ctx.editor.getCaretModel().moveToOffset(variableDeclaration.getNameIdentifier().getTextOffset());
+            ctx.editor.getCaretModel().moveToOffset(compute(() -> variableDeclaration.getNameIdentifier().getTextOffset()));
             new VariableInplaceRenamer(variableDeclaration, ctx.editor, ctx.project) {
                 @Override
                 protected void moveOffsetAfter(boolean success) {
@@ -191,7 +194,7 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
      */
     private void doIntroduceFieldForStandaloneMethodCall(ConversionContext ctx, PsiElement field) {
         var manager = PsiDocumentManager.getInstance(ctx.project);
-        manager.commitAllDocuments();
+        ApplicationManager.getApplication().invokeAndWait(manager::commitAllDocuments);
         var addedField = new Ref<PsiField>();
         WriteCommandAction.runWriteCommandAction(ctx.project, () -> {
             addedField.set((PsiField) ctx.targetClass.add(field));
@@ -220,10 +223,12 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
      * </pre>
      */
     protected Couple<String> constructFieldTypeAndName(PsiJavaCodeReferenceElement classReference) {
-        String fieldName = classReference.getTypeParameters().length == 0
-            ? classReference.getReferenceName()
-            : classReference.getReferenceName() + "<" + Arrays.stream(classReference.getTypeParameters()).map(PsiType::getCanonicalText).collect(joining(", ")) + ">";
-        return Couple.of(fieldName, toLowerCamel(classReference.getReferenceName()));
+        return compute(() -> {
+            String fieldName = classReference.getTypeParameters().length == 0
+                               ? classReference.getReferenceName()
+                               : classReference.getReferenceName() + "<" + Arrays.stream(classReference.getTypeParameters()).map(PsiType::getCanonicalText).collect(joining(", ")) + ">";
+            return Couple.of(fieldName, toLowerCamel(classReference.getReferenceName()));
+        });
     }
 
     private String toLowerCamel(String text) {

@@ -5,6 +5,7 @@ package com.picimako.mockitools.util;
 import java.util.List;
 import java.util.Optional;
 
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
@@ -40,8 +41,10 @@ public final class PsiClassUtil {
     }
 
     public static void importClass(String fqn, PsiElement context) {
-        PsiClass collectionClass = JavaPsiFacade.getInstance(context.getProject()).findClass(fqn, ProjectScope.getAllScope(context.getProject()));
-        ImportUtils.addImportIfNeeded(collectionClass, context);
+        ReadAction.run(() -> {
+            PsiClass collectionClass = JavaPsiFacade.getInstance(context.getProject()).findClass(fqn, ProjectScope.getAllScope(context.getProject()));
+            ImportUtils.addImportIfNeeded(collectionClass, context);
+        });
     }
 
     /**

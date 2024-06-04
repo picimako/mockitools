@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 
+import static com.intellij.openapi.application.ReadAction.compute;
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static com.picimako.mockitools.EnforceConventionUtil.isBDDMockitoEnforced;
@@ -11,12 +12,10 @@ import static com.picimako.mockitools.VerificationApproach.BDDMOCKITO_THEN_SHOUL
 import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;
 import static com.picimako.mockitools.util.PsiMethodUtil.getSubsequentMethodCall;
-import static java.util.stream.Collectors.toList;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
@@ -52,14 +51,14 @@ final class ConvertFromBDDMockitoThenIntention extends ConvertVerificationIntent
 
     @Override
     protected boolean isQualifierHaveCorrectType(PsiExpression qualifier) {
-        return qualifier instanceof PsiReferenceExpression qualifierAsRef
-            && qualifierAsRef.resolve() instanceof PsiClass qualifierClass
-            && ORG_MOCKITO_BDDMOCKITO.equals(qualifierClass.getQualifiedName());
+        return compute(() -> qualifier instanceof PsiReferenceExpression qualifierAsRef
+                             && qualifierAsRef.resolve() instanceof PsiClass qualifierClass
+                             && ORG_MOCKITO_BDDMOCKITO.equals(qualifierClass.getQualifiedName()));
     }
 
     @Override
     public List<AnAction> actionSelectionOptions(Editor editor, PsiFile file) {
-        boolean isBulkMode = editor.getSelectionModel().hasSelection();
+        boolean isBulkMode = compute(() -> editor.getSelectionModel().hasSelection());
         var actions = new ArrayList<AnAction>(3);
 
         if (!isBDDMockitoEnforced(file)) {
@@ -90,11 +89,11 @@ final class ConvertFromBDDMockitoThenIntention extends ConvertVerificationIntent
 
     @NotNull
     private List<PsiMethodCallExpression> collectShouldCalls(Editor editor, PsiFile file) {
-        return collectStatementsInSelection(editor, file).stream()
+        return compute(() -> collectStatementsInSelection(editor, file).stream()
             .map(statement -> findChildOfType(statement, PsiIdentifier.class))
             .map(identifier -> getParentOfType(identifier, PsiMethodCallExpression.class))
             .map(PsiMethodUtil::getSubsequentMethodCall)
-            .collect(toList());
+            .toList());
     }
 
     private boolean areAllVerificationsWithInOrder(List<PsiMethodCallExpression> shoulds) {
@@ -102,7 +101,7 @@ final class ConvertFromBDDMockitoThenIntention extends ConvertVerificationIntent
     }
 
     private boolean areAllVerificationsUsingSameInOrder(List<PsiMethodCallExpression> shoulds) {
-        return shoulds.stream().map(PsiMethodUtil::getFirstArgument).map(PsiElement::getText).distinct().count() == 1;
+        return shoulds.stream().map(PsiMethodUtil::getFirstArgument).map(arg -> compute(arg::getText)).distinct().count() == 1;
     }
 
     /**
@@ -111,7 +110,7 @@ final class ConvertFromBDDMockitoThenIntention extends ConvertVerificationIntent
      */
     private boolean areAllVerificationsWithoutInOrder(Editor editor, PsiFile file, boolean isBulkMode) {
         return !isBulkMode
-            ? !BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(getSubsequentMethodCall(getMethodCallAtCaret(file, editor)))
-            : collectShouldCalls(editor, file).stream().noneMatch(BDDMOCKITO_THEN_SHOULD::isInOrderSpecific);
+               ? !BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(getSubsequentMethodCall(getMethodCallAtCaret(file, editor)))
+               : collectShouldCalls(editor, file).stream().noneMatch(BDDMOCKITO_THEN_SHOULD::isInOrderSpecific);
     }
 }

@@ -2,13 +2,10 @@
 
 package com.picimako.mockitools.inspection;
 
-import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito3;
-import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito4;
-
 import com.intellij.codeInspection.InspectionProfileEntry;
 import com.intellij.testFramework.TestDataPath;
 import com.picimako.mockitools.MockitoolsTestBase;
-import org.junit.jupiter.api.BeforeEach;
+import com.picimako.mockitools.ThirdPartyLibrary;
 
 /**
  * Base test class for Mockitools inspection unit testing.
@@ -17,6 +14,14 @@ import org.junit.jupiter.api.BeforeEach;
  */
 @TestDataPath("$CONTENT_ROOT/testData/inspection")
 public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
+
+    public MockitoolsInspectionTestBase() {
+        super();
+    }
+
+    public MockitoolsInspectionTestBase(ThirdPartyLibrary... libraries) {
+        super(libraries);
+    }
 
     /**
      * Override this to configure the inspection to be tested.
@@ -99,17 +104,12 @@ public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
      * Base class for testing Mockito 3 specific inspections.
      */
     public static abstract class MockitoV3 extends MockitoolsInspectionTestBase {
-
-        //This must be overridden, otherwise the library load doesn't seem to take effect
-        @BeforeEach
-        @Override
-        protected void setUp() {
-            loadMockito3(getFixture().getProjectDisposable(), getFixture().getModule());
+        public MockitoV3() {
+            super(ThirdPartyLibrary.MOCKITO_V3);
         }
 
-        @Override
-        protected void loadLibs() {
-            loadMockito3(getFixture().getProjectDisposable(), getFixture().getModule());
+        public MockitoV3(ThirdPartyLibrary... libraries) {
+            super(libraries);
         }
     }
 
@@ -117,10 +117,8 @@ public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
      * Base class for testing Mockito 4 specific inspections.
      */
     public static abstract class MockitoV4 extends MockitoolsInspectionTestBase {
-
-        @Override
-        protected void loadLibs() {
-            loadMockito4(getFixture().getProjectDisposable(), getFixture().getModule());
+        public MockitoV4() {
+            super(ThirdPartyLibrary.MOCKITO_V4);
         }
     }
 }

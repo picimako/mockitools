@@ -9,6 +9,7 @@ import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupp
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
@@ -38,7 +39,7 @@ final class ConvertFromMockitoDoIntention extends ConvertStubbingIntentionBase {
 
     @Override
     public List<AnAction> actionSelectionOptions(Editor editor, PsiFile file) {
-        boolean isBulkMode = editor.getSelectionModel().hasSelection();
+        boolean isBulkMode = ReadAction.compute(() -> editor.getSelectionModel().hasSelection());
         var actions = new ArrayList<AnAction>(3);
         if (!isBDDMockitoEnforced(file) && doAllCallChainsMatch(DOESNT_CONTAIN_DO_NOTHING, isBulkMode, editor, file)) {
             actions.add(new ConvertStubbingAction(StubbingApproach.MOCKITO_DO_X, StubbingApproach.MOCKITO_WHEN, isBulkMode));

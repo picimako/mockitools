@@ -4,14 +4,14 @@ package com.picimako.mockitools;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.psi.PsiField;
-import com.intellij.testFramework.junit5.RunInEdt;
+import com.intellij.psi.PsiType;
 import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link MockableTypesUtil}.
  */
-@RunInEdt
 class MockableTypesUtilTest extends MockitoolsTestBase {
 
     @Test
@@ -26,7 +26,7 @@ class MockableTypesUtilTest extends MockitoolsTestBase {
                 }
                 """);
 
-        assertThat(MockableTypesUtil.isMockableType(getField().getTypeElement().getType())).isTrue();
+        assertThat(MockableTypesUtil.isMockableType(getFieldType())).isTrue();
     }
 
     @Test
@@ -41,7 +41,7 @@ class MockableTypesUtilTest extends MockitoolsTestBase {
                 }
                 """);
 
-        assertThat(MockableTypesUtil.isMockableType(getField().getTypeElement().getType())).isFalse();
+        assertThat(MockableTypesUtil.isMockableType(getFieldType())).isFalse();
     }
 
     @Test
@@ -56,10 +56,10 @@ class MockableTypesUtilTest extends MockitoolsTestBase {
                 }
                 """);
 
-        assertThat(MockableTypesUtil.isMockableType(getField().getTypeElement().getType())).isFalse();
+        assertThat(MockableTypesUtil.isMockableType(getFieldType())).isFalse();
     }
 
-    private PsiField getField() {
-        return (PsiField) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent();
+    private PsiType getFieldType() {
+        return ReadAction.compute(() -> ((PsiField) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent()).getTypeElement().getType());
     }
 }

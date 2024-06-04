@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools.intention.convert.stub;
 
+import static com.intellij.openapi.application.ReadAction.compute;
 import static com.picimako.mockitools.EnforceConventionUtil.isBDDMockitoEnforced;
 import static com.picimako.mockitools.EnforceConventionUtil.isMockitoEnforced;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
@@ -38,7 +39,7 @@ final class ConvertFromBDDMockitoGivenIntention extends ConvertStubbingIntention
 
     @Override
     public List<AnAction> actionSelectionOptions(Editor editor, PsiFile file) {
-        boolean isBulkMode = editor.getSelectionModel().hasSelection();
+        boolean isBulkMode = compute(() -> editor.getSelectionModel().hasSelection());
         var actions = new ArrayList<AnAction>(3);
         if (!isBDDMockitoEnforced(file)) {
             if (doAllCallChainsMatch(DOESNT_CONTAIN_WILL, isBulkMode, editor, file)) {

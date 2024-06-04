@@ -12,6 +12,7 @@ import static com.picimako.mockitools.inspection.consecutive.TypeConversionMetho
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -76,12 +77,12 @@ final class ConvertThrowStubbingArgumentsIntention implements IntentionAction {
     }
 
     private boolean isArgumentListConvertible(PsiMethodCallExpression call, ExceptionStubber stubber) {
-        if (stubber.classMatcher.matches(call)) {
+        if (ReadAction.compute(() -> stubber.classMatcher.matches(call))) {
             if (areAllClassObjectAccessExpressions(getArguments(call))) {
                 message = TO_THROWABLES.message;
                 return true;
             }
-        } else if (stubber.throwablesMatcher.matches(call)) {
+        } else if (ReadAction.compute(() -> stubber.throwablesMatcher.matches(call))) {
             var arguments = getArguments(call);
             if (areAllNewExpressions(arguments) && !containsCallToNonDefaultConstructor(arguments)) {
                 message = TO_CLASSES.message;

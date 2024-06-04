@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools.intention;
 
+import static com.intellij.openapi.application.ReadAction.compute;
 import static com.picimako.mockitools.util.ClassObjectAccessUtil.getOperandType;
 import static com.picimako.mockitools.MockableTypesUtil.isMockableTypeInAnyWay;
 import static com.picimako.mockitools.MockitoQualifiedNames.SPY;
@@ -18,7 +19,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiNewExpression;
-import com.intellij.psi.PsiReference;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.picimako.mockitools.MockitoQualifiedNames;
 import com.picimako.mockitools.util.PsiMethodUtil;
@@ -84,7 +84,7 @@ final class ConvertSpyCallToFieldIntention extends ConvertCallToFieldIntentionBa
             .map(PsiMethodUtil::getFirstArgument)
             .map(spiedTypeOrInstance -> spiedTypeOrInstance instanceof PsiNewExpression newSpiedInstance
                 //e.g. Mockito.spy(new ObjectToSpy())
-                ? !newSpiedInstance.isArrayCreation() && isMockableTypeInAnyWay(spiedTypeOrInstance.getType())
+                ? compute(() -> !newSpiedInstance.isArrayCreation()) && isMockableTypeInAnyWay(spiedTypeOrInstance.getType())
                 //e.g. Mockito.spy(ObjectToSpy.class)
                 : isMockableTypeInAnyWay(getOperandType(spiedTypeOrInstance)))
             .orElse(false);
@@ -98,7 +98,7 @@ final class ConvertSpyCallToFieldIntention extends ConvertCallToFieldIntentionBa
     @Override
     protected void introduceFieldForNewExpression(ConversionContext ctx) {
         var newExpression = (PsiNewExpression) ctx.mockTypeOrObject;
-        introduceField(ctx, () -> constructFieldTypeAndName(newExpression.getClassReference()), getInitializer(newExpression));
+        introduceField(ctx, () -> constructFieldTypeAndName(compute(newExpression::getClassReference)), getInitializer(newExpression));
     }
 
     /**
@@ -115,25 +115,26 @@ final class ConvertSpyCallToFieldIntention extends ConvertCallToFieldIntentionBa
      * It is either an explicitly defined one, or an auto-generated one when the instantiated type has no non-default constructor.
      */
     private static boolean isDefaultConstructor(@NotNull PsiNewExpression newExpression) {
-        PsiMethod constructor = newExpression.resolveConstructor(); //in case of auto-generated default constructor it returns null
+        PsiMethod constructor = compute(newExpression::resolveConstructor); //in case of auto-generated default constructor it returns null
         //new Clazz() + explicit Clazz() -> true
         //new Clazz() + Clazz(String) -> false
         //new Clazz("") + Clazz(String) -> false
         //new Clazz("") + Clazz(int) -> false
         //new Clazz("") + Clazz() + Clazz(int) -> false
         if (constructor != null) {
-            return constructor.getParameterList().isEmpty() && (constructor.hasModifierProperty(PsiModifier.PUBLIC) || constructor.hasModifierProperty(PsiModifier.PACKAGE_LOCAL));
+            return compute(() -> constructor.getParameterList().isEmpty()
+                   && (constructor.hasModifierProperty(PsiModifier.PUBLIC) || constructor.hasModifierProperty(PsiModifier.PACKAGE_LOCAL)));
         }
         //new Clazz() + auto-gen Clazz() -> true
         //new Clazz() + Clazz(String) + Clazz(int) -> false
         //new Clazz("") + Clazz() + Clazz(int) + Clazz(double) -> false
-        return Optional.ofNullable(newExpression.getClassReference())
-            .map(PsiReference::resolve)
+        return Optional.ofNullable(compute(newExpression::getClassReference))
+            .map(ref -> compute(ref::resolve))
             .map(PsiClass.class::cast)
             .map(PsiClass::getConstructors)
             .stream()
             .flatMap(Arrays::stream)
-            .noneMatch(constr -> !constr.getParameterList().isEmpty());
+            .noneMatch(constr -> !compute(() -> constr.getParameterList().isEmpty()));
     }
 
     /**
@@ -147,9 +148,9 @@ final class ConvertSpyCallToFieldIntention extends ConvertCallToFieldIntentionBa
     protected PsiElement createField(String fieldType, String fieldName, Supplier<String> initializer, ConversionContext ctx) {
         StringBuilder sb = new StringBuilder("@" + MockitoQualifiedNames.ORG_MOCKITO_SPY + " " + fieldType + " " + fieldName);
         if (initializer != NO_INITIALIZER) {
-            sb.append(" = ").append(initializer.get());
+            sb.append(" = ").append(compute(initializer::get));
         }
-        return JavaCodeStyleManager.getInstance(ctx.project)
-            .shortenClassReferences(JavaPsiFacade.getElementFactory(ctx.project).createFieldFromText(sb.append(";").toString(), ctx.targetClass));
+        return compute(() -> JavaCodeStyleManager.getInstance(ctx.project)
+            .shortenClassReferences(JavaPsiFacade.getElementFactory(ctx.project).createFieldFromText(sb.append(";").toString(), ctx.targetClass)));
     }
 }

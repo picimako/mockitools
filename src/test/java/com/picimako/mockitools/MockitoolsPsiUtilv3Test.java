@@ -2,12 +2,10 @@
 
 package com.picimako.mockitools;
 
-import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito3;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.testFramework.junit5.RunInEdt;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -17,14 +15,10 @@ import java.util.stream.Stream;
 /**
  * Functional test for {@link MockitoolsPsiUtil}. Contains test cases specific to Mockito 3.x.
  */
-@RunInEdt
-//Per class lifecycle is required to use non-static MethodSources accessing the underlying fixture
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MockitoolsPsiUtilv3Test extends MockitoolsTestBase {
 
-    @Override
-    protected void loadLibs() {
-        loadMockito3(getFixture().getProjectDisposable(), getFixture().getModule());
+    public MockitoolsPsiUtilv3Test() {
+        super(ThirdPartyLibrary.MOCKITO_V3);
     }
 
     @ParameterizedTest
@@ -50,7 +44,7 @@ class MockitoolsPsiUtilv3Test extends MockitoolsTestBase {
     }
 
     private PsiMethodCallExpression getMethodCall() {
-        return (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent();
+        return (PsiMethodCallExpression) ReadAction.compute(() -> getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent());
     }
 
     private record TestData(String fileName, String fileContent, Supplier<Boolean> isSpecificMethod) {

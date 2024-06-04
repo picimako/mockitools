@@ -30,17 +30,17 @@ public abstract class MockitoolsBaseInspection extends LocalInspectionTool {
     protected JavaElementVisitor methodCallVisitor(@NotNull ProblemsHolder holder) {
         return new JavaElementVisitor() {
             @Override
-            public void visitMethodCallExpression(PsiMethodCallExpression expression) {
+            public void visitMethodCallExpression(@NotNull PsiMethodCallExpression expression) {
                 checkMethodCallExpression(expression, holder);
             }
 
             @Override
-            public void visitCallExpression(PsiCallExpression callExpression) {
+            public void visitCallExpression(@NotNull PsiCallExpression callExpression) {
                 //it is only method call expressions that we need to take into account
             }
 
             @Override
-            public void visitNewExpression(PsiNewExpression expression) {
+            public void visitNewExpression(@NotNull PsiNewExpression expression) {
                 //it is only method call expressions that we need to take into account
             }
         };
@@ -50,7 +50,7 @@ public abstract class MockitoolsBaseInspection extends LocalInspectionTool {
     protected JavaElementVisitor fieldVisitor(@NotNull ProblemsHolder holder) {
         return new JavaElementVisitor() {
             @Override
-            public void visitField(PsiField field) {
+            public void visitField(@NotNull PsiField field) {
                 checkField(field, holder);
             }
         };
@@ -60,22 +60,22 @@ public abstract class MockitoolsBaseInspection extends LocalInspectionTool {
     protected JavaElementVisitor fieldAndMethodCallVisitor(@NotNull ProblemsHolder holder) {
         return new JavaElementVisitor() {
             @Override
-            public void visitField(PsiField field) {
+            public void visitField(@NotNull PsiField field) {
                 checkField(field, holder);
             }
 
             @Override
-            public void visitMethodCallExpression(PsiMethodCallExpression expression) {
+            public void visitMethodCallExpression(@NotNull PsiMethodCallExpression expression) {
                 checkMethodCallExpression(expression, holder);
             }
 
             @Override
-            public void visitCallExpression(PsiCallExpression callExpression) {
+            public void visitCallExpression(@NotNull PsiCallExpression callExpression) {
                 //it is only method call expressions that we need to take into account
             }
 
             @Override
-            public void visitNewExpression(PsiNewExpression expression) {
+            public void visitNewExpression(@NotNull PsiNewExpression expression) {
                 //it is only method call expressions that we need to take into account
             }
         };
@@ -85,22 +85,22 @@ public abstract class MockitoolsBaseInspection extends LocalInspectionTool {
     protected JavaElementVisitor annotationAndMethodCallVisitor(@NotNull ProblemsHolder holder) {
         return new JavaElementVisitor() {
             @Override
-            public void visitAnnotation(PsiAnnotation annotation) {
+            public void visitAnnotation(@NotNull PsiAnnotation annotation) {
                 checkAnnotation(annotation, holder);
             }
 
             @Override
-            public void visitMethodCallExpression(PsiMethodCallExpression expression) {
+            public void visitMethodCallExpression(@NotNull PsiMethodCallExpression expression) {
                 checkMethodCallExpression(expression, holder);
             }
 
             @Override
-            public void visitCallExpression(PsiCallExpression callExpression) {
+            public void visitCallExpression(@NotNull PsiCallExpression callExpression) {
                 //it is only method call expressions that we need to take into account
             }
 
             @Override
-            public void visitNewExpression(PsiNewExpression expression) {
+            public void visitNewExpression(@NotNull PsiNewExpression expression) {
                 //it is only method call expressions that we need to take into account
             }
         };

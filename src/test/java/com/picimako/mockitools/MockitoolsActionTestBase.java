@@ -3,6 +3,7 @@
 package com.picimako.mockitools;
 
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.application.ApplicationManager;
 
 import java.util.function.Supplier;
 
@@ -13,7 +14,7 @@ public abstract class MockitoolsActionTestBase extends MockitoolsTestBase {
 
     protected void checkAction(Supplier<AnAction> action, String beforeText, String afterText) {
         getFixture().configureByText("ConversionTest.java", beforeText);
-        getFixture().testAction(action.get());
+        ApplicationManager.getApplication().invokeAndWait(() -> getFixture().testAction(action.get()));
         getFixture().checkResult(afterText);
     }
 }

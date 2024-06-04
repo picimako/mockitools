@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools.inspection.verification;
 
+import static com.intellij.codeInspection.options.OptPane.*;
 import static com.picimako.mockitools.MockitoQualifiedNames.AT_LEAST;
 import static com.picimako.mockitools.MockitoQualifiedNames.AT_MOST;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
@@ -13,16 +14,13 @@ import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
-import javax.swing.*;
-
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.codeInspection.ui.SingleIntegerFieldOptionsPanel;
+import com.intellij.codeInspection.options.OptPane;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.util.PsiLiteralUtil;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import com.picimako.mockitools.resources.MockitoolsBundle;
 
@@ -55,8 +53,9 @@ final class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBase
     public int timeoutMaxThreshold = 5000;
 
     @Override
-    public @Nullable JComponent createOptionsPanel() {
-        return new SingleIntegerFieldOptionsPanel(MockitoolsBundle.message("inspection.timeout.max.threshold.config.title"), this, "timeoutMaxThreshold");
+    public @NotNull OptPane getOptionsPane() {
+        return pane(
+            number("timeoutMaxThreshold", MockitoolsBundle.message("inspection.timeout.max.threshold.config.title"), Integer.MIN_VALUE, Integer.MAX_VALUE));
     }
 
     @Override

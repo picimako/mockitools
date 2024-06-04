@@ -53,7 +53,7 @@ final class ArgumentMatchersCalledViaMatchersInspection extends MigrationAidBase
         }
 
         @Override
-        protected void doFix(Project project, ProblemDescriptor descriptor) {
+        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
             replace((PsiExpression) descriptor.getPsiElement(), project);
         }
 

@@ -2,8 +2,9 @@
 
 package com.picimako.mockitools.intention;
 
+import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.run;
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
-import static com.picimako.mockitools.dsl.MockAnnotation.isAttributeEnabledOnMockAnnotation;
 import static com.picimako.mockitools.MockitoQualifiedNames.ANSWER;
 import static com.picimako.mockitools.MockitoQualifiedNames.DEFAULT_ANSWER;
 import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
@@ -17,6 +18,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_SPY;
 import static com.picimako.mockitools.MockitoQualifiedNames.SPY;
 import static com.picimako.mockitools.MockitoQualifiedNames.STRICTNESS;
 import static com.picimako.mockitools.MockitoolsPsiUtil.MOCKITO_WITH_SETTINGS;
+import static com.picimako.mockitools.dsl.MockAnnotation.isAttributeEnabledOnMockAnnotation;
 import static com.picimako.mockitools.intention.ConvertMockCallToFieldIntention.isDefaultAnswer;
 import static com.picimako.mockitools.intention.MethodRearranger.reOrder;
 import static com.picimako.mockitools.util.ListPopupHelper.selectItemAndRun;
@@ -28,7 +30,9 @@ import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.lang.jvm.annotation.JvmAnnotationAttribute;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Ref;
 import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiAnnotationMemberValue;
 import com.intellij.psi.PsiArrayInitializerMemberValue;
 import com.intellij.psi.PsiClass;
@@ -43,6 +47,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNameValuePair;
 import com.intellij.psi.PsiQualifiedReference;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.util.IncorrectOperationException;
@@ -97,8 +102,8 @@ final class ConvertMockSpyFieldToCallIntention implements IntentionAction {
     @Override
     public @IntentionName @NotNull String getText() {
         return mockingCall != null
-            ? MockitoolsBundle.message("intention.convert.mocking.field.to.call", mockingCall)
-            : MockitoolsBundle.message("intention.convert.mocking.field.to.call.generic");
+               ? MockitoolsBundle.message("intention.convert.mocking.field.to.call", mockingCall)
+               : MockitoolsBundle.message("intention.convert.mocking.field.to.call.generic");
     }
 
     @Override
@@ -108,33 +113,35 @@ final class ConvertMockSpyFieldToCallIntention implements IntentionAction {
 
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-        final var element = file.findElementAt(editor.getCaretModel().getOffset());
-        //If the caret is at a field identifier and the parent class has at least one method
-        if (isIdentifierOfField(element)) {
-            PsiField field = (PsiField) element.getParent();
-            if (field.getContainingClass().getMethods().length == 0) return false;
+        return compute(() -> {
+            final var element = file.findElementAt(editor.getCaretModel().getOffset());
+            //If the caret is at a field identifier and the parent class has at least one method
+            if (isIdentifierOfField(element)) {
+                PsiField field = (PsiField) element.getParent();
+                if (field.getContainingClass().getMethods().length == 0) return false;
 
-            boolean hasMock;
-            if ((hasMock = field.hasAnnotation(ORG_MOCKITO_MOCK)) && field.hasAnnotation(ORG_MOCKITO_SPY)) {
-                return false;
+                boolean hasMock;
+                if ((hasMock = field.hasAnnotation(ORG_MOCKITO_MOCK)) && field.hasAnnotation(ORG_MOCKITO_SPY)) {
+                    return false;
+                }
+                if (hasMock) {
+                    mockingCall = MockitoQualifiedNames.MOCK;
+                    return true;
+                }
+                if (field.hasAnnotation(ORG_MOCKITO_SPY)) {
+                    mockingCall = MockitoQualifiedNames.SPY;
+                    return true;
+                }
             }
-            if (hasMock) {
-                mockingCall = MockitoQualifiedNames.MOCK;
-                return true;
-            }
-            if (field.hasAnnotation(ORG_MOCKITO_SPY)) {
-                mockingCall = MockitoQualifiedNames.SPY;
-                return true;
-            }
-        }
-        return false;
+            return false;
+        });
     }
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        final var element = file.findElementAt(editor.getCaretModel().getOffset());
-        PsiField field = (PsiField) element.getParent();
-        PsiMethod[] methodsInClass = ((PsiClass) field.getParent()).getMethods();
+        final var element = file.findElementAt(compute(() -> editor.getCaretModel().getOffset()));
+        var field = (PsiField) compute(element::getParent);
+        var methodsInClass = compute(() -> ((PsiClass) field.getParent()).getMethods());
         if (methodsInClass.length > 1) {
             selectItemAndRun(MockitoolsBundle.message("intention.convert.mocking.field.to.call.select.method"),
                 reOrder(methodsInClass), selectedMethod -> introduceMockitoMockingCall(field, selectedMethod, file), () -> METHOD_CELL_RENDERER, editor, project);
@@ -147,99 +154,112 @@ final class ConvertMockSpyFieldToCallIntention implements IntentionAction {
      * Adds the new variable declaration as the first statement of method body.
      */
     private void introduceMockitoMockingCall(PsiField fieldToConvert, PsiMethod targetMethod, PsiFile file) {
-        StringBuilder mockitoMockingCall;
-        //This if-else is safe since isAvailable() returns true only in case of @Mock and @Spy annotations
-        if (fieldToConvert.hasAnnotation(ORG_MOCKITO_MOCK)) {
-            //org.mockito.Mockito.mock(<fieldtype>.class
-            mockitoMockingCall = new StringBuilder("Mockito").append(".").append(MOCK).append("(");
-            appendType(fieldToConvert, mockitoMockingCall);
+        final var mockitoMockingCall = new Ref<StringBuilder>();
 
-            var mockAnnotation = fieldToConvert.getAnnotation(ORG_MOCKITO_MOCK);
-            //Assemble Mockito.mock() call based on the @Mock annotation attributes
-            boolean isMockSettingsOverride = true;
-            //Handle .mock(Class, Answer) and .mock(Class, String)
-            if (mockAnnotation.getAttributes().size() == 1) {
-                for (var entry : MOCK_OVERLOAD_ARGS.entrySet()) {
-                    var attributeValue = valueOf(mockAnnotation.findAttribute(entry.getKey()))
-                        .filter(value -> entry.getValue().test(value));
-                    if (attributeValue.isPresent()) {
-                        mockitoMockingCall.append(", ").append(attributeValue.get().getText());
-                        isMockSettingsOverride = false;
-                        break;
+        //This if-else is safe since isAvailable() returns true only in case of @Mock and @Spy annotations
+        if (compute(() -> fieldToConvert.hasAnnotation(ORG_MOCKITO_MOCK))) {
+            final var mockAnnotation = new Ref<PsiAnnotation>();
+            final var isMockSettingsOverride = new Ref<Boolean>();
+
+            run(() -> {
+                //org.mockito.Mockito.mock(<fieldtype>.class
+                mockitoMockingCall.set(new StringBuilder("Mockito").append(".").append(MOCK).append("("));
+                appendType(fieldToConvert, mockitoMockingCall.get());
+
+                mockAnnotation.set(fieldToConvert.getAnnotation(ORG_MOCKITO_MOCK));
+                //Assemble Mockito.mock() call based on the @Mock annotation attributes
+                isMockSettingsOverride.set(true);
+                //Handle .mock(Class, Answer) and .mock(Class, String)
+                if (mockAnnotation.get().getAttributes().size() == 1) {
+                    for (var entry : MOCK_OVERLOAD_ARGS.entrySet()) {
+                        var attributeValue = valueOf(mockAnnotation.get().findAttribute(entry.getKey()))
+                            .filter(value -> entry.getValue().test(value));
+                        if (attributeValue.isPresent()) {
+                            mockitoMockingCall.get().append(", ").append(attributeValue.get().getText());
+                            isMockSettingsOverride.set(false);
+                            break;
+                        }
                     }
                 }
-            }
+            });
+
 
             //if there is no attribute specified, no action is needed
             //If there is at least one attribute specified, but it is not the answer and name specific overrides of Mockito.mock(),
-            // then build the MockSettings for Mockito.mock(Class, MockSettings) 
-            if (!mockAnnotation.getAttributes().isEmpty() && isMockSettingsOverride) {
+            // then build the MockSettings for Mockito.mock(Class, MockSettings)
+            if (compute(() -> !mockAnnotation.get().getAttributes().isEmpty()) && isMockSettingsOverride.get()) {
                 StringBuilder mockSettings = new StringBuilder("Mockito").append(".withSettings()");
+                run(() -> {
+                    //Handle boolean attributes
+                    BOOLEAN_ATTRIBUTES.forEach(attributeName -> {
+                        if (isAttributeEnabledOnMockAnnotation(mockAnnotation.get(), attributeName))
+                            appendSetting(mockSettings, attributeName, "");
+                    });
 
-                //Handle boolean attributes
-                BOOLEAN_ATTRIBUTES.forEach(attributeName -> {
-                    if (isAttributeEnabledOnMockAnnotation(mockAnnotation, attributeName))
-                        appendSetting(mockSettings, attributeName, "");
-                });
+                    //Handle attributes for whose MockSettings counterpart the value of the attribute must be passed in.
+                    //E.g. withSettings().name("some name") or withSettings().answer(anAnswer)
+                    valueOf(mockAnnotation.get().findAttribute(NAME)).ifPresent(value -> {
+                        if (MOCK_OVERLOAD_ARGS.get(NAME).test(value))
+                            appendSetting(mockSettings, NAME, value.getText());
+                    });
+                    valueOf(mockAnnotation.get().findAttribute(ANSWER)).ifPresent(value -> {
+                        if (MOCK_OVERLOAD_ARGS.get(ANSWER).test(value))
+                            appendSetting(mockSettings, DEFAULT_ANSWER, value.getText());
+                    });
 
-                //Handle attributes for whose MockSettings counterpart the value of the attribute must be passed in.
-                //E.g. withSettings().name("some name") or withSettings().answer(anAnswer)
-                valueOf(mockAnnotation.findAttribute(NAME)).ifPresent(value -> {
-                    if (MOCK_OVERLOAD_ARGS.get(NAME).test(value)) appendSetting(mockSettings, NAME, value.getText());
-                });
-                valueOf(mockAnnotation.findAttribute(ANSWER)).ifPresent(value -> {
-                    if (MOCK_OVERLOAD_ARGS.get(ANSWER).test(value))
-                        appendSetting(mockSettings, DEFAULT_ANSWER, value.getText());
-                });
-
-                //Handle extraInterfaces attribute.
-                //This needs special care because the attribute value may be an individual value or an array initializer.
-                valueOf(mockAnnotation.findAttribute(EXTRA_INTERFACES)).ifPresent(extraInterfacesValue -> {
-                    if (extraInterfacesValue instanceof PsiArrayInitializerMemberValue attributeValue) {
-                        //In case of empty extraInterfaces - @Mock(extraInterfaces = {}) - don't add the .extraInterfaces() call to the mock settings
-                        if (attributeValue.getInitializers().length > 0) {
-                            String interfaces = Arrays.stream(attributeValue.getInitializers()).map(PsiElement::getText).collect(joining(","));
-                            appendSetting(mockSettings, EXTRA_INTERFACES, interfaces);
-                        }
-                    } else {
-                        appendSetting(mockSettings, EXTRA_INTERFACES, extraInterfacesValue.getText());
-                    }
-                });
-
-                valueOf(mockAnnotation.findAttribute(STRICTNESS)).ifPresent(value -> {
-                    if (value instanceof PsiReferenceExpression expression) {
-                        var resolved = expression.resolve();
-                        if (resolved instanceof PsiEnumConstant resolvedConst) {
-                            String strictnessName = resolvedConst.getName();
-                            //Mock.Strictness.TEST_LEVEL_DEFAULT has no matching enum constant in Strictness, thus we'll ignore it.
-                            if (!"TEST_LEVEL_DEFAULT".equals(strictnessName)) {
-                                runWriteCommandAction(file.getProject(),
-                                    () -> PsiClassUtil.importClass(ORG_MOCKITO_QUALITY_STRICTNESS, mockAnnotation));
-                                appendSetting(mockSettings, STRICTNESS, "Strictness." + strictnessName);
+                    //Handle extraInterfaces attribute.
+                    //This needs special care because the attribute value may be an individual value or an array initializer.
+                    valueOf(mockAnnotation.get().findAttribute(EXTRA_INTERFACES)).ifPresent(extraInterfacesValue -> {
+                        if (extraInterfacesValue instanceof PsiArrayInitializerMemberValue attributeValue) {
+                            //In case of empty extraInterfaces - @Mock(extraInterfaces = {}) - don't add the .extraInterfaces() call to the mock settings
+                            var initializers = attributeValue.getInitializers();
+                            if (initializers.length > 0) {
+                                String interfaces = Arrays.stream(initializers).map(PsiElement::getText).collect(joining(","));
+                                appendSetting(mockSettings, EXTRA_INTERFACES, interfaces);
                             }
+                        } else {
+                            appendSetting(mockSettings, EXTRA_INTERFACES, extraInterfacesValue.getText());
                         }
-                    }
+                    });
                 });
 
-                valueOf(mockAnnotation.findAttribute(MOCK_MAKER)).ifPresent(value -> appendSetting(mockSettings, MOCK_MAKER, value.getText()));
+                compute(() -> valueOf(mockAnnotation.get().findAttribute(STRICTNESS))
+                    .filter(PsiReferenceExpression.class::isInstance)
+                    .map(PsiReferenceExpression.class::cast)
+                    .map(PsiReference::resolve)
+                    .filter(PsiEnumConstant.class::isInstance)
+                    .map(PsiEnumConstant.class::cast)
+                    .map(PsiField::getName))
+                    .ifPresent(strictnessName -> {
+                        //Mock.Strictness.TEST_LEVEL_DEFAULT has no matching enum constant in Strictness, thus we'll ignore it.
+                        if (!"TEST_LEVEL_DEFAULT".equals(strictnessName)) {
+                            runWriteCommandAction(file.getProject(),
+                                () -> PsiClassUtil.importClass(ORG_MOCKITO_QUALITY_STRICTNESS, mockAnnotation.get()));
+                            appendSetting(mockSettings, STRICTNESS, "Strictness." + strictnessName);
+                        }
+                    });
 
-                mockitoMockingCall.append(", ").append(mockSettings); //Adds the second parameter to Mockito.mock(Class, MockSettings)
+                run(() -> valueOf(mockAnnotation.get().findAttribute(MOCK_MAKER)).ifPresent(value -> appendSetting(mockSettings, MOCK_MAKER, value.getText())));
+
+                mockitoMockingCall.get().append(", ").append(mockSettings); //Adds the second parameter to Mockito.mock(Class, MockSettings)
             }
         } else { //@Spy -> Mockito.spy()
-            mockitoMockingCall = new StringBuilder("Mockito").append(".").append(SPY).append("(");
-            if (fieldToConvert.hasInitializer()) {
-                mockitoMockingCall.append(fieldToConvert.getInitializer().getText());
-            } else {
-                appendType(fieldToConvert, mockitoMockingCall);
-            }
+            run(() -> {
+                mockitoMockingCall.set(new StringBuilder("Mockito").append(".").append(SPY).append("("));
+                if (fieldToConvert.hasInitializer()) {
+                    mockitoMockingCall.get().append(fieldToConvert.getInitializer().getText());
+                } else {
+                    appendType(fieldToConvert, mockitoMockingCall.get());
+                }
+            });
         }
 
-        mockitoMockingCall.append(")");
+        mockitoMockingCall.get().append(")");
 
         runWriteCommandAction(file.getProject(), () -> {
             var elementFactory = JavaPsiFacade.getElementFactory(file.getProject());
             PsiClassUtil.importClass(ORG_MOCKITO_MOCKITO, file);
-            var mockitoMockingInitializer = elementFactory.createExpressionFromText(mockitoMockingCall.toString(), file);
+            var mockitoMockingInitializer = elementFactory.createExpressionFromText(mockitoMockingCall.get().toString(), file);
 
             //Post-process variable initializer: if the second argument is a call to Mockito.withSettings() then it can be omitted.
             //E.g. mock(Type.class, Mockito.withSettings()) -> mock(Type.class)
@@ -268,13 +288,13 @@ final class ConvertMockSpyFieldToCallIntention implements IntentionAction {
     }
 
     private boolean isIdentifierOfField(PsiElement element) {
-        return element instanceof PsiIdentifier && element.getParent() instanceof PsiField;
+        return element instanceof PsiIdentifier && compute(element::getParent) instanceof PsiField;
     }
 
     private Optional<PsiAnnotationMemberValue> valueOf(JvmAnnotationAttribute attribute) {
-        return attribute instanceof PsiNameValuePair attributeNameValue && attributeNameValue.getValue() != null
-            ? Optional.ofNullable(attributeNameValue.getValue())
-            : Optional.empty();
+        return compute(() -> attribute instanceof PsiNameValuePair attributeNameValue && attributeNameValue.getValue() != null
+                             ? Optional.ofNullable(attributeNameValue.getValue())
+                             : Optional.empty());
     }
 
     private void appendSetting(StringBuilder sb, String methodName, String argument) {
@@ -285,11 +305,13 @@ final class ConvertMockSpyFieldToCallIntention implements IntentionAction {
      * This is to make sure that the mock()/spy() call's argument (when a PsiClassObjectAccessExpression), doesn't include the generic type arguments.
      */
     private void appendType(PsiField fieldToConvert, StringBuilder mockitoMockingCall) {
-        Optional.ofNullable(fieldToConvert.getTypeElement())
-            .map(PsiTypeElement::getInnermostComponentReferenceElement)
-            .map(PsiQualifiedReference::getReferenceName)
-            .ifPresentOrElse(mockitoMockingCall::append, () -> mockitoMockingCall.append(fieldToConvert.getType().getCanonicalText()));
-        mockitoMockingCall.append(".class");
+        run(() -> {
+            Optional.ofNullable(fieldToConvert.getTypeElement())
+                .map(PsiTypeElement::getInnermostComponentReferenceElement)
+                .map(PsiQualifiedReference::getReferenceName)
+                .ifPresentOrElse(mockitoMockingCall::append, () -> mockitoMockingCall.append(fieldToConvert.getType().getCanonicalText()));
+            mockitoMockingCall.append(".class");
+        });
     }
 
     @Override

@@ -2,14 +2,12 @@
 
 package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 
-import com.intellij.testFramework.junit5.RunInEdt;
 import com.picimako.mockitools.MockitoolsActionTestBase;
 import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link ConvertBDDMockitoThenToMockitoVerifyAction}.
  */
-@RunInEdt
 class ConvertBDDMockitoThenToMockitoVerifyActionTest extends MockitoolsActionTestBase {
 
     @Test

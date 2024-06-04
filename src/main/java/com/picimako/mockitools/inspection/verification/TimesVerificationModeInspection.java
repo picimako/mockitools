@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools.inspection.verification;
 
+import static com.intellij.codeInspection.options.OptPane.*;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO_THEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_STATIC_VERIFICATION;
@@ -18,7 +19,7 @@ import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.codeInspection.ui.MultipleCheckboxOptionsPanel;
+import com.intellij.codeInspection.options.OptPane;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.project.Project;
@@ -73,11 +74,10 @@ final class TimesVerificationModeInspection extends MockitoolsBaseInspection {
     public boolean reportTimesOneCanBeOmitted = true;
 
     @Override
-    public @Nullable JComponent createOptionsPanel() {
-        final MultipleCheckboxOptionsPanel panel = new MultipleCheckboxOptionsPanel(this);
-        panel.addCheckbox(MockitoolsBundle.message("inspection.option.report.times.zero.to.never"), "reportTimesZeroToNever");
-        panel.addCheckbox(MockitoolsBundle.message("inspection.option.report.times.one.to.omit"), "reportTimesOneCanBeOmitted");
-        return panel;
+    public @NotNull OptPane getOptionsPane() {
+        return pane(
+            checkbox("reportTimesZeroToNever", MockitoolsBundle.message("inspection.option.report.times.zero.to.never")),
+            checkbox("reportTimesOneCanBeOmitted", MockitoolsBundle.message("inspection.option.report.times.one.to.omit")));
     }
 
     @Override
@@ -127,7 +127,7 @@ final class TimesVerificationModeInspection extends MockitoolsBaseInspection {
      */
     private static final class ReplaceTimesZeroWithNeverQuickFix extends TimesQuickFix {
         @Override
-        protected void doFix(Project project, ProblemDescriptor descriptor) {
+        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
             var methodCall = (PsiMethodCallExpression) descriptor.getPsiElement();
             var replaced = methodCall.replace(
                 JavaPsiFacade.getElementFactory(project).createExpressionFromText(ORG_MOCKITO_MOCKITO_NEVER + "()", methodCall));
@@ -147,7 +147,7 @@ final class TimesVerificationModeInspection extends MockitoolsBaseInspection {
      */
     private static final class DeleteTimesOneQuickFix extends TimesQuickFix {
         @Override
-        protected void doFix(Project project, ProblemDescriptor descriptor) {
+        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
             descriptor.getPsiElement().delete();
         }
 

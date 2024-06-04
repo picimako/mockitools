@@ -6,6 +6,7 @@ import static com.siyeh.ig.callMatcher.CallMatcher.anyOf;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +36,7 @@ public final class ExceptionStubber {
     }
 
     public boolean isApplicableTo(PsiMethodCallExpression call) {
-        return matcher.matches(call);
+        return ReadAction.compute(() -> matcher.matches(call));
     }
 
     /**
@@ -58,7 +59,7 @@ public final class ExceptionStubber {
 
     /**
      * Similar to {@link #createClassMatcher(String, String, String)}, but creates the matcher for the {@code java.lang.Throwable...}
-     * specific parametization.
+     * specific parameterization.
      */
     private CallMatcher createThrowablesMatcher(String methodName, String instanceClassName, @Nullable String staticClassName) {
         var throwablesMatchers = new ArrayList<CallMatcher>(2);

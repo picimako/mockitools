@@ -2,14 +2,11 @@
 
 package com.picimako.mockitools;
 
-import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito5;
-
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.testFramework.TestDataPath;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase5;
 import org.jetbrains.annotations.Nullable;
-import org.junit.jupiter.api.BeforeEach;
 
 /**
  * Base test class for non-inspection integration tests.
@@ -22,7 +19,20 @@ public abstract class MockitoolsTestBase extends LightJavaCodeInsightFixtureTest
 
     protected MockitoolsTestBase() {
         //Returns a descriptor with a real JDK defined by the JAVA_HOME environment variable.
-        super(new DefaultLightProjectDescriptor(() -> JavaSdk.getInstance().createJdk("Real JDK", System.getenv("JAVA_HOME"), false)));
+        super(new DefaultLightProjectDescriptor(() -> JavaSdk.getInstance().createJdk("Real JDK", System.getenv("JAVA_HOME"), false))
+            .withRepositoryLibrary(ThirdPartyLibrary.MOCKITO_V5.getMavenCoordinate()));
+    }
+
+    protected MockitoolsTestBase(ThirdPartyLibrary... libraries) {
+        super(createDescriptor(libraries));
+    }
+
+    private static DefaultLightProjectDescriptor createDescriptor(ThirdPartyLibrary... libraries) {
+        var descriptor = new DefaultLightProjectDescriptor(() -> JavaSdk.getInstance().createJdk("Real JDK", System.getenv("JAVA_HOME"), false));
+        for (var library : libraries) {
+            descriptor.withRepositoryLibrary(library.getMavenCoordinate(), false);
+        }
+        return descriptor;
     }
 
     @Nullable
@@ -42,14 +52,5 @@ public abstract class MockitoolsTestBase extends LightJavaCodeInsightFixtureTest
         }
 
         return clazz.getAnnotation(TestDataPath.class).value().replace("$CONTENT_ROOT/testData/", BASE_PATH);
-    }
-
-    @BeforeEach //using BeforeEach because during BeforeAll, the fixture is not yet initialized to fetch it in 'loadLibs()'
-    protected void setUp() {
-        loadLibs();
-    }
-
-    protected void loadLibs() {
-        loadMockito5(getFixture().getProjectDisposable(), getFixture().getModule());
     }
 }

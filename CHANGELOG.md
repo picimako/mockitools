@@ -4,6 +4,14 @@
 
 ## [Unreleased]
 
+## [1.2.0]
+### Changed
+- New support range of IDEs: 2023.3-2024.2-EAP.
+- Dependency updates.
+
+### Fixed
+- Fixed an exception that occurred during previewing the quick fix result for simplifying mock creations.
+
 ## [1.1.0]
 ### Changed
 - New support range of IDEs: 2023.1.5-2024.1-EAP.

@@ -41,7 +41,7 @@ public class MergeConsecutiveStubbingCallsQuickFix extends InspectionGadgetsFix 
     }
 
     @Override
-    protected void doFix(Project project, ProblemDescriptor descriptor) {
+    protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
         var firstConsecutiveCall = context.getFirstConsecutiveCall();
         var viewProvider = firstConsecutiveCall.getManager().findViewProvider(context.getContainingFile());
         if (viewProvider == null) return;

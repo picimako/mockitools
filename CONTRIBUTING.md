@@ -69,17 +69,10 @@ Other resources: [IntelliJ Platform Plugin SDK - Testing Overview](https://plugi
 
 #### JDK
 
-Java file based tests require either a mock or a real JDK to be available. This project is configured to always use a real JDK via
-`com.picimako.mockitools.MockitoolsTestBase#getJdkHome()`, so that modification of the
+Java file based tests require either a mock or a real JDK to be available. This project is configured to always use a real JDK,
+so that modification of the
 [`idea.home.path` system property](https://plugins.jetbrains.com/docs/intellij/code-inspections.html#inspection-unit-test)
 is not necessary for running tests locally. And, using the JAVA_HOME based JDK also works on GitHub Actions.
-
-#### Other libs
-
-In order for tests to recognize code from other libraries, those libraries have to be added to the classpath too. You can use the various
-`load*()` methods of `com.picimako.mockitools.ThirdPartyLibraryLoader`.
-
-These libraries are located in the `lib` directory under the project root.
 
 ### testData
 

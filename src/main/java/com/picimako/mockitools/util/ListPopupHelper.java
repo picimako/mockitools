@@ -2,15 +2,12 @@
 
 package com.picimako.mockitools.util;
 
-import java.util.List;
-import java.util.function.Supplier;
-import javax.swing.*;
-
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -20,6 +17,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.Consumer;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Provides methods to work with list popups.
@@ -37,12 +38,21 @@ public final class ListPopupHelper {
                 return null;
             }
         };
-        new ListPopupImpl(project, step) {
-            @Override
-            protected ListCellRenderer<?> getListElementRenderer() {
-                return cellRenderer.get();
-            }
-        }.showInBestPositionFor(editor);
+        if (ApplicationManager.getApplication().isUnitTestMode()) {
+            ApplicationManager.getApplication().invokeAndWait(() -> new ListPopupImpl(project, step) {
+                @Override
+                protected ListCellRenderer<?> getListElementRenderer() {
+                    return cellRenderer.get();
+                }
+            }.showInBestPositionFor(editor));
+        } else {
+            new ListPopupImpl(project, step) {
+                @Override
+                protected ListCellRenderer<?> getListElementRenderer() {
+                    return cellRenderer.get();
+                }
+            }.showInBestPositionFor(editor);
+        }
     }
 
     /**
@@ -68,7 +78,7 @@ public final class ListPopupHelper {
         if (CommonDataKeys.PROJECT.getData(context) == editor.getProject()) return context;
         return dataId -> CommonDataKeys.PROJECT.is(dataId) ? editor.getProject() : context.getData(dataId);
     }
-    
+
     private ListPopupHelper() {
         //Utility class
     }

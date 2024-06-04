@@ -157,7 +157,7 @@ final class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInspe
         private final SmartPsiElementPointer<PsiMethod> stubbedMethod;
 
         @Override
-        protected void doFix(Project project, ProblemDescriptor descriptor) {
+        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
             var exception = descriptor.getPsiElement();
             if (!(exception instanceof PsiExpression)) return;
 

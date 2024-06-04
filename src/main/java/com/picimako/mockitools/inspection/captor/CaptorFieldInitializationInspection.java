@@ -55,7 +55,7 @@ final class CaptorFieldInitializationInspection extends MockitoolsBaseInspection
         }
 
         @Override
-        protected void doFix(Project project, ProblemDescriptor descriptor) {
+        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
             descriptor.getPsiElement().delete();
         }
     }

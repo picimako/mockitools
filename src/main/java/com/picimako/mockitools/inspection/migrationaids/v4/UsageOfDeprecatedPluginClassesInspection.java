@@ -37,7 +37,7 @@ final class UsageOfDeprecatedPluginClassesInspection extends MigrationAidBase.V2
 
         return new JavaElementVisitor() {
             @Override
-            public void visitReferenceElement(PsiJavaCodeReferenceElement reference) {
+            public void visitReferenceElement(@NotNull PsiJavaCodeReferenceElement reference) {
                 if (ORG_MOCKITO_CONFIGURATION_ANNOTATION_ENGINE.equals(reference.getQualifiedName())) {
                     holder.registerProblem(reference,
                         MockitoolsBundle.message("inspection.migration.aid.v4.plugin.configuration.annotation.engine"),
