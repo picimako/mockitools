@@ -2,12 +2,10 @@
 
 package com.picimako.mockitools;
 
-import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadMockito3;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.testFramework.junit5.RunInEdt;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -17,8 +15,6 @@ import java.util.stream.Stream;
 /**
  * Functional test for {@link MockitoolsPsiUtil}. Contains test cases specific to Mockito 3.x.
  */
-//Per class lifecycle is required to use non-static MethodSources accessing the underlying fixture
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MockitoolsPsiUtilv3Test extends MockitoolsTestBase {
 
     public MockitoolsPsiUtilv3Test() {
