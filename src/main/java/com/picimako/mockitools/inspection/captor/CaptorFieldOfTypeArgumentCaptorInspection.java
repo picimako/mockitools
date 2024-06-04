@@ -62,7 +62,7 @@ final class CaptorFieldOfTypeArgumentCaptorInspection extends MockitoolsBaseInsp
         }
 
         @Override
-        protected void doFix(Project project, ProblemDescriptor descriptor) {
+        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
             var context = descriptor.getPsiElement().getContext();
             if (context instanceof PsiField field) {
                 var fieldType = field.getTypeElement();

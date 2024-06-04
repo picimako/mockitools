@@ -36,7 +36,7 @@ final class UsageOfOldJUnitRunnerInspection extends MigrationAidBase.V23ToV4Base
 
         return new JavaElementVisitor() {
             @Override
-            public void visitReferenceElement(PsiJavaCodeReferenceElement reference) {
+            public void visitReferenceElement(@NotNull PsiJavaCodeReferenceElement reference) {
                 if (ORG_MOCKITO_RUNNERS_CONSOLE_SPAMMING_MOCKITO_JUNIT_RUNNER.equals(reference.getQualifiedName())
                     || ORG_MOCKITO_RUNNERS_VERBOSE_MOCKITO_JUNIT_RUNNER.equals(reference.getQualifiedName())) {
                     holder.registerProblem(reference,

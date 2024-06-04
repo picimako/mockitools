@@ -63,7 +63,7 @@ final class ParameterizedIsNotNullMatcherInspection extends MigrationAidBase.V23
         }
 
         @Override
-        protected void doFix(Project project, ProblemDescriptor descriptor) {
+        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
             var parentCall = getParentCall(descriptor.getPsiElement());
             if (parentCall != null) {
                 deleteArguments(parentCall);

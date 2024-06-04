@@ -34,7 +34,7 @@ final class NotExtensibleClassInspection extends LocalInspectionTool {
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
         return new JavaElementVisitor() {
             @Override
-            public void visitClass(PsiClass aClass) {
+            public void visitClass(@NotNull PsiClass aClass) {
                 if (aClass.isAnnotationType()
                     || aClass.isEnum()
                     || aClass.isRecord()

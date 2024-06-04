@@ -70,7 +70,7 @@ final class UsageOfDeprecatedVerifyInspection extends MigrationAidBase.V3ToV4Bas
         }
 
         @Override
-        protected void doFix(Project project, ProblemDescriptor descriptor) {
+        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
             var parentCall = getParentCall(descriptor.getPsiElement());
             if (parentCall != null) {
                 var arguments = getArguments(parentCall);
@@ -89,7 +89,7 @@ final class UsageOfDeprecatedVerifyInspection extends MigrationAidBase.V3ToV4Bas
         }
 
         @Override
-        protected void doFix(Project project, ProblemDescriptor descriptor) {
+        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
             var parentCall = getParentCall(descriptor.getPsiElement());
             if (parentCall != null) {
                 PsiElement elementAfterReplace = descriptor.getPsiElement().replace(PsiElementFactory.getInstance(project).createIdentifier(VERIFY_NO_MORE_INTERACTIONS));

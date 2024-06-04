@@ -35,7 +35,7 @@ public class NameCollisionlessReferenceReplacerQuickFix extends MigrationAidV4Ba
     }
 
     @Override
-    protected void doFix(Project project, ProblemDescriptor descriptor) {
+    protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
         Optional.ofNullable(ModuleUtilCore.findModuleForFile(descriptor.getPsiElement().getContainingFile().getVirtualFile(), project))
             .map(module -> getElementFactory(project).createReferenceElementByFQClassName(replacementClassFqn, moduleWithLibrariesScope(module)))
             .ifPresent(pluginsAnnotationEngine -> descriptor.getPsiElement().replace(pluginsAnnotationEngine));

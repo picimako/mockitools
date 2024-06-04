@@ -48,7 +48,7 @@ final class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loca
         if (isInTestSourceContent(session.getFile())) {
             return new JavaElementVisitor() {
                 @Override
-                public void visitLocalVariable(PsiLocalVariable variable) {
+                public void visitLocalVariable(@NotNull PsiLocalVariable variable) {
                     if (!typeEquals(ORG_MOCKITO_INORDER, variable.getType()) || !(variable.getInitializer() instanceof PsiMethodCallExpression)) return;
 
                     var inOrderRefs = ReferencesSearch.search(variable).toArray(PsiReference.EMPTY_ARRAY);

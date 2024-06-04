@@ -74,7 +74,7 @@ final class UsageOfAnyMatchersInspection extends MigrationAidBase.V23ToV4BaseIns
         }
 
         @Override
-        protected void doFix(Project project, ProblemDescriptor descriptor) {
+        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
             var parentCall = getParentCall(descriptor.getPsiElement());
             if (parentCall != null) {
                 PsiElement elementAfterReplace = descriptor.getPsiElement().replace(PsiElementFactory.getInstance(project).createIdentifier(ANY));
@@ -97,7 +97,7 @@ final class UsageOfAnyMatchersInspection extends MigrationAidBase.V23ToV4BaseIns
         }
 
         @Override
-        protected void doFix(Project project, ProblemDescriptor descriptor) {
+        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
             var parentCall = getParentCall(descriptor.getPsiElement());
             if (parentCall != null) {
                 PsiElement elementAfterReplace = descriptor.getPsiElement().replace(PsiElementFactory.getInstance(project).createIdentifier(anyX));

@@ -12,10 +12,8 @@ import static com.picimako.mockitools.VerificationApproach.BDDMOCKITO_THEN_SHOUL
 import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;
 import static com.picimako.mockitools.util.PsiMethodUtil.getSubsequentMethodCall;
-import static java.util.stream.Collectors.toList;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiExpression;

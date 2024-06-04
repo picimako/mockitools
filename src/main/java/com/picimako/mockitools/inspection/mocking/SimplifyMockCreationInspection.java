@@ -76,7 +76,7 @@ final class SimplifyMockCreationInspection extends MockitoolsBaseInspection {
         }
 
         @Override
-        protected void doFix(Project project, ProblemDescriptor descriptor) {
+        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
             if (descriptor.getPsiElement() instanceof PsiMethodCallExpression mockitoMock) {
                 var settingsMethodCall = collectCallsInChainFromLast(/*withSettings*/ get2ndArgument(mockitoMock)).get(0);
                 String settingsMethodName = getMethodName(settingsMethodCall);

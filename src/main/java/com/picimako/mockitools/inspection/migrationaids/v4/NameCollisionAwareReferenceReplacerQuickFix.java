@@ -43,7 +43,7 @@ public class NameCollisionAwareReferenceReplacerQuickFix extends MigrationAidV4B
     }
 
     @Override
-    protected void doFix(Project project, ProblemDescriptor descriptor) {
+    protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
         var element = (PsiJavaCodeReferenceElement) descriptor.getPsiElement();
         Module module = ModuleUtilCore.findModuleForFile(element.getContainingFile().getVirtualFile(), project);
         if (module == null) return;

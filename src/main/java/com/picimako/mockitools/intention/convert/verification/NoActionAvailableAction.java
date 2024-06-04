@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools.intention.convert.verification;
 
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.picimako.mockitools.resources.MockitoolsBundle;
@@ -25,5 +26,10 @@ public class NoActionAvailableAction extends AnAction {
     @Override
     public void update(@NotNull AnActionEvent e) {
         e.getPresentation().setEnabled(false);
+    }
+
+    @Override
+    public @NotNull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
     }
 }
