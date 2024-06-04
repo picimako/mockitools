@@ -3,6 +3,7 @@
 package com.picimako.mockitools;
 
 import static com.google.common.collect.Iterables.getLast;
+import static com.intellij.openapi.application.ReadAction.compute;
 import static com.picimako.mockitools.CallChainEndsWith.ENDS_WITH_GIVEN;
 import static com.picimako.mockitools.CallChainEndsWith.ENDS_WITH_WHEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.DO_THROW;
@@ -80,12 +81,12 @@ public enum StubbingApproach {
 
         @Override
         public boolean isStubbedBy(PsiMethodCallExpression expression) {
-            return MOCKITO_WHEN.matches(expression);
+            return compute(() -> MOCKITO_WHEN.matches(expression));
         }
 
         @Override
         public boolean isAnyOfStubs(PsiMethodCallExpression expression) {
-            return MOCKITO_WHEN_THEN_X.matches(expression);
+            return compute(() -> MOCKITO_WHEN_THEN_X.matches(expression));
         }
 
         @Override
@@ -137,12 +138,12 @@ public enum StubbingApproach {
 
         @Override
         public boolean isStubbedBy(PsiMethodCallExpression expression) {
-            return MOCKITO_DO_X_WHEN.matches(expression);
+            return compute(() -> MOCKITO_DO_X_WHEN.matches(expression));
         }
 
         @Override
         public boolean isAnyOfStubs(PsiMethodCallExpression expression) {
-            return MOCKITO_DO_X.matches(expression);
+            return compute(() -> MOCKITO_DO_X.matches(expression));
         }
 
         @Override
@@ -191,12 +192,12 @@ public enum StubbingApproach {
 
         @Override
         public boolean isStubbedBy(PsiMethodCallExpression expression) {
-            return BDDMOCKITO_GIVEN.matches(expression);
+            return compute(() -> BDDMOCKITO_GIVEN.matches(expression));
         }
 
         @Override
         public boolean isAnyOfStubs(PsiMethodCallExpression expression) {
-            return BDDMOCKITO_GIVEN_WILL_X.matches(expression);
+            return compute(() -> BDDMOCKITO_GIVEN_WILL_X.matches(expression));
         }
 
         @Override
@@ -246,12 +247,12 @@ public enum StubbingApproach {
 
         @Override
         public boolean isStubbedBy(PsiMethodCallExpression expression) {
-            return BDDMOCKITO_WILL_X_GIVEN.matches(expression);
+            return compute(() -> BDDMOCKITO_WILL_X_GIVEN.matches(expression));
         }
 
         @Override
         public boolean isAnyOfStubs(PsiMethodCallExpression expression) {
-            return BDDMOCKITO_WILL_X.matches(expression);
+            return compute(() -> BDDMOCKITO_WILL_X.matches(expression));
         }
 
         @Override

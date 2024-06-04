@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools.intention.mocking;
 
+import static com.intellij.openapi.application.ReadAction.compute;
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 import static com.picimako.mockitools.MockitoMockMatchers.MOCKITO_SPY_T;
 import static com.picimako.mockitools.MockitoMockMatchers.MOCK_WITH_ANSWER;
@@ -57,12 +58,12 @@ final class ExpandMockCreationIntention implements IntentionAction {
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
         return getMethodCallAtCaretOrEmpty(file, editor)
-            .map(call -> {
+            .map(call -> compute(() -> {
                 if (MOCKITO_SPY_T.matches(call)) return hasArgument(call);
                 if (MOCK_WITH_NAME.matches(call) || MOCK_WITH_ANSWER.matches(call))
                     return hasTwoArguments(call);
                 return false;
-            }).orElse(false);
+            })).orElse(false);
     }
 
     //Conversion
@@ -71,7 +72,7 @@ final class ExpandMockCreationIntention implements IntentionAction {
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
         getMethodCallAtCaretOrEmpty(file, editor).ifPresent(call -> {
             //Mockito.spy(spiedInstance) -> Mockito.mock(<raw type of spiedInstance>, withSettings().spiedInstance(spiedInstance))
-            if (MOCKITO_SPY_T.matches(call)) {
+            if (compute(() -> MOCKITO_SPY_T.matches(call))) {
                 expand(call, project, () -> {
                     var spiedInstance = getFirstArgument(call);
                     return String.format(
@@ -80,13 +81,13 @@ final class ExpandMockCreationIntention implements IntentionAction {
                 });
             }
             //Mockito.mock(<type>.class, <name>) -> Mockito.mock(<type>.class, withSettings().name(<name>))
-            else if (MOCK_WITH_NAME.matches(call)) {
+            else if (compute(() -> MOCK_WITH_NAME.matches(call))) {
                 expand(call, project, () -> String.format(
                     "org.mockito.Mockito.mock(%s, org.mockito.Mockito.withSettings().name(%s))",
                     getFirstArgument(call).getText(), get2ndArgument(call).getText()));
             }
             //Mockito.mock(<type>.class, <answer>) -> Mockito.mock(<type>.class, withSettings().defaultAnswer(<answer>))
-            else if (MOCK_WITH_ANSWER.matches(call)) {
+            else if (compute(() -> MOCK_WITH_ANSWER.matches(call))) {
                 expand(call, project, () -> String.format(
                     "org.mockito.Mockito.mock(%s, org.mockito.Mockito.withSettings().defaultAnswer(%s))",
                     getFirstArgument(call).getText(), get2ndArgument(call).getText()));

@@ -2,14 +2,12 @@
 
 package com.picimako.mockitools.intention.convert.verification.inorderverify;
 
-import com.intellij.testFramework.junit5.RunInEdt;
 import com.picimako.mockitools.MockitoolsActionTestBase;
 import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link ConvertInOrderVerifyToMockitoVerifyAction}.
  */
-@RunInEdt
 class ConvertInOrderVerifyToMockitoVerifyActionTest extends MockitoolsActionTestBase {
 
     @Test

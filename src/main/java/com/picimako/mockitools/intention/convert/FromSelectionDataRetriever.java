@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools.intention.convert;
 
+import static com.intellij.openapi.application.ReadAction.compute;
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getNextSiblingOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
@@ -28,7 +29,7 @@ import java.util.List;
 public final class FromSelectionDataRetriever {
 
     public static int selectionLengthIn(SelectionModel model) {
-        return model.getSelectionEnd() - model.getSelectionStart();
+        return compute(() -> model.getSelectionEnd() - model.getSelectionStart());
     }
 
     /**
@@ -36,13 +37,15 @@ public final class FromSelectionDataRetriever {
      */
     @NotNull
     public static List<PsiExpressionStatement> collectStatementsInSelection(Editor editor, PsiFile file) {
-        var statements = new SmartList<PsiExpressionStatement>();
-        var statement = findFirstSelectedStatement(editor, file);
-        while (isWithinSelection(statement, editor)) {
-            statements.add(statement);
-            statement = getNextSiblingOfType(statement, PsiExpressionStatement.class);
-        }
-        return statements;
+        return compute(() -> {
+            var statements = new SmartList<PsiExpressionStatement>();
+            var statement = findFirstSelectedStatement(editor, file);
+            while (isWithinSelection(statement, editor)) {
+                statements.add(statement);
+                statement = getNextSiblingOfType(statement, PsiExpressionStatement.class);
+            }
+            return statements;
+        });
     }
 
     /**
@@ -53,12 +56,14 @@ public final class FromSelectionDataRetriever {
      */
     @Nullable
     private static PsiExpressionStatement findFirstSelectedStatement(Editor editor, PsiFile file) {
-        var elementAtStart = file.findElementAt(editor.getSelectionModel().getSelectionStart());
-        if (elementAtStart instanceof PsiIdentifier)
-            return getParentOfType(elementAtStart, PsiExpressionStatement.class);
-        else if (elementAtStart instanceof PsiWhiteSpace)
-            return getNextSiblingOfType(elementAtStart, PsiExpressionStatement.class);
-        return null;
+        return compute(() -> {
+            var elementAtStart = file.findElementAt(editor.getSelectionModel().getSelectionStart());
+            if (elementAtStart instanceof PsiIdentifier)
+                return getParentOfType(elementAtStart, PsiExpressionStatement.class);
+            else if (elementAtStart instanceof PsiWhiteSpace)
+                return getNextSiblingOfType(elementAtStart, PsiExpressionStatement.class);
+            return null;
+        });
     }
 
     /**

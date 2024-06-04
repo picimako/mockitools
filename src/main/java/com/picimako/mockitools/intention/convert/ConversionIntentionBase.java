@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools.intention.convert;
 
+import static com.intellij.openapi.application.ReadAction.compute;
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getPrevSiblingOfType;
@@ -52,8 +53,8 @@ public abstract class ConversionIntentionBase implements IntentionAction {
 
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-        if (!editor.getSelectionModel().hasSelection()) {
-            final var element = file.findElementAt(editor.getCaretModel().getOffset());
+        if (compute(() -> !editor.getSelectionModel().hasSelection())) {
+            final var element = file.findElementAt(compute(() -> editor.getCaretModel().getOffset()));
             return isIdentifierOfMethodCall(element) && isAvailableFor(getMethodCallForIdentifier(element));
         } else return isAvailableForBulkConversion(editor, file);
     }
@@ -65,13 +66,13 @@ public abstract class ConversionIntentionBase implements IntentionAction {
      */
     private boolean isAvailableForBulkConversion(Editor editor, PsiFile file) {
         var model = editor.getSelectionModel();
-        int selectionStart = model.getSelectionStart();
-        int selectionEnd = model.getSelectionEnd();
+        int selectionStart = compute(model::getSelectionStart);
+        int selectionEnd = compute(model::getSelectionEnd);
 
         //This is to prevent executing further logic for unnecessarily short selections.
         if (selectionLengthIn(model) < minSelectionLength
             || containsOnlyWhiteSpaces(charSequenceInRange(editor, selectionStart, selectionEnd))
-            || !isSymbolAfterMethodCallChain(file.findElementAt(selectionEnd)))
+            || !isSymbolAfterMethodCallChain(compute(() -> file.findElementAt(selectionEnd))))
             return false;
 
         var statementsInSelection = collectStatementsInSelection(editor, file);
@@ -79,9 +80,9 @@ public abstract class ConversionIntentionBase implements IntentionAction {
         if (statementsInSelection.isEmpty()) return false;
 
         for (var statement : statementsInSelection) {
-            var identifier = findChildOfType(statement, PsiIdentifier.class);
+            var identifier = compute(() -> findChildOfType(statement, PsiIdentifier.class));
             if (identifier == null) return false;
-            var verificationCall = getParentOfType(identifier, PsiMethodCallExpression.class);
+            var verificationCall = compute(() -> getParentOfType(identifier, PsiMethodCallExpression.class));
             if (verificationCall == null) return false;
             //If we find at least one call chain in the selection that doesn't satisfy the current intention's availability criteria,
             //then the intention won't be available.
@@ -98,7 +99,7 @@ public abstract class ConversionIntentionBase implements IntentionAction {
      */
     private boolean isCorrectIdentifier(@NotNull PsiElement identifier, @NotNull PsiMethodCallExpression verificationCall) {
         var qualifier = getQualifier(verificationCall);
-        return PsiManager.getInstance(identifier.getProject()).areElementsEquivalent(identifier.getParent(), qualifier)
+        return PsiManager.getInstance(identifier.getProject()).areElementsEquivalent(compute(identifier::getParent), qualifier)
             && isQualifierHaveCorrectType(qualifier);
     }
 

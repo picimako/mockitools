@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools.intention.convert.verification.mockedstaticverify;
 
+import static com.intellij.openapi.application.ReadAction.compute;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_STATIC;
 
 import com.intellij.openapi.actionSystem.AnAction;
@@ -40,14 +41,14 @@ final class ConvertFromMockedStaticVerifyIntention extends ConvertVerificationIn
      */
     @Override
     protected boolean isQualifierHaveCorrectType(PsiExpression qualifier) {
-        return TypeUtils.expressionHasTypeOrSubtype(qualifier, ORG_MOCKITO_MOCKED_STATIC);
+        return compute(() -> TypeUtils.expressionHasTypeOrSubtype(qualifier, ORG_MOCKITO_MOCKED_STATIC));
     }
 
     //Invocation
 
     @Override
     public List<AnAction> actionSelectionOptions(Editor editor, PsiFile file) {
-        boolean isBulkMode = editor.getSelectionModel().hasSelection();
+        boolean isBulkMode = compute(() -> editor.getSelectionModel().hasSelection());
         return Collections.singletonList(new ConvertMockedStaticVerifyToInOrderVerifyAction(isBulkMode));
     }
 }

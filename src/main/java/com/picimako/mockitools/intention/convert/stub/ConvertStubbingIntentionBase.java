@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools.intention.convert.stub;
 
+import static com.intellij.openapi.application.ReadAction.compute;
 import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;
@@ -56,9 +57,9 @@ public abstract class ConvertStubbingIntentionBase extends ConversionIntentionBa
      */
     @Override
     protected boolean isQualifierHaveCorrectType(PsiExpression qualifier) {
-        return qualifier instanceof PsiReferenceExpression qualifierAsRef
-            && qualifierAsRef.resolve() instanceof PsiClass qualifierClass
-            && qualifierType.equals(qualifierClass.getQualifiedName());
+        return compute(() -> qualifier instanceof PsiReferenceExpression qualifierAsRef
+                             && qualifierAsRef.resolve() instanceof PsiClass qualifierClass
+                             && qualifierType.equals(qualifierClass.getQualifiedName()));
     }
 
     protected boolean doAllCallChainsMatch(CallChainAnalyzer analyzer, boolean isBulkMode, Editor editor, PsiFile file) {

@@ -2,14 +2,12 @@
 
 package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 
-import com.intellij.testFramework.junit5.RunInEdt;
 import com.picimako.mockitools.MockitoolsActionTestBase;
 import org.junit.jupiter.api.Test;
 
 /**
  * Integration test for {@link com.picimako.mockitools.intention.convert.verification.bddmockitothen.ConvertBDDMockitoThenToInOrderVerifyAction}.
  */
-@RunInEdt
 class ConvertBDDMockitoThenToInOrderVerifyActionTest extends MockitoolsActionTestBase {
 
     //Caret based conversion

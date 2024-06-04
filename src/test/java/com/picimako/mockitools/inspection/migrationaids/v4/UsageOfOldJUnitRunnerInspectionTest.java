@@ -2,9 +2,8 @@
 
 package com.picimako.mockitools.inspection.migrationaids.v4;
 
-import static com.picimako.mockitools.ThirdPartyLibraryLoader.loadJUnit4;
-
 import com.intellij.codeInspection.InspectionProfileEntry;
+import com.picimako.mockitools.ThirdPartyLibrary;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
 import org.junit.jupiter.api.Test;
 
@@ -13,14 +12,13 @@ import org.junit.jupiter.api.Test;
  */
 class UsageOfOldJUnitRunnerInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
 
-    @Override
-    protected InspectionProfileEntry getInspection() {
-        return new UsageOfOldJUnitRunnerInspection();
+    public UsageOfOldJUnitRunnerInspectionTest() {
+        super(ThirdPartyLibrary.JUNIT_4, ThirdPartyLibrary.MOCKITO_V3);
     }
 
     @Override
-    protected void loadLibs() {
-        loadJUnit4(getFixture().getProjectDisposable(), getFixture().getModule());
+    protected InspectionProfileEntry getInspection() {
+        return new UsageOfOldJUnitRunnerInspection();
     }
 
     @Test

@@ -3,13 +3,11 @@
 package com.picimako.mockitools.intention;
 
 import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.testFramework.junit5.RunInEdt;
 import org.junit.jupiter.api.Test;
 
 /**
  * Functional test for {@link ConvertMockSpyFieldToCallIntention}.
  */
-@RunInEdt
 class ConvertMockSpyFieldToCallWithSettingsIntentionTest extends MockitoolsIntentionTestBase {
 
     @Override

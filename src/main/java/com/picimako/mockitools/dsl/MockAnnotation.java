@@ -2,6 +2,8 @@
 
 package com.picimako.mockitools.dsl;
 
+import static com.intellij.openapi.application.ReadAction.compute;
+
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.psi.PsiAnnotation;
 import com.picimako.mockitools.MockitoQualifiedNames;
@@ -24,7 +26,7 @@ public final class MockAnnotation {
      * @param attributeName  the name of a boolean-value attribute on the @Mock annotation.
      */
     public static boolean isAttributeEnabledOnMockAnnotation(PsiAnnotation mockAnnotation, String attributeName) {
-        Boolean attributeValue = AnnotationUtil.getBooleanAttributeValue(mockAnnotation, attributeName);
+        Boolean attributeValue = compute(() -> AnnotationUtil.getBooleanAttributeValue(mockAnnotation, attributeName));
         return Boolean.TRUE.equals(attributeValue); //Given that the default values are false, and to be true they have to be specified explicitly
     }
 

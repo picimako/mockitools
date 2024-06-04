@@ -3,7 +3,6 @@
 package com.picimako.mockitools.intention.convert.verification.mockitoverify;
 
 import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.testFramework.junit5.RunInEdt;
 import com.picimako.mockitools.Convention;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
 import org.junit.jupiter.api.Test;
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Functional test for {@link ConvertFromMockitoVerifyIntention}.
  */
-@RunInEdt
 class ConvertFromMockitoVerifyIntentionInBulkTest extends EnforceConventionAwareIntentionTestBase {
 
     @Override

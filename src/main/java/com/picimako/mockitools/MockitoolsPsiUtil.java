@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools;
 
+import static com.intellij.openapi.application.ReadAction.compute;
 import static com.picimako.mockitools.MockitoQualifiedNames.AFTER;
 import static com.picimako.mockitools.MockitoQualifiedNames.CALLS;
 import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
@@ -66,7 +67,7 @@ public final class MockitoolsPsiUtil {
      * @return true if the method is a Mockito.mock, false otherwise
      */
     public static boolean isMockitoMock(PsiMethodCallExpression expression) {
-        return MOCKITO_MOCK.matches(expression);
+        return compute(() -> MOCKITO_MOCK.matches(expression));
     }
 
     /**
@@ -76,7 +77,7 @@ public final class MockitoolsPsiUtil {
      * @return true if the method is a Mockito.spy, false otherwise
      */
     public static boolean isMockitoSpy(PsiMethodCallExpression expression) {
-        return MOCKITO_SPY.matches(expression);
+        return compute(() -> MOCKITO_SPY.matches(expression));
     }
 
     /**
@@ -86,7 +87,7 @@ public final class MockitoolsPsiUtil {
      * @return true if the method is a Mockito.verify, false otherwise
      */
     public static boolean isMockitoVerify(PsiMethodCallExpression expression) {
-        return MOCKITO_VERIFY.matches(expression);
+        return compute(() -> MOCKITO_VERIFY.matches(expression));
     }
 
     /**
@@ -108,16 +109,16 @@ public final class MockitoolsPsiUtil {
      */
     public static boolean isMatchers(PsiMethodCallExpression expression) {
         return matchesAnyMethodIn(ORG_MOCKITO_ARGUMENT_MATCHERS, expression)
-            && Optional.ofNullable((PsiReferenceExpression) getQualifier(expression))
-            .map(qualifier -> (PsiClass) qualifier.resolve())
-            .filter(matchers -> ORG_MOCKITO_MATCHERS.equals(matchers.getQualifiedName()))
-            .isPresent();
+               && Optional.ofNullable((PsiReferenceExpression) getQualifier(expression))
+                   .map(qualifier -> (PsiClass) compute(qualifier::resolve))
+                   .filter(matchers -> ORG_MOCKITO_MATCHERS.equals(matchers.getQualifiedName()))
+                   .isPresent();
     }
 
     private static boolean matchesAnyMethodIn(String methodFqn, PsiMethodCallExpression expression) {
-        return staticCall(methodFqn, getMethodName(expression))
+        return compute(() -> staticCall(methodFqn, getMethodName(expression))
             .parameterCount(expression.getArgumentList().getExpressionCount()) //matchers can have various numbers of arguments, so lets match with the current call's parameter count
-            .matches(expression);
+            .matches(expression));
     }
 
     /**
@@ -127,7 +128,7 @@ public final class MockitoolsPsiUtil {
      * @return true if the method is a Mockito.times, false otherwise
      */
     public static boolean isTimes(PsiMethodCallExpression methodCall) {
-        return MOCKITO_TIMES.matches(methodCall);
+        return compute(() -> MOCKITO_TIMES.matches(methodCall));
     }
 
     /**
@@ -137,7 +138,7 @@ public final class MockitoolsPsiUtil {
      * @return true if the method is a Mockito.calls, false otherwise
      */
     public static boolean isCalls(PsiMethodCallExpression methodCall) {
-        return MOCKITO_CALLS.matches(methodCall);
+        return compute(() -> MOCKITO_CALLS.matches(methodCall));
     }
 
     /**
@@ -147,7 +148,7 @@ public final class MockitoolsPsiUtil {
      * @return true if the method is a Mockito.after, false otherwise
      */
     public static boolean isAfter(PsiMethodCallExpression methodCall) {
-        return MOCKITO_AFTER.matches(methodCall);
+        return compute(() -> MOCKITO_AFTER.matches(methodCall));
     }
 
     /**
@@ -157,7 +158,7 @@ public final class MockitoolsPsiUtil {
      * @return true if the method is a Mockito.timeout, false otherwise
      */
     public static boolean isTimeout(PsiMethodCallExpression methodCall) {
-        return MOCKITO_TIMEOUT.matches(methodCall);
+        return compute(() -> MOCKITO_TIMEOUT.matches(methodCall));
     }
 
     /**
@@ -167,7 +168,7 @@ public final class MockitoolsPsiUtil {
      * @return true if the method is a MockitoSettings.extraInterfaces, false otherwise
      */
     public static boolean isExtraInterfaces(PsiMethodCallExpression methodCall) {
-        return MOCK_SETTING_EXTRA_INTERFACES.matches(methodCall);
+        return compute(() -> MOCK_SETTING_EXTRA_INTERFACES.matches(methodCall));
     }
 
     /**
@@ -177,7 +178,7 @@ public final class MockitoolsPsiUtil {
      * @return true if the method is a Mockito.reset, false otherwise
      */
     public static boolean isReset(PsiMethodCallExpression methodCall) {
-        return MOCKITO_RESET.matches(methodCall);
+        return compute(() -> MOCKITO_RESET.matches(methodCall));
     }
 
     /**
@@ -187,7 +188,7 @@ public final class MockitoolsPsiUtil {
      * @return true if the method is a MockedStatic.reset, false otherwise
      */
     public static boolean isMockedStaticReset(PsiMethodCallExpression methodCall) {
-        return MOCKED_STATIC_RESET.matches(methodCall);
+        return compute(() -> MOCKED_STATIC_RESET.matches(methodCall));
     }
 
     /**
@@ -197,7 +198,7 @@ public final class MockitoolsPsiUtil {
      * @return true if the method is a Mockito.ignoreStubs, false otherwise
      */
     public static boolean isIgnoreStubs(PsiMethodCallExpression methodCall) {
-        return MOCKITO_IGNORE_STUBS.matches(methodCall);
+        return compute(() -> MOCKITO_IGNORE_STUBS.matches(methodCall));
     }
 
     /**
@@ -210,10 +211,12 @@ public final class MockitoolsPsiUtil {
      * @return true if the field is org.mockito.ArgumentCaptor, false otherwise
      */
     public static boolean isOfTypeArgumentCaptor(PsiField field) {
-        PsiTypeElement typeElement = field.getTypeElement();
-        return typeElement != null
-            && typeElement.getType() instanceof PsiClassReferenceType type
-            && ORG_MOCKITO_ARGUMENT_CAPTOR.equals(type.rawType().getCanonicalText());
+        return compute(() -> {
+            PsiTypeElement typeElement = field.getTypeElement();
+            return typeElement != null
+                   && typeElement.getType() instanceof PsiClassReferenceType type
+                   && ORG_MOCKITO_ARGUMENT_CAPTOR.equals(type.rawType().getCanonicalText());
+        });
     }
 
     private MockitoolsPsiUtil() {

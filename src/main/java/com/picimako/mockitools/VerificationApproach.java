@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools;
 
+import static com.intellij.openapi.application.ReadAction.compute;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO_THEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
@@ -71,18 +72,18 @@ public enum VerificationApproach {
 
         @Override
         public boolean isVerifiedBy(PsiMethodCallExpression expression) {
-            return BDDMOCKITO_THEN.matches(expression);
+            return compute(() -> BDDMOCKITO_THEN.matches(expression));
         }
 
         @Override
         public boolean isValid(PsiMethodCallExpression verificationCall) {
             var should = getSubsequentMethodCall(verificationCall);
-            return THEN_SHOULD.matches(should) && hasSubsequentMethodCall(should);
+            return compute(() -> THEN_SHOULD.matches(should) && hasSubsequentMethodCall(should));
         }
 
         @Override
         public boolean isInOrderSpecific(PsiMethodCallExpression should) {
-            return THEN_SHOULD_WITH_INORDER.matches(should) && !THEN_SHOULD_WITHOUT_INORDER.matches(should);
+            return compute(() -> THEN_SHOULD_WITH_INORDER.matches(should) && !THEN_SHOULD_WITHOUT_INORDER.matches(should));
         }
 
         @Override
@@ -93,7 +94,7 @@ public enum VerificationApproach {
     INORDER_VERIFY("InOrder.verify()") {
         @Override
         public boolean isVerifiedBy(PsiMethodCallExpression expression) {
-            return EnforceConventionInspection.IN_ORDER_VERIFY_NON_MOCKED_STATIC.matches(expression);
+            return compute(() -> EnforceConventionInspection.IN_ORDER_VERIFY_NON_MOCKED_STATIC.matches(expression));
         }
 
         @Override
@@ -118,7 +119,7 @@ public enum VerificationApproach {
 
         @Override
         public boolean isVerifiedBy(PsiMethodCallExpression expression) {
-            return IN_ORDER_VERIFY_MOCKED_STATIC.matches(expression);
+            return compute(() -> IN_ORDER_VERIFY_MOCKED_STATIC.matches(expression));
         }
 
         @Override
@@ -140,7 +141,7 @@ public enum VerificationApproach {
 
         @Override
         public boolean isVerifiedBy(PsiMethodCallExpression expression) {
-            return MOCKED_STATIC_VERIFY.matches(expression);
+            return compute(() -> MOCKED_STATIC_VERIFY.matches(expression));
         }
 
         @Override

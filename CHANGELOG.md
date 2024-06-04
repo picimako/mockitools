@@ -6,7 +6,7 @@
 
 ## [1.2.0]
 ### Changed
-- New support range of IDEs: 2023.2.6-2024.2-EAP.
+- New support range of IDEs: 2023.3-2024.2-EAP.
 - Dependency updates.
 
 ### Fixed

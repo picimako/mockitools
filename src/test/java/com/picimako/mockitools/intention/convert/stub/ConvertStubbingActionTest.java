@@ -2,7 +2,6 @@
 
 package com.picimako.mockitools.intention.convert.stub;
 
-import com.intellij.testFramework.junit5.RunInEdt;
 import com.picimako.mockitools.MockitoolsActionTestBase;
 import com.picimako.mockitools.StubbingApproach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Integration test for {@link ConvertStubbingAction}.
  */
-@RunInEdt
 class ConvertStubbingActionTest extends MockitoolsActionTestBase {
 
     @Test
