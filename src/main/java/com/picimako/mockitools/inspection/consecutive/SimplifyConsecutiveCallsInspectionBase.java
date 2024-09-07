@@ -27,14 +27,14 @@ import java.util.function.Predicate;
  * {@link #register} ->
  * {@link #doRegister}
  */
-public abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsBaseInspection {
+abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsBaseInspection {
 
     //Analysis workflow
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
-        analysisDescriptors().stream()
-            .filter(descriptor -> descriptor.matches(expression))
+        analyzers().stream()
+            .filter(analyzer -> analyzer.canAnalyze(expression))
             .findFirst()
             .ifPresent(analyzer -> checkCallChainAndRegister(analyzer, expression, holder));
     }
@@ -48,11 +48,11 @@ public abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsB
      *     This separate registration is to provide better notification for users, and in the future, to be able to merge different consecutive calls separately.</li>
      * </ul>
      */
-    protected void checkCallChainAndRegister(ConsecutiveCallAnalysisDescriptor analyzer, PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
+    protected void checkCallChainAndRegister(ConsecutiveCallAnalyzer analyzer, PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         var callsInWholeChain = collectCallsInChainFromFirst(expression, true);
         var consecutiveCallIndeces = new SmartList<Integer>();
 
-        for (int i = analyzer.indexToStartInspectionAt; i < callsInWholeChain.size(); i++) {
+        for (int i = analyzer.skipAnalysisOfFirstCall ? 1 : 0; i < callsInWholeChain.size(); i++) {
             var call = callsInWholeChain.get(i);
 
             if (analyzer.consecutiveMethodName.equals(getMethodName(call)) && extraCondition().test(call)) {
@@ -74,11 +74,11 @@ public abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsB
         return call -> true;
     }
 
-    protected abstract List<ConsecutiveCallAnalysisDescriptor> analysisDescriptors();
+    protected abstract List<ConsecutiveCallAnalyzer> analyzers();
 
     //Registration workflow
 
-    private void registerMultiple(ConsecutiveCallAnalysisDescriptor analyzer, List<PsiMethodCallExpression> callsInWholeChain,
+    private void registerMultiple(ConsecutiveCallAnalyzer analyzer, List<PsiMethodCallExpression> callsInWholeChain,
                                   List<Integer> consecutiveCallIndeces, @NotNull ProblemsHolder holder) {
         if (consecutiveCallIndeces.size() > 1) {
             register(new ConsecutiveCallRegistrarContext(analyzer, callsInWholeChain, consecutiveCallIndeces), holder);

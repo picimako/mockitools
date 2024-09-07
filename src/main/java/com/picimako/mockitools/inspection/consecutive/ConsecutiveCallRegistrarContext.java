@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
  */
 class ConsecutiveCallRegistrarContext {
     /**
-     * @see ConsecutiveCallAnalysisDescriptor#consecutiveMethodName
+     * @see ConsecutiveCallAnalyzer#consecutiveMethodName
      */
     final String consecutiveMethodName;
     /**
@@ -27,11 +27,11 @@ class ConsecutiveCallRegistrarContext {
      */
     final List<Integer> consecutiveCallIndeces;
     /**
-     * @see ConsecutiveCallAnalysisDescriptor#exceptionStubber
+     * @see ConsecutiveCallAnalyzer#exceptionStubber
      */
     private final ExceptionStubber exceptionStubber;
 
-    ConsecutiveCallRegistrarContext(@NotNull ConsecutiveCallAnalysisDescriptor analyzer,
+    ConsecutiveCallRegistrarContext(@NotNull ConsecutiveCallAnalyzer analyzer,
                                     @NotNull List<PsiMethodCallExpression> callsInWholeChain,
                                     @NotNull List<Integer> consecutiveCallIndeces) {
         consecutiveMethodName = analyzer.consecutiveMethodName;

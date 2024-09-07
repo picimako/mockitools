@@ -15,7 +15,7 @@ import com.intellij.psi.SmartPsiElementPointer;
  */
 class ConsecutiveCallQuickFixContext {
     /**
-     * @see ConsecutiveCallAnalysisDescriptor#consecutiveMethodName
+     * @see ConsecutiveCallAnalyzer#consecutiveMethodName
      */
     final String consecutiveMethodName;
     /**
@@ -29,7 +29,7 @@ class ConsecutiveCallQuickFixContext {
 
     public ConsecutiveCallQuickFixContext(ConsecutiveCallRegistrarContext registrar) {
         this.consecutiveMethodName = registrar.consecutiveMethodName;
-        wholeChainPointers = toPointers(registrar.callsInWholeChain);
+        this.wholeChainPointers = toPointers(registrar.callsInWholeChain);
         this.consecutiveCallIndeces = registrar.consecutiveCallIndeces;
     }
 

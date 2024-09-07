@@ -7,6 +7,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_S
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 
 import com.intellij.psi.PsiMethodCallExpression;
+import com.picimako.mockitools.StubbingApproach;
 import com.picimako.mockitools.inspection.stubbing.ExceptionStubber;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Data class to be used during the analysis phase.
  */
-class ConsecutiveCallAnalysisDescriptor {
+class ConsecutiveCallAnalyzer {
     /**
      * The method name whose consecutiveness the inspection looks for.
      * <p>
@@ -27,53 +28,52 @@ class ConsecutiveCallAnalysisDescriptor {
     @NotNull
     final String consecutiveMethodName;
     /**
-     * The index to start inspecting the call chain from, because in case of e.g. {@code Mockito.when()} it is certain that
+     * Whether to skip the analysis of the first call in a call chain, because in case of e.g. {@code Mockito.when()} it is certain that
      * {@code when()} will never match e.g. {@code thenReturn()}, so we can skip that comparison and start at the next call.
      */
-    final int indexToStartInspectionAt;
+    final boolean skipAnalysisOfFirstCall;
     /**
      * Used to identify {@code *Throw()} calls in case of {@link SimplifyConsecutiveThrowCallsInspection}.
      */
     @Nullable
     final ExceptionStubber exceptionStubber;
     /**
-     * The call matcher built for {@link Builder#inCallChainsBeginningWith}.
+     * The call matcher built for {@link Analyzer#inCallChainsBeginningWithStatic}.
      */
     @NotNull
     private final CallMatcher chainStarterMethodMatcher;
 
-    private ConsecutiveCallAnalysisDescriptor(Builder builder) {
+    private ConsecutiveCallAnalyzer(Analyzer builder) {
         chainStarterMethodMatcher = builder.chainStarterMethodMatcher;
         consecutiveMethodName = builder.consecutiveMethodName;
-        indexToStartInspectionAt = builder.indexToStartInspectionAt;
+        skipAnalysisOfFirstCall = builder.skipAnalysisOfFirstCall;
         exceptionStubber = builder.exceptionStubbingVia;
     }
 
-    boolean matches(PsiMethodCallExpression expression) {
+    boolean canAnalyze(PsiMethodCallExpression expression) {
         return chainStarterMethodMatcher.matches(expression);
     }
 
+    /**
+     * Builder for {@code ConsecutiveCallAnalyzer}.
+     */
     @RequiredArgsConstructor
-    static final class Builder {
+    static final class Analyzer {
         /**
          * Used in the quick fix as the beginning of the expression that is built for replacement.
          * <p>
-         * Usually either {@code org.mockito.Mockito} or {@code org.mockito.BDDMockito}.
+         * Either {@code org.mockito.Mockito}, {@code org.mockito.BDDMockito} or {@code org.mockito.MockedStatic}.
          */
         private final String mockitoClass;
         private CallMatcher chainStarterMethodMatcher;
         @Accessors(fluent = true)
         @Setter
         private String consecutiveMethodName;
-        @Accessors(fluent = true)
-        @Setter
-        private int indexToStartInspectionAt = 0;
+        private boolean skipAnalysisOfFirstCall = false;
         /**
          * Applicable only in case of {@link SimplifyConsecutiveThrowCallsInspection}.
          */
         @Nullable
-        @Accessors(fluent = true)
-        @Setter
         private ExceptionStubber exceptionStubbingVia;
 
         /**
@@ -82,41 +82,54 @@ class ConsecutiveCallAnalysisDescriptor {
          * @param chainStarterMethodNames The first call in a stubbing call chain from where the calls are collected.
          *                                E.g. {@code Mockito.when()}, {@code BDDMockito.willReturn()}, etc.
          */
-        Builder inCallChainsBeginningWith(String... chainStarterMethodNames) {
-            return inCallChainsBeginningWith(MethodType.STATIC, chainStarterMethodNames);
+        Analyzer inCallChainsBeginningWithStatic(String... chainStarterMethodNames) {
+            this.chainStarterMethodMatcher = CallMatcher.staticCall(mockitoClass, chainStarterMethodNames);
+            return this;
         }
 
         /**
-         * Configures the method names as instance or static methods (based on the method type) in {@link #mockitoClass}.
+         * Configures the method names as instance methods in {@link #mockitoClass}.
          *
          * @param chainStarterMethodNames The first call in a stubbing call chain from where the calls are collected.
          *                                E.g. {@code Mockito.when()}, {@code BDDMockito.willReturn()}, etc.
          */
-        Builder inCallChainsBeginningWith(MethodType methodtype, String... chainStarterMethodNames) {
-            this.chainStarterMethodMatcher = methodtype == MethodType.STATIC
-                ? CallMatcher.staticCall(mockitoClass, chainStarterMethodNames)
-                : CallMatcher.instanceCall(mockitoClass, chainStarterMethodNames);
+        Analyzer inCallChainsBeginningWithInstance(String... chainStarterMethodNames) {
+            this.chainStarterMethodMatcher = CallMatcher.instanceCall(mockitoClass, chainStarterMethodNames);
             return this;
         }
 
-        ConsecutiveCallAnalysisDescriptor build() {
-            return new ConsecutiveCallAnalysisDescriptor(this);
+        /**
+         * Configures this builder to do skip the analysis of the first call in a chain.
+         */
+        Analyzer skippingAnalysisOfFirstCall() {
+            skipAnalysisOfFirstCall = true;
+            return this;
         }
 
-        static Builder forMockito(String consecutiveMethodName) {
-            return new Builder(ORG_MOCKITO_MOCKITO).consecutiveMethodName(consecutiveMethodName);
+        /**
+         * Configure the exception stubber from the provide stubbing approach
+         */
+        Analyzer exceptionStubbingVia(StubbingApproach stubbingApproach) {
+            exceptionStubbingVia = stubbingApproach.getExceptionStubber();
+            return this;
         }
 
-        static Builder forBDDMockito(String consecutiveMethodName) {
-            return new Builder(ORG_MOCKITO_BDDMOCKITO).consecutiveMethodName(consecutiveMethodName);
+        ConsecutiveCallAnalyzer build() {
+            return new ConsecutiveCallAnalyzer(this);
         }
 
-        static Builder forMockedStatic(String consecutiveMethodName) {
-            return new Builder(ORG_MOCKITO_MOCKED_STATIC).consecutiveMethodName(consecutiveMethodName);
-        }
-    }
+        //Static factory methods
 
-    enum MethodType {
-        STATIC, INSTANCE
+        static Analyzer forMockito(String consecutiveMethodName) {
+            return new Analyzer(ORG_MOCKITO_MOCKITO).consecutiveMethodName(consecutiveMethodName);
+        }
+
+        static Analyzer forBDDMockito(String consecutiveMethodName) {
+            return new Analyzer(ORG_MOCKITO_BDDMOCKITO).consecutiveMethodName(consecutiveMethodName);
+        }
+
+        static Analyzer forMockedStatic(String consecutiveMethodName) {
+            return new Analyzer(ORG_MOCKITO_MOCKED_STATIC).consecutiveMethodName(consecutiveMethodName);
+        }
     }
 }

@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 
 /**
- * Descriptor for holding *Throw() call related information.
+ * Descriptor for holding {@code *Throw()} call related information.
  */
 public final class ExceptionStubber {
     private static final CallMatcher[] CALL_MATCHER_EMPTY = new CallMatcher[0];

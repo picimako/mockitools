@@ -13,13 +13,12 @@ import static com.picimako.mockitools.StubbingApproach.BDDMOCKITO_GIVEN;
 import static com.picimako.mockitools.StubbingApproach.BDDMOCKITO_WILL_X;
 import static com.picimako.mockitools.StubbingApproach.MOCKITO_DO_X;
 import static com.picimako.mockitools.StubbingApproach.MOCKITO_WHEN;
-import static com.picimako.mockitools.inspection.consecutive.ConsecutiveCallAnalysisDescriptor.MethodType.INSTANCE;
 import static com.picimako.mockitools.util.PsiMethodUtil.containsCallToNonDefaultConstructor;
 import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
 
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.inspection.consecutive.ConsecutiveCallAnalysisDescriptor.Builder;
+import com.picimako.mockitools.inspection.consecutive.ConsecutiveCallAnalyzer.Analyzer;
 import com.picimako.mockitools.util.PsiMethodUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,28 +45,28 @@ import java.util.function.Predicate;
  * @since 0.4.0
  */
 final class SimplifyConsecutiveThrowCallsInspection extends SimplifyConsecutiveCallsInspectionBase {
-    private static final List<ConsecutiveCallAnalysisDescriptor> THROW_CALL_DESCRIPTORS = List.of(
-        Builder.forMockito(DO_THROW)
-            .exceptionStubbingVia(MOCKITO_DO_X.getExceptionStubber())
-            .inCallChainsBeginningWith(DO_RETURN, DO_THROW, "doNothing", "doAnswer", "doCallRealMethod").build(),
-        Builder.forBDDMockito(WILL_THROW)
-            .exceptionStubbingVia(BDDMOCKITO_WILL_X.getExceptionStubber())
-            .inCallChainsBeginningWith(WILL_THROW).build(),
-        Builder.forBDDMockito(WILL_THROW)
-            .exceptionStubbingVia(BDDMOCKITO_GIVEN.getExceptionStubber())
-            .inCallChainsBeginningWith(GIVEN, WILL_RETURN, "will", "willDoNothing", "willAnswer", "willCallRealMethod").build(),
-        Builder.forMockito(THEN_THROW)
-            .exceptionStubbingVia(MOCKITO_WHEN.getExceptionStubber())
-            .indexToStartInspectionAt(1)
-            .inCallChainsBeginningWith(WHEN).build(),
-        Builder.forMockedStatic(THEN_THROW)
-            .exceptionStubbingVia(MOCKITO_WHEN.getExceptionStubber())
-            .indexToStartInspectionAt(1)
-            .inCallChainsBeginningWith(INSTANCE, WHEN).build()
+    private static final List<ConsecutiveCallAnalyzer> THROW_CALL_DESCRIPTORS = List.of(
+        Analyzer.forMockito(DO_THROW)
+            .exceptionStubbingVia(MOCKITO_DO_X)
+            .inCallChainsBeginningWithStatic(DO_RETURN, DO_THROW, "doNothing", "doAnswer", "doCallRealMethod").build(),
+        Analyzer.forBDDMockito(WILL_THROW)
+            .exceptionStubbingVia(BDDMOCKITO_WILL_X)
+            .inCallChainsBeginningWithStatic(WILL_THROW).build(),
+        Analyzer.forBDDMockito(WILL_THROW)
+            .exceptionStubbingVia(BDDMOCKITO_GIVEN)
+            .inCallChainsBeginningWithStatic(GIVEN, WILL_RETURN, "will", "willDoNothing", "willAnswer", "willCallRealMethod").build(),
+        Analyzer.forMockito(THEN_THROW)
+            .exceptionStubbingVia(MOCKITO_WHEN)
+            .skippingAnalysisOfFirstCall()
+            .inCallChainsBeginningWithStatic(WHEN).build(),
+        Analyzer.forMockedStatic(THEN_THROW)
+            .exceptionStubbingVia(MOCKITO_WHEN)
+            .skippingAnalysisOfFirstCall()
+            .inCallChainsBeginningWithInstance(WHEN).build()
     );
 
     @Override
-    protected List<ConsecutiveCallAnalysisDescriptor> analysisDescriptors() {
+    protected List<ConsecutiveCallAnalyzer> analyzers() {
         return THROW_CALL_DESCRIPTORS;
     }
 
