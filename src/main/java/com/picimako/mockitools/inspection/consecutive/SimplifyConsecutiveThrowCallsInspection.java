@@ -82,22 +82,20 @@ final class SimplifyConsecutiveThrowCallsInspection extends SimplifyConsecutiveC
      * so they can choose the target type.
      */
     @Override
-    protected void register(ConsecutiveCallRegistrarContext registrar, @NotNull ProblemsHolder holder) {
+    protected void register(ConsecutiveCallRegistrar registrar, @NotNull ProblemsHolder holder) {
         switch (determineParamCombination(registrar)) {
             case CLASSES, THROWABLES ->
-                doRegister(registrar, holder, new MergeConsecutiveStubbingCallsQuickFix(new ConsecutiveCallQuickFixContext(registrar), TypeConversionMethod.NO_CONVERSION));
+                doRegister(registrar, holder, TypeConversionMethod.NO_CONVERSION);
             case MIXED_WITH_THROWABLES_PREFERRED ->
-                doRegister(registrar, holder, new MergeConsecutiveStubbingCallsQuickFix(new ConsecutiveCallQuickFixContext(registrar), TypeConversionMethod.TO_THROWABLES_SIMPLE));
-            case MIXED -> doRegister(registrar, holder,
-                new MergeConsecutiveStubbingCallsQuickFix(new ConsecutiveCallQuickFixContext(registrar), TypeConversionMethod.TO_CLASSES),
-                new MergeConsecutiveStubbingCallsQuickFix(new ConsecutiveCallQuickFixContext(registrar), TypeConversionMethod.TO_THROWABLES));
+                doRegister(registrar, holder, TypeConversionMethod.TO_THROWABLES_SIMPLE);
+            case MIXED -> doRegister(registrar, holder, TypeConversionMethod.TO_CLASSES, TypeConversionMethod.TO_THROWABLES);
         }
     }
 
     /**
      * Determines the combination of parameter types specified in the *Throw() calls.
      */
-    private ThrowStubParameterCombination determineParamCombination(ConsecutiveCallRegistrarContext registrar) {
+    private ThrowStubParameterCombination determineParamCombination(ConsecutiveCallRegistrar registrar) {
         boolean hasClasses = false;
         boolean hasThrowables = false;
         boolean isThereNonDefaultNewExpressionArg = false;

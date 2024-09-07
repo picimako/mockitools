@@ -47,7 +47,7 @@ final class SimplifyConsecutiveReturnCallsInspection extends SimplifyConsecutive
     }
 
     @Override
-    protected void register(ConsecutiveCallRegistrarContext registrar, @NotNull ProblemsHolder holder) {
-        doRegister(registrar, holder, new MergeConsecutiveStubbingCallsQuickFix(new ConsecutiveCallQuickFixContext(registrar), TypeConversionMethod.NO_CONVERSION));
+    protected void register(ConsecutiveCallRegistrar registrar, @NotNull ProblemsHolder holder) {
+        doRegister(registrar, holder, TypeConversionMethod.NO_CONVERSION);
     }
 }

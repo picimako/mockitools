@@ -3,17 +3,20 @@
 package com.picimako.mockitools.inspection.consecutive;
 
 import static com.google.common.collect.Iterables.getLast;
+import static com.picimako.mockitools.util.PointersUtil.toPointers;
 
-import java.util.List;
-
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.intellij.psi.SmartPsiElementPointer;
 import com.picimako.mockitools.inspection.stubbing.ExceptionStubber;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * Data class to be used during quick fix registration.
  */
-class ConsecutiveCallRegistrarContext {
+class ConsecutiveCallRegistrar {
     /**
      * @see ConsecutiveCallAnalyzer#consecutiveMethodName
      */
@@ -30,10 +33,16 @@ class ConsecutiveCallRegistrarContext {
      * @see ConsecutiveCallAnalyzer#exceptionStubber
      */
     private final ExceptionStubber exceptionStubber;
+    /**
+     * The list of {@code callsInWholeChain} as {@link SmartPsiElementPointer}s used within the respective quick fix.
+     * <p>
+     * This is lazy-initialized, and instantiated only when {@code MergeConsecutiveStubbingCallsQuickFix} is actually called.
+     */
+    private List<SmartPsiElementPointer<PsiMethodCallExpression>> wholeChainPointers = null;
 
-    ConsecutiveCallRegistrarContext(@NotNull ConsecutiveCallAnalyzer analyzer,
-                                    @NotNull List<PsiMethodCallExpression> callsInWholeChain,
-                                    @NotNull List<Integer> consecutiveCallIndeces) {
+    ConsecutiveCallRegistrar(@NotNull ConsecutiveCallAnalyzer analyzer,
+                             @NotNull List<PsiMethodCallExpression> callsInWholeChain,
+                             @NotNull List<Integer> consecutiveCallIndeces) {
         consecutiveMethodName = analyzer.consecutiveMethodName;
         exceptionStubber = analyzer.exceptionStubber;
         this.callsInWholeChain = callsInWholeChain;
@@ -53,5 +62,26 @@ class ConsecutiveCallRegistrarContext {
 
     boolean isCallToThrowables(PsiMethodCallExpression call) {
         return exceptionStubber != null && exceptionStubber.throwablesMatcher.matches(call);
+    }
+
+    //For quick fixes
+
+    PsiMethodCallExpression getElement(int index) {
+        initializePointersIfNotAlready();
+        return wholeChainPointers.get(index).getElement();
+    }
+
+    PsiMethodCallExpression getFirstConsecutiveCall() {
+        initializePointersIfNotAlready();
+        return wholeChainPointers.get(consecutiveCallIndeces.get(0)).getElement();
+    }
+
+    VirtualFile getContainingFile() {
+        initializePointersIfNotAlready();
+        return wholeChainPointers.get(0).getVirtualFile();
+    }
+
+    private void initializePointersIfNotAlready() {
+        if (wholeChainPointers == null) wholeChainPointers = toPointers(callsInWholeChain);
     }
 }
