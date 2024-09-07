@@ -95,9 +95,6 @@ public class ConvertStubbingAction extends AnAction {
 
     @Nullable
     public static PsiMethodCallExpression getFirstCallInChain(PsiExpressionStatement statement) {
-        return Optional.of(statement)
-            .map(stmt -> findChildOfType(stmt, PsiIdentifier.class))
-            .map(identifier -> getParentOfType(identifier, PsiMethodCallExpression.class))
-            .orElse(null);
+        return getParentOfType(/*identifier*/ findChildOfType(statement, PsiIdentifier.class), PsiMethodCallExpression.class);
     }
 }

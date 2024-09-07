@@ -42,12 +42,16 @@ final class ConvertFromMockitoWhenIntention extends ConvertStubbingIntentionBase
         boolean isBulkMode = ReadAction.compute(() -> editor.getSelectionModel().hasSelection());
         var actions = new ArrayList<AnAction>(3);
         if (!isBDDMockitoEnforced(file) && doAllCallChainsMatch(DOESNT_CONTAIN_THEN, isBulkMode, editor, file)) {
-            actions.add(new ConvertStubbingAction(MOCKITO_WHEN, StubbingApproach.MOCKITO_DO_X, isBulkMode));
+            addConversion(actions, StubbingApproach.MOCKITO_DO_X, isBulkMode);
         }
         if (!isMockitoEnforced(file)) {
-            actions.add(new ConvertStubbingAction(MOCKITO_WHEN, StubbingApproach.BDDMOCKITO_GIVEN, isBulkMode));
-            actions.add(new ConvertStubbingAction(MOCKITO_WHEN, StubbingApproach.BDDMOCKITO_WILL_X, isBulkMode));
+            addConversion(actions, StubbingApproach.BDDMOCKITO_GIVEN, isBulkMode);
+            addConversion(actions, StubbingApproach.BDDMOCKITO_WILL_X, isBulkMode);
         }
         return actions;
+    }
+
+    private void addConversion(List<AnAction> actions, StubbingApproach targetApproach, boolean isBulkMode) {
+        actions.add(new ConvertStubbingAction(MOCKITO_WHEN, targetApproach, isBulkMode));
     }
 }

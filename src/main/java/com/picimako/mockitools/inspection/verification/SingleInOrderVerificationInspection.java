@@ -29,28 +29,27 @@ import org.jetbrains.annotations.NotNull;
 final class SingleInOrderVerificationInspection extends LocalInspectionTool {
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-        if (isInTestSourceContent(session.getFile())) {
-            return new JavaElementVisitor() {
-                @Override
-                public void visitLocalVariable(@NotNull PsiLocalVariable variable) {
-                    if (!typeEquals(ORG_MOCKITO_INORDER, variable.getType())) return;
+        if (!isInTestSourceContent(session.getFile())) return PsiElementVisitor.EMPTY_VISITOR;
 
-                    var inOrderRefs = ReferencesSearch.search(variable).findAll();
-                    //If there is only one reference to/usage of the InOrder variable
-                    if (inOrderRefs.size() == 1) {
-                        var ref = inOrderRefs.iterator().next();
-                        if (ref instanceof PsiReferenceExpression inOrderRef) {
-                            var verifyOrShould = getParentOfType(inOrderRef, PsiMethodCallExpression.class);
-                            //If the only usage is a method call to InOrder.verify() or BDDMockito.should(InOrder)
-                            if (VerificationApproach.INORDER_VERIFY.isVerifiedBy(verifyOrShould) || VerificationApproach.BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(verifyOrShould))
-                                holder.registerProblem(variable.getNameIdentifier(), MockitoolsBundle.message("inspection.in.order.is.used.only.once"));
-                        }
+        return new JavaElementVisitor() {
+            @Override
+            public void visitLocalVariable(@NotNull PsiLocalVariable variable) {
+                if (!typeEquals(ORG_MOCKITO_INORDER, variable.getType())) return;
+
+                var inOrderRefs = ReferencesSearch.search(variable).findAll();
+                //If there is only one reference to/usage of the InOrder variable
+                if (inOrderRefs.size() == 1) {
+                    var ref = inOrderRefs.iterator().next();
+                    if (ref instanceof PsiReferenceExpression inOrderRef) {
+                        var verifyOrShould = getParentOfType(inOrderRef, PsiMethodCallExpression.class);
+                        //If the only usage is a method call to InOrder.verify() or BDDMockito.should(InOrder)
+                        if (VerificationApproach.INORDER_VERIFY.isVerifiedBy(verifyOrShould) || VerificationApproach.BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(verifyOrShould))
+                            holder.registerProblem(variable.getNameIdentifier(), MockitoolsBundle.message("inspection.in.order.is.used.only.once"));
                     }
-
-                    super.visitLocalVariable(variable);
                 }
-            };
-        }
-        return PsiElementVisitor.EMPTY_VISITOR;
+
+                super.visitLocalVariable(variable);
+            }
+        };
     }
 }

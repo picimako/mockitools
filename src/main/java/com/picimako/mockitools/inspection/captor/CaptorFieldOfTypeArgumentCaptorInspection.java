@@ -10,6 +10,7 @@ import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
@@ -20,9 +21,9 @@ import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
-import org.jetbrains.annotations.NotNull;
-
 import com.picimako.mockitools.resources.MockitoolsBundle;
+import com.siyeh.ig.InspectionGadgetsFix;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Fields that are annotated as {@code @Captor} must have {@code ArgumentCaptor} as their type, otherwise Mockito will fail
@@ -54,11 +55,16 @@ final class CaptorFieldOfTypeArgumentCaptorInspection extends MockitoolsBaseInsp
      * <p>
      * With that said, it imports {@code org.mockito.ArgumentCaptor} upon applying the quick fix.
      */
-    private static final class ConvertFieldTypeToArgumentCaptorQuickFix extends CaptorFieldBaseQuickFix {
+    private static final class ConvertFieldTypeToArgumentCaptorQuickFix extends InspectionGadgetsFix {
 
         @Override
         public @IntentionName @NotNull String getName() {
             return MockitoolsBundle.message("quick.fix.captor.field.convert.to.argumentcaptor");
+        }
+
+        @Override
+        public @IntentionFamilyName @NotNull String getFamilyName() {
+            return MockitoolsBundle.message("quick.fix.captor.field.family.name");
         }
 
         @Override

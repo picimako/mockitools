@@ -12,9 +12,6 @@ import com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection;
  */
 public final class EnforceConventionUtil {
 
-    /**
-     * @see EnforceConventionInspection#SHORT_NAME
-     */
     public static final String ENFORCE_CONVENTION_INSPECTION_SHORT_NAME = "EnforceConvention";
 
     /**

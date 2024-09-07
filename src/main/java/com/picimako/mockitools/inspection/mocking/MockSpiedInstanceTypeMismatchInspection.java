@@ -44,9 +44,8 @@ final class MockSpiedInstanceTypeMismatchInspection extends MockitoolsBaseInspec
                 if (SPIED_INSTANCE.equals(getMethodName(settingsCall))
                     && hasArgument(settingsCall) //e.g. spiedInstance(someObject)
                     && getFirstArgument(settingsCall) instanceof PsiNewExpression spiedInstance) { //e.g. someObject
-                    var mockTypeArg = getFirstArgument(expression);
-                    if (mockTypeArg instanceof PsiClassObjectAccessExpression mockTypeAsClassAccess
-                        && !Objects.equals(getRawType(mockTypeAsClassAccess.getOperand().getType()), getRawType(spiedInstance.getType()))) {
+                    if (getFirstArgument(expression) instanceof PsiClassObjectAccessExpression mockTypeArg
+                        && !Objects.equals(getRawType(mockTypeArg.getOperand().getType()), getRawType(spiedInstance.getType()))) {
                         holder.registerProblem(mockTypeArg, MockitoolsBundle.message("inspection.mock.type.spied.instance.type.mismatch"));
                     }
                     break; //Found the 'spiedInstance()' method, further inspection of the call chain is not needed.

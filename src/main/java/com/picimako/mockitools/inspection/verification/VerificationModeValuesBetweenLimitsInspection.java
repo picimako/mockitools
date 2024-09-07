@@ -65,9 +65,9 @@ final class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBase
         else if (isCalls(expression))
             checkIntegerArgumentValue(1, expression, holder);
         else if (isAfter(expression))
-            checkLongArgumentValue(0L, expression, false, holder);
+            checkLongArgumentValue(expression, false, holder);
         else if (isTimeout(expression))
-            checkLongArgumentValue(0L, expression, true, holder);
+            checkLongArgumentValue(expression, true, holder);
     }
 
     private void checkIntegerArgumentValue(int upperLimit, PsiMethodCallExpression methodCall, @NotNull ProblemsHolder holder) {
@@ -80,14 +80,14 @@ final class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBase
         }
     }
 
-    private void checkLongArgumentValue(long upperLimit, PsiMethodCallExpression methodCall, boolean isTimeout, @NotNull ProblemsHolder holder) {
+    private void checkLongArgumentValue(PsiMethodCallExpression methodCall, boolean isTimeout, @NotNull ProblemsHolder holder) {
         var verificationModeArgument = getFirstArgument(methodCall);
         Long argValue = PsiLiteralUtil.parseLong(verificationModeArgument.getText());
 
         if (argValue != null) {
-            if (argValue < upperLimit) {
+            if (argValue < 0L /*upper limit*/) {
                 holder.registerProblem(verificationModeArgument,
-                    MockitoolsBundle.message("inspection.verification.mode.value.less.than.allowed", getMethodName(methodCall), upperLimit));
+                    MockitoolsBundle.message("inspection.verification.mode.value.less.than.allowed", getMethodName(methodCall), 0L));
             }
             if (isTimeout && argValue > timeoutMaxThreshold) {
                 holder.registerProblem(verificationModeArgument, MockitoolsBundle.message("inspection.timeout.value.more.than.allowed", timeoutMaxThreshold));

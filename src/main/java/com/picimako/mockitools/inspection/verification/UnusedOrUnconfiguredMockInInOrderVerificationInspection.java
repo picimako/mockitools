@@ -45,45 +45,45 @@ import java.util.List;
 final class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends LocalInspectionTool {
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
-        if (isInTestSourceContent(session.getFile())) {
-            return new JavaElementVisitor() {
-                @Override
-                public void visitLocalVariable(@NotNull PsiLocalVariable variable) {
-                    if (!typeEquals(ORG_MOCKITO_INORDER, variable.getType()) || !(variable.getInitializer() instanceof PsiMethodCallExpression)) return;
+        if (!isInTestSourceContent(session.getFile())) return PsiElementVisitor.EMPTY_VISITOR;
 
-                    var inOrderRefs = ReferencesSearch.search(variable).toArray(PsiReference.EMPTY_ARRAY);
-                    if (inOrderRefs.length > 0 && areAllVerifications(inOrderRefs)) {
-                        var mocksInVerifications = collectMocksInVerifications(inOrderRefs);
-                        var mockitoInOrder = (PsiMethodCallExpression) variable.getInitializer();
-                        //The mock arguments in 'Mockito.inOrder()'
-                        var mocksInMockitoInOrder = getArguments(mockitoInOrder);
+        return new JavaElementVisitor() {
+            @Override
+            public void visitLocalVariable(@NotNull PsiLocalVariable variable) {
+                if (!typeEquals(ORG_MOCKITO_INORDER, variable.getType()) || !(variable.getInitializer() instanceof PsiMethodCallExpression))
+                    return;
 
-                        //The mock arguments from each 'InOrder.verify()' and 'BDDMockito.then().should(InOrder)' call
-                        var mocksInVerificationsAsString = mocksInVerifications.stream().map(PsiElement::getText).toList();
-                        //Report all mocks in 'Mockito.inOrder()' that are not used in a verification
-                        for (var mockInInOrder : mocksInMockitoInOrder) {
-                            //Exclude Type.class-type arguments that are (most probably) used in MockedStatic verifications
-                            if (mockInInOrder instanceof PsiClassObjectAccessExpression) continue;
-                            if (!mocksInVerificationsAsString.contains(mockInInOrder.getText()))
-                                holder.registerProblem(mockInInOrder, MockitoolsBundle.message("inspection.no.in.order.verification.for.mock"));
-                        }
+                var inOrderRefs = ReferencesSearch.search(variable).toArray(PsiReference.EMPTY_ARRAY);
+                if (inOrderRefs.length > 0 && areAllVerifications(inOrderRefs)) {
+                    var mockitoInOrder = (PsiMethodCallExpression) variable.getInitializer();
+                    //The mock arguments in 'Mockito.inOrder()'
+                    var mocksInMockitoInOrder = getArguments(mockitoInOrder);
 
-                        //The mock arguments as Strings from 'Mockito.inOrder()'
-                        var mocksInMockitoInOrderAsString = Arrays.stream(mocksInMockitoInOrder).map(PsiElement::getText).toList();
-                        //Report all mocks in verifications that are not configured in 'Mockito.inOrder()'
-                        //This corresponds to the 'inOrderRequiresFamiliarMock()' method in
-                        // https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java
-                        for (var mockInVerification : mocksInVerifications) {
-                            if (!mocksInMockitoInOrderAsString.contains(mockInVerification.getText()))
-                                holder.registerProblem(mockInVerification, MockitoolsBundle.message("inspection.mock.is.not.configured.in.in.order"));
-                        }
+                    var mocksInVerifications = collectMocksInVerifications(inOrderRefs);
+                    //The mock arguments from each 'InOrder.verify()' and 'BDDMockito.then().should(InOrder)' call
+                    var mocksInVerificationsAsString = mocksInVerifications.stream().map(PsiElement::getText).toList();
+                    //Report all mocks in 'Mockito.inOrder()' that are not used in a verification
+                    for (var mockInInOrder : mocksInMockitoInOrder) {
+                        //Exclude Type.class-type arguments that are (most probably) used in MockedStatic verifications
+                        if (mockInInOrder instanceof PsiClassObjectAccessExpression) continue;
+                        if (!mocksInVerificationsAsString.contains(mockInInOrder.getText()))
+                            holder.registerProblem(mockInInOrder, MockitoolsBundle.message("inspection.no.in.order.verification.for.mock"));
                     }
 
-                    super.visitLocalVariable(variable);
+                    //The mock arguments as Strings from 'Mockito.inOrder()'
+                    var mocksInMockitoInOrderAsString = Arrays.stream(mocksInMockitoInOrder).map(PsiElement::getText).toList();
+                    //Report all mocks in verifications that are not configured in 'Mockito.inOrder()'
+                    //This corresponds to the 'inOrderRequiresFamiliarMock()' method in
+                    // https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java
+                    for (var mockInVerification : mocksInVerifications) {
+                        if (!mocksInMockitoInOrderAsString.contains(mockInVerification.getText()))
+                            holder.registerProblem(mockInVerification, MockitoolsBundle.message("inspection.mock.is.not.configured.in.in.order"));
+                    }
                 }
-            };
-        }
-        return PsiElementVisitor.EMPTY_VISITOR;
+
+                super.visitLocalVariable(variable);
+            }
+        };
     }
 
     /**

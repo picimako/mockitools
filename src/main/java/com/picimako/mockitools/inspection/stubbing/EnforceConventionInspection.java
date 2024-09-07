@@ -43,7 +43,6 @@ import java.util.Optional;
  * @since 0.4.0
  */
 public final class EnforceConventionInspection extends MockitoolsBaseInspection {
-    public static final String SHORT_NAME = "EnforceConvention";
     //MockedStatic specific verify() methods are excluded, since BDDMockito has no way to verify MockedStatic
     public static final CallMatcher IN_ORDER_VERIFY_NON_MOCKED_STATIC = CallMatcher.anyOf(
         INORDER_VERIFY.parameterTypes("T"),

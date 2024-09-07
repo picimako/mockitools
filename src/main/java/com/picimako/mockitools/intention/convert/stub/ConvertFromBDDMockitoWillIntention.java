@@ -6,6 +6,7 @@ import static com.intellij.openapi.application.ReadAction.compute;
 import static com.picimako.mockitools.EnforceConventionUtil.isBDDMockitoEnforced;
 import static com.picimako.mockitools.EnforceConventionUtil.isMockitoEnforced;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
+import static com.picimako.mockitools.StubbingApproach.BDDMOCKITO_WILL_X;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_WILL;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_WILL_DO_NOTHING;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
@@ -35,7 +36,7 @@ final class ConvertFromBDDMockitoWillIntention extends ConvertStubbingIntentionB
 
     @Override
     public boolean isAvailableFor(PsiMethodCallExpression methodCall) {
-        return StubbingApproach.BDDMOCKITO_WILL_X.isAnyOfStubs(methodCall) && StubbingApproach.BDDMOCKITO_WILL_X.isValid(collectCallsInChainFromFirst(methodCall));
+        return BDDMOCKITO_WILL_X.isAnyOfStubs(methodCall) && BDDMOCKITO_WILL_X.isValid(collectCallsInChainFromFirst(methodCall));
     }
 
     @Override
@@ -44,13 +45,17 @@ final class ConvertFromBDDMockitoWillIntention extends ConvertStubbingIntentionB
         var actions = new ArrayList<AnAction>(3);
         if (!isBDDMockitoEnforced(file)) {
             if (doAllCallChainsMatch(DOESNT_CONTAIN_WILL, isBulkMode, editor, file))
-                actions.add(new ConvertStubbingAction(StubbingApproach.BDDMOCKITO_WILL_X, StubbingApproach.MOCKITO_DO_X, isBulkMode));
+                addConversion(actions, StubbingApproach.MOCKITO_DO_X, isBulkMode);
             if (doAllCallChainsMatch(DOESNT_CONTAIN_WILL_DO_NOTHING, isBulkMode, editor, file))
-                actions.add(new ConvertStubbingAction(StubbingApproach.BDDMOCKITO_WILL_X, StubbingApproach.MOCKITO_WHEN, isBulkMode));
+                addConversion(actions, StubbingApproach.MOCKITO_WHEN, isBulkMode);
         }
         if (!isMockitoEnforced(file) && doAllCallChainsMatch(DOESNT_CONTAIN_WILL_DO_NOTHING, isBulkMode, editor, file)) {
-            actions.add(new ConvertStubbingAction(StubbingApproach.BDDMOCKITO_WILL_X, StubbingApproach.BDDMOCKITO_GIVEN, isBulkMode));
+            addConversion(actions, StubbingApproach.BDDMOCKITO_GIVEN, isBulkMode);
         }
         return !actions.isEmpty() ? actions : NO_ACTION_AVAILABLE;
+    }
+
+    private void addConversion(List<AnAction> actions, StubbingApproach targetApproach, boolean isBulkMode) {
+        actions.add(new ConvertStubbingAction(BDDMOCKITO_WILL_X, targetApproach, isBulkMode));
     }
 }

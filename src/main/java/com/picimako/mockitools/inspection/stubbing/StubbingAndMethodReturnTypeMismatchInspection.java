@@ -41,7 +41,8 @@ final class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBase
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
-        if (MOCKITO_DO_X.isAnyOfStubs(expression)) checkAndRegister("doNothing", "doReturn", MOCKITO_DO_X, expression, holder);
+        if (MOCKITO_DO_X.isAnyOfStubs(expression))
+            checkAndRegister("doNothing", "doReturn", MOCKITO_DO_X, expression, holder);
         else if (BDDMOCKITO_WILL_X.isAnyOfStubs(expression))
             checkAndRegister("willDoNothing", "willReturn", BDDMOCKITO_WILL_X, expression, holder);
     }

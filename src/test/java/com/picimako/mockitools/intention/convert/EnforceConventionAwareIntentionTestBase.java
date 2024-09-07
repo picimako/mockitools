@@ -7,6 +7,7 @@ import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.testFramework.InspectionsKt;
 
 import com.picimako.mockitools.Convention;
+import com.picimako.mockitools.EnforceConventionUtil;
 import com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection;
 import com.picimako.mockitools.intention.MockitoolsIntentionTestBase;
 
@@ -21,6 +22,6 @@ public abstract class EnforceConventionAwareIntentionTestBase extends Mockitools
         inspection.conventionToEnforce = convention;
         InspectionsKt.disableAllTools(profile);
         profile.addTool(getFixture().getProject(), new LocalInspectionToolWrapper(inspection), null);
-        profile.enableTool(EnforceConventionInspection.SHORT_NAME, getFixture().getProject());
+        profile.enableTool(EnforceConventionUtil.ENFORCE_CONVENTION_INSPECTION_SHORT_NAME, getFixture().getProject());
     }
 }
