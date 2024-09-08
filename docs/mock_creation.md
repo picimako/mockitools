@@ -150,8 +150,6 @@ class SpyOnMockTest {
 The corresponding feature was introduced in [Mockito 5.4.0](https://github.com/mockito/mockito/releases/tag/v5.4.0), but this inspection does not do a library version check,
 and validates test code regardless of the Mockito version.
    
-**NOTE:** variables with `Mockito.mock()` initializers passed into `Mockito.spy()` are not recognized as mocks yet.
-
 ----
 
 ## Mock/Spy creation without specifying class

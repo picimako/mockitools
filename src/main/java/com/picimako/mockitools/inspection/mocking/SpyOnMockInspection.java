@@ -2,27 +2,29 @@
 
 package com.picimako.mockitools.inspection.mocking;
 
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
+import static com.picimako.mockitools.MockitoQualifiedNames.SPY;
+import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoMock;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
+import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
+
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
+import com.picimako.mockitools.dsl.MockObject;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
-
-import static com.picimako.mockitools.MockitoQualifiedNames.*;
-import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoMock;
-import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
-import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 
 /**
  * This inspection reports spy creation on mock objects.
  * <p>
  * Although, the corresponding feature was introduced in Mockito 5.4.0, this inspection does not do a library version check,
  * and validates test code regardless of the Mockito version.
- * <p>
- * NOTE: variables with Mockito.mock() initializers are not recognized as mocks yet.
  *
  * @since 0.11.0
  */
@@ -40,10 +42,17 @@ final class SpyOnMockInspection extends MockitoolsBaseInspection {
                     holder.registerProblem(firstArgument, MockitoolsBundle.message("inspection.spying.on.mock.is.not.allowed"));
             }
             //Mockito.spy(Mockito.mock(<name of field annotated with @Mock>))
-            else if (firstArgument instanceof PsiReferenceExpression variableRef
-                && variableRef.resolve() instanceof PsiField field
-                && field.hasAnnotation(ORG_MOCKITO_MOCK)) {
-                holder.registerProblem(firstArgument, MockitoolsBundle.message("inspection.spying.on.mock.is.not.allowed"));
+            else if (firstArgument instanceof PsiReferenceExpression variableRef) {
+                var resolved = variableRef.resolve();
+                if (resolved instanceof PsiField field) {
+                    if (field.hasAnnotation(ORG_MOCKITO_MOCK)) {
+                        holder.registerProblem(firstArgument, MockitoolsBundle.message("inspection.spying.on.mock.is.not.allowed"));
+                    }
+                } else if (resolved instanceof PsiLocalVariable localVariable) {
+                    if (MockObject.isAnyKindOfMock(localVariable)) {
+                        holder.registerProblem(firstArgument, MockitoolsBundle.message("inspection.spying.on.mock.is.not.allowed"));
+                    }
+                }
             }
         }
     }
