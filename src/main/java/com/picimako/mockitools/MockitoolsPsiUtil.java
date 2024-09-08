@@ -3,6 +3,7 @@
 package com.picimako.mockitools;
 
 import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.util.NotNullLazyValue.lazy;
 import static com.picimako.mockitools.MockitoQualifiedNames.AFTER;
 import static com.picimako.mockitools.MockitoQualifiedNames.CALLS;
 import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
@@ -26,6 +27,7 @@ import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
+import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethodCallExpression;
@@ -48,10 +50,10 @@ public final class MockitoolsPsiUtil {
     private static final CallMatcher MOCKITO_TIMES = staticCall(ORG_MOCKITO_MOCKITO, TIMES).parameterCount(1);
     private static final CallMatcher MOCKITO_CALLS = staticCall(ORG_MOCKITO_MOCKITO, CALLS).parameterCount(1);
     private static final CallMatcher MOCKITO_AFTER = staticCall(ORG_MOCKITO_MOCKITO, AFTER).parameterCount(1);
-    private static final CallMatcher MOCKITO_TIMEOUT = staticCall(ORG_MOCKITO_MOCKITO, TIMEOUT).parameterCount(1);
-    private static final CallMatcher MOCKITO_RESET = staticCall(ORG_MOCKITO_MOCKITO, RESET);
-    private static final CallMatcher MOCKED_STATIC_RESET = instanceCall(ORG_MOCKITO_MOCKED_STATIC, RESET);
-    private static final CallMatcher MOCKITO_IGNORE_STUBS = staticCall(ORG_MOCKITO_MOCKITO, IGNORE_STUBS);
+    private static final NotNullLazyValue<CallMatcher> MOCKITO_TIMEOUT = lazy(() -> staticCall(ORG_MOCKITO_MOCKITO, TIMEOUT).parameterCount(1));
+    private static final NotNullLazyValue<CallMatcher> MOCKITO_RESET = lazy(() -> staticCall(ORG_MOCKITO_MOCKITO, RESET));
+    private static final NotNullLazyValue<CallMatcher> MOCKED_STATIC_RESET = lazy(() -> instanceCall(ORG_MOCKITO_MOCKED_STATIC, RESET));
+    private static final NotNullLazyValue<CallMatcher> MOCKITO_IGNORE_STUBS = lazy(() -> staticCall(ORG_MOCKITO_MOCKITO, IGNORE_STUBS));
     public static final CallMatcher.Simple MOCKITO_VERIFY = staticCall(ORG_MOCKITO_MOCKITO, VERIFY);
     public static final CallMatcher.Simple INORDER_VERIFY = instanceCall(ORG_MOCKITO_INORDER, VERIFY);
     public static final CallMatcher.Simple MOCKED_STATIC_VERIFY = instanceCall(ORG_MOCKITO_MOCKED_STATIC, VERIFY);
@@ -158,7 +160,7 @@ public final class MockitoolsPsiUtil {
      * @return true if the method is a Mockito.timeout, false otherwise
      */
     public static boolean isTimeout(PsiMethodCallExpression methodCall) {
-        return compute(() -> MOCKITO_TIMEOUT.matches(methodCall));
+        return compute(() -> MOCKITO_TIMEOUT.get().matches(methodCall));
     }
 
     /**
@@ -178,7 +180,7 @@ public final class MockitoolsPsiUtil {
      * @return true if the method is a Mockito.reset, false otherwise
      */
     public static boolean isReset(PsiMethodCallExpression methodCall) {
-        return compute(() -> MOCKITO_RESET.matches(methodCall));
+        return compute(() -> MOCKITO_RESET.get().matches(methodCall));
     }
 
     /**
@@ -188,7 +190,7 @@ public final class MockitoolsPsiUtil {
      * @return true if the method is a MockedStatic.reset, false otherwise
      */
     public static boolean isMockedStaticReset(PsiMethodCallExpression methodCall) {
-        return compute(() -> MOCKED_STATIC_RESET.matches(methodCall));
+        return compute(() -> MOCKED_STATIC_RESET.get().matches(methodCall));
     }
 
     /**
@@ -198,7 +200,7 @@ public final class MockitoolsPsiUtil {
      * @return true if the method is a Mockito.ignoreStubs, false otherwise
      */
     public static boolean isIgnoreStubs(PsiMethodCallExpression methodCall) {
-        return compute(() -> MOCKITO_IGNORE_STUBS.matches(methodCall));
+        return compute(() -> MOCKITO_IGNORE_STUBS.get().matches(methodCall));
     }
 
     /**
