@@ -12,6 +12,7 @@
 * [Convert Mockito.mock()/spy() calls to @Mock/@Spy fields](#convert-mockitomockspy-calls-to-mockspy-fields)
 * [Simplify mock creation](#simplify-mock-creation)
 * [Expand mock creation](#expand-mock-creation)
+* [Explicit initialization of @Mock and @InjectMocks fields is not required](#explicit-initialization-of-mock-and-injectmocks-fields-is-not-required)
 <!-- TOC -->
 
 ## Non-interface type(s) passed into extraInterfaces
@@ -465,4 +466,29 @@ Mockito.mock(MockType.class, withSettings().name("some mock name"))
 Mockito.mock(MockType.class, Answers.RETURNS_MOCKS)
 //to:
 Mockito.mock(MockType.class, withSettings().defaultAnswer(Answers.RETURNS_MOCKS))
+```
+
+## Explicit initialization of @Mock and @InjectMocks fields is not required
+
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-1.3.0-blue) [![](https://img.shields.io/badge/implementation-MockFieldInitializationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/mocking/MockFieldInitializationInspection.java)
+
+Since `@Mock` and `@InjectMocks` annotated fields are initialized automagically by Mockito via `MockitoJUnitRunner`, `MockitoJUnit.rule()` or
+`MockitoAnnotations.initMocks()/openMocks()`, there is no need to explicitly initialize them.
+
+This inspection reports `@Mock` and `@InjectMocks` fields that have an initializer specified.
+
+```java
+class CaptorTest {
+    @Mock
+    public MockObject mock = Mockito.mock();
+}
+```
+
+You can also apply a quick fix (*Remove initializer*) on it, so that the initializer may be removed. The code will then become:
+
+```java
+class CaptorTest {
+    @Mock
+    public MockObject mock;
+}
 ```

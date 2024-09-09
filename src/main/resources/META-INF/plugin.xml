@@ -48,6 +48,11 @@
                 displayName="@Mock#extraInterfaces and MockSettings.extraInterfaces() validations" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
+                implementationClass="com.picimako.mockitools.inspection.mocking.MockFieldInitializationInspection"
+                id="mockitools.mockFieldInitialization" language="JAVA"
+                displayName="@Mock or @InjectMocks field is explicitly initialized" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+        <localInspection
                 implementationClass="com.picimako.mockitools.inspection.mocking.MockTypeInspection"
                 id="mockitools.mockType" language="JAVA"
                 displayName="Mocking/spying non-mockable types" groupPath="Java"

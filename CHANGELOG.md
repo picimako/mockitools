@@ -12,6 +12,7 @@ either with `Mockito.mock()` or `Mockito.spy()`.
 as well as `equals()` and `hashCode()`.
 - [63](https://github.com/picimako/mockitools/issues/63): Added an inspection to report `ArgumentCaptor.captor()` calls when they are passed in at least one argument.
 This method is not designed to accept any argument.
+- [55](https://github.com/picimako/mockitools/issues/55): Added an inspection to report explicit initialization of `@Mock` and `@InjectMocks` annotated fields.
 
 ### Changed
 - Applied a couple of code simplifications for easier maintenance.
