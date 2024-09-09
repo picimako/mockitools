@@ -3,6 +3,7 @@
 <!-- TOC -->
 * [Invalid checked exception is passed into *Throw() methods](#invalid-checked-exception-is-passed-into-throw-methods)
 * [Consecutive `*Return()` and `*Throw()` calls can be merged](#consecutive-return-and-throw-calls-can-be-merged)
+* [Stubbing calls and method return type mismatch](#stubbing-calls-and-method-return-type-mismatch)
 * [Convert arguments of `*Throw()` stubbing methods](#convert-arguments-of-throw-stubbing-methods)
 * [Convert between various stubbing approaches](#convert-between-various-stubbing-approaches)
 <!-- TOC -->
@@ -58,10 +59,11 @@ Reports multiple consecutive calls to `*Return()` and `*Throw()` methods, respec
 If there are multiple sections of consecutive calls within the same call chain, they are reported separately for better notification,
 and all sections can be merged separately, depending on the section the quick fix is invoked on. It is always the last consecutive call that is registered.
 
-### Return examples
+### *Return examples
 
-![consecutive_return_calls](assets/consecutive_return_calls.png)
+![consecutive thenReturn() calls](assets/consecutive_then_return_calls.gif)
 
+**Detailed examples:**
 ```java
 From: Mockito.when(mockObject.invoke()).thenReturn(1).thenReturn(2);
   to: Mockito.when(mockObject.invoke()).thenReturn(1, 2);
@@ -81,7 +83,7 @@ From: Mockito.when(mockObject.invoke()).thenReturn(1, 2, 3).thenReturn(4).thenCa
   to: Mockito.when(mockObject.invoke()).thenReturn(1, 2, 3).thenReturn(4).thenCallRealMethod().thenReturn(5, 6, 7);
 ```
 
-### Throw examples
+### *Throw examples
 
 When merging `*Throw()` calls, there are a few more cases than in case of `*Return()` ones.
 
@@ -92,6 +94,10 @@ When merging `*Throw()` calls, there are a few more cases than in case of `*Retu
 | `Class` + 'new' expression with default constructor     | Merge calls, convert parameters to Class objects<br/>Merge calls, convert parameters to Throwables | `Class`<br/>`Throwable`                    |
 | `Class` + 'new' expression with non-default constructor | Merge *Throw calls                                                                                 | `Throwable` to keep constructor parameters |
 
+![consecutive thenThrow() calls](assets/consecutive_then_throw_calls.gif)
+
+**Detailed examples:**
+
 ```java
 From: Mockito.when(mockObject.invoke()).thenThrow(IllegalArgumentException.class).thenThrow(IOException.class);
   to: Mockito.when(mockObject.invoke()).thenThrow(IllegalArgumentException.class, IOException.class);
@@ -99,27 +105,34 @@ From: Mockito.when(mockObject.invoke()).thenThrow(IllegalArgumentException.class
 From: Mockito.when(mockObject.invoke()).thenThrow(new IllegalArgumentException()).thenThrow(new IOException());
   to: Mockito.when(mockObject.invoke()).thenThrow(new IllegalArgumentException(), new IOException());
 
-From: Mockito.when(mockObject.invoke()).thenThrow(IllegalArgumentException.class).thenThrow(new IOException());
-  to (conversion to Classes):    Mockito.when(mockObject.invoke()).thenThrow(IllegalArgumentException.class, IOException.class);
-  to (conversion to Throwables): Mockito.when(mockObject.invoke()).thenThrow(new IllegalArgumentException(), new IOException());
+//From:
+Mockito.when(mockObject.invoke()).thenThrow(IllegalArgumentException.class).thenThrow(new IOException());
+//to (conversion to Classes):
+Mockito.when(mockObject.invoke()).thenThrow(IllegalArgumentException.class, IOException.class);
+//to (conversion to Throwables):
+Mockito.when(mockObject.invoke()).thenThrow(new IllegalArgumentException(), new IOException());
+  
+//From:
+Mockito.when(mockObject.invoke())
+  .thenThrow(IllegalArgumentException.class).thenThrow(new IOException("reason")) //caret is here
+  .thenReturn(10)
+  .thenThrow(IllegalArgumentException.class).thenThrow(IOException.class);
+//to:
+Mockito.when(mockObject.invoke())
+  .thenThrow(new IllegalArgumentException(), new IOException("reason"))
+  .thenReturn(10)
+  .thenThrow(IllegalArgumentException.class).thenThrow(IOException.class);
 
-From: Mockito.when(mockObject.invoke())
-        .thenThrow(IllegalArgumentException.class).thenThrow(new IOException("reason")) //caret is here
-        .thenReturn(10)
-        .thenThrow(IllegalArgumentException.class).thenThrow(IOException.class);
-  to: Mockito.when(mockObject.invoke())
-        .thenThrow(new IllegalArgumentException(), new IOException("reason"))
-        .thenReturn(10)
-        .thenThrow(IllegalArgumentException.class).thenThrow(IOException.class);
-
-From: Mockito.when(mockObject.invoke())
-        .thenThrow(IllegalArgumentException.class).thenThrow(new IOException("reason"))
-        .thenReturn(10)
-        .thenThrow(IllegalArgumentException.class).thenThrow(IOException.class); //caret is here
-  to: Mockito.when(mockObject.invoke())
-        .thenThrow(IllegalArgumentException.class).thenThrow(new IOException("reason"))
-        .thenReturn(10)
-        .thenThrow(IllegalArgumentException.class, IOException.class);
+//From:
+Mockito.when(mockObject.invoke())
+  .thenThrow(IllegalArgumentException.class).thenThrow(new IOException("reason"))
+  .thenReturn(10)
+  .thenThrow(IllegalArgumentException.class).thenThrow(IOException.class); //caret is here
+//to:
+Mockito.when(mockObject.invoke())
+  .thenThrow(IllegalArgumentException.class).thenThrow(new IOException("reason"))
+  .thenReturn(10)
+  .thenThrow(IllegalArgumentException.class, IOException.class);
 ```
 
 ## Stubbing calls and method return type mismatch
@@ -127,8 +140,8 @@ From: Mockito.when(mockObject.invoke())
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.7.0-blue) [![](https://img.shields.io/badge/implementation-StubbingAndMethodReturnTypeMismatchInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/StubbingAndMethodReturnTypeMismatchInspection.java)
 
 There are two parts to this inspection:
-- it reports `doNothing()` and `willDoNothing()` calls when the stubbed method's return type is not void. Mockito's [corresponding error handling](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java#L568)
-- it reports `*Return()` calls when the stubbed method's return type is void. Mockito's [corresponding error handling](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java#L546)
+- it reports `doNothing()` and `willDoNothing()` calls when the stubbed method's return type is not void. See Mockito's [corresponding error handling](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java#L568)
+- it reports `*Return()` calls when the stubbed method's return type is void. See Mockito's [corresponding error handling](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java#L546)
 
 It highlights every instance of `doNothing()`, `willDoNothing()` and `*Return()` calls in the affected call chains.
 
@@ -170,6 +183,10 @@ All stubbing approaches are supported:
 - `Mockito.do*().doThrow().when()`
 - `BDDMockito.will*().willThrow().given()`
 - `BDDMockito.willThrow().given()`
+
+![convert arguments of thenThrow() call](assets/convert_arguments_of_then_throw_call.gif)
+
+### Examples
 
 ```java
 From: Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new IllegalArgumentException());
@@ -220,6 +237,8 @@ Below you can see the details of the conversion directions when converting singl
 
 **Example (Mockito.when() -> BDDMockito.will\*()):**
 
+![convert stubbing](assets/convert_stubbing.gif)
+
 ```java
 From: Mockito.when(mockObject.doSomething()).thenThrow(new IOException(), new IllegalArgumentException()).thenReturn(20);
   to: BDDMockito.willThrow(new IOException(), new IllegalArgumentException()).willReturn(20).given(mockObject).doSomething();
@@ -233,17 +252,17 @@ Conversion of one or more stubbing call chains is also available via selection i
 
 The availability and the conversion logic is the same as for the single conversion options, with the only difference that all selected stubbings must be of the same approach.
 
-#### Examples
+#### Example (Mockito.do*() -> BDDMockito.given())
+
+![convert multiple stubbings in selection](assets/convert_multiple_stubbings_in_selection.gif)
 
 Selections are between [\[ and ]].
 
-**Mockito.do*() -> BDDMockito.given()**
-
 ```java
-From:
-      [[Mockito.doReturn(30).when(mock).doSomething();
-        Mockito.doThrow(IllegalArgumentException.class).when(mock).doSomethingElse();]]
-to:
-      BDDMockito.given(mock.doSomething()).willReturn(30);
-      BDDMockito.given(mock.doSomethingElse()).willThrow(IllegalArgumentException.class);
+//From:
+[[Mockito.doReturn(30).when(mock).doSomething();
+  Mockito.doThrow(IllegalArgumentException.class).when(mock).doSomethingElse();]]
+//to:
+BDDMockito.given(mock.doSomething()).willReturn(30);
+BDDMockito.given(mock.doSomethingElse()).willThrow(IllegalArgumentException.class);
 ```

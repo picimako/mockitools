@@ -4,9 +4,11 @@
 * [Verification mode arguments must be between limits](#verification-mode-arguments-must-be-between-limits)
 * [Mockito.times(0) and Mockito.times(1) calls may be optimized or removed](#mockitotimes0-and-mockitotimes1-calls-may-be-optimized-or-removed)
 * [No method call argument is provided](#no-method-call-argument-is-provided)
+* [Cannot verify `toString()`](#cannot-verify-tostring)
 * [InOrder with a single verification](#inorder-with-a-single-verification)
 * [Misconfigured InOrder verifications](#misconfigured-inorder-verifications)
 * [Convert between various verification approaches](#convert-between-various-verification-approaches)
+* [Stub-only mock is used in verification](#stub-only-mock-is-used-in-verification)
 * [Code complete mock objects](#code-complete-mock-objects)
 <!-- TOC -->
 
@@ -20,7 +22,9 @@ This inspection validates the following time- and occurrence based methods for `
 None of these calls are allowed negative values as arguments. Additionally, `Mockito.calls()` doesn't allow 0 as argument either,
 and `Mockito.timeout()` doesn't allow values above a user-defined threshold (with 5000 as its default value - see inspection settings).
 
-The following are all non-compliant examples:
+![verification mode arguments outside limits](assets/verification_mode_arguments_outside_limits.png)
+
+The following ones are all non-compliant examples:
 
 ```java
 Mockito.verify(mockObject, times(-10)).method(); //negative value
@@ -29,7 +33,7 @@ Mockito.verify(mockObject, atMost(-10)).method(); //negative value
 
 InOrder inOrder = Mockito.inOrder(mockObject);
 inOrder.verify(mockObject, calls(-10)).method(); //negative value
-inOrder.verify(mockObject, calls(0)).method(); //0 is not allowed either for calls
+inOrder.verify(mockObject, calls(0)).method(); //0 (beside negative values) is not allowed either for calls
 
 Mockito.verify(mockObject, after(-1000).never()).method(); //negative value
 Mockito.verify(mockObject, timeout(-1000)).method(); //negative value
@@ -48,7 +52,11 @@ This inspection reports `Mockito.times()` calls whether they can be optimized or
 
 Both of them can be enabled/disabled on the inspection's settings panel.
 
+### Quick fixes
+
 Quick fixes are also provided for the replacement and removal of these calls.
+
+![replace times_zero_with_never](assets/replace_times_zero_with_never.gif)
 
 ```java
 From: Mockito.verify(mock, times(1))... //times(1) can be omitted
@@ -125,6 +133,8 @@ and also cases when:
 - the user forgot to add further verification calls,
 - a verification started out as `InOrder` but was forgotten to be converted to simple verification when he/she changed his/her mind
 
+![single verification in InOrder](assets/single_verification_in_order.png)
+
 ```java
 InOrder inOrder = Mockito.inOrder(mock); //the variable name is highlighted
 inOrder.verify(mock).doSomething();
@@ -138,20 +148,22 @@ inOrder.verify(mock).doSomething();
 This inspection reports mock objects in `InOrder` verifications in the following cases:
 
 - The mock is added to the arguments of `Mockito.inOrder()` but is not used in any verification performed via that `InOrder` object.
-  - `Type.class`-type arguments are excluded for MockedStatic verifications
+  - `Type.class`-type arguments are excluded for `MockedStatic` verifications
 - The mock is used in an `InOrder` verification, but it is not added to the arguments of `Mockito.inOrder()`.
 
 It can report mocks both in `InOrder.verify()` and `BDDMockito.then().should(InOrder)`.
 
-```java
-InOrder unusedMock = Mockito.inOrder(mock, mock2); //mock2 is reported since it is not used in any of the verifications
-unusedMock.verify(mock).doSomething();
-unusedMock.verify(mock, Mockito.times(2)).doSomething();
+### Unused mock
 
-InOrder unconfiguredMock = Mockito.inOrder(mock);
-unconfiguredMock.verify(mock).doSomething();
-unconfiguredMock.verify(mock2).doSomething(); //mock2 is reported since it is not added to 'Mockito.inOrder()'
-```
+Here, `mock2` is reported since it is not used in any of the verifications:
+
+![unused mock in InOrder](assets/unused_mock_in_inorder.png)
+
+### Unconfigured mock
+
+Here, `mock2` is reported since it is not added to `Mockito.inOrder()`:
+
+![unconfigured mock in InOrder](assets/unconfigured_mock_in_inorder.png)
 
 ## Convert between various verification approaches
 
@@ -186,6 +198,8 @@ it always creates a new `InOrder` local variable.
 
 **Example (Mockito.verify() -> BDDMockito.then()):**
 
+![convert verification](assets/convert_verification.gif)
+
 ```java
 //Without verification mode
 From: Mockito.verify(mock).doSomething();
@@ -199,10 +213,11 @@ From: Mockito.verify(mock, times(2)).doSomething();
 **Example (BDDMockito.then() -> InOrder.verify()):**
 
 ```java
-From: BDDMockito.then(mock).should().doSomething();
-to:
-      InOrder inOrder = Mockito.inOrder(mock);
-      inOrder.verify(mock).doSomething();
+//From:
+BDDMockito.then(mock).should().doSomething();
+//to:
+InOrder inOrder = Mockito.inOrder(mock);
+inOrder.verify(mock).doSomething();
 ```
 
 ### Selection based conversion
@@ -225,27 +240,29 @@ Selections are between [\[ and ]].
 
 **InOrder.verify() -> BDDMockito.then()**
 
+![convert multiple verifications in selection](assets/convert_multiple_verifications_in_selection.gif)
+
 ```java
-From:
-      InOrder inOrder = Mockito.inOrder(mock, mock2);
-      [[inOrder.verify(mock).doSomething();
-      inOrder.verify(mock2, times(2)).doSomething();]]
-to:
-      InOrder inOrder = Mockito.inOrder(mock, mock2);
-      BDDMockito.then(mock).should().doSomething();
-      BDDMockito.then(mock2).should(times(2)).doSomething();
+//From:
+InOrder inOrder = Mockito.inOrder(mock, mock2);
+[[inOrder.verify(mock).doSomething();
+inOrder.verify(mock2, times(2)).doSomething();]]
+//to:
+InOrder inOrder = Mockito.inOrder(mock, mock2);
+BDDMockito.then(mock).should().doSomething();
+BDDMockito.then(mock2).should(times(2)).doSomething();
 ```
 
 **Mockito.verify() -> InOrder.verify()**
 
 ```java
-From:
-      [[Mockito.verify(mock).doSomething();
-      Mockito.verify(mock2, times(2)).doSomething();]]
-to:
-      InOrder inOrder = Mockito.inOrder(mock, mock2);
-      inOrder.verify(mock).doSomething();
-      inOrder.verify(mock2, times(2)).doSomething();
+//From:
+[[Mockito.verify(mock).doSomething();
+Mockito.verify(mock2, times(2)).doSomething();]]
+//to:
+InOrder inOrder = Mockito.inOrder(mock, mock2);
+inOrder.verify(mock).doSomething();
+inOrder.verify(mock2, times(2)).doSomething();
 ```
 
 ## Stub-only mock is used in verification
