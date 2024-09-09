@@ -122,9 +122,14 @@ public abstract class ConversionIntentionBase implements IntentionAction {
      */
     protected abstract boolean isQualifierHaveCorrectType(PsiExpression qualifier);
 
+    /**
+     * Returns the title of the list popup that is presented for this conversion to select the target approach.
+     */
+    protected abstract String approachSelectionListTitle();
+
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        ListPopupHelper.showActionsInListPopup(MockitoolsBundle.message("intention.convert.verification.select.target"), actionSelectionOptions(editor, file), editor);
+        ListPopupHelper.showActionsInListPopup(approachSelectionListTitle(), actionSelectionOptions(editor, file), editor);
     }
 
     /**

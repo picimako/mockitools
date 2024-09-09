@@ -51,6 +51,11 @@ public abstract class ConvertStubbingIntentionBase extends ConversionIntentionBa
         return MockitoolsBundle.message("intention.convert.stubbing.x.to.family", sourceApproachName);
     }
 
+    @Override
+    protected String approachSelectionListTitle() {
+        return MockitoolsBundle.message("intention.convert.stubbing.select.target");
+    }
+
     /**
      * Returns whether the argument qualifier expression has the correct type. The qualifier may be a local variable
      * (in case of e.g. InOrder), or a class (in case of Mockito or BDDMockito).

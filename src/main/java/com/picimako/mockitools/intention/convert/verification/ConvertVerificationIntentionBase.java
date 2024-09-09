@@ -38,6 +38,11 @@ public abstract class ConvertVerificationIntentionBase extends ConversionIntenti
         return sourceApproach.isVerifiedBy(methodCall) && sourceApproach.isValid(methodCall);
     }
 
+    @Override
+    protected String approachSelectionListTitle() {
+        return MockitoolsBundle.message("intention.convert.verification.select.target");
+    }
+
     //Intention names
 
     @Override
