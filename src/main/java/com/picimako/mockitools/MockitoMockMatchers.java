@@ -32,12 +32,16 @@ public final class MockitoMockMatchers {
 
     //Since Mockito 4.9.0
 
-    public static final CallMatcher MOCK_REIFIED = MOCKITO_MOCK.parameterTypes("T...");
-    public static final CallMatcher SPY_REIFIED = staticCall(ORG_MOCKITO_MOCKITO, SPY).parameterTypes("T...");
-    private static final CallMatcher MOCK_WITH_NAME_REIFIED = MOCKITO_MOCK.parameterTypes(CommonClassNames.JAVA_LANG_STRING, "T...");
-    private static final CallMatcher MOCK_WITH_ANSWER_REIFIED = MOCKITO_MOCK.parameterTypes(ORG_MOCKITO_ANSWER, "T...");
-    private static final CallMatcher MOCK_WITH_SETTINGS_REIFIED = MOCKITO_MOCK.parameterTypes(ORG_MOCKITO_MOCK_SETTINGS, "T...");
-    public static final CallMatcher MOCKS_REIFIED_WITH_CONFIG = anyOf(MOCK_WITH_NAME_REIFIED, MOCK_WITH_ANSWER_REIFIED, MOCK_WITH_SETTINGS_REIFIED);
+    public static final CallMatcher MOCK_GENERIC_INFERRED = MOCKITO_MOCK.parameterTypes("T...");
+    public static final CallMatcher SPY_GENERIC_INFERRED = staticCall(ORG_MOCKITO_MOCKITO, SPY).parameterTypes("T...");
+    private static final CallMatcher MOCK_WITH_NAME_GENERIC_INFERRED = MOCKITO_MOCK.parameterTypes(CommonClassNames.JAVA_LANG_STRING, "T...");
+    private static final CallMatcher MOCK_WITH_ANSWER_GENERIC_INFERRED = MOCKITO_MOCK.parameterTypes(ORG_MOCKITO_ANSWER, "T...");
+    private static final CallMatcher MOCK_WITH_SETTINGS_GENERIC_INFERRED = MOCKITO_MOCK.parameterTypes(ORG_MOCKITO_MOCK_SETTINGS, "T...");
+    public static final CallMatcher MOCKS_GENERIC_INFERRED_WITH_CONFIG = anyOf(MOCK_WITH_NAME_GENERIC_INFERRED, MOCK_WITH_ANSWER_GENERIC_INFERRED, MOCK_WITH_SETTINGS_GENERIC_INFERRED);
+
+    //Since Mockito 5.7.0
+
+    public static final CallMatcher CAPTOR_GENERIC_INFERRED = CallMatcher.staticCall(MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT_CAPTOR, "captor").parameterTypes("U...");
 
     //Other
 

@@ -4,6 +4,7 @@
 * [Inconsistent argument matcher usage](#inconsistent-argument-matcher-usage)
 * [Explicit initialization of @Captor field is not required](#explicit-initialization-of-captor-field-is-not-required)
 * [@Captor field must be of the type ArgumentCaptor](#captor-field-must-be-of-the-type-argumentcaptor)
+* [Generic inferred ArgumentCaptor creation](#generic-inferred-argumentcaptor-creation)
 <!-- TOC -->
 
 ## Inconsistent argument matcher usage
@@ -98,3 +99,16 @@ List<List<String>> captor; //before
 @Captor
 ArgumentCaptor<List<List<String>>> captor; //after
 ```
+
+----
+
+## Generic inferred ArgumentCaptor creation
+
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-1.3.0-blue) [![](https://img.shields.io/badge/implementation-GenericInferredCaptorCreationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/captor/GenericInferredCaptorCreationInspection.java)
+
+[Mockito 5.7.0](https://github.com/mockito/mockito/pull/3144) introduced the `ArgumentCaptor.captor()` method
+for captor creation, so that the captor type is not determined by the class passed in at creation, instead by the type of the variable/field it is assigned to.
+
+This method throws an exception if objects are passed in, thus this inspection reports calls to this method when it finds at least one such argument.
+
+![generic inferred captor creation](assets/generic_inferred_captor_creation.png)

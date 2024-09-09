@@ -118,9 +118,14 @@
                 displayName="Spying on mock objects" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.mocking.ParameterlessMockAndSpyCreationInspection"
-                id="mockitools.arg.in.parameterless.mock.spy.creation" language="JAVA"
-                displayName="Argument in parameterless mock()/spy() creation" groupPath="Java"
+                implementationClass="com.picimako.mockitools.inspection.mocking.GenericInferredMockAndSpyCreationInspection"
+                id="mockitools.arg.in.generic.inferred.mock.spy.creation" language="JAVA"
+                displayName="Argument in generic inferred mock()/spy() creation" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.captor.GenericInferredCaptorCreationInspection"
+                id="mockitools.arg.in.generic.inferred.captor.creation" language="JAVA"
+                displayName="Argument in generic inferred ArgumentCaptor creation" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.mocking.MockSpiedInstanceTypeMismatchInspection"

@@ -94,7 +94,7 @@ and validates test code regardless of the Mockito version.
 
 ## Mock/Spy creation without specifying class
 
-![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.11.0-blue) [![](https://img.shields.io/badge/implementation-ClasslessMockAndSpyCreationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/ClasslessMockAndSpyCreationInspection.java)
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.11.0-blue) [![](https://img.shields.io/badge/implementation-GenericInferredMockAndSpyCreationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/mocking/GenericInferredMockAndSpyCreationInspection.java)
 
 [Mockito 4.9.0](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#mock_without_class) introduced an enhancement to `Mockito.mock()` and `Mockito.spy()`
 based mock/spy creation, so that the mock type is not determined by the class passed in, instead by the type of the variable/field it is assigned to.
@@ -102,7 +102,7 @@ based mock/spy creation, so that the mock type is not determined by the class pa
 These variants of `mock()` and `spy()` throw an exception if objects other than configuration are passed in, thus this inspection reports
 these calls when it finds at least one such argument.
 
-![reified mock creation with arguments passed in](assets/reified_mock_creation_with_arguments.png)
+![generic inferred mock creation with arguments passed in](assets/generic_inferred_mock_creation_with_arguments.png)
 
 ----
 

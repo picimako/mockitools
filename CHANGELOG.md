@@ -10,6 +10,8 @@
 either with `Mockito.mock()` or `Mockito.spy()`.
 - [66](https://github.com/picimako/mockitools/issues/66): Added an inspection that can report the stubbing of private and native methods,
 as well as `equals()` and `hashCode()`.
+- [63](https://github.com/picimako/mockitools/issues/63): Added an inspection to report `ArgumentCaptor.captor()` calls when they are passed in at least one argument.
+This method is not designed to accept any argument.
 
 ### Changed
 - Applied a couple of code simplifications for easier maintenance.
