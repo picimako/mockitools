@@ -5,16 +5,9 @@ package com.picimako.mockitools.intention;
 import static com.intellij.openapi.application.ReadAction.compute;
 
 import com.google.common.collect.ImmutableList;
-import com.intellij.icons.AllIcons;
-import com.intellij.ide.util.MethodCellRenderer;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiSubstitutor;
-import com.intellij.psi.util.PsiFormatUtil;
-import com.intellij.psi.util.PsiFormatUtilBase;
 import com.intellij.util.SmartList;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.Set;
 
@@ -26,7 +19,7 @@ import java.util.Set;
  */
 public final class MethodRearranger {
 
-    private static final Set<String> BEFORE_ANNOTATIONS = Set.of(
+    public static final Set<String> BEFORE_ANNOTATIONS = Set.of(
         //JUnit 4
         "org.junit.Before", "org.junit.BeforeClass",
         //JUnit 5
@@ -36,7 +29,7 @@ public final class MethodRearranger {
         "org.testng.annotations.BeforeGroups", "org.testng.annotations.BeforeClass",
         "org.testng.annotations.BeforeMethod"
     );
-    private static final Set<String> TEST_ANNOTATIONS = Set.of("org.junit.Test", "org.junit.jupiter.api.Test", "org.testng.annotations.Test");
+    public static final Set<String> TEST_ANNOTATIONS = Set.of("org.junit.Test", "org.junit.jupiter.api.Test", "org.testng.annotations.Test");
 
     /**
      * Returns a reordered variant of the argument methods array.
@@ -64,38 +57,5 @@ public final class MethodRearranger {
 
     private MethodRearranger() {
         //Utility
-    }
-
-    /**
-     * Custom cell renderer for {@link ConvertMockSpyFieldToCallIntention} that displays only the method signature
-     * without the container class to minimize noise in the target method selection list popup.
-     * <p>
-     * Hooks and test methods are displayed with dedicated icons to better distinguish them visually.
-     */
-    static final class ClassMethodCellRenderer extends MethodCellRenderer {
-        ClassMethodCellRenderer() {
-            super(true);
-        }
-
-        @Override
-        public String getContainerText(PsiMethod element, String name) {
-            //No container text is displayed
-            return null;
-        }
-
-        @Override
-        public String getElementText(PsiMethod element) {
-            //The element text is always method name and the parameter list, e.g. 'testMethod(String)'
-            return PsiFormatUtil.formatMethod(element, PsiSubstitutor.EMPTY, PsiFormatUtilBase.SHOW_NAME | PsiFormatUtilBase.SHOW_PARAMETERS, PsiFormatUtilBase.SHOW_TYPE);
-        }
-
-        @Override
-        protected Icon getIcon(PsiElement element) {
-            if (BEFORE_ANNOTATIONS.stream().anyMatch(ann -> ((PsiMethod) element).hasAnnotation(ann)))
-                return AllIcons.Gutter.ExtAnnotation;
-            else if (TEST_ANNOTATIONS.stream().anyMatch(ann -> ((PsiMethod) element).hasAnnotation(ann)))
-                return AllIcons.Actions.Execute;
-            return super.getIcon(element);
-        }
     }
 }
