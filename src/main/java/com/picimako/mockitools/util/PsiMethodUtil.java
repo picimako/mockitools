@@ -99,7 +99,7 @@ public final class PsiMethodUtil {
      * @return the next method call, or null if the starting call is null, or if it has no subsequent call
      * @since 0.3.0
      */
-    @Nullable
+    @Nullable("When either the method argument is null, or it has no subsequent call.")
     public static PsiMethodCallExpression getSubsequentMethodCall(@Nullable PsiMethodCallExpression methodCall) {
         if (methodCall == null) return null;
 

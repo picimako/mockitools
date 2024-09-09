@@ -6,6 +6,7 @@
 * [Stubbing calls and method return type mismatch](#stubbing-calls-and-method-return-type-mismatch)
 * [Convert arguments of `*Throw()` stubbing methods](#convert-arguments-of-throw-stubbing-methods)
 * [Convert between various stubbing approaches](#convert-between-various-stubbing-approaches)
+* [Cannot stub certain methods](#cannot-stub-certain-methods)
 <!-- TOC -->
 
 ## Invalid checked exception is passed into *Throw() methods
@@ -266,3 +267,15 @@ Selections are between [\[ and ]].
 BDDMockito.given(mock.doSomething()).willReturn(30);
 BDDMockito.given(mock.doSomethingElse()).willThrow(IllegalArgumentException.class);
 ```
+
+## Cannot stub certain methods
+
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-1.3.0-blue) [![](https://img.shields.io/badge/implementation-CannotStubMethodInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/CannotStubMethodInspection.java)
+
+Mockito, based on [Reporter.missingMethodInvocation()](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java#L118),
+cannot mock private, native, `equals()` and `hashCode()` methods.
+
+This inspection reports stubbing method calls on such methods. It supports all `Mockito` and `BDDMockito`-based stubbing,
+but not `MockedStatic`.
+
+![stubbing a private method](assets/stubbing_private_method.png)

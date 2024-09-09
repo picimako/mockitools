@@ -8,6 +8,8 @@
 ### Added
 - The inspection reporting spy creation on a mock object now also recognizes passed in mock objects when they are created
 either with `Mockito.mock()` or `Mockito.spy()`.
+- [66](https://github.com/picimako/mockitools/issues/66): Added an inspection that can report the stubbing of private and native methods,
+as well as `equals()` and `hashCode()`.
 
 ### Changed
 - Applied a couple of code simplifications for easier maintenance.

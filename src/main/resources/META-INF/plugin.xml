@@ -78,6 +78,11 @@
                 displayName="Consecutive *Throw() stubbing calls can be simplified" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="WARNING"/>
         <localInspection
+                implementationClass="com.picimako.mockitools.inspection.stubbing.CannotStubMethodInspection"
+                id="mockitools.cannotStubMethod" language="JAVA"
+                displayName="Stubbing of private/native/equals()/hashCode methods" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+        <localInspection
                 implementationClass="com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection"
                 id="mockitools.enforce.convention" language="JAVA"
                 displayName="Enforce conventions" groupPath="Java"
