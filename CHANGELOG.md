@@ -9,6 +9,14 @@
 - The inspection reporting spy creation on a mock object now also recognizes passed in mock objects when they are created
 either with `Mockito.mock()` or `Mockito.spy()`.
 
+### Changed
+- Applied a couple of code simplifications for easier maintenance.
+- Improved the documentation, in many cases by replacing textual code examples with screenshots and gifs.
+
+### Fixed
+- Fixed the title of the list popup when selecting the target stubbing during conversion.
+- Fixed a threading related exception that occurred during converting `@Mock` or `@Spy` fields to their corresponding method call versions.
+
 ## [1.2.0]
 ### Changed
 - New support range of IDEs: 2023.3-2024.2-EAP.
