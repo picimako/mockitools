@@ -3,6 +3,7 @@ package com.picimako.mockitools.intention;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.psi.PsiFile;
 import com.picimako.mockitools.MockitoolsTestBase;
 
@@ -40,6 +41,16 @@ public abstract class MockitoolsIntentionTestBase extends MockitoolsTestBase {
     protected void checkIntentionRun(String beforeText, String afterText) {
         PsiFile psiFile = getFixture().configureByText("ConversionTest.java", beforeText);
         getIntention().invoke(getFixture().getProject(), getFixture().getEditor(), psiFile);
+        getFixture().checkResult(afterText);
+    }
+
+    /**
+     * Invokes the intention on EDT when e.g. a list popup is displayed during the intention actions behaviour
+     * that requires that thread as a caller.
+     */
+    protected void checkIntentionRunOnEdt(String beforeText, String afterText) {
+        PsiFile psiFile = getFixture().configureByText("ConversionTest.java", beforeText);
+        ApplicationManager.getApplication().invokeAndWait(() -> getIntention().invoke(getFixture().getProject(), getFixture().getEditor(), psiFile));
         getFixture().checkResult(afterText);
     }
 }

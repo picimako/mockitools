@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools;
 
@@ -12,9 +12,6 @@ import com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection;
  */
 public final class EnforceConventionUtil {
 
-    /**
-     * @see EnforceConventionInspection#SHORT_NAME
-     */
     public static final String ENFORCE_CONVENTION_INSPECTION_SHORT_NAME = "EnforceConvention";
 
     /**

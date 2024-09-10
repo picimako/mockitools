@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.util;
 
@@ -12,7 +12,6 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiExpression;
 import com.intellij.psi.search.ProjectScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.introduceField.ElementToWorkOn;
@@ -30,7 +29,7 @@ public final class PsiClassUtil {
      * <p>
      * Based on {@link com.intellij.refactoring.introduceField.BaseExpressionToFieldHandler}.
      */
-    public static List<PsiClass> getParentClasses(@NotNull PsiExpression expression) {
+    public static List<PsiClass> getParentClasses(@NotNull PsiElement expression) {
         var parentClasses = new SmartList<PsiClass>();
         PsiElement parent = Optional.ofNullable(expression.getUserData(ElementToWorkOn.PARENT)).orElseGet(expression::getParent);
         while (parent != null) {

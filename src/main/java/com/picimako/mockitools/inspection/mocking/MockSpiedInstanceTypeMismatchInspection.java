@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.mocking;
 
@@ -44,9 +44,8 @@ final class MockSpiedInstanceTypeMismatchInspection extends MockitoolsBaseInspec
                 if (SPIED_INSTANCE.equals(getMethodName(settingsCall))
                     && hasArgument(settingsCall) //e.g. spiedInstance(someObject)
                     && getFirstArgument(settingsCall) instanceof PsiNewExpression spiedInstance) { //e.g. someObject
-                    var mockTypeArg = getFirstArgument(expression);
-                    if (mockTypeArg instanceof PsiClassObjectAccessExpression mockTypeAsClassAccess
-                        && !Objects.equals(getRawType(mockTypeAsClassAccess.getOperand().getType()), getRawType(spiedInstance.getType()))) {
+                    if (getFirstArgument(expression) instanceof PsiClassObjectAccessExpression mockTypeArg
+                        && !Objects.equals(getRawType(mockTypeArg.getOperand().getType()), getRawType(spiedInstance.getType()))) {
                         holder.registerProblem(mockTypeArg, MockitoolsBundle.message("inspection.mock.type.spied.instance.type.mismatch"));
                     }
                     break; //Found the 'spiedInstance()' method, further inspection of the call chain is not needed.

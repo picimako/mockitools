@@ -3,7 +3,7 @@
     <id>mockitools</id>
     <name>Mockitools</name>
     <vendor url="https://github.com/picimako/mockitools">Tamás Balog</vendor>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
     <resource-bundle>messages.MockitoolsBundle</resource-bundle>
 
     <description>Provides integration for the Mockito framework for Java.</description>
@@ -48,6 +48,11 @@
                 displayName="@Mock#extraInterfaces and MockSettings.extraInterfaces() validations" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
+                implementationClass="com.picimako.mockitools.inspection.mocking.MockFieldInitializationInspection"
+                id="mockitools.mockFieldInitialization" language="JAVA"
+                displayName="@Mock or @InjectMocks field is explicitly initialized" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+        <localInspection
                 implementationClass="com.picimako.mockitools.inspection.mocking.MockTypeInspection"
                 id="mockitools.mockType" language="JAVA"
                 displayName="Mocking/spying non-mockable types" groupPath="Java"
@@ -77,6 +82,11 @@
                 id="mockitools.simplifyConsecutiveThrowStubbingCalls" language="JAVA"
                 displayName="Consecutive *Throw() stubbing calls can be simplified" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.stubbing.CannotStubMethodInspection"
+                id="mockitools.cannotStubMethod" language="JAVA"
+                displayName="Stubbing of private/native/equals()/hashCode methods" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection"
                 id="mockitools.enforce.convention" language="JAVA"
@@ -113,9 +123,14 @@
                 displayName="Spying on mock objects" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
-                implementationClass="com.picimako.mockitools.inspection.mocking.ParameterlessMockAndSpyCreationInspection"
-                id="mockitools.arg.in.parameterless.mock.spy.creation" language="JAVA"
-                displayName="Argument in parameterless mock()/spy() creation" groupPath="Java"
+                implementationClass="com.picimako.mockitools.inspection.mocking.GenericInferredMockAndSpyCreationInspection"
+                id="mockitools.arg.in.generic.inferred.mock.spy.creation" language="JAVA"
+                displayName="Argument in generic inferred mock()/spy() creation" groupPath="Java"
+                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+        <localInspection
+                implementationClass="com.picimako.mockitools.inspection.captor.GenericInferredCaptorCreationInspection"
+                id="mockitools.arg.in.generic.inferred.captor.creation" language="JAVA"
+                displayName="Argument in generic inferred ArgumentCaptor creation" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.mocking.MockSpiedInstanceTypeMismatchInspection"

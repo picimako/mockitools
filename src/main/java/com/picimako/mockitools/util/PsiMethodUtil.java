@@ -1,10 +1,9 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.util;
 
 import static com.intellij.openapi.application.ReadAction.compute;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
-import static java.util.stream.Collectors.toList;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
@@ -99,7 +98,7 @@ public final class PsiMethodUtil {
      * @return the next method call, or null if the starting call is null, or if it has no subsequent call
      * @since 0.3.0
      */
-    @Nullable
+    @Nullable("When either the method argument is null, or it has no subsequent call.")
     public static PsiMethodCallExpression getSubsequentMethodCall(@Nullable PsiMethodCallExpression methodCall) {
         if (methodCall == null) return null;
 
@@ -117,10 +116,11 @@ public final class PsiMethodUtil {
     }
 
     /**
-     * Gets the first argument of the provided method call, given that the argument list exists and is not null.
+     * Gets the first argument of the provided method call, or null if there is no argument specified.
      */
     public static PsiExpression getFirstArgument(@NotNull PsiMethodCallExpression methodCall) {
-        return getArguments(methodCall)[0];
+        var arguments = getArguments(methodCall);
+        return arguments.length > 0 ? arguments[0] : null;
     }
 
     /**
@@ -227,7 +227,7 @@ public final class PsiMethodUtil {
                 current = previousCall;
             } else break;
         }
-        return calls.stream().map(PsiMethodCallExpression.class::cast).collect(toList());
+        return calls.stream().map(PsiMethodCallExpression.class::cast).toList();
     }
 
     public static List<PsiMethodCallExpression> collectCallsInChainFromFirst(PsiExpression expression, boolean includeMySelf) {

@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.captor;
 
@@ -9,11 +9,13 @@ import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiField;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.siyeh.ig.InspectionGadgetsFix;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.mockitools.resources.MockitoolsBundle;
@@ -47,11 +49,16 @@ final class CaptorFieldInitializationInspection extends MockitoolsBaseInspection
         }
     }
 
-    private static final class RemoveArgumentCaptorInitQuickFix extends CaptorFieldBaseQuickFix {
+    private static final class RemoveArgumentCaptorInitQuickFix extends InspectionGadgetsFix {
 
         @Override
         public @IntentionName @NotNull String getName() {
-            return MockitoolsBundle.message("quick.fix.captor.field.remove.init");
+            return MockitoolsBundle.message("quick.fix.field.remove.init");
+        }
+
+        @Override
+        public @IntentionFamilyName @NotNull String getFamilyName() {
+            return MockitoolsBundle.message("quick.fix.captor.field.family.name");
         }
 
         @Override

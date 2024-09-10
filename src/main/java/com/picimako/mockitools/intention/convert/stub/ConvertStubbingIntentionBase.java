@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.stub;
 
@@ -49,6 +49,11 @@ public abstract class ConvertStubbingIntentionBase extends ConversionIntentionBa
     @Override
     public @NotNull @IntentionFamilyName String getFamilyName() {
         return MockitoolsBundle.message("intention.convert.stubbing.x.to.family", sourceApproachName);
+    }
+
+    @Override
+    protected String approachSelectionListTitle() {
+        return MockitoolsBundle.message("intention.convert.stubbing.select.target");
     }
 
     /**

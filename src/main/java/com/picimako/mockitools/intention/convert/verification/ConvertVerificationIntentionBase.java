@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.verification;
 
@@ -36,6 +36,11 @@ public abstract class ConvertVerificationIntentionBase extends ConversionIntenti
     @Override
     public boolean isAvailableFor(PsiMethodCallExpression methodCall) {
         return sourceApproach.isVerifiedBy(methodCall) && sourceApproach.isValid(methodCall);
+    }
+
+    @Override
+    protected String approachSelectionListTitle() {
+        return MockitoolsBundle.message("intention.convert.verification.select.target");
     }
 
     //Intention names

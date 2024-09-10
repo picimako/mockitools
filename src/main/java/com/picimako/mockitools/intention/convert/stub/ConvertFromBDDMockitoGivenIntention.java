@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.stub;
 
@@ -6,6 +6,7 @@ import static com.intellij.openapi.application.ReadAction.compute;
 import static com.picimako.mockitools.EnforceConventionUtil.isBDDMockitoEnforced;
 import static com.picimako.mockitools.EnforceConventionUtil.isMockitoEnforced;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
+import static com.picimako.mockitools.StubbingApproach.BDDMOCKITO_GIVEN;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_WILL;
 
 import com.intellij.openapi.actionSystem.AnAction;
@@ -33,8 +34,7 @@ final class ConvertFromBDDMockitoGivenIntention extends ConvertStubbingIntention
 
     @Override
     public boolean isAvailableFor(PsiMethodCallExpression methodCall) {
-        return StubbingApproach.BDDMOCKITO_GIVEN.isStubbedBy(methodCall)
-            && StubbingApproach.BDDMOCKITO_GIVEN.isValid(methodCall);
+        return BDDMOCKITO_GIVEN.isStubbedBy(methodCall) && BDDMOCKITO_GIVEN.isValid(methodCall);
     }
 
     @Override
@@ -43,13 +43,17 @@ final class ConvertFromBDDMockitoGivenIntention extends ConvertStubbingIntention
         var actions = new ArrayList<AnAction>(3);
         if (!isBDDMockitoEnforced(file)) {
             if (doAllCallChainsMatch(DOESNT_CONTAIN_WILL, isBulkMode, editor, file)) {
-                actions.add(new ConvertStubbingAction(StubbingApproach.BDDMOCKITO_GIVEN, StubbingApproach.MOCKITO_DO_X, isBulkMode));
+                addConversion(actions, StubbingApproach.MOCKITO_DO_X, isBulkMode);
             }
-            actions.add(new ConvertStubbingAction(StubbingApproach.BDDMOCKITO_GIVEN, StubbingApproach.MOCKITO_WHEN, isBulkMode));
+            addConversion(actions, StubbingApproach.MOCKITO_WHEN, isBulkMode);
         }
         if (!isMockitoEnforced(file)) {
-            actions.add(new ConvertStubbingAction(StubbingApproach.BDDMOCKITO_GIVEN, StubbingApproach.BDDMOCKITO_WILL_X, isBulkMode));
+            addConversion(actions, StubbingApproach.BDDMOCKITO_WILL_X, isBulkMode);
         }
         return actions;
+    }
+
+    private void addConversion(List<AnAction> actions, StubbingApproach targetApproach, boolean isBulkMode) {
+        actions.add(new ConvertStubbingAction(BDDMOCKITO_GIVEN, targetApproach, isBulkMode));
     }
 }

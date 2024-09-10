@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention;
 
@@ -27,7 +27,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaCodeReferenceElement;
@@ -35,6 +34,7 @@ import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNewExpression;
 import com.intellij.psi.PsiType;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.rename.inplace.MemberInplaceRenamer;
 import com.intellij.refactoring.rename.inplace.VariableInplaceRenamer;
 import com.intellij.util.Consumer;
@@ -45,6 +45,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -97,11 +98,16 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
                 project,
                 editor,
                 targetClass -> introduceFieldForNewExpression(ctx.targetClass(targetClass)));
+        } else if (ctx.mockTypeOrObject instanceof PsiLocalVariable) {
+            selectTargetClassAndIntroduceField(getParentClasses(ctx.mockTypeOrObject),
+                project,
+                editor,
+                targetClass -> introduceFieldForLocalVariableType(ctx.targetClass(targetClass)));
         }
     }
 
     /**
-     * Introduces the field taking into account that the Mockito.spy() or Mockito.mock() call's argument is a 'new' expression, so that the field type, name
+     * Introduces the field taking into account that the {@code Mockito.spy()} call's argument is a 'new' expression, so that the field type, name
      * and initializer are constructed properly.
      * <p>
      * Applicable only to {@link ConvertSpyCallToFieldIntention}.
@@ -111,13 +117,22 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
     }
 
     /**
-     * Introduces the field taking into account that the Mockito.spy() or Mockito.mock() call's argument is a class object access expression, so that the field type and name
+     * Introduces the field taking into account that the {@code Mockito.spy()} or {@code Mockito.mock()} call's argument is a class object access expression, so that the field type and name
      * are constructed properly.
      */
     protected void introduceFieldForClassObjectAccess(ConversionContext ctx) {
         introduceField(ctx,
             () -> Couple.of(resolveOperandType(ctx.mockTypeOrObject).getName(), toLowerCamel(resolveOperandType(ctx.mockTypeOrObject).getName())),
             NO_INITIALIZER);
+    }
+
+    /**
+     * Introduces the field taking into account that the {@code Mockito.spy()} or {@code Mockito.mock()} call's type is generic inferred,
+     * and is determined by the local variable's type the call is assigned to.
+     */
+    protected void introduceFieldForLocalVariableType(ConversionContext ctx) {
+        var localVar = (PsiLocalVariable) ctx.mockTypeOrObject;
+        introduceField(ctx, () -> Couple.of(localVar.getType().getPresentableText(), localVar.getName()), NO_INITIALIZER);
     }
 
     /**
@@ -246,7 +261,8 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
 
     protected static final class ConversionContext {
         final PsiMethodCallExpression spyOrMockCall;
-        final PsiExpression mockTypeOrObject;
+        @Nullable
+        final PsiElement mockTypeOrObject;
         final Editor editor;
         final Project project;
         @Accessors(fluent = true)
@@ -255,7 +271,9 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
 
         ConversionContext(PsiMethodCallExpression spyOrMockCall, Editor editor, Project project) {
             this.spyOrMockCall = spyOrMockCall;
-            this.mockTypeOrObject = getFirstArgument(spyOrMockCall);
+            this.mockTypeOrObject = Optional.ofNullable(getFirstArgument(spyOrMockCall))
+                .map(PsiElement.class::cast)
+                .orElseGet(() -> PsiTreeUtil.getParentOfType(spyOrMockCall, PsiLocalVariable.class));
             this.editor = editor;
             this.project = project;
         }

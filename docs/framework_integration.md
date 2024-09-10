@@ -15,11 +15,4 @@ According to the javadoc of the [`@NotExtensible`](https://javadoc.io/doc/org.mo
 
 The inspection is applied to interfaces and named classes that can inherit from other types.
 
-```java
-import org.mockito.MockSettings;
-import java.util.List;
-
-//MockSettings is annotated as @NotExtensible, so this interface is reported by the inspection.
-interface SomeInterface extends MockSettings, List<String> {
-}
-```
+![interface extends not extensible interface](assets/interface_extends_not_extensible.png)

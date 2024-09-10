@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention;
 
@@ -15,7 +15,6 @@ import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
 import static com.picimako.mockitools.MockitoQualifiedNames.LENIENT;
 import static com.picimako.mockitools.MockitoQualifiedNames.MOCK_MAKER;
 import static com.picimako.mockitools.MockitoQualifiedNames.NAME;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ANSWERS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK_SERIALIZABLE_MODE;
@@ -46,9 +45,11 @@ import com.intellij.psi.PsiEnumConstant;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.picimako.mockitools.MockitoMockMatchers;
 import com.picimako.mockitools.MockitoQualifiedNames;
 import com.picimako.mockitools.util.PsiClassUtil;
@@ -124,12 +125,24 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
         return getMethodCallAtCaretOrEmpty(file, editor)
             .filter(call -> MockitoQualifiedNames.MOCK.equals(getMethodName(call)))
             .map(call -> compute(() -> {
-                if (isMockableTypeInAnyWay(getOperandType(/*mockTypeArg*/getFirstArgument(call)))) {
-                    if (MockitoMockMatchers.MOCK.matches(call)) return hasOneArgument(call);
-                    if (MOCK_WITH_NAME.matches(call) || MOCK_WITH_ANSWER.matches(call))
-                        return hasTwoArguments(call);
-                    if (MOCK_WITH_SETTINGS.matches(call))
-                        return hasTwoArguments(call) && isSettingsSupportedByMockAnnotation(get2ndArgument(call));
+                var mockTypeArg = getFirstArgument(call);
+                //Mockito.mock(<type>, ...)
+                if (mockTypeArg != null) {
+                    if (isMockableTypeInAnyWay(getOperandType(mockTypeArg))) {
+                        if (MockitoMockMatchers.MOCK.matches(call)) return hasOneArgument(call);
+                        if (MOCK_WITH_NAME.matches(call) || MOCK_WITH_ANSWER.matches(call))
+                            return hasTwoArguments(call);
+                        if (MOCK_WITH_SETTINGS.matches(call))
+                            return hasTwoArguments(call) && isSettingsSupportedByMockAnnotation(get2ndArgument(call));
+                    }
+                }
+                //Generic inferred Mockito.mock()
+                else {
+                    var parentVariable = PsiTreeUtil.getParentOfType(call, PsiLocalVariable.class);
+                    return parentVariable != null
+                           //SomeObject someVariable = ...;
+                           && !parentVariable.getTypeElement().isInferredType()
+                           && isMockableTypeInAnyWay(parentVariable.getType());
                 }
                 return false;
             }))
@@ -220,14 +233,13 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
      * Returns whether the argument Answer expression is a reference to {@code org.mockito.Answers.RETURNS_DEFAULTS}.
      */
     public static boolean isDefaultAnswer(PsiExpression answer) {
-        return answer instanceof PsiReferenceExpression answerExpr
-               && isEnumConstant(compute(answerExpr::resolve), ORG_MOCKITO_ANSWERS, "RETURNS_DEFAULTS");
+        return answer instanceof PsiReferenceExpression answerExpr && isAnswersReturnDefaults(compute(answerExpr::resolve));
     }
 
-    private static boolean isEnumConstant(PsiElement element, String enumClassName, String enumConstantName) {
+    private static boolean isAnswersReturnDefaults(PsiElement element) {
         return element instanceof PsiEnumConstant constant
-               && enumClassName.equals(constant.getContainingClass().getQualifiedName())
-               && enumConstantName.equals(constant.getName());
+               && MockitoQualifiedNames.ORG_MOCKITO_ANSWERS.equals(constant.getContainingClass().getQualifiedName())
+               && "RETURNS_DEFAULTS".equals(constant.getName());
     }
 
     /**

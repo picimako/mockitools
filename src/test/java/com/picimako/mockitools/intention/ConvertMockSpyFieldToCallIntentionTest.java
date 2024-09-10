@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention;
 
@@ -31,7 +31,7 @@ class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionTestBase
         checkIntentionIsNotAvailable(
             """
                 import org.mockito.Mock;
-
+                
                 public class NotAvailable {
                     @Mock
                     Object mo<caret>ck;
@@ -44,7 +44,7 @@ class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionTestBase
             """
                 import org.mockito.Mock;
                 import org.mockito.Spy;
-
+                
                 public class NotAvailable {
                     @Mock
                     @Spy
@@ -57,11 +57,11 @@ class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionTestBase
         checkIntentionIsAvailable(
             """
                 import org.mockito.Mock;
-
+                
                 public class Available {
                     @Mock
                     Object mo<caret>ck;
-
+                
                     public void method() {}
                 }""");
     }
@@ -71,11 +71,11 @@ class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionTestBase
         checkIntentionIsAvailable(
             """
                 import org.mockito.Spy;
-
+                
                 public class Available {
                     @Spy
                     Object mo<caret>ck;
-
+                
                     public void method() {}
                 }""");
     }
@@ -87,11 +87,11 @@ class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionTestBase
         checkIntentionRun(
             """
                 import org.mockito.Mock;
-
+                
                 public class ConversionTest {
                     @Mock
                     Object mo<caret>ck;
-
+                
                     public void method() {
                         int number = 10;
                     }
@@ -99,9 +99,9 @@ class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionTestBase
             """
                 import org.mockito.Mock;
                 import org.mockito.Mockito;
-
+                
                 public class ConversionTest {
-
+                
                     public void method() {
                         Object mock = Mockito.mock(Object.class);
                         int number = 10;
@@ -114,19 +114,19 @@ class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionTestBase
         checkIntentionRun(
             """
                 import org.mockito.Mock;
-
+                
                 public class ConversionTest {
                     @Mock
                     Object mo<caret>ck;
-
+                
                     public void method() {}
                 }""",
             """
                 import org.mockito.Mock;
                 import org.mockito.Mockito;
-
+                
                 public class ConversionTest {
-
+                
                     public void method() {
                         Object mock = Mockito.mock(Object.class);
                     }
@@ -135,30 +135,30 @@ class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionTestBase
 
     @Test
     void testConvertsMockFieldToMockCallIntoSelectedMethod() {
-        checkIntentionRun(
+        checkIntentionRunOnEdt(
             """
                 import org.mockito.Mock;
-
+                
                 public class ConversionTest {
                     @Mock
                     Object mo<caret>ck;
-
+                
                     public void method() {
                     }
-
+                
                     public void anotherMethod() {
                     }
                 }""",
             """
                 import org.mockito.Mock;
                 import org.mockito.Mockito;
-
+                
                 public class ConversionTest {
-
+                
                     public void method() {
                         Object mock = Mockito.mock(Object.class);
                     }
-
+                
                     public void anotherMethod() {
                     }
                 }""");
@@ -171,11 +171,11 @@ class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionTestBase
         checkIntentionRun(
             """
                 import org.mockito.Spy;
-
+                
                 public class ConversionTest {
                     @Spy
                     Object mo<caret>ck;
-
+                
                     public void method() {
                         int number = 10;
                     }
@@ -183,9 +183,9 @@ class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionTestBase
             """
                 import org.mockito.Mockito;
                 import org.mockito.Spy;
-
+                
                 public class ConversionTest {
-
+                
                     public void method() {
                         Object mock = Mockito.spy(Object.class);
                         int number = 10;
@@ -198,19 +198,19 @@ class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionTestBase
         checkIntentionRun(
             """
                 import org.mockito.Spy;
-
+                
                 public class ConversionTest {
                     @Spy
                     Object mo<caret>ck;
-
+                
                     public void method() {}
                 }""",
             """
                 import org.mockito.Mockito;
                 import org.mockito.Spy;
-
+                
                 public class ConversionTest {
-
+                
                     public void method() {
                         Object mock = Mockito.spy(Object.class);
                     }
@@ -219,30 +219,30 @@ class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionTestBase
 
     @Test
     void testConvertsSpyFieldToSpyCallIntoSelectedMethod() {
-        checkIntentionRun(
+        checkIntentionRunOnEdt(
             """
                 import org.mockito.Spy;
-
+                
                 public class ConversionTest {
                     @Spy
                     Object mo<caret>ck;
-
+                
                     public void method() {
                     }
-
+                
                     public void anotherMethod() {
                     }
                 }""",
             """
                 import org.mockito.Mockito;
                 import org.mockito.Spy;
-
+                
                 public class ConversionTest {
-
+                
                     public void method() {
                         Object mock = Mockito.spy(Object.class);
                     }
-
+                
                     public void anotherMethod() {
                     }
                 }""");
@@ -255,26 +255,26 @@ class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionTestBase
         checkIntentionRun(
             """
                 import org.mockito.Spy;
-
+                
                 public class ConversionTest {
                     @Spy
                     MockObject<String> mo<caret>ck;
-
+                
                     public void method() {
                     }
-
+                
                     public static final class MockObject<T> { }
                 }""",
             """
                 import org.mockito.Mockito;
                 import org.mockito.Spy;
-
+                
                 public class ConversionTest {
-
+                
                     public void method() {
                         MockObject<String> mock = Mockito.spy(MockObject.class);
                     }
-
+                
                     public static final class MockObject<T> { }
                 }""");
     }
@@ -284,26 +284,26 @@ class ConvertMockSpyFieldToCallIntentionTest extends MockitoolsIntentionTestBase
         checkIntentionRun(
             """
                 import org.mockito.Mock;
-
+                
                 public class ConversionTest {
                     @Mock
                     MockObject<String> mo<caret>ck;
-
+                
                     public void method() {
                     }
-
+                
                     public static final class MockObject<T> { }
                 }""",
             """
                 import org.mockito.Mock;
                 import org.mockito.Mockito;
-
+                
                 public class ConversionTest {
-
+                
                     public void method() {
                         MockObject<String> mock = Mockito.mock(MockObject.class);
                     }
-
+                
                     public static final class MockObject<T> { }
                 }""");
     }

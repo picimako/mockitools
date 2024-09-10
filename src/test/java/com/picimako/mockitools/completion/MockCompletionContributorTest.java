@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.completion;
 
@@ -45,7 +45,7 @@ class MockCompletionContributorTest extends MockitoolsCodeCompletionTestBase {
 
     @Test
     void shouldNotCompleteNonMockParameterHolder() {
-        doTestCodeCompletionContains("CompletionTest.java",
+        doTestCodeCompletionContains(
             """
                 import org.mockito.Mock;
                 import org.mockito.Mockito;
@@ -75,63 +75,63 @@ class MockCompletionContributorTest extends MockitoolsCodeCompletionTestBase {
 
     @Test
     void shouldCompleteFirstArgumentInEmptyArgumentListT() {
-        doTestCodeCompletionContains("CompletionTest.java",
+        doTestCodeCompletionContains(
             COMPLETION_TEST_CLASS.formatted("", "Mockito.reset(<caret>);"),
             "mock", "spy", "someInjectMocks", "someMock", "someSpy");
     }
 
     @Test
     void shouldCompleteFirstArgumentInNonEmptyArgumentListT() {
-        doTestCodeCompletionContains("CompletionTest.java",
+        doTestCodeCompletionContains(
             COMPLETION_TEST_CLASS.formatted("", "Mockito.reset(someInjectMocks, <caret>);"),
             "mock", "spy", "someInjectMocks", "someMock", "someSpy");
     }
 
     @Test
     void shouldCompleteFirstArgumentInEmptyArgumentListObject() {
-        doTestCodeCompletionContains("CompletionTest.java",
+        doTestCodeCompletionContains(
             COMPLETION_TEST_CLASS.formatted("", "Mockito.verifyNoMoreInteractions(<caret>);"),
             "mock", "spy", "someInjectMocks", "someMock", "someSpy");
     }
 
     @Test
     void shouldCompleteFirstArgumentInNonEmptyArgumentListObject() {
-        doTestCodeCompletionContains("CompletionTest.java",
+        doTestCodeCompletionContains(
             COMPLETION_TEST_CLASS.formatted("", "Mockito.verifyNoMoreInteractions(someInjectMocks, <caret>);"),
             "mock", "spy", "someInjectMocks", "someMock", "someSpy");
     }
 
     @Test
     void shouldCompleteLastArgument() {
-        doTestCodeCompletionContains("CompletionTest.java",
+        doTestCodeCompletionContains(
             COMPLETION_TEST_CLASS.formatted("", "Mockito.verifyNoMoreInteractions(someMock, someSpy, <caret>);"),
             "mock", "spy", "someInjectMocks", "someMock", "someSpy");
     }
 
     @Test
     void shouldCompleteFirstArgumentInEmptyArgumentListObjectStaticImported() {
-        doTestCodeCompletionContains("CompletionTest.java",
+        doTestCodeCompletionContains(
             COMPLETION_TEST_CLASS.formatted("import static org.mockito.Mockito.verifyNoMoreInteractions;", "verifyNoMoreInteractions(<caret>);"),
             "mock", "spy", "someInjectMocks", "someMock", "someSpy");
     }
 
     @Test
     void shouldCompleteFirstArgumentInNonEmptyArgumentListObjectStaticImported() {
-        doTestCodeCompletionContains("CompletionTest.java",
+        doTestCodeCompletionContains(
             COMPLETION_TEST_CLASS.formatted("import static org.mockito.Mockito.verifyNoMoreInteractions;", "verifyNoMoreInteractions(someInjectMocks, <caret>);"),
             "mock", "spy", "someInjectMocks", "someMock", "someSpy");
     }
 
     @Test
     void shouldCompleteLastArgumentStaticImported() {
-        doTestCodeCompletionContains("CompletionTest.java",
+        doTestCodeCompletionContains(
             COMPLETION_TEST_CLASS.formatted("import static org.mockito.Mockito.verifyNoMoreInteractions;", "verifyNoMoreInteractions(someMock, someSpy, <caret>);"),
             "mock", "spy", "someInjectMocks", "someMock", "someSpy");
     }
 
     @Test
     void shouldCompleteMiddleArgument() {
-        doTestCodeCompletionContains("CompletionTest.java",
+        doTestCodeCompletionContains(
             COMPLETION_TEST_CLASS.formatted("", "Mockito.clearInvocations(someMock, <caret>someSpy);"),
             "mock", "spy", "someInjectMocks", "someMock", "someSpy");
     }

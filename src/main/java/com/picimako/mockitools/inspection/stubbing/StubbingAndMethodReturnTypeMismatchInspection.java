@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.stubbing;
 
@@ -41,7 +41,8 @@ final class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBase
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
-        if (MOCKITO_DO_X.isAnyOfStubs(expression)) checkAndRegister("doNothing", "doReturn", MOCKITO_DO_X, expression, holder);
+        if (MOCKITO_DO_X.isAnyOfStubs(expression))
+            checkAndRegister("doNothing", "doReturn", MOCKITO_DO_X, expression, holder);
         else if (BDDMOCKITO_WILL_X.isAnyOfStubs(expression))
             checkAndRegister("willDoNothing", "willReturn", BDDMOCKITO_WILL_X, expression, holder);
     }

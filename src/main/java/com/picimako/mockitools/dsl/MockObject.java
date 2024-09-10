@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.dsl;
 
@@ -42,8 +42,9 @@ public final class MockObject {
     }
 
     public static String getMockInitializerAsString(PsiLocalVariable localVariable) {
-        if (MockitoolsPsiUtil.isMockitoMock((PsiMethodCallExpression) localVariable.getInitializer())) return "mock()";
-        if (MockitoolsPsiUtil.isMockitoSpy((PsiMethodCallExpression) localVariable.getInitializer())) return "spy()";
+        var initializer = (PsiMethodCallExpression) localVariable.getInitializer();
+        if (MockitoolsPsiUtil.isMockitoMock(initializer)) return "mock()";
+        if (MockitoolsPsiUtil.isMockitoSpy(initializer)) return "spy()";
         return "";
     }
 

@@ -4,6 +4,26 @@
 
 ## [Unreleased]
 
+## [1.3.0]
+### Added
+- The inspection reporting spy creation on a mock object now also recognizes passed in mock objects when they are created
+either with `Mockito.mock()` or `Mockito.spy()`.
+- [66](https://github.com/picimako/mockitools/issues/66): Added an inspection that can report the stubbing of private and native methods,
+as well as `equals()` and `hashCode()`.
+- [63](https://github.com/picimako/mockitools/issues/63): Added an inspection to report `ArgumentCaptor.captor()` calls when they are passed in at least one argument.
+This method is not designed to accept any argument.
+- [55](https://github.com/picimako/mockitools/issues/55): Added an inspection to report explicit initialization of `@Mock` and `@InjectMocks` annotated fields.
+- Added support for generic inferred `Mockito.mock()` and `Mockito.spy()` calls when converting from those calls to `@Mock` and `@Spy` fields, respectively.
+
+### Changed
+- Applied a couple of code simplifications for easier maintenance.
+- Improved the documentation, in many cases by replacing textual code examples with screenshots and gifs.
+
+### Fixed
+- Fixed the title of the list popup when selecting the target stubbing during conversion.
+- Fixed a threading related exception that occurred during converting `@Mock` or `@Spy` fields to their corresponding method call versions.
+- Fixed some potential `ArrayIndexOutOfBoundsException`s.
+
 ## [1.2.0]
 ### Changed
 - New support range of IDEs: 2023.3-2024.2-EAP.

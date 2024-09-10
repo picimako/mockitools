@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert;
 
@@ -31,7 +31,6 @@ import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.util.IncorrectOperationException;
 import com.picimako.mockitools.util.ListPopupHelper;
 import com.picimako.mockitools.intention.convert.verification.NoActionAvailableAction;
-import com.picimako.mockitools.resources.MockitoolsBundle;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -122,9 +121,14 @@ public abstract class ConversionIntentionBase implements IntentionAction {
      */
     protected abstract boolean isQualifierHaveCorrectType(PsiExpression qualifier);
 
+    /**
+     * Returns the title of the list popup that is presented for this conversion to select the target approach.
+     */
+    protected abstract String approachSelectionListTitle();
+
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        ListPopupHelper.showActionsInListPopup(MockitoolsBundle.message("intention.convert.verification.select.target"), actionSelectionOptions(editor, file), editor);
+        ListPopupHelper.showActionsInListPopup(approachSelectionListTitle(), actionSelectionOptions(editor, file), editor);
     }
 
     /**

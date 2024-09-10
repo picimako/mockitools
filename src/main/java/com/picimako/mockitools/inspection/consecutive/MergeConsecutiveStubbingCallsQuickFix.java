@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.consecutive;
 
@@ -7,7 +7,6 @@ import java.util.Arrays;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.siyeh.ig.InspectionGadgetsFix;
@@ -22,14 +21,14 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  */
 @RequiredArgsConstructor
 public class MergeConsecutiveStubbingCallsQuickFix extends InspectionGadgetsFix {
-    private final ConsecutiveCallQuickFixContext context;
+    private final ConsecutiveCallRegistrar registrar;
     private final TypeConversionMethod argumentTypeConverter;
 
     @Override
     public @IntentionName @NotNull String getName() {
         return switch (argumentTypeConverter) {
             case NO_CONVERSION, TO_THROWABLES_SIMPLE ->
-                MockitoolsBundle.message("quick.fix.merge.with.previous.consecutive.calls", context.consecutiveMethodName);
+                MockitoolsBundle.message("quick.fix.merge.with.previous.consecutive.calls", registrar.consecutiveMethodName);
             default ->
                 MockitoolsBundle.message("quick.fix.merge.with.previous.consecutive.calls.and.convert.params", argumentTypeConverter.message);
         };
@@ -42,10 +41,10 @@ public class MergeConsecutiveStubbingCallsQuickFix extends InspectionGadgetsFix 
 
     @Override
     protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-        var firstConsecutiveCall = context.getFirstConsecutiveCall();
-        var viewProvider = firstConsecutiveCall.getManager().findViewProvider(context.getContainingFile());
+        var firstConsecutiveCall = registrar.getFirstConsecutiveCall();
+        var viewProvider = firstConsecutiveCall.getManager().findViewProvider(registrar.getContainingFile());
         if (viewProvider == null) return;
-        Document document = viewProvider.getDocument();
+        var document = viewProvider.getDocument();
         if (document == null) return;
         var documentManager = PsiDocumentManager.getInstance(project);
 
@@ -54,9 +53,9 @@ public class MergeConsecutiveStubbingCallsQuickFix extends InspectionGadgetsFix 
             expression.replace(argumentTypeConverter.convert(expression));
         }
         //Merge arguments by adding them to the first consecutive call
-        context.consecutiveCallIndeces.stream()
+        registrar.consecutiveCallIndeces.stream()
             .skip(1)
-            .map(context::getElement)
+            .map(registrar::getElement)
             .flatMap(methodCall -> Arrays.stream(methodCall.getArgumentList().getExpressions()))
             .map(argumentTypeConverter::convert)
             .forEach(argument -> {
@@ -67,11 +66,11 @@ public class MergeConsecutiveStubbingCallsQuickFix extends InspectionGadgetsFix 
         documentManager.doPostponedOperationsAndUnblockDocument(document);
         
         //Remove the consecutive calls except the first one
-        for (int i = 1; i < context.consecutiveCallIndeces.size(); i++) {
-            Integer index = context.consecutiveCallIndeces.get(i);
+        for (int i = 1; i < registrar.consecutiveCallIndeces.size(); i++) {
+            Integer index = registrar.consecutiveCallIndeces.get(i);
             document.deleteString(
-                context.getElement(index - 1).getTextRange().getEndOffset(),
-                context.getElement(index).getTextRange().getEndOffset());
+                registrar.getElement(index - 1).getTextRange().getEndOffset(),
+                registrar.getElement(index).getTextRange().getEndOffset());
             documentManager.commitDocument(document);
         }
     }

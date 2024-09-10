@@ -3,7 +3,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.Answers;
 
-class ClasslessMockCreation {
+class GenericInferredMockCreation {
 
     void noHighlights() {
         MockObject mock = Mockito.mock();

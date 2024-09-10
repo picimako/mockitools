@@ -4,17 +4,15 @@
 * [Non-interface type(s) passed into extraInterfaces](#non-interface-types-passed-into-extrainterfaces)
 * [No argument is provided for the extraInterfaces() call](#no-argument-is-provided-for-the-extrainterfaces-call)
 * [Mockito cannot mock certain types](#mockito-cannot-mock-certain-types)
-  * [Non-annotation based validation](#non-annotation-based-validation)
-  * [@DoNotMock annotated types](#donotmock-annotated-types)
 * [Spying on mock objects](#spying-on-mock-objects)
 * [Mock/Spy creation without specifying class](#mockspy-creation-without-specifying-class)
 * [Mismatch between mocked type and type of spied instance](#mismatch-between-mocked-type-and-type-of-spied-instance)
 * [Mockito/MockedStatic.reset() is used](#mockitomockedstaticreset-is-used)
 * [Convert @Mock/@Spy fields to Mockito.mock()/spy() calls](#convert-mockspy-fields-to-mockitomockspy-calls)
-    * [Determining the target method](#determining-the-target-method)
 * [Convert Mockito.mock()/spy() calls to @Mock/@Spy fields](#convert-mockitomockspy-calls-to-mockspy-fields)
 * [Simplify mock creation](#simplify-mock-creation)
 * [Expand mock creation](#expand-mock-creation)
+* [Explicit initialization of @Mock and @InjectMocks fields is not required](#explicit-initialization-of-mock-and-injectmocks-fields-is-not-required)
 <!-- TOC -->
 
 ## Non-interface type(s) passed into extraInterfaces
@@ -24,15 +22,9 @@
 When specifying extra interfaces for a mock object (either `@Mock` annotation's `extraInterfaces` attribute, or in `Mockito.withSettings().extraInterfaces()`)
 the types must be actual interfaces, otherwise Mockito would stop test execution and fail with an exception letting you know about one of these issues.
 
-```java
-@Mock(extraInterfaces = {List.class, Set.class, Object.class}) //Object is not an interface
-public Object mock;
-```
+![extraInterfaces type is not an interface](assets/extra_interfaces_type_is_not_interface.png)
 
-```java
-//None of the arguments is an interface
-Mockito.mock(Object.class, Mockito.withSettings().extraInterfaces(Object.class, ArrayList.class, AbstractMap.class));
-```
+![extraInterfaces none of the types is an interface](assets/extra_interfaces_no_type_is_interface.png)
 
 The respective Mockito exceptions are thrown in Mockito's [Reporter.java](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java),
 look for the `extraInterfacesAcceptsOnlyInterfaces(Class)` method.
@@ -46,9 +38,7 @@ look for the `extraInterfacesAcceptsOnlyInterfaces(Class)` method.
 the `MockSettings.extraInterfaces()` method accepts a varargs of `Class` objects, but if there is no argument passed in,
 Mockito would stop test execution and fail with an exception letting you know about the problem.
 
-```java
-Mockito.mock(Object.class, Mockito.withSettings().extraInterfaces()); //no argument specified
-```
+![extraInterfaces without any argument](assets/extra_interfaces_no_argument.png)
 
 You can find the related Mockito exception handling in its [Reporter.java](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java),
 look for the `extraInterfacesRequiresAtLeastOneInterface()` method.
@@ -69,24 +59,9 @@ and [InlineBytecodeGenerator#EXCLUDES](https://github.com/mockito/mockito/blob/m
 This inspection validates `@Mock` and `@Spy` annotated fields' types and the types specified as the arguments of `Mockito.mock()` and `Mockito.spy()` calls.
 The following examples are all non-compliant ones:
 
-```java
-class MockTypesTest {
-    @Mock
-    String mock;
+![non-mockable types](assets/non_mockable_types.png)
 
-    @Spy
-    int spy; //primitive
-
-    @Test
-    public void shouldInspectMockTypes() {
-        Mockito.mock(Short.class); //wrapper
-        Mockito.spy(Class.class);
-        Mockito.mock(String.class, Mockito.withSettings().name("name"));
-    }
-}
-```
-
-### @DoNotMock annotated types
+### @DoNotMock-annotated types
 
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.2.0-blue) [![](https://img.shields.io/badge/implementation-MockTypeInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/MockTypeInspection.java)
 
@@ -97,28 +72,7 @@ ends with `org.mockito.DoNotMock`, be it a custom annotation or Mockito's `org.m
 
 When constructing the inspection message, the inspection looks for the annotation's `reason` attribute value.
 
-```java
-class MockTypesTest {
-    @Mock
-    NotMockable mock; //message: ... The reason: Create a real instance instead.
-    @Mock
-    NotMockableWithCustomReason mockCustom; //message: ... The reason: You are doing it wrong.
-    @Mock
-    NotMockableWithEmptyReason mockEmpty; //message: ... No reason provided.
-
-    @DoNotMock
-    private static class NotMockable {
-    }
-
-    @DoNotMock(reason = "You are doing it wrong.")
-    private static class NotMockableWithCustomReason {
-    }
-
-    @DoNotMock(reason = "") //This is just for demonstration purposes. Either specify an actual reason or use the default one if the annotation has one.
-    private static class NotMockableWithEmptyReason {
-    }
-}
-```
+![non-mockable types with @DoNotMock annotation](assets/non_mockable_types_with_do_not_mock_annotation.png)
 
 Additional resources:
 - [@DoNotMock javadoc](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/DoNotMock.html)
@@ -132,48 +86,24 @@ Additional resources:
 
 This inspection reports spy creation on mock objects, for example
 
-```java
-
-class SpyOnMockTest {
-    
-    @Mock
-    MockObject mock;
-    
-    @Test
-    void testMethod() {
-      var spiedLocal = Mockito.spy(Mockito.mock(MockObject.class));
-      var spiedField = Mockito.spy(mock);
-    }
-}
-```
+![spying on mock objects](assets/spying_on_mock_object.png)
 
 The corresponding feature was introduced in [Mockito 5.4.0](https://github.com/mockito/mockito/releases/tag/v5.4.0), but this inspection does not do a library version check,
 and validates test code regardless of the Mockito version.
-   
-**NOTE:** variables with `Mockito.mock()` initializers passed into `Mockito.spy()` are not recognized as mocks yet.
 
 ----
 
 ## Mock/Spy creation without specifying class
 
-![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.11.0-blue) [![](https://img.shields.io/badge/implementation-ClasslessMockAndSpyCreationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/ClasslessMockAndSpyCreationInspection.java)
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.11.0-blue) [![](https://img.shields.io/badge/implementation-GenericInferredMockAndSpyCreationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/mocking/GenericInferredMockAndSpyCreationInspection.java)
 
 [Mockito 4.9.0](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#mock_without_class) introduced an enhancement to `Mockito.mock()` and `Mockito.spy()`
-based mock/spy creation, so that the mock type is not determined by the class passed in, instead the variable/field it is assigned to.
+based mock/spy creation, so that the mock type is not determined by the class passed in, instead by the type of the variable/field it is assigned to.
 
-These variants of `mock()` and `spy()` throw an exception if objects other configuration are passed in, thus this inspection reports
+These variants of `mock()` and `spy()` throw an exception if objects other than configuration are passed in, thus this inspection reports
 these calls when it finds at least one such argument.
 
-```java
-class MockWithoutSpecifyingClassTest {
-
-    @Test
-    void testMethod() {
-        MockObject mockWithAnswer = Mockito.mock(Answers.CALLS_REAL_METHODS, someOtherObject); //someOtherObject is highlighted
-        MockObject spied = Mockito.spy(new MockObject(), new MockObject()); //The entire argument list is highlighted
-    }
-}
-```
+![generic inferred mock creation with arguments passed in](assets/generic_inferred_mock_creation_with_arguments.png)
 
 ----
 
@@ -196,11 +126,11 @@ Based on Mockito's behaviour, in case of mocking/spying type with generic types,
 class MockSpiedInstanceTypeMismatch {
 
     void typeComparison() {
-        //Matching types, are not reported
+        //Matching types - are not reported
         var matchesWithoutGenerics = mock(ArrayList.class, withSettings().spiedInstance(new ArrayList()));
         var matchesWithGenerics = mock(ArrayList.class, withSettings().spiedInstance(new ArrayList<>()));
     
-        //Mismatching types, are reported
+        //Mismatching types - are reported
         var doesNotMatchWithSubType = mock(List.class, withSettings().spiedInstance(new ArrayList<>()));
         var doesNotMatchWithSuperType = mock(SomeType.class, withSettings().spiedInstance(new SuperType()));
         var doesNotMatchWithOtherType = mock(List.class, withSettings().spiedInstance(new HashSet<>()));
@@ -243,17 +173,7 @@ Based on Mockito's documentation on [resetting mocks](https://javadoc.io/doc/org
 This inspection will report any call to `Mockito.reset()` and `MockedStatic.reset()` (since 0.6.0), regardless of its location in the test method.
 Although there may be cases when calling `reset()` is acceptable or even necessary, this inspection doesn't take into account those cases.
 
-```java
-@Test
-void testMethod() {
-    //mock setup
-    MockObject mock = Mockito.mock(MockObject.class);
-    when(mock.doSomething())...
-    reset(mock); //reset() is called
-    //another mock setup
-    when(mock.doSomethingElse())...
-}
-```
+![Mockito.reset() is called](assets/mockito_reset_is_called.png)
 
 Additional resources:
 - [Reflectoring.io - Clean Unit Tests with Mockito](https://reflectoring.io/clean-unit-tests-with-mockito/) (**Avoid Mockito.reset() for Better Unit Tests** section)
@@ -273,20 +193,22 @@ It is not available when the field annotated with both `@Mock` and `@Spy`.
 
 In case of converting `@Mock` fields, default attribute values are also ignored and not added to the result `Mockito.mock()` call.
 
-#### Determining the target method
+### Determining the target method
 
-If there is only one method in the class, then that is the target method, otherwise users are able to choose which method to introduce the variable in.
+If there is only one method in the class, then that one is the target method, otherwise users are able to choose which method to introduce the variable in.
 
 Inner classes are not taken into consideration. Converting the field is possible only within the same class.
 
-The methods in the target selection list are reordered and are always shown in before hooks, test methods, rest of methods order. Before hooks and test methods also have dedicated
-icons for better visual presentation of them.
+The methods in the target selection list are reordered and are always shown in the following order: before hooks, test methods, rest of methods order.
+Before hooks and test methods also have dedicated icons for better visual presentation of them.
 
 ![target_method_selection](assets/target_method_selection_list.png)
 
-#### Examples
+![convert @Mock field to mock() variable](assets/convert_mock_field_to_variable.gif)
 
-Below you can find an extensive list of examples, what is converted into what.
+### Examples
+
+Below you can find an extensive list of examples about what is converted into what.
 
 <details>
         <summary><strong>See examples...</strong></summary>
@@ -342,18 +264,18 @@ to:   Object mock = Mockito.mock(Object.class, Mockito.withSettings().mockMaker(
 ```
 
 ```java
-from:
+//from:
 @Mock(extraInterfaces = List.class, name = "some name")
 Object mock;
-to:
+//to:
 Object mock = Mockito.mock(Object.class, Mockito.withSettings().name("some name").extraInterfaces(List.class));
 ```
 
 ```java
-from:
+//from:
 @Mock(name = "some name", extraInterfaces = List.class, answer = Answers.CALLS_REAL_METHODS)
 Object mock;
-to:
+//to:
 Object mock = Mockito.mock(Object.class, Mockito.withSettings()
     .name("some name")
     .defaultAnswer(Answers.CALLS_REAL_METHODS)
@@ -361,10 +283,10 @@ Object mock = Mockito.mock(Object.class, Mockito.withSettings()
 ```
 
 ```java
-from:
+//from:
 @Mock(lenient = true, extraInterfaces = {List.class, Set.class}, name = "some name", answer = Answers.CALLS_REAL_METHODS)
 Object mock;
-to:
+//to:
 Object mock = Mockito.mock(Object.class, Mockito.withSettings()
     .lenient()
     .name("some name")
@@ -383,12 +305,20 @@ Object mock = Mockito.mock(Object.class, Mockito.withSettings()
 
 Just like `@Spy` and `@Mock` annotated fields can be converted to `Mockito.spy()` and `@Mockito.mock()` calls, it is true vice versa too.
 
-**Mockito.spy()**
+### Mockito.spy()
 
-This intention is available on `Mockito.spy()` calls, when the argument of the call is either a new expression (i.e. `new MockObject()`), or a class object access expression (i.e. `MockObject.class`),
-but the argument is not an array creation.
+This intention is available on `Mockito.spy()` calls, when the argument of the call is either a *new* expression (i.e. `new MockObject()`),
+or a class object access expression (i.e. `MockObject.class`), but the argument is not an array creation. The mock type must also be
+mockable.
+
+It is also available when the mock type is generic inferred and there is no call argument, i.e. `MockObject spy = Mockito.spy();`.
+
+#### Examples
 
 ```java
+from: Clazz spy = spy();
+to:   @Spy Clazz spy;
+
 from: spy(Clazz.class);
 to:   @Spy Clazz clazz;
 
@@ -414,13 +344,13 @@ from: Clazz<typeargs> localVar = spy(new Clazz<typeargs>());
 to:   @Spy Clazz<typeargs> localVar;
 ```
 
-**Mockito.mock()**
+### Mockito.mock()
 
 This intention is available on `Mockito.mock()` calls, when the Class argument of the call is a class object access expression (i.e. `MockObject.class`),
 and in case of the `MockSettings` specific overload, the @Mock annotation supports all configuration specified:
 - it starts with the `Mockito.withSettings()` call,
 - it doesn't have a call other than to `lenient()`, `stubOnly()`, `defaultAnswer()`, `name()`, `extraInterfaces()`, `mockMaker()`
-  or `serializable()` but not its overloaded variant `serializable(SerializableMode)`.
+  or `serializable()`, but not its overloaded variant `serializable(SerializableMode)`.
 
 NOTE: there is no validation on whether the specified name or answer is valid to be put into the annotation attribute (as annotation attributes accept constants only),
 the intention is available regardless.
@@ -428,7 +358,16 @@ the intention is available regardless.
 This is mainly to not confuse users when the intention is available and when it is not, and to draw attention to that the attribute values may need adjustment to be used
 in the @Mock annotation.
 
+The mock type must also be mockable to be available, and it is also available when the mock type is generic inferred and there is no call argument, i.e. `MockObject mock = Mockito.mock();`.
+
+![convert mock() variable to @Mock field](assets/convert_mock_variable_to_field.gif)
+
+#### Examples
+
 ```java
+from: Clazz mock = mock();
+to:   @Mock Clazz mock;
+
 from: mock(Clazz.class)
 to:   @Mock Clazz clazz;
 
@@ -465,18 +404,18 @@ to:   @Mock(mockMaker = MockMakers.INLINE) Clazz clazz;
 
 Furthermore, the type that is being mocked should be mockable either by Mockito's rules or not being annotated with `@DoNotMock`.
 
-**Naming**
+### Naming
 
 - if the `Mockito.spy()`/`Mockito.mock()` call is part of a local variable declaration, then by default will use the variable's name.
 If there is already a field with the same name in the target class, a rename refactor is invoked first.
 - if the call is not part of a local variable declaration, a rename refactor is invoked first, where the default field name provided is the
 mock type's name in lowercase format.
 
-**Target class selection**
+### Target class selection
    
 If there is more than one parent class of the selected `spy()`/`mock()` call, a list is shown to select the class the field will be introduced in.
 
-**Support notes**
+### Support notes
 
 It is not yet supported to convert `spy()` calls in which an already created object is passed:
 
@@ -495,6 +434,10 @@ or simpler variants, and provides a quick fix to replace them with their corresp
 This is essentially the opposite direction of what [Expand mock creation](#expand-mock-creation) does. 
 
 Currently `spiedInstance()`, `name()` and `defaultAnswer()` are supported in `MockSettings`.
+
+![simplify mock creation](assets/simplify_mock_creation.gif)
+
+### Examples
 
 ```java
 from: Mockito.mock(MockObject.class, withSettings().spiedInstance(instance))
@@ -516,7 +459,9 @@ This intention action expands certain mock/spy creation calls to use concrete `M
 and aims to simplify the process of converting mock creation logic when further mock settings need to be added.
 This is essentially the opposite direction of what [Simplify mock creation](#simplify-mock-creation) does.
 
-The intention is available on `Mockito.mock()` and `Mockito.spy()` calls. and the following conversions/expansions are supported:
+![expand mock creation](assets/expand_mock_creation.gif)
+
+The intention is available on `Mockito.mock()` and `Mockito.spy()` calls, and the following conversions/expansions are supported:
 
 ```java
 //From:
@@ -525,9 +470,38 @@ var spy = Mockito.spy(spiedInstance);
 //to:
 var spy = Mockito.mock(SpiedType.class, withSettings().spiedInstance(spiedInstance));
 
-from: Mockito.mock(MockType.class, "some mock name")
-  to: Mockito.mock(MockType.class, withSettings().name("some mock name"))
+//From:
+Mockito.mock(MockType.class, "some mock name")
+//to:
+Mockito.mock(MockType.class, withSettings().name("some mock name"))
 
-from: Mockito.mock(MockType.class, Answers.RETURNS_MOCKS)
-  to: Mockito.mock(MockType.class, withSettings().defaultAnswer(Answers.RETURNS_MOCKS))
+//From:
+Mockito.mock(MockType.class, Answers.RETURNS_MOCKS)
+//to:
+Mockito.mock(MockType.class, withSettings().defaultAnswer(Answers.RETURNS_MOCKS))
+```
+
+## Explicit initialization of @Mock and @InjectMocks fields is not required
+
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-1.3.0-blue) [![](https://img.shields.io/badge/implementation-MockFieldInitializationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/mocking/MockFieldInitializationInspection.java)
+
+Since `@Mock` and `@InjectMocks` annotated fields are initialized automagically by Mockito via `MockitoJUnitRunner`, `MockitoJUnit.rule()` or
+`MockitoAnnotations.initMocks()/openMocks()`, there is no need to explicitly initialize them.
+
+This inspection reports `@Mock` and `@InjectMocks` fields that have an initializer specified.
+
+```java
+class CaptorTest {
+    @Mock
+    public MockObject mock = Mockito.mock();
+}
+```
+
+You can also apply a quick fix (*Remove initializer*) on it, so that the initializer may be removed. The code will then become:
+
+```java
+class CaptorTest {
+    @Mock
+    public MockObject mock;
+}
 ```

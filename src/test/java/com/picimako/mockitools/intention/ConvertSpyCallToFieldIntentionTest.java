@@ -1,4 +1,4 @@
-//Copyright 2023 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention;
 
@@ -155,6 +155,34 @@ class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
                         Mockable spy = Mockito.s<caret>py(Mockable.class);
                     }
 
+                    public static final class Mockable { }
+                }""");
+    }
+
+    @Test
+    void testNotAvailableForGenericInferredMockitoSpyWithVarKeyword() {
+        checkIntentionIsNotAvailable(
+            """
+                import org.mockito.Mockito;
+
+                public class NotAvailable {
+                    public void testMethod() {
+                        var spy = Mockito.sp<caret>y();
+                    }
+                }""");
+    }
+
+    @Test
+    void testAvailableForGenericInferredMockitoSpyWithExplicitType() {
+        checkIntentionIsAvailable(
+            """
+                import org.mockito.Mockito;
+
+                public class Available {
+                    public void testMethod() {
+                        Mockable spy = Mockito.sp<caret>y();
+                    }
+                
                     public static final class Mockable { }
                 }""");
     }
@@ -950,6 +978,36 @@ class ConvertSpyCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
                 public class ConversionTest {
                     public void testMethod() {
                         var spy = Mockito.s<caret>py(Mockable.class);
+                    }
+
+                    public static final class Mockable { }
+                }""",
+            """
+                import org.mockito.Mockito;
+                import org.mockito.Spy;
+
+                public class ConversionTest {
+                    @Spy
+                    Mockable spy;
+
+                    public void testMethod() {
+                    }
+
+                    public static final class Mockable { }
+                }""");
+    }
+
+    //Conversion - generic inferred spy creation
+
+    @Test
+    void testConvertsGenericInferredMockitoSpy() {
+        checkIntentionRun(
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        Mockable spy = Mockito.s<caret>py();
                     }
 
                     public static final class Mockable { }
