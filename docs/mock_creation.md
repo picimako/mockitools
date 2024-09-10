@@ -308,13 +308,17 @@ Just like `@Spy` and `@Mock` annotated fields can be converted to `Mockito.spy()
 ### Mockito.spy()
 
 This intention is available on `Mockito.spy()` calls, when the argument of the call is either a *new* expression (i.e. `new MockObject()`),
-or a class object access expression (i.e. `MockObject.class`), but the argument is not an array creation.
+or a class object access expression (i.e. `MockObject.class`), but the argument is not an array creation. The mock type must also be
+mockable.
 
-![convert mock() variable to @Mock field](assets/convert_mock_variable_to_field.gif)
+It is also available when the mock type is generic inferred and there is no call argument, i.e. `MockObject spy = Mockito.spy();`.
 
-### Examples
+#### Examples
 
 ```java
+from: Clazz spy = spy();
+to:   @Spy Clazz spy;
+
 from: spy(Clazz.class);
 to:   @Spy Clazz clazz;
 
@@ -354,7 +358,16 @@ the intention is available regardless.
 This is mainly to not confuse users when the intention is available and when it is not, and to draw attention to that the attribute values may need adjustment to be used
 in the @Mock annotation.
 
+The mock type must also be mockable to be available, and it is also available when the mock type is generic inferred and there is no call argument, i.e. `MockObject mock = Mockito.mock();`.
+
+![convert mock() variable to @Mock field](assets/convert_mock_variable_to_field.gif)
+
+#### Examples
+
 ```java
+from: Clazz mock = mock();
+to:   @Mock Clazz mock;
+
 from: mock(Clazz.class)
 to:   @Mock Clazz clazz;
 

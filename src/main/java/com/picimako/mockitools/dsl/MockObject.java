@@ -42,8 +42,9 @@ public final class MockObject {
     }
 
     public static String getMockInitializerAsString(PsiLocalVariable localVariable) {
-        if (MockitoolsPsiUtil.isMockitoMock((PsiMethodCallExpression) localVariable.getInitializer())) return "mock()";
-        if (MockitoolsPsiUtil.isMockitoSpy((PsiMethodCallExpression) localVariable.getInitializer())) return "spy()";
+        var initializer = (PsiMethodCallExpression) localVariable.getInitializer();
+        if (MockitoolsPsiUtil.isMockitoMock(initializer)) return "mock()";
+        if (MockitoolsPsiUtil.isMockitoSpy(initializer)) return "spy()";
         return "";
     }
 

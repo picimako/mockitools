@@ -29,6 +29,7 @@ import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFrom
 import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgumentOrNull;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaretOrEmpty;
 import static com.picimako.mockitools.util.PsiMethodUtil.hasOneArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.hasTwoArguments;
@@ -46,9 +47,11 @@ import com.intellij.psi.PsiEnumConstant;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.picimako.mockitools.MockitoMockMatchers;
 import com.picimako.mockitools.MockitoQualifiedNames;
 import com.picimako.mockitools.util.PsiClassUtil;
@@ -124,12 +127,24 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
         return getMethodCallAtCaretOrEmpty(file, editor)
             .filter(call -> MockitoQualifiedNames.MOCK.equals(getMethodName(call)))
             .map(call -> compute(() -> {
-                if (isMockableTypeInAnyWay(getOperandType(/*mockTypeArg*/getFirstArgument(call)))) {
-                    if (MockitoMockMatchers.MOCK.matches(call)) return hasOneArgument(call);
-                    if (MOCK_WITH_NAME.matches(call) || MOCK_WITH_ANSWER.matches(call))
-                        return hasTwoArguments(call);
-                    if (MOCK_WITH_SETTINGS.matches(call))
-                        return hasTwoArguments(call) && isSettingsSupportedByMockAnnotation(get2ndArgument(call));
+                var mockTypeArg = getFirstArgumentOrNull(call);
+                //Mockito.mock(<type>, ...)
+                if (mockTypeArg != null) {
+                    if (isMockableTypeInAnyWay(getOperandType(mockTypeArg))) {
+                        if (MockitoMockMatchers.MOCK.matches(call)) return hasOneArgument(call);
+                        if (MOCK_WITH_NAME.matches(call) || MOCK_WITH_ANSWER.matches(call))
+                            return hasTwoArguments(call);
+                        if (MOCK_WITH_SETTINGS.matches(call))
+                            return hasTwoArguments(call) && isSettingsSupportedByMockAnnotation(get2ndArgument(call));
+                    }
+                }
+                //Generic inferred Mockito.mock()
+                else {
+                    var parentVariable = PsiTreeUtil.getParentOfType(call, PsiLocalVariable.class);
+                    return parentVariable != null
+                           //SomeObject someVariable = ...;
+                           && !parentVariable.getTypeElement().isInferredType()
+                           && isMockableTypeInAnyWay(parentVariable.getType());
                 }
                 return false;
             }))

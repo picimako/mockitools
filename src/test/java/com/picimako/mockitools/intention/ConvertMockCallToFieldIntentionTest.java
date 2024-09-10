@@ -109,6 +109,32 @@ class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
     }
 
     @Test
+    void testNotAvailableForGenericInferredMockitoMockWithVarKeyword() {
+        checkIntentionIsNotAvailable(
+            """
+                import org.mockito.Mockito;
+
+                public class NotAvailable {
+                    public void testMethod() {
+                        var mock = Mockito.mo<caret>ck();
+                    }
+                }""");
+    }
+
+    @Test
+    void testAvailableForGenericInferredMockitoMockWithExplicitType() {
+        checkIntentionIsAvailable(
+            """
+                import org.mockito.Mockito;
+
+                public class Available {
+                    public void testMethod() {
+                        Object mock = Mockito.mo<caret>ck();
+                    }
+                }""");
+    }
+
+    @Test
     void testAvailableForMockitoMock() {
         checkIntentionIsAvailable(
             """
@@ -214,6 +240,30 @@ class ConvertMockCallToFieldIntentionTest extends MockitoolsIntentionTestBase {
                         aMethod(object);
                     }
                     public void aMethod(Object object) { }
+                }""");
+    }
+
+    @Test
+    void testConvertsGenericInferredMockitoMock() {
+        checkIntentionRun(
+            """
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    public void testMethod() {
+                        Object mock = Mockito.mo<caret>ck();
+                    }
+                }""",
+            """
+                import org.mockito.Mock;
+                import org.mockito.Mockito;
+
+                public class ConversionTest {
+                    @Mock
+                    Object mock;
+
+                    public void testMethod() {
+                    }
                 }""");
     }
 

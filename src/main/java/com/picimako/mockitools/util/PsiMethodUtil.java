@@ -124,6 +124,15 @@ public final class PsiMethodUtil {
     }
 
     /**
+     * Gets the first argument of the provided method call, or null if there is no argument specified.
+     */
+    @Nullable("When the method call has no argument")
+    public static PsiExpression getFirstArgumentOrNull(@NotNull PsiMethodCallExpression methodCall) {
+        var arguments = getArguments(methodCall);
+        return arguments.length > 0 ? arguments[0] : null;
+    }
+
+    /**
      * Gets the 2nd argument of the provided method call, given that the argument list exists and is not null.
      */
     public static PsiExpression get2ndArgument(@NotNull PsiMethodCallExpression methodCall) {

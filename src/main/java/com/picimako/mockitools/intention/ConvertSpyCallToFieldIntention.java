@@ -3,12 +3,11 @@
 package com.picimako.mockitools.intention;
 
 import static com.intellij.openapi.application.ReadAction.compute;
-import static com.picimako.mockitools.util.ClassObjectAccessUtil.getOperandType;
 import static com.picimako.mockitools.MockableTypesUtil.isMockableTypeInAnyWay;
 import static com.picimako.mockitools.MockitoQualifiedNames.SPY;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoSpy;
+import static com.picimako.mockitools.util.ClassObjectAccessUtil.getOperandType;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaretOrEmpty;
-import static com.picimako.mockitools.util.PsiMethodUtil.hasOneArgument;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -16,10 +15,12 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiNewExpression;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.picimako.mockitools.MockitoQualifiedNames;
 import com.picimako.mockitools.util.PsiMethodUtil;
 import org.jetbrains.annotations.NotNull;
@@ -34,8 +35,8 @@ import java.util.function.Supplier;
  * The intention is available
  * <ul>
  *      <li>on Mockito.spy() calls,</li>
- *      <li>when the argument of the call is either a new expression, or a class object access expression,</li>
- *      <li>the argument is not an array creation,</li>
+ *      <li>when the argument of the call is either a new expression, or a class object access expression,
+ *      and it is not an array creation, or when the type is generic inferred and there is no call argument,</li>
  *      <li>the type that is being mocked can actually be mocked (by Mockito's rules)/allowed to be mocked (by the @DoNotMock annotation)</li>
  * </ul>
  * <p>
@@ -62,7 +63,7 @@ import java.util.function.Supplier;
  * <p>
  * If there is more than one parent class of the selected spy() call, a list is shown from which the class where the field will be introduced, can be selected.
  * <p>
- * NOTE: The format {@code spy(&lt;reference to already created object>)} where the object passed in to the spy() call is created outside
+ * NOTE: The format {@code spy(<reference to already created object>)} where the object passed in to the spy() call is created outside
  * the call is not yet supported.
  *
  * @see ConvertMockCallToFieldIntention
@@ -70,26 +71,38 @@ import java.util.function.Supplier;
  * @since 0.2.0
  */
 final class ConvertSpyCallToFieldIntention extends ConvertCallToFieldIntentionBase {
-    
+
     public ConvertSpyCallToFieldIntention() {
         super(SPY, "@Spy");
     }
 
     //Availability
-    
+
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-        return getMethodCallAtCaretOrEmpty(file, editor)
-            .filter(call -> isMockitoSpy(call) && hasOneArgument(call))
-            .map(PsiMethodUtil::getFirstArgument)
-            .map(spiedTypeOrInstance -> spiedTypeOrInstance instanceof PsiNewExpression newSpiedInstance
-                //e.g. Mockito.spy(new ObjectToSpy())
-                ? compute(() -> !newSpiedInstance.isArrayCreation()) && isMockableTypeInAnyWay(spiedTypeOrInstance.getType())
-                //e.g. Mockito.spy(ObjectToSpy.class)
-                : isMockableTypeInAnyWay(getOperandType(spiedTypeOrInstance)))
-            .orElse(false);
+        var methodCallAtCaret = getMethodCallAtCaretOrEmpty(file, editor);
+        if (methodCallAtCaret.isPresent() && isMockitoSpy(methodCallAtCaret.get())) {
+            return methodCallAtCaret
+                .filter(PsiMethodUtil::hasOneArgument)
+                .map(PsiMethodUtil::getFirstArgumentOrNull)
+                .map(spiedTypeOrInstance -> spiedTypeOrInstance instanceof PsiNewExpression newSpiedInstance
+                                            //e.g. Mockito.spy(new ObjectToSpy())
+                                            ? compute(() -> !newSpiedInstance.isArrayCreation()) && isMockableTypeInAnyWay(spiedTypeOrInstance.getType())
+                                            //e.g. Mockito.spy(ObjectToSpy.class)
+                                            : isMockableTypeInAnyWay(getOperandType(spiedTypeOrInstance)))
+                //Generic inferred Mockito.spy()
+                .orElseGet(() -> {
+                    var parentVariable = PsiTreeUtil.getParentOfType(methodCallAtCaret.get(), PsiLocalVariable.class);
+                    return parentVariable != null
+                           //SomeObject someVariable = ...;
+                           && !parentVariable.getTypeElement().isInferredType()
+                           && isMockableTypeInAnyWay(compute(parentVariable::getType));
+                });
+        }
+
+        return false;
     }
-    
+
     //Conversion
 
     /**
@@ -123,7 +136,7 @@ final class ConvertSpyCallToFieldIntention extends ConvertCallToFieldIntentionBa
         //new Clazz("") + Clazz() + Clazz(int) -> false
         if (constructor != null) {
             return compute(() -> constructor.getParameterList().isEmpty()
-                   && (constructor.hasModifierProperty(PsiModifier.PUBLIC) || constructor.hasModifierProperty(PsiModifier.PACKAGE_LOCAL)));
+                                 && (constructor.hasModifierProperty(PsiModifier.PUBLIC) || constructor.hasModifierProperty(PsiModifier.PACKAGE_LOCAL)));
         }
         //new Clazz() + auto-gen Clazz() -> true
         //new Clazz() + Clazz(String) + Clazz(int) -> false
