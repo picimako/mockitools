@@ -31,7 +31,6 @@ import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.util.IncorrectOperationException;
 import com.picimako.mockitools.util.ListPopupHelper;
 import com.picimako.mockitools.intention.convert.verification.NoActionAvailableAction;
-import com.picimako.mockitools.resources.MockitoolsBundle;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;

@@ -35,9 +35,7 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.InspectionGadgetsFix;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;

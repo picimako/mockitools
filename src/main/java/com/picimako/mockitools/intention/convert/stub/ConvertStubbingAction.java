@@ -25,7 +25,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Action to convert between the different stubbing approaches.
