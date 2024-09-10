@@ -2,8 +2,6 @@
 
 package com.picimako.mockitools.util;
 
-import static java.util.stream.Collectors.toList;
-
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
@@ -17,7 +15,7 @@ import java.util.List;
 public final class PointersUtil {
 
     public static <T extends PsiElement> List<SmartPsiElementPointer<T>> toPointers(List<T> calls) {
-        return calls.stream().map(PointersUtil::toPointer).collect(toList());
+        return calls.stream().map(PointersUtil::toPointer).toList();
     }
 
     @NotNull

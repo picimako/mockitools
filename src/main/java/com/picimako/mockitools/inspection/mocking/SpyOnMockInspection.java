@@ -48,10 +48,8 @@ final class SpyOnMockInspection extends MockitoolsBaseInspection {
                     if (field.hasAnnotation(ORG_MOCKITO_MOCK)) {
                         holder.registerProblem(firstArgument, MockitoolsBundle.message("inspection.spying.on.mock.is.not.allowed"));
                     }
-                } else if (resolved instanceof PsiLocalVariable localVariable) {
-                    if (MockObject.isAnyKindOfMock(localVariable)) {
-                        holder.registerProblem(firstArgument, MockitoolsBundle.message("inspection.spying.on.mock.is.not.allowed"));
-                    }
+                } else if (resolved instanceof PsiLocalVariable localVariable && MockObject.isAnyKindOfMock(localVariable)) {
+                    holder.registerProblem(firstArgument, MockitoolsBundle.message("inspection.spying.on.mock.is.not.allowed"));
                 }
             }
         }

@@ -28,7 +28,7 @@ import com.intellij.lang.jvm.annotation.JvmAnnotationAttribute;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformCoreDataKeys;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.JavaPsiFacade;
@@ -108,7 +108,7 @@ final class ConvertMockSpyFieldToCallAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-        introduceMockitoMockingCall(fieldToConvert, method, e.getData(PlatformCoreDataKeys.PSI_FILE));
+        introduceMockitoMockingCall(fieldToConvert, method, e.getData(CommonDataKeys.PSI_FILE));
     }
 
     /**

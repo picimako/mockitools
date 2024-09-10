@@ -4,7 +4,6 @@ package com.picimako.mockitools.util;
 
 import static com.intellij.openapi.application.ReadAction.compute;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
-import static java.util.stream.Collectors.toList;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
@@ -228,7 +227,7 @@ public final class PsiMethodUtil {
                 current = previousCall;
             } else break;
         }
-        return calls.stream().map(PsiMethodCallExpression.class::cast).collect(toList());
+        return calls.stream().map(PsiMethodCallExpression.class::cast).toList();
     }
 
     public static List<PsiMethodCallExpression> collectCallsInChainFromFirst(PsiExpression expression, boolean includeMySelf) {
