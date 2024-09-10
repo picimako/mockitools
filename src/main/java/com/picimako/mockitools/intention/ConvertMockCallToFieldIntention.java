@@ -15,7 +15,6 @@ import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
 import static com.picimako.mockitools.MockitoQualifiedNames.LENIENT;
 import static com.picimako.mockitools.MockitoQualifiedNames.MOCK_MAKER;
 import static com.picimako.mockitools.MockitoQualifiedNames.NAME;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ANSWERS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK_SERIALIZABLE_MODE;
@@ -234,14 +233,13 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
      * Returns whether the argument Answer expression is a reference to {@code org.mockito.Answers.RETURNS_DEFAULTS}.
      */
     public static boolean isDefaultAnswer(PsiExpression answer) {
-        return answer instanceof PsiReferenceExpression answerExpr
-               && isEnumConstant(compute(answerExpr::resolve), ORG_MOCKITO_ANSWERS, "RETURNS_DEFAULTS");
+        return answer instanceof PsiReferenceExpression answerExpr && isAnswersReturnDefaults(compute(answerExpr::resolve));
     }
 
-    private static boolean isEnumConstant(PsiElement element, String enumClassName, String enumConstantName) {
+    private static boolean isAnswersReturnDefaults(PsiElement element) {
         return element instanceof PsiEnumConstant constant
-               && enumClassName.equals(constant.getContainingClass().getQualifiedName())
-               && enumConstantName.equals(constant.getName());
+               && MockitoQualifiedNames.ORG_MOCKITO_ANSWERS.equals(constant.getContainingClass().getQualifiedName())
+               && "RETURNS_DEFAULTS".equals(constant.getName());
     }
 
     /**

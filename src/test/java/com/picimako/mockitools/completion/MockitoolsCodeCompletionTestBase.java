@@ -15,14 +15,13 @@ public abstract class MockitoolsCodeCompletionTestBase extends MockitoolsTestBas
      * Tests basic code completion in the provided file text at the marked caret position,
      * and validates if the completion contains exactly the expected items.
      *
-     * @param fileName        the file name to configure the test data in
      * @param text            the file text on which the code completion is invoked
      * @param completionItems the list of items that are expected to be in the displayed completion list
      */
-    protected void doTestCodeCompletionContains(String fileName, String text, String... completionItems) {
+    protected void doTestCodeCompletionContains(String text, String... completionItems) {
         assertThat(text).withFailMessage("File text must contain <caret> to invoke code completion.").contains("<caret>");
 
-        getFixture().configureByText(fileName, text);
+        getFixture().configureByText("CompletionTest.java", text);
         getFixture().complete(CompletionType.BASIC);
 
         assertThat(getFixture().getLookupElementStrings()).containsExactlyInAnyOrder(completionItems);
