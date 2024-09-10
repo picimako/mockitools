@@ -29,7 +29,6 @@ import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFrom
 import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgumentOrNull;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaretOrEmpty;
 import static com.picimako.mockitools.util.PsiMethodUtil.hasOneArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.hasTwoArguments;
@@ -127,7 +126,7 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
         return getMethodCallAtCaretOrEmpty(file, editor)
             .filter(call -> MockitoQualifiedNames.MOCK.equals(getMethodName(call)))
             .map(call -> compute(() -> {
-                var mockTypeArg = getFirstArgumentOrNull(call);
+                var mockTypeArg = getFirstArgument(call);
                 //Mockito.mock(<type>, ...)
                 if (mockTypeArg != null) {
                     if (isMockableTypeInAnyWay(getOperandType(mockTypeArg))) {

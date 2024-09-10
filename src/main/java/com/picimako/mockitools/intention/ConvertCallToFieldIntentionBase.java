@@ -6,7 +6,7 @@ import static com.intellij.openapi.application.ReadAction.compute;
 import static com.picimako.mockitools.util.ClassObjectAccessUtil.resolveOperandType;
 import static com.picimako.mockitools.util.ListPopupHelper.selectItemAndRun;
 import static com.picimako.mockitools.util.PsiClassUtil.getParentClasses;
-import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgumentOrNull;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.util.Ranges.endOffsetOf;
 import static java.util.stream.Collectors.joining;
 
@@ -271,7 +271,7 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
 
         ConversionContext(PsiMethodCallExpression spyOrMockCall, Editor editor, Project project) {
             this.spyOrMockCall = spyOrMockCall;
-            this.mockTypeOrObject = Optional.ofNullable(getFirstArgumentOrNull(spyOrMockCall))
+            this.mockTypeOrObject = Optional.ofNullable(getFirstArgument(spyOrMockCall))
                 .map(PsiElement.class::cast)
                 .orElseGet(() -> PsiTreeUtil.getParentOfType(spyOrMockCall, PsiLocalVariable.class));
             this.editor = editor;

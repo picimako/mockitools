@@ -84,7 +84,7 @@ final class ConvertSpyCallToFieldIntention extends ConvertCallToFieldIntentionBa
         if (methodCallAtCaret.isPresent() && isMockitoSpy(methodCallAtCaret.get())) {
             return methodCallAtCaret
                 .filter(PsiMethodUtil::hasOneArgument)
-                .map(PsiMethodUtil::getFirstArgumentOrNull)
+                .map(PsiMethodUtil::getFirstArgument)
                 .map(spiedTypeOrInstance -> spiedTypeOrInstance instanceof PsiNewExpression newSpiedInstance
                                             //e.g. Mockito.spy(new ObjectToSpy())
                                             ? compute(() -> !newSpiedInstance.isArrayCreation()) && isMockableTypeInAnyWay(spiedTypeOrInstance.getType())

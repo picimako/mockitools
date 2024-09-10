@@ -22,6 +22,7 @@ This method is not designed to accept any argument.
 ### Fixed
 - Fixed the title of the list popup when selecting the target stubbing during conversion.
 - Fixed a threading related exception that occurred during converting `@Mock` or `@Spy` fields to their corresponding method call versions.
+- Fixed some potential `ArrayIndexOutOfBoundsException`s.
 
 ## [1.2.0]
 ### Changed
