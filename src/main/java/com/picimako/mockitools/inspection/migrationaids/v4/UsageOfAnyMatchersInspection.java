@@ -108,6 +108,7 @@ final class UsageOfAnyMatchersInspection extends MigrationAidBase.V23ToV4BaseIns
 
         private String getAnyX(String referenceName) {
             Matcher matcher = ANY_X_OF_PATTERN.matcher(referenceName);
+            //noinspection ResultOfMethodCallIgnored
             matcher.matches(); //no need to check if it matches. It already matches because of the initial CallMatcher.
             return matcher.group("anyX");
         }

@@ -39,6 +39,7 @@ final class UsageOfDeprecatedPluginClassesInspection extends MigrationAidBase.V2
             @Override
             public void visitReferenceElement(@NotNull PsiJavaCodeReferenceElement reference) {
                 if (ORG_MOCKITO_CONFIGURATION_ANNOTATION_ENGINE.equals(reference.getQualifiedName())) {
+                    //noinspection DialogTitleCapitalization
                     holder.registerProblem(reference,
                         MockitoolsBundle.message("inspection.migration.aid.v4.plugin.configuration.annotation.engine"),
                         new NameCollisionAwareReferenceReplacerQuickFix("quick.fix.migration.aid.v4.replace.with.org.mockito.plugins.AnnotationEngine",
