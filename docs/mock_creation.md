@@ -491,7 +491,7 @@ Since `@Mock` and `@InjectMocks` annotated fields are initialized automagically 
 This inspection reports `@Mock` and `@InjectMocks` fields that have an initializer specified.
 
 ```java
-class CaptorTest {
+class MockTest {
     @Mock
     public MockObject mock = Mockito.mock();
 }
@@ -500,7 +500,7 @@ class CaptorTest {
 You can also apply a quick fix (*Remove initializer*) on it, so that the initializer may be removed. The code will then become:
 
 ```java
-class CaptorTest {
+class MockTest {
     @Mock
     public MockObject mock;
 }
