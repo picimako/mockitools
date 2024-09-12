@@ -3,7 +3,7 @@
     <id>mockitools</id>
     <name>Mockitools</name>
     <vendor url="https://github.com/picimako/mockitools">Tamás Balog</vendor>
-    <version>1.3.0</version>
+    <version>1.3.1</version>
     <resource-bundle>messages.MockitoolsBundle</resource-bundle>
 
     <description>Provides integration for the Mockito framework for Java.</description>
@@ -47,11 +47,12 @@
                 id="mockitools.extraInterfaces" language="JAVA"
                 displayName="@Mock#extraInterfaces and MockSettings.extraInterfaces() validations" groupPath="Java"
                 groupName="Mockito" enabledByDefault="true" level="ERROR"/>
-        <localInspection
-                implementationClass="com.picimako.mockitools.inspection.mocking.MockFieldInitializationInspection"
-                id="mockitools.mockFieldInitialization" language="JAVA"
-                displayName="@Mock or @InjectMocks field is explicitly initialized" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+        <!-- Disabled due to https://github.com/picimako/mockitools/issues/69 -->
+<!--        <localInspection-->
+<!--                implementationClass="com.picimako.mockitools.inspection.mocking.MockFieldInitializationInspection"-->
+<!--                id="mockitools.mockFieldInitialization" language="JAVA"-->
+<!--                displayName="@Mock or @InjectMocks field is explicitly initialized" groupPath="Java"-->
+<!--                groupName="Mockito" enabledByDefault="true" level="WARNING"/>-->
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.mocking.MockTypeInspection"
                 id="mockitools.mockType" language="JAVA"

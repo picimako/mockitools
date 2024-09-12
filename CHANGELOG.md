@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+## [1.3.1]
+### Changed
+- [69](https://github.com/picimako/mockitools/issues/69): Temporarily remove the inspection introduced in [55](https://github.com/picimako/mockitools/issues/55) to further investigate its viability.
+
 ## [1.3.0]
 ### Added
 - The inspection reporting spy creation on a mock object now also recognizes passed in mock objects when they are created

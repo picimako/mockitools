@@ -485,6 +485,8 @@ Mockito.mock(MockType.class, withSettings().defaultAnswer(Answers.RETURNS_MOCKS)
 
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-1.3.0-blue) [![](https://img.shields.io/badge/implementation-MockFieldInitializationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/mocking/MockFieldInitializationInspection.java)
 
+NOTE: this inspection has been temporarily removed in Mockitools v1.3.1 for further investigation of its viability.
+
 Since `@Mock` and `@InjectMocks` annotated fields are initialized automagically by Mockito via `MockitoJUnitRunner`, `MockitoJUnit.rule()` or
 `MockitoAnnotations.initMocks()/openMocks()`, there is no need to explicitly initialize them.
 
