@@ -40,8 +40,8 @@ class ConvertBDDMockitoThenToInOrderVerifyActionTest extends MockitoolsActionTes
                 class ConversionTest {
                     void testMethod(){
                         MockObject mockObject = Mockito.mock(MockObject.class);
-                        InOrder order = Mockito.inOrder(mockObject);
-                        order.verify(mockObject).doSomething();
+                        InOrder inOrder = Mockito.inOrder(mockObject);
+                        inOrder.verify(mockObject).doSomething();
                     }
                     private static class MockObject {
                         public void doSomething() {
@@ -74,8 +74,8 @@ class ConvertBDDMockitoThenToInOrderVerifyActionTest extends MockitoolsActionTes
                 class ConversionTest {
                     void testMethod(){
                         MockObject mockObject = Mockito.mock(MockObject.class);
-                        InOrder order = Mockito.inOrder(mockObject);
-                        order.verify(mockObject, Mockito.times(2)).doSomething();
+                        InOrder inOrder = Mockito.inOrder(mockObject);
+                        inOrder.verify(mockObject, Mockito.times(2)).doSomething();
                     }
                     private static class MockObject {
                         public void doSomething() {
@@ -183,9 +183,9 @@ class ConvertBDDMockitoThenToInOrderVerifyActionTest extends MockitoolsActionTes
                 class ConversionTest {
                     void testMethod(){
                         MockObject mockObject = Mockito.mock(MockObject.class);
-                        InOrder order = Mockito.inOrder(mockObject);
-                        order.verify(mockObject).doSomething();
-                        order.verify(mockObject).doSomething();
+                        InOrder inOrder = Mockito.inOrder(mockObject);
+                        inOrder.verify(mockObject).doSomething();
+                        inOrder.verify(mockObject).doSomething();
                     }
                     private static class MockObject {
                         public void doSomething() {
@@ -219,9 +219,9 @@ class ConvertBDDMockitoThenToInOrderVerifyActionTest extends MockitoolsActionTes
                 class ConversionTest {
                     void testMethod(){
                         MockObject mockObject = Mockito.mock(MockObject.class);
-                        InOrder order = Mockito.inOrder(mockObject);
-                        order.verify(mockObject, Mockito.times(2)).doSomething();
-                        order.verify(mockObject, Mockito.times(3)).doSomething();
+                        InOrder inOrder = Mockito.inOrder(mockObject);
+                        inOrder.verify(mockObject, Mockito.times(2)).doSomething();
+                        inOrder.verify(mockObject, Mockito.times(3)).doSomething();
                     }
                     private static class MockObject {
                         public void doSomething() {
@@ -333,9 +333,9 @@ class ConvertBDDMockitoThenToInOrderVerifyActionTest extends MockitoolsActionTes
                     void testMethod(){
                         MockObject mockObject = Mockito.mock(MockObject.class);
                         MockObject mockObject2 = Mockito.mock(MockObject.class);
-                        InOrder order = Mockito.inOrder(mockObject, mockObject2);
-                        order.verify(mockObject, Mockito.times(2)).doSomething();
-                        order.verify(mockObject2, Mockito.times(2)).doSomething();
+                        InOrder inOrder = Mockito.inOrder(mockObject, mockObject2);
+                        inOrder.verify(mockObject, Mockito.times(2)).doSomething();
+                        inOrder.verify(mockObject2, Mockito.times(2)).doSomething();
                     }
                     private static class MockObject {
                         public void doSomething() {

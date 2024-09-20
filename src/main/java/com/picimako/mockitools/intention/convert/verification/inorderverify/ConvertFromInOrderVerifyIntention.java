@@ -76,7 +76,7 @@ final class ConvertFromInOrderVerifyIntention extends ConvertVerificationIntenti
             //the method call at the caret position. The identifier at this point cannot be null.
             ? getMethodCallForIdentifier(file.findElementAt(compute(() -> editor.getCaretModel().getOffset())))
             //the method call of the first selected statement
-            : compute(() -> getParentOfType(findChildOfType(collectStatementsInSelection(editor, file).get(0), PsiIdentifier.class), PsiMethodCallExpression.class));
+            : compute(() -> getParentOfType(findChildOfType(collectStatementsInSelection(editor, file).getFirst(), PsiIdentifier.class), PsiMethodCallExpression.class));
 
         if (INORDER_VERIFY.isVerifiedBy(verificationCall)) {
             var actions = new ArrayList<AnAction>(3);

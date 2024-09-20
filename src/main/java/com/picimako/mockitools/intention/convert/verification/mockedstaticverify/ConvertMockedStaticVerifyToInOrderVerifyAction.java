@@ -81,7 +81,7 @@ public class ConvertMockedStaticVerifyToInOrderVerifyAction extends ConvertVerif
         for (var calls : verificationCallChains) {
             var mockedVarAndClassType = getMockedVarAndClassType(calls);
             if (isNotEmpty(mockedVarAndClassType))
-                convertVerification(calls, calls.get(0), mockedVarAndClassType.second);
+                convertVerification(calls, calls.getFirst(), mockedVarAndClassType.second);
         }
 
         rename(inOrderVariable);
@@ -102,7 +102,7 @@ public class ConvertMockedStaticVerifyToInOrderVerifyAction extends ConvertVerif
      */
     @NotNull
     private Pair<String, PsiElement> getMockedVarAndClassType(List<PsiMethodCallExpression> calls) {
-        if (getQualifier(calls.get(0)) instanceof PsiReferenceExpression mockVariableRef) {
+        if (getQualifier(calls.getFirst()) instanceof PsiReferenceExpression mockVariableRef) {
             var mockedStaticResourceVar = mockVariableRef.resolve();
             if (mockedStaticResourceVar instanceof PsiResourceVariable mockedStaticResourceVariable) {
                 var mockStaticCall = mockedStaticResourceVariable.getInitializer();

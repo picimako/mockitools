@@ -17,7 +17,7 @@
 
 ## Non-interface type(s) passed into extraInterfaces
 
-![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-ExtraInterfacesInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/ExtraInterfacesInspection.java)
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-ExtraInterfacesInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/stubbing/ExtraInterfacesInspection.java)
 
 When specifying extra interfaces for a mock object (either `@Mock` annotation's `extraInterfaces` attribute, or in `Mockito.withSettings().extraInterfaces()`)
 the types must be actual interfaces, otherwise Mockito would stop test execution and fail with an exception letting you know about one of these issues.
@@ -33,7 +33,7 @@ look for the `extraInterfacesAcceptsOnlyInterfaces(Class)` method.
 
 ## No argument is provided for the extraInterfaces() call
 
-![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-ExtraInterfacesInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/ExtraInterfacesInspection.java)
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-ExtraInterfacesInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/stubbing/ExtraInterfacesInspection.java)
 
 the `MockSettings.extraInterfaces()` method accepts a varargs of `Class` objects, but if there is no argument passed in,
 Mockito would stop test execution and fail with an exception letting you know about the problem.
@@ -49,7 +49,7 @@ look for the `extraInterfacesRequiresAtLeastOneInterface()` method.
 
 ### Non-annotation based validation
 
-![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-MockTypeInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/MockTypeInspection.java)
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-MockTypeInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/mocking/MockTypeInspection.java)
 
 Based on Mockito's underlying logic, when attempting to create mocks for primitives, primitive wrapper types, `String` and `Class`, Mockito throws an exception that mock creation cannot happen.
 
@@ -63,7 +63,7 @@ The following examples are all non-compliant ones:
 
 ### @DoNotMock-annotated types
 
-![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.2.0-blue) [![](https://img.shields.io/badge/implementation-MockTypeInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/MockTypeInspection.java)
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.2.0-blue) [![](https://img.shields.io/badge/implementation-MockTypeInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/mocking/MockTypeInspection.java)
 
 In Mockito 4.1.0 a new `@DoNotMock` annotation was introduced adopted from Google. It has a `reason` attribute to inform users why the type marked with the annotation should not be mocked.
 
@@ -82,7 +82,7 @@ Additional resources:
 
 ## Spying on mock objects
 
-![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.11.0-blue) [![](https://img.shields.io/badge/implementation-SpyOnMockInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/SpyOnMockInspection.java)
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.11.0-blue) [![](https://img.shields.io/badge/implementation-SpyOnMockInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/mocking/SpyOnMockInspection.java)
 
 This inspection reports spy creation on mock objects, for example
 
@@ -110,7 +110,7 @@ these calls when it finds at least one such argument.
 ## Mismatch between mocked type and type of spied instance
 
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.11.0-blue)
-[![](https://img.shields.io/badge/implementation-MockSpiedInstanceTypeMismatchInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/MockSpiedInstanceTypeMismatchInspection.java)
+[![](https://img.shields.io/badge/implementation-MockSpiedInstanceTypeMismatchInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/mocking/MockSpiedInstanceTypeMismatchInspection.java)
 
 This inspection reports when the mocked type and the type of the spied instance don't match in a `mock(Type.class, withSettings().spiedInstance(...));`-type mock creation.
    

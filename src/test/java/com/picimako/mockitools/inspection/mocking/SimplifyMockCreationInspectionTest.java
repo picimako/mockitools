@@ -36,22 +36,22 @@ class SimplifyMockCreationInspectionTest extends MockitoolsInspectionTestBase {
                     void testSpiedInstance() {
                         var spy = mock(MockO<caret>bject.class, withSettings().spiedInstance(new MockObject()));
                     }
-                    
+                
                     private static final class MockObject {
                     }
                 }
                 """,
             """
                 import org.mockito.Mockito;
-                                
+                
                 import static org.mockito.Mockito.mock;
                 import static org.mockito.Mockito.withSettings;
-                                
+                
                 class SimplifyMockCreation {
                     void testSpiedInstance() {
                         var spy = Mockito.spy(new MockObject());
                     }
-                    
+                
                     private static final class MockObject {
                     }
                 }
@@ -70,23 +70,23 @@ class SimplifyMockCreationInspectionTest extends MockitoolsInspectionTestBase {
                         var spiedInstance = new MockObject();
                         var spy = mock(MockObj<caret>ect.class, withSettings().spiedInstance(spiedInstance));
                     }
-                    
+                
                     private static final class MockObject {
                     }
                 }
                 """,
             """
                 import org.mockito.Mockito;
-                                
+                
                 import static org.mockito.Mockito.mock;
                 import static org.mockito.Mockito.withSettings;
-                                
+                
                 class SimplifyMockCreation {
                     void testSpiedInstance() {
                         var spiedInstance = new MockObject();
                         var spy = Mockito.spy(spiedInstance);
                     }
-                                
+                
                     private static final class MockObject {
                     }
                 }
@@ -106,22 +106,22 @@ class SimplifyMockCreationInspectionTest extends MockitoolsInspectionTestBase {
                     void testName() {
                         var mock = mock(MockObject.class, w<caret>ithSettings().name("some name"));
                     }
-                    
+                
                     private static final class MockObject {
                     }
                 }
                 """,
             """
                 import org.mockito.Mockito;
-                                
+                
                 import static org.mockito.Mockito.mock;
                 import static org.mockito.Mockito.withSettings;
-                                
+                
                 class SimplifyMockCreation {
                     void testName() {
                         var mock = Mockito.mock(MockObject.class, "some name");
                     }
-                                
+                
                     private static final class MockObject {
                     }
                 }
@@ -140,23 +140,23 @@ class SimplifyMockCreationInspectionTest extends MockitoolsInspectionTestBase {
                         var name = "some name";
                         var mock = mock(MockObject.class, w<caret>ithSettings().name(name));
                     }
-                    
+                
                     private static final class MockObject {
                     }
                 }
                 """,
             """
                 import org.mockito.Mockito;
-                                
+                
                 import static org.mockito.Mockito.mock;
                 import static org.mockito.Mockito.withSettings;
-                                
+                
                 class SimplifyMockCreation {
                     void testName() {
                         var name = "some name";
                         var mock = Mockito.mock(MockObject.class, name);
                     }
-                                
+                
                     private static final class MockObject {
                     }
                 }
@@ -178,7 +178,7 @@ class SimplifyMockCreationInspectionTest extends MockitoolsInspectionTestBase {
                     void testDefaultAnswer() {
                         var mock = mock(MockObject.class, w<caret>ithSettings().defaultAnswer(Answers.RETURNS_SMART_NULLS));
                     }
-                    
+                
                     private static final class MockObject {
                     }
                 }
@@ -186,15 +186,15 @@ class SimplifyMockCreationInspectionTest extends MockitoolsInspectionTestBase {
             """
                 import static org.mockito.Mockito.mock;
                 import static org.mockito.Mockito.withSettings;
-                                
+                
                 import org.mockito.Answers;
                 import org.mockito.Mockito;
-                                
+                
                 class SimplifyMockCreation {
                     void testDefaultAnswer() {
                         var mock = Mockito.mock(MockObject.class, Answers.RETURNS_SMART_NULLS);
                     }
-                                
+                
                     private static final class MockObject {
                     }
                 }
@@ -214,7 +214,7 @@ class SimplifyMockCreationInspectionTest extends MockitoolsInspectionTestBase {
                     void testDefaultAnswer() {
                         var mock = mock(MockObject.class, w<caret>ithSettings().defaultAnswer(new GloballyConfiguredAnswer()));
                     }
-                    
+                
                     private static final class MockObject {
                     }
                 }
@@ -222,15 +222,15 @@ class SimplifyMockCreationInspectionTest extends MockitoolsInspectionTestBase {
             """
                 import static org.mockito.Mockito.mock;
                 import static org.mockito.Mockito.withSettings;
-                                
+                
                 import org.mockito.Mockito;
                 import org.mockito.internal.stubbing.defaultanswers.GloballyConfiguredAnswer;
-                                
+                
                 class SimplifyMockCreation {
                     void testDefaultAnswer() {
                         var mock = Mockito.mock(MockObject.class, new GloballyConfiguredAnswer());
                     }
-                                
+                
                     private static final class MockObject {
                     }
                 }
@@ -251,7 +251,7 @@ class SimplifyMockCreationInspectionTest extends MockitoolsInspectionTestBase {
                         var answer = new ReturnsMocks();
                         var mock = mock(MockObject.class, w<caret>ithSettings().defaultAnswer(answer));
                     }
-                    
+                
                     private static final class MockObject {
                     }
                 }
@@ -259,16 +259,16 @@ class SimplifyMockCreationInspectionTest extends MockitoolsInspectionTestBase {
             """
                 import static org.mockito.Mockito.mock;
                 import static org.mockito.Mockito.withSettings;
-                                
+                
                 import org.mockito.Mockito;
                 import org.mockito.internal.stubbing.defaultanswers.ReturnsMocks;
-                                
+                
                 class SimplifyMockCreation {
                     void testDefaultAnswer() {
                         var answer = new ReturnsMocks();
                         var mock = Mockito.mock(MockObject.class, answer);
                     }
-                                
+                
                     private static final class MockObject {
                     }
                 }

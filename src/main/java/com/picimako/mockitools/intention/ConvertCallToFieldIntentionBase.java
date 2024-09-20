@@ -140,7 +140,7 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
      */
     private void selectTargetClassAndIntroduceField(List<PsiClass> parentClasses, Project project, Editor editor, Consumer<PsiClass> introduceField) {
         if (parentClasses.size() == 1) {
-            introduceField.consume(parentClasses.get(0));
+            introduceField.consume(parentClasses.getFirst());
         } else {
             selectItemAndRun(MockitoolsBundle.message("intention.select.target.class"), parentClasses, introduceField, PsiClassListCellRenderer::new, editor, project);
         }

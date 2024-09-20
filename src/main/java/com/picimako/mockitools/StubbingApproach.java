@@ -71,7 +71,7 @@ public enum StubbingApproach {
 
         @Override
         public Optional<PsiMethodCallExpression> getStubbedMethodCall(List<PsiMethodCallExpression> stubbingCalls) {
-            return getStubbedMethodCall(stubbingCalls.get(0));
+            return getStubbedMethodCall(stubbingCalls.getFirst());
         }
 
         @Override
@@ -182,7 +182,7 @@ public enum StubbingApproach {
 
         @Override
         public Optional<PsiMethodCallExpression> getStubbedMethodCall(List<PsiMethodCallExpression> stubbingCalls) {
-            return getStubbedMethodCall(stubbingCalls.get(0));
+            return getStubbedMethodCall(stubbingCalls.getFirst());
         }
 
         @Override
