@@ -61,7 +61,7 @@ public abstract class ConvertVerificationActionBase extends AnAction {
             inOrderCreator = new InOrderVariableCreator(editor.getDocument());
             if (isBulkMode) {
                 var statementsInSelection = collectStatementsInSelection(editor, file);
-                var firstVerification = getVerificationCall(statementsInSelection.get(0));
+                var firstVerification = getVerificationCall(statementsInSelection.getFirst());
                 performActionInBulk(statementsInSelection, firstVerification, collectCallsInChainFromFirst(firstVerification, true));
             } else performAction(project, file);
         });
@@ -115,7 +115,7 @@ public abstract class ConvertVerificationActionBase extends AnAction {
      */
     protected void replaceBeginningOfChain(List<PsiMethodCallExpression> calls, String replacement, @NotNull String... mockitoClass) {
         //end offset of Mockito.verify/BDDMockito.then
-        var verifyOrThen = calls.get(0);
+        var verifyOrThen = calls.getFirst();
         int endOffset = endOffsetOf(getReferenceNameElement(verifyOrThen));
         performAndCommitDocument(() -> editor.getDocument().replaceString(verifyOrThen.getTextOffset(), endOffset, replacement));
         if (mockitoClass.length == 1)

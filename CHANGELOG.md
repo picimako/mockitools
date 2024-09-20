@@ -4,6 +4,15 @@
 
 ## [Unreleased]
 
+## [1.4.0]
+### Changed
+- New supported IDE version range: 2024.2 - 2024.3.*.
+- Updated the project to use the IntelliJ Platform Gradle Plugin 2.0.
+- Updated the project to use JDK 21.
+
+### Fixed
+- Fixed some links in the documentation.
+
 ## [1.3.1]
 ### Changed
 - [69](https://github.com/picimako/mockitools/issues/69): Temporarily remove the inspection introduced in [55](https://github.com/picimako/mockitools/issues/55) to further investigate its viability.

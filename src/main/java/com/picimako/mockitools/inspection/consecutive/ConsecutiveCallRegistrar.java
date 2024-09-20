@@ -73,12 +73,12 @@ class ConsecutiveCallRegistrar {
 
     PsiMethodCallExpression getFirstConsecutiveCall() {
         initializePointersIfNotAlready();
-        return wholeChainPointers.get(consecutiveCallIndeces.get(0)).getElement();
+        return wholeChainPointers.get(consecutiveCallIndeces.getFirst()).getElement();
     }
 
     VirtualFile getContainingFile() {
         initializePointersIfNotAlready();
-        return wholeChainPointers.get(0).getVirtualFile();
+        return wholeChainPointers.getFirst().getVirtualFile();
     }
 
     private void initializePointersIfNotAlready() {

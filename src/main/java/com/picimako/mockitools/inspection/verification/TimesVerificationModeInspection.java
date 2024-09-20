@@ -96,7 +96,7 @@ final class TimesVerificationModeInspection extends MockitoolsBaseInspection {
             //times(1) is allowed to be removed only when it is used in the Mockito-provided verification methods
             var verificationModeCalls = getCallsInVerificationModeArgument(expression);
             if (verificationModeCalls.size() == 1) {
-                var timesMode = verificationModeCalls.get(0);
+                var timesMode = verificationModeCalls.getFirst();
                 if (isTimesWithValueEqualTo(timesMode, 1))
                     holder.registerProblem(timesMode, MockitoolsBundle.message("inspection.times.one.can.be.omitted"), ProblemHighlightType.LIKE_UNUSED_SYMBOL, new DeleteTimesOneQuickFix());
             }

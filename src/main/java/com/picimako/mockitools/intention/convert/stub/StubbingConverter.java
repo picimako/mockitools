@@ -71,7 +71,7 @@ public final class StubbingConverter {
      * </pre>
      */
     private void convertSameType(List<PsiMethodCallExpression> calls, StubbingApproach from, StubbingApproach to) {
-        doBaseConversion(from, to, calls, endOffsetOf(getQualifier(calls.get(0))), to.getBeginningOfStubbing(from));
+        doBaseConversion(from, to, calls, endOffsetOf(getQualifier(calls.getFirst())), to.getBeginningOfStubbing(from));
     }
 
     /**
@@ -86,12 +86,12 @@ public final class StubbingConverter {
      */
     private void convertToStubber(List<PsiMethodCallExpression> calls, StubbingApproach from, StubbingApproach to) {
         //These have to be saved before the base conversion, so their values are kept properly
-        var stubbedCall = ((PsiMethodCallExpression) getFirstArgument(calls.get(0))); //mock.doSomething()
+        var stubbedCall = ((PsiMethodCallExpression) getFirstArgument(calls.getFirst())); //mock.doSomething()
         var stubbedCallQualifier = getQualifier(stubbedCall).getText(); //"mock"
         var stubbedCallText = stubbedCall.getText(); //"mock.doSomething()"
 
         //At this point the example chain becomes 'Mockito.do*();'
-        doBaseConversion(from, to, calls, endOffsetOf(calls.get(0)), to.getBeginningOfStubbing(from));
+        doBaseConversion(from, to, calls, endOffsetOf(calls.getFirst()), to.getBeginningOfStubbing(from));
 
         //Adds the '.when(mock).doSomething()' part at the end of the call chain, so the example becomes: 'Mockito.do*().when(mock).doSomething();'
         document.insertString(
@@ -111,7 +111,7 @@ public final class StubbingConverter {
      */
     private void convertToStubbing(List<PsiMethodCallExpression> calls, StubbingApproach from, StubbingApproach to) {
         var stubbingMethod = calls.get(calls.size() - 2); //when(mock)
-        int endOffset = endOffsetOf(getQualifier(calls.get(0))); //end offset of Mockito
+        int endOffset = endOffsetOf(getQualifier(calls.getFirst())); //end offset of Mockito
 
         //BDDMockito.given + ( + mock + .doSomething() + )
         String replacement = to.getBeginningOfStubbing(from) + "(" + getFirstArgument(stubbingMethod).getText() + getLast(calls).getText().replace(stubbingMethod.getText(), "") + ")";
@@ -147,7 +147,7 @@ public final class StubbingConverter {
      * @param replacement the replacement text
      */
     private void replaceBeginningOfChain(List<PsiMethodCallExpression> calls, int endOffset, String replacement) {
-        replaceString(calls.get(0).getTextOffset(), endOffset, replacement);
+        replaceString(calls.getFirst().getTextOffset(), endOffset, replacement);
     }
 
     /**

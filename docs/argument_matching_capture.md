@@ -9,7 +9,7 @@
 
 ## Inconsistent argument matcher usage
 
-![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-InconsistentArgumentMatcherUsageInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/InconsistentArgumentMatcherUsageInspection.java)
+![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-InconsistentArgumentMatcherUsageInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/stubbing/InconsistentArgumentMatcherUsageInspection.java)
 
 Argument matchers are used inconsistently (and incorrectly) when, during stubbing, matcher and non-matcher arguments are used in a
 mixed manner. That is not permitted by Mockito, and test execution fails when it encounters this problem. As per Mockito documentation:
@@ -40,7 +40,7 @@ SonarLint also have a rule for this validation: [Mockito argument matchers shoul
 
 ## Explicit initialization of @Captor field is not required
 
-![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-CaptorFieldInitializationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/CaptorFieldInitializationInspection.java)
+![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-CaptorFieldInitializationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/captor/CaptorFieldInitializationInspection.java)
 
 Since `@Captor` annotated fields are initialized automagically by Mockito via `MockitoJUnitRunner`, `MockitoJUnit.rule()` or
 `MockitoAnnotations.initMocks()/openMocks()`, there is no need to explicitly initialize them.
@@ -69,7 +69,7 @@ public class CaptorTest {
 
 ## @Captor field must be of the type ArgumentCaptor
 
-![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-CaptorFieldOfTypeArgumentCaptorInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/CaptorFieldOfTypeArgumentCaptorInspection.java)
+![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-CaptorFieldOfTypeArgumentCaptorInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/captor/CaptorFieldOfTypeArgumentCaptorInspection.java)
 
 Fields that are annotated as `@Captor` must have `ArgumentCaptor` as their type, otherwise Mockito will fail with a message saying the type must be ArgumentCaptor. You can find the corresponding logic in
 [org.mockito.internal.configuration.CaptorAnnotationProcessor](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/configuration/CaptorAnnotationProcessor.java).

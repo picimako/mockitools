@@ -11,7 +11,7 @@
 
 ## Invalid checked exception is passed into *Throw() methods
 
-![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.3.0-blue) [![](https://img.shields.io/badge/implementation-ThrowsCheckedExceptionStubbingInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/ThrowsCheckedExceptionStubbingInspection.java)
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.3.0-blue) [![](https://img.shields.io/badge/implementation-ThrowsCheckedExceptionStubbingInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/stubbing/ThrowsCheckedExceptionStubbingInspection.java)
 
 Reports exception references in `*Throw()` stubbing methods based on Mockito's rule on checked exceptions
 
@@ -138,7 +138,7 @@ Mockito.when(mockObject.invoke())
 
 ## Stubbing calls and method return type mismatch
 
-![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.7.0-blue) [![](https://img.shields.io/badge/implementation-StubbingAndMethodReturnTypeMismatchInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/StubbingAndMethodReturnTypeMismatchInspection.java)
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.7.0-blue) [![](https://img.shields.io/badge/implementation-StubbingAndMethodReturnTypeMismatchInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/stubbing/StubbingAndMethodReturnTypeMismatchInspection.java)
 
 There are two parts to this inspection:
 - it reports `doNothing()` and `willDoNothing()` calls when the stubbed method's return type is not void. See Mockito's [corresponding error handling](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java#L568)
@@ -270,7 +270,7 @@ BDDMockito.given(mock.doSomethingElse()).willThrow(IllegalArgumentException.clas
 
 ## Cannot stub certain methods
 
-![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-1.3.0-blue) [![](https://img.shields.io/badge/implementation-CannotStubMethodInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/CannotStubMethodInspection.java)
+![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-1.3.0-blue) [![](https://img.shields.io/badge/implementation-CannotStubMethodInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/stubbing/CannotStubMethodInspection.java)
 
 Mockito, based on [Reporter.missingMethodInvocation()](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java#L118),
 cannot mock private, native, `equals()` and `hashCode()` methods.

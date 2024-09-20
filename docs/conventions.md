@@ -3,7 +3,7 @@
 ### Enforce org.mockito.Mockito over org.mockito.BDDMockito and vice versa
 
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.4.0-blue)
-[![](https://img.shields.io/badge/implementation-EnforceConventionInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/EnforceConventionInspection.java)
+[![](https://img.shields.io/badge/implementation-EnforceConventionInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/stubbing/EnforceConventionInspection.java)
 
 Projects might want to enforce certain coding conventions for Mockito. This inspection helps with that.
 

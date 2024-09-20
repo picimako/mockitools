@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Functional test for {@link com.picimako.mockitools.MockitoolsPsiUtil}.
  */
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 @TestDataPath("$CONTENT_ROOT/testData/inspection/donotmockreason")
 class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
 

@@ -47,7 +47,7 @@ final class SimplifyMockCreationInspection extends MockitoolsBaseInspection {
             //withSettings() + one additional settings call
             if (calls.size() != 2) return;
 
-            String settingsMethodName = getMethodName(calls.get(0));
+            String settingsMethodName = getMethodName(calls.getFirst());
             if (SPIED_INSTANCE.equals(settingsMethodName))
                 //Mockito.mock(<type>, withSettings().spiedInstance(instance)) -> Mockito.spy(instance)
                 registerProblem(expression, holder, "spy(<spiedInstance>)");
@@ -78,7 +78,7 @@ final class SimplifyMockCreationInspection extends MockitoolsBaseInspection {
         @Override
         protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
             if (descriptor.getPsiElement() instanceof PsiMethodCallExpression mockitoMock) {
-                var settingsMethodCall = collectCallsInChainFromLast(/*withSettings*/ get2ndArgument(mockitoMock)).get(0);
+                var settingsMethodCall = collectCallsInChainFromLast(/*withSettings*/ get2ndArgument(mockitoMock)).getFirst();
                 String settingsMethodName = getMethodName(settingsMethodCall);
 
                 if (SPIED_INSTANCE.equals(settingsMethodName)) {

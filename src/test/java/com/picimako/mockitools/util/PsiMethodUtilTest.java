@@ -265,6 +265,7 @@ class PsiMethodUtilTest extends MockitoolsTestBase {
 
     //findCallUpwardsInChain
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     void testFindsCallUpwards() {
         getFixture().configureByText("FindUpwards.java",
@@ -299,6 +300,7 @@ class PsiMethodUtilTest extends MockitoolsTestBase {
 
     //findCallDownwardsInChain
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     void testFindsCallDownwards() {
         getFixture().configureByText("FindDownwards.java",

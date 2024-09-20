@@ -26,7 +26,7 @@ public class ConvertInOrderVerifyToMockedStaticVerifyAction extends ConvertVerif
     @Override
     protected void perform(PsiMethodCallExpression verificationCall, Project project) {
         var calls = collectCallsInChainFromFirst(verificationCall, true);
-        var mockedStaticArgument = getFirstArgument(calls.get(0));
+        var mockedStaticArgument = getFirstArgument(calls.getFirst());
         String mockedStaticText = mockedStaticArgument.getText();
 
         mockedStaticArgument.delete();

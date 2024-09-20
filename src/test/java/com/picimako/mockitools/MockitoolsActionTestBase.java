@@ -4,6 +4,7 @@ package com.picimako.mockitools;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
+import org.assertj.core.api.Assertions;
 
 import java.util.function.Supplier;
 
@@ -16,5 +17,11 @@ public abstract class MockitoolsActionTestBase extends MockitoolsTestBase {
         getFixture().configureByText("ConversionTest.java", beforeText);
         ApplicationManager.getApplication().invokeAndWait(() -> getFixture().testAction(action.get()));
         getFixture().checkResult(afterText);
+    }
+
+    protected void checkActionFlexible(Supplier<AnAction> action, String beforeText, String afterText) {
+        getFixture().configureByText("ConversionTest.java", beforeText);
+        ApplicationManager.getApplication().invokeAndWait(() -> getFixture().testAction(action.get()));
+        Assertions.assertThat(getFixture().getEditor().getDocument().getText()).endsWith(afterText);
     }
 }

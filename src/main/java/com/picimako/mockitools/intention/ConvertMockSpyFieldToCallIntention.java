@@ -42,7 +42,6 @@ import org.jetbrains.annotations.NotNull;
  *
  * @since 0.2.0
  */
-@SuppressWarnings("UnstableApiUsage")
 final class ConvertMockSpyFieldToCallIntention implements IntentionAction {
 
     @IntentionName

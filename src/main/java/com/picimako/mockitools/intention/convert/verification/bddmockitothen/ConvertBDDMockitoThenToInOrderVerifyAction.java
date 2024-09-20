@@ -10,6 +10,7 @@ import static com.picimako.mockitools.util.PsiMethodUtil.hasArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.hasTwoArguments;
 import static com.picimako.mockitools.util.Ranges.endOffsetOf;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiMethodCallExpression;
@@ -48,7 +49,8 @@ public class ConvertBDDMockitoThenToInOrderVerifyAction extends ConvertVerificat
             //Get verification mode argument from 'should()', or empty string if there's none
             var inOrderVariable = createAndAddInOrderVariable(bddMockitoThen, calls);
             convertWithoutInOrder(bddMockitoThen, calls, should);
-            MemberInplaceRenameHelper.rename(inOrderVariable.getFirstChild(), editor);
+            if (!ApplicationManager.getApplication().isUnitTestMode())
+                MemberInplaceRenameHelper.rename(inOrderVariable.getFirstChild(), editor);
         }
         //If there is InOrder argument, don't create one, just use that for the inOrder.verify
         else {
@@ -66,7 +68,8 @@ public class ConvertBDDMockitoThenToInOrderVerifyAction extends ConvertVerificat
             //Create the InOrder variable before converting any of the selected call chains, so that they can use the same InOrder variable.
             var inOrderVariable = createAndAddInOrderVariable(firstVerification, callsInFirstVerification, collectMockObjects(statementsInSelection));
             convertWithinSelection(this::convertWithoutInOrder, statementsInSelection);
-            MemberInplaceRenameHelper.rename(inOrderVariable.getFirstChild(), editor);
+            if (!ApplicationManager.getApplication().isUnitTestMode())
+                MemberInplaceRenameHelper.rename(inOrderVariable.getFirstChild(), editor);
         } else {
             convertWithinSelection(this::convertWithInOrder, statementsInSelection);
         }

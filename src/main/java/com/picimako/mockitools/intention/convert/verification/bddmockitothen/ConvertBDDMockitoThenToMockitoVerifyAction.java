@@ -48,6 +48,6 @@ public class ConvertBDDMockitoThenToMockitoVerifyAction extends ConvertVerificat
         //Replace BDDMockito.then with Mockito.verify
         replaceBeginningOfChain(calls, "Mockito.verify", ORG_MOCKITO_MOCKITO);
         //Delete should() with its arguments, if any
-        performAndCommitDocument(() -> editor.getDocument().deleteString(endOffsetOf(calls.get(0)), endOffsetOf(should)));
+        performAndCommitDocument(() -> editor.getDocument().deleteString(endOffsetOf(calls.getFirst()), endOffsetOf(should)));
     }
 }

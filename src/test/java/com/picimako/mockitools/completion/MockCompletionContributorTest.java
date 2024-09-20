@@ -15,7 +15,7 @@ class MockCompletionContributorTest extends MockitoolsCodeCompletionTestBase {
         import org.mockito.Mockito;
         import org.mockito.Spy;
         import org.mockito.InjectMocks;
-                        
+        
         class CompletionTest {
             @Mock
             SomeMockType someMock;
@@ -23,20 +23,20 @@ class MockCompletionContributorTest extends MockitoolsCodeCompletionTestBase {
             SomeMockType someSpy;
             @InjectMocks
             SomeMockType someInjectMocks;
-                        
+        
             Object notAMock;
-            
+        
             void testMethod() {
                 SomeMockType mock = Mockito.mock(SomeMockType.class);
                 SomeMockType spy = Mockito.spy(SomeMockType.class);
                 %s
             }
-            
+        
             void testSomethingElse() {
                 SomeMockType mockElse = Mockito.mock(SomeMockType.class);
                 SomeMockType spyElse = Mockito.spy(SomeMockType.class);
             }
-            
+        
             private static final class SomeMockType {
                 //...
             }
@@ -49,22 +49,22 @@ class MockCompletionContributorTest extends MockitoolsCodeCompletionTestBase {
             """
                 import org.mockito.Mock;
                 import org.mockito.Mockito;
-                                
+                
                 class CompletionTest {
                     @Mock
                     SomeMockType someMock;
                     Object notAMock;
-                    
+                
                     void testMethod() {
                         Object nonMock = new Object();
                         Mockito.reset(<caret>);
                     }
-                    
+                
                     void testSomethingElse() {
                         SomeMockType mock = Mockito.mock(SomeMockType.class);
                         SomeMockType spy = Mockito.spy(SomeMockType.class);
                     }
-                    
+                
                     private static final class SomeMockType {
                         //...
                     }
