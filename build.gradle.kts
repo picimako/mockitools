@@ -112,7 +112,7 @@ intellijPlatformTesting {
                 isScanForTestClasses = false
                 include("**/*Test.class")
                 //Excluded due to https://github.com/picimako/mockitools/issues/69
-                exclude("**/MockFieldInitializationInspectionTest.class")
+                exclude("**/MockFieldInitializationInspectionTest.class, **/StubOnlyMockInVerificationInspectionTest.class")
             }
         }
     }
