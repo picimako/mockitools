@@ -7,6 +7,7 @@
 ## [1.4.1]
 ### Changed
 - Removed some IntelliJ Platform internal API usage.
+- Minor code improvements.
 
 ## [1.4.0]
 ### Changed
