@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+## [1.4.1]
+### Changed
+- Removed some IntelliJ Platform internal API usage.
+- Minor code improvements.
+
 ## [1.4.0]
 ### Changed
 - New supported IDE version range: 2024.2 - 2024.3.*.

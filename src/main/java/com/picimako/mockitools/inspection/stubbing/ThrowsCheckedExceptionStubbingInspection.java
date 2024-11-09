@@ -131,7 +131,7 @@ final class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInspe
      * if it is not specified there.
      * <p>
      * For example:
-     * <pre>
+     * <pre>{@code
      * MockObject mock = Mockito.mock(MockObject.class);
      * Mockito.when(mock.doSomething()).thenThrow(IOException.class);
      *
@@ -148,7 +148,7 @@ final class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInspe
      *         return 0;
      *     }
      * }
-     * </pre>
+     * }</pre>
      *
      * @since 0.5.0
      */

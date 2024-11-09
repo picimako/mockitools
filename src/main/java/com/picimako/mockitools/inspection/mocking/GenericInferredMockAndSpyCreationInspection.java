@@ -43,9 +43,10 @@ final class GenericInferredMockAndSpyCreationInspection extends MockitoolsBaseIn
     private void registerProblem(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder, @Range(from = 0, to = 1) int startArgumentIndex) {
         var argumentList = expression.getArgumentList();
         var arguments = argumentList.getExpressions();
+        int argumentListTextOffset = argumentList.getTextOffset();
         var textRange = TextRange.create(
-            arguments[startArgumentIndex].getTextOffset() - argumentList.getTextOffset(),
-            endOffsetOf(getLastElement(arguments)) - argumentList.getTextOffset());
+            arguments[startArgumentIndex].getTextOffset() - argumentListTextOffset,
+            endOffsetOf(getLastElement(arguments)) - argumentListTextOffset);
 
         holder.registerProblem(argumentList, textRange, MockitoolsBundle.message("inspection.argument.in.generic.inferred.mock.spy.creation"));
     }

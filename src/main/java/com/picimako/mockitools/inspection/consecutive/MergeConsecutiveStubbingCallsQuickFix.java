@@ -2,7 +2,8 @@
 
 package com.picimako.mockitools.inspection.consecutive;
 
-import java.util.Arrays;
+import static com.picimako.mockitools.resources.MockitoolsBundle.message;
+import static com.picimako.mockitools.util.Ranges.endOffsetOf;
 
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.util.IntentionFamilyName;
@@ -13,7 +14,7 @@ import com.siyeh.ig.InspectionGadgetsFix;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
-import com.picimako.mockitools.resources.MockitoolsBundle;
+import java.util.Arrays;
 
 /**
  * Quick fix that merges consecutive {@code *Throw()} or {@code *Return()} calls, respectively.
@@ -28,15 +29,15 @@ public class MergeConsecutiveStubbingCallsQuickFix extends InspectionGadgetsFix 
     public @IntentionName @NotNull String getName() {
         return switch (argumentTypeConverter) {
             case NO_CONVERSION, TO_THROWABLES_SIMPLE ->
-                MockitoolsBundle.message("quick.fix.merge.with.previous.consecutive.calls", registrar.consecutiveMethodName);
+                message("quick.fix.merge.with.previous.consecutive.calls", registrar.consecutiveMethodName);
             default ->
-                MockitoolsBundle.message("quick.fix.merge.with.previous.consecutive.calls.and.convert.params", argumentTypeConverter.message);
+                message("quick.fix.merge.with.previous.consecutive.calls.and.convert.params", argumentTypeConverter.message);
         };
     }
 
     @Override
     public @IntentionFamilyName @NotNull String getFamilyName() {
-        return MockitoolsBundle.message("quick.fix.family.simplify.consecutive.stubbing.calls");
+        return message("quick.fix.family.simplify.consecutive.stubbing.calls");
     }
 
     @Override
@@ -64,13 +65,13 @@ public class MergeConsecutiveStubbingCallsQuickFix extends InspectionGadgetsFix 
             });
 
         documentManager.doPostponedOperationsAndUnblockDocument(document);
-        
+
         //Remove the consecutive calls except the first one
         for (int i = 1; i < registrar.consecutiveCallIndeces.size(); i++) {
             Integer index = registrar.consecutiveCallIndeces.get(i);
             document.deleteString(
-                registrar.getElement(index - 1).getTextRange().getEndOffset(),
-                registrar.getElement(index).getTextRange().getEndOffset());
+                endOffsetOf(registrar.getElement(index - 1)),
+                endOffsetOf(registrar.getElement(index)));
             documentManager.commitDocument(document);
         }
     }

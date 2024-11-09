@@ -34,9 +34,10 @@ final class GenericInferredCaptorCreationInspection extends MockitoolsBaseInspec
     private void registerProblem(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
         var argumentList = expression.getArgumentList();
         var arguments = argumentList.getExpressions();
+        int argumentListTextOffset = argumentList.getTextOffset();
         var textRange = TextRange.create(
-            arguments[0].getTextOffset() - argumentList.getTextOffset(),
-            endOffsetOf(getLastElement(arguments)) - argumentList.getTextOffset());
+            arguments[0].getTextOffset() - argumentListTextOffset,
+            endOffsetOf(getLastElement(arguments)) - argumentListTextOffset);
 
         holder.registerProblem(argumentList, textRange, MockitoolsBundle.message("inspection.argument.in.generic.inferred.captor.creation"));
     }
