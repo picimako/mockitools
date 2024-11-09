@@ -49,9 +49,12 @@ final class NotExtensibleClassInspection extends LocalInspectionTool {
                         //at this point the name identifier should not be null
                         holder.registerProblem(aClass.getNameIdentifier(), MockitoolsBundle.message("inspection.interface.extends.not.extensible"));
                     }
-                } else if (aClass.getSuperClass() != null && aClass.getSuperClass().hasAnnotation(ORG_MOCKITO_NOT_EXTENSIBLE)) {
-                    //at this point the name identifier should not be null
-                    holder.registerProblem(aClass.getNameIdentifier(), MockitoolsBundle.message("inspection.class.extends.not.extensible"));
+                } else {
+                    var superClass = aClass.getSuperClass();
+                    if (superClass != null && superClass.hasAnnotation(ORG_MOCKITO_NOT_EXTENSIBLE)) {
+                        //at this point the name identifier should not be null
+                        holder.registerProblem(aClass.getNameIdentifier(), MockitoolsBundle.message("inspection.class.extends.not.extensible"));
+                    }
                 }
             }
         };
