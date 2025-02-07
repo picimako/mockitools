@@ -3,10 +3,7 @@
     <id>mockitools</id>
     <name>Mockitools</name>
     <vendor url="https://github.com/picimako/mockitools">Tamás Balog</vendor>
-    <version>1.4.0</version>
     <resource-bundle>messages.MockitoolsBundle</resource-bundle>
-
-    <description>Provides integration for the Mockito framework for Java.</description>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
