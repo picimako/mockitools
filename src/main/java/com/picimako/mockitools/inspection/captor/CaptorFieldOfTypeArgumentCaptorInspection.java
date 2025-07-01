@@ -69,16 +69,15 @@ final class CaptorFieldOfTypeArgumentCaptorInspection extends MockitoolsBaseInsp
 
         @Override
         protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
-            var context = descriptor.getPsiElement().getContext();
-            if (context instanceof PsiField field) {
+            if (descriptor.getPsiElement().getContext() instanceof PsiField field) {
                 var fieldType = field.getTypeElement();
                 if (fieldType != null) {
                     PsiType type = fieldType.getType();
                     //If the field type is a primitive, then it converts it to its boxed type, otherwise leaves it as it is.
-                    PsiType boxedType = type instanceof PsiPrimitiveType primitiveType ? primitiveType.getBoxedType(context) : type;
+                    PsiType boxedType = type instanceof PsiPrimitiveType primitiveType ? primitiveType.getBoxedType(field) : type;
                     if (boxedType != null) {
                         PsiElement replaced = fieldType.replace(JavaPsiFacade.getElementFactory(project)
-                            .createTypeElementFromText(ORG_MOCKITO_ARGUMENT_CAPTOR + "<" + boxedType.getCanonicalText() + ">", context));
+                            .createTypeElementFromText(ORG_MOCKITO_ARGUMENT_CAPTOR + "<" + boxedType.getCanonicalText() + ">", field));
                         JavaCodeStyleManager.getInstance(project).shortenClassReferences(replaced);
                     }
                 }
