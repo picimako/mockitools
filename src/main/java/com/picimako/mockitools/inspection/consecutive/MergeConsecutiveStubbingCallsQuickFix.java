@@ -10,7 +10,8 @@ import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
-import com.siyeh.ig.InspectionGadgetsFix;
+import com.intellij.psi.PsiElement;
+import com.picimako.mockitools.inspection.BaseQuickFix;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +22,7 @@ import java.util.Arrays;
  * Only a single section of consecutive calls is merged if there are multiple.
  */
 @RequiredArgsConstructor
-public class MergeConsecutiveStubbingCallsQuickFix extends InspectionGadgetsFix {
+public class MergeConsecutiveStubbingCallsQuickFix extends BaseQuickFix {
     private final ConsecutiveCallRegistrar registrar;
     private final TypeConversionMethod argumentTypeConverter;
 
@@ -41,7 +42,7 @@ public class MergeConsecutiveStubbingCallsQuickFix extends InspectionGadgetsFix 
     }
 
     @Override
-    protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
+    protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor, PsiElement problemElement) {
         var firstConsecutiveCall = registrar.getFirstConsecutiveCall();
         var viewProvider = firstConsecutiveCall.getManager().findViewProvider(registrar.getContainingFile());
         if (viewProvider == null) return;

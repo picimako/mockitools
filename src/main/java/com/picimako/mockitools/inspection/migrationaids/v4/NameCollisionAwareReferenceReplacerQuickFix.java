@@ -13,6 +13,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiJavaCodeReferenceElement;
 import com.intellij.psi.PsiJavaFile;
 import lombok.RequiredArgsConstructor;
@@ -43,17 +44,20 @@ public class NameCollisionAwareReferenceReplacerQuickFix extends MigrationAidV4B
     }
 
     @Override
-    protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
-        var element = (PsiJavaCodeReferenceElement) descriptor.getPsiElement();
-        Module module = ModuleUtilCore.findModuleForFile(element.getContainingFile().getVirtualFile(), project);
+    protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor, PsiElement problemElement) {
+        var element = (PsiJavaCodeReferenceElement) problemElement;
+        var containingFile = (PsiJavaFile) element.getContainingFile();
+        Module module = ModuleUtilCore.findModuleForFile(containingFile.getVirtualFile(), project);
         if (module == null) return;
 
         if (element.isQualified()) {
             element.replace(getElementFactory(project).createReferenceElementByFQClassName(replacementClassFqn, moduleWithLibrariesScope(module)));
         } else {
-            var containingFile = (PsiJavaFile) element.getContainingFile();
             Optional.ofNullable(containingFile.findImportReferenceTo((PsiClass) element.resolve()))
-                .ifPresent(importStmt -> importStmt.replace(getElementFactory(project).createFQClassNameReferenceElement(replacementClassFqn, moduleWithLibrariesScope(module))));
+                .ifPresent(importStmt ->
+                    importStmt.replace(
+                        getElementFactory(project)
+                        .createFQClassNameReferenceElement(replacementClassFqn, moduleWithLibrariesScope(module))));
         }
     }
 

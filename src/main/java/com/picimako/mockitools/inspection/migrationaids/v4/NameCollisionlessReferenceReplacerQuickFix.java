@@ -11,6 +11,7 @@ import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,9 +36,9 @@ public class NameCollisionlessReferenceReplacerQuickFix extends MigrationAidV4Ba
     }
 
     @Override
-    protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
-        Optional.ofNullable(ModuleUtilCore.findModuleForFile(descriptor.getPsiElement().getContainingFile().getVirtualFile(), project))
+    protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor, PsiElement problemElement) {
+        Optional.ofNullable(ModuleUtilCore.findModuleForFile(problemElement.getContainingFile().getVirtualFile(), project))
             .map(module -> getElementFactory(project).createReferenceElementByFQClassName(replacementClassFqn, moduleWithLibrariesScope(module)))
-            .ifPresent(pluginsAnnotationEngine -> descriptor.getPsiElement().replace(pluginsAnnotationEngine));
+            .ifPresent(problemElement::replace);
     }
 }

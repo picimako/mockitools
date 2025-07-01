@@ -21,9 +21,9 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
+import com.picimako.mockitools.inspection.BaseQuickFix;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;
-import com.siyeh.ig.InspectionGadgetsFix;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -68,7 +68,7 @@ final class SimplifyMockCreationInspection extends MockitoolsBaseInspection {
             new ReplaceWithSimplerMockCreationQuickFix());
     }
 
-    private static final class ReplaceWithSimplerMockCreationQuickFix extends InspectionGadgetsFix {
+    private static final class ReplaceWithSimplerMockCreationQuickFix extends BaseQuickFix {
 
         @Override
         public @IntentionFamilyName @NotNull String getFamilyName() {
@@ -76,8 +76,8 @@ final class SimplifyMockCreationInspection extends MockitoolsBaseInspection {
         }
 
         @Override
-        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
-            if (descriptor.getPsiElement() instanceof PsiMethodCallExpression mockitoMock) {
+        protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor, PsiElement problemElement) {
+            if (problemElement instanceof PsiMethodCallExpression mockitoMock) {
                 var settingsMethodCall = collectCallsInChainFromLast(/*withSettings*/ get2ndArgument(mockitoMock)).getFirst();
                 String settingsMethodName = getMethodName(settingsMethodCall);
 

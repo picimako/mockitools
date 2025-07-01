@@ -20,9 +20,9 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
+import com.picimako.mockitools.inspection.BaseQuickFix;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;
-import com.siyeh.ig.InspectionGadgetsFix;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -55,7 +55,7 @@ final class CaptorFieldOfTypeArgumentCaptorInspection extends MockitoolsBaseInsp
      * <p>
      * With that said, it imports {@code org.mockito.ArgumentCaptor} upon applying the quick fix.
      */
-    private static final class ConvertFieldTypeToArgumentCaptorQuickFix extends InspectionGadgetsFix {
+    private static final class ConvertFieldTypeToArgumentCaptorQuickFix extends BaseQuickFix {
 
         @Override
         public @IntentionName @NotNull String getName() {
@@ -68,8 +68,8 @@ final class CaptorFieldOfTypeArgumentCaptorInspection extends MockitoolsBaseInsp
         }
 
         @Override
-        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
-            if (descriptor.getPsiElement().getContext() instanceof PsiField field) {
+        protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor, PsiElement problemElement) {
+            if (problemElement.getContext() instanceof PsiField field) {
                 var fieldType = field.getTypeElement();
                 if (fieldType != null) {
                     PsiType type = fieldType.getType();
