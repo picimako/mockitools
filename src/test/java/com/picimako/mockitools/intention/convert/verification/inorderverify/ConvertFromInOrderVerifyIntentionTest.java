@@ -26,7 +26,7 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
 
     @Test
     void testNotAvailableForNonJavaFile() {
-        checkIntentionIsNotAvailable("NotJava.xml", "<tag><caret></tag>");
+        checkIntentionIsNotAvailable("NotJava.json", "{<caret>}");
     }
 
     @Test

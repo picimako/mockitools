@@ -25,7 +25,7 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
 
     @Test
     void testNotAvailableForNonJavaFile() {
-        checkIntentionIsNotAvailable("NotJava.xml", "<tag><caret></tag>");
+        checkIntentionIsNotAvailable("NotJava.json", "{<caret>}");
     }
 
     @Test

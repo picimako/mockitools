@@ -25,7 +25,7 @@ class ConvertFromMockedStaticVerifyIntentionTest extends EnforceConventionAwareI
 
     @Test
     void testNotAvailableForNonJavaFile() {
-        checkIntentionIsNotAvailable("NotJava.xml", "<tag><caret></tag>");
+        checkIntentionIsNotAvailable("NotJava.json", "{<caret>}");
     }
 
     @Test
