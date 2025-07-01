@@ -75,64 +75,77 @@ class MockCompletionContributorTest extends MockitoolsCodeCompletionTestBase {
 
     @Test
     void shouldCompleteFirstArgumentInEmptyArgumentListT() {
-        doTestCodeCompletionContains(
-            COMPLETION_TEST_CLASS.formatted("", "Mockito.reset(<caret>);"),
+        testCompletionContains(
+            "",
+            "Mockito.reset(<caret>);",
             "mock", "spy", "someInjectMocks", "someMock", "someSpy");
     }
 
     @Test
     void shouldCompleteFirstArgumentInNonEmptyArgumentListT() {
-        doTestCodeCompletionContains(
-            COMPLETION_TEST_CLASS.formatted("", "Mockito.reset(someInjectMocks, <caret>);"),
+        testCompletionContains(
+            "",
+            "Mockito.reset(someInjectMocks, <caret>);",
             "mock", "spy", "someInjectMocks", "someMock", "someSpy");
     }
 
     @Test
     void shouldCompleteFirstArgumentInEmptyArgumentListObject() {
-        doTestCodeCompletionContains(
-            COMPLETION_TEST_CLASS.formatted("", "Mockito.verifyNoMoreInteractions(<caret>);"),
+        testCompletionContains(
+            "",
+            "Mockito.verifyNoMoreInteractions(<caret>);",
             "mock", "spy", "someInjectMocks", "someMock", "someSpy");
     }
 
     @Test
     void shouldCompleteFirstArgumentInNonEmptyArgumentListObject() {
-        doTestCodeCompletionContains(
-            COMPLETION_TEST_CLASS.formatted("", "Mockito.verifyNoMoreInteractions(someInjectMocks, <caret>);"),
+        testCompletionContains(
+            "",
+            "Mockito.verifyNoMoreInteractions(someInjectMocks, <caret>);",
             "mock", "spy", "someInjectMocks", "someMock", "someSpy");
     }
 
     @Test
     void shouldCompleteLastArgument() {
-        doTestCodeCompletionContains(
-            COMPLETION_TEST_CLASS.formatted("", "Mockito.verifyNoMoreInteractions(someMock, someSpy, <caret>);"),
+        testCompletionContains(
+            "",
+            "Mockito.verifyNoMoreInteractions(someMock, someSpy, <caret>);",
             "mock", "spy", "someInjectMocks", "someMock", "someSpy");
     }
 
     @Test
     void shouldCompleteFirstArgumentInEmptyArgumentListObjectStaticImported() {
-        doTestCodeCompletionContains(
-            COMPLETION_TEST_CLASS.formatted("import static org.mockito.Mockito.verifyNoMoreInteractions;", "verifyNoMoreInteractions(<caret>);"),
+        testCompletionContains(
+            "import static org.mockito.Mockito.verifyNoMoreInteractions;",
+            "verifyNoMoreInteractions(<caret>);",
             "mock", "spy", "someInjectMocks", "someMock", "someSpy");
     }
 
     @Test
     void shouldCompleteFirstArgumentInNonEmptyArgumentListObjectStaticImported() {
-        doTestCodeCompletionContains(
-            COMPLETION_TEST_CLASS.formatted("import static org.mockito.Mockito.verifyNoMoreInteractions;", "verifyNoMoreInteractions(someInjectMocks, <caret>);"),
+        testCompletionContains(
+            "import static org.mockito.Mockito.verifyNoMoreInteractions;",
+            "verifyNoMoreInteractions(someInjectMocks, <caret>);",
             "mock", "spy", "someInjectMocks", "someMock", "someSpy");
     }
 
     @Test
     void shouldCompleteLastArgumentStaticImported() {
-        doTestCodeCompletionContains(
-            COMPLETION_TEST_CLASS.formatted("import static org.mockito.Mockito.verifyNoMoreInteractions;", "verifyNoMoreInteractions(someMock, someSpy, <caret>);"),
+        testCompletionContains(
+            "import static org.mockito.Mockito.verifyNoMoreInteractions;",
+            "verifyNoMoreInteractions(someMock, someSpy, <caret>);",
             "mock", "spy", "someInjectMocks", "someMock", "someSpy");
     }
 
     @Test
     void shouldCompleteMiddleArgument() {
-        doTestCodeCompletionContains(
-            COMPLETION_TEST_CLASS.formatted("", "Mockito.clearInvocations(someMock, <caret>someSpy);"),
+        testCompletionContains(
+            "",
+            "Mockito.clearInvocations(someMock, <caret>someSpy);",
             "mock", "spy", "someInjectMocks", "someMock", "someSpy");
+    }
+
+    private void testCompletionContains(String importStatement, String mockContainerCall, String... completionItems) {
+        doTestCodeCompletionContains(COMPLETION_TEST_CLASS.formatted(importStatement, mockContainerCall), completionItems);
     }
 }
