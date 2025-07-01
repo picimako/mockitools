@@ -1,15 +1,21 @@
 [versions]
 # libraries
 junit = "4.13.2"
+assertj = "3.27.3"
+junitJupiter = "5.11.3"
 
 # plugins
 changelog = "2.2.1"
-intelliJPlatform = "2.0.1"
-kotlin = "2.1.0"
-lombok = "8.12.1"
+intelliJPlatform = "2.5.0"
+kotlin = "2.1.20"
+lombok = "8.13.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+assertj = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
+junitJupiterApi = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junitJupiter" }
+junitJupiterEngine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junitJupiter" }
+junitJupiterParams = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junitJupiter" }
 
 [plugins]
 changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
