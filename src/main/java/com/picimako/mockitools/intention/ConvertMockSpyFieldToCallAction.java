@@ -114,6 +114,7 @@ final class ConvertMockSpyFieldToCallAction extends AnAction {
     /**
      * Adds the new variable declaration as the first statement of method body.
      */
+    @SuppressWarnings("UnstableApiUsage")
     public static void introduceMockitoMockingCall(PsiField fieldToConvert, PsiMethod targetMethod, PsiFile file) {
         final var mockitoMockingCall = new Ref<StringBuilder>();
 

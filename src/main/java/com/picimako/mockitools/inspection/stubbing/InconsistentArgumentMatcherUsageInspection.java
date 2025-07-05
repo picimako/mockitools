@@ -16,7 +16,6 @@ import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiExpressionList;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiTypeCastExpression;
-import com.picimako.mockitools.inspection.HasSonarLintAlternative;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.callMatcher.CallMatcher;
@@ -40,9 +39,9 @@ import org.jetbrains.annotations.Nullable;
  *
  * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#argument_matchers">Argument matchers documentation</a>
  * @see <a href="https://javadoc.io/static/org.mockito/mockito-core/3.11.2/org/mockito/ArgumentMatchers.html">ArgumentMatchers javadoc</a>
+ * @see <a href="https://rules.sonarsource.com/java/tag/mockito/RSPEC-6073">SonarLint alternative</a>
  * @since 0.1.0
  */
-@HasSonarLintAlternative("https://rules.sonarsource.com/java/tag/mockito/RSPEC-6073")
 final class InconsistentArgumentMatcherUsageInspection extends MockitoolsBaseInspection {
 
     @Override

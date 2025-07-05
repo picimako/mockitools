@@ -46,6 +46,10 @@ final class MockCompletionContributor extends CompletionContributor {
     private static final Pattern MOCKITO_VERIFY_PATTERN = Pattern.compile("Mockito\\.(verifyNoInteractions|verifyNoMoreInteractions|verifyZeroInteractions)");
     private static final Pattern VERIFY_PATTERN = Pattern.compile("verifyNoInteractions|verifyNoMoreInteractions|verifyZeroInteractions");
 
+    /**
+     * This capture uses regex based identification of the target method calls because the CallMatcher based
+     * solution can't resolve calls to their methods when the completion is triggered in an empty argument list.
+     */
     private static final PsiElementPattern.Capture<PsiElement> MOCK_OBJECT_PARAMETER_HOLDER_PATTERN =
         psiElement(JavaTokenType.IDENTIFIER)
             .withSuperParent(3, psiElement(PsiMethodCallExpression.class)
@@ -54,14 +58,12 @@ final class MockCompletionContributor extends CompletionContributor {
                     public boolean accepts(@NotNull PsiMethodCallExpression element, ProcessingContext context) {
                         if (MockitoolsPsiUtil.MOCK_OBJECT_PARAMETER_HOLDER.matches(element))
                             return true;
-                        else {
 
-                            String canonicalText = element.getMethodExpression().getCanonicalText();
-                            //E.g. 'Mockito.verifyNoInteractions'
-                            return MOCKITO_VERIFY_PATTERN.matcher(canonicalText).matches()
-                                //E.g. 'verifyNoInteractions' when static-imported
-                                || (VERIFY_PATTERN.matcher(canonicalText).matches() && isMethodDeclaredInMockitoClass(element));
-                        }
+                        String canonicalText = element.getMethodExpression().getCanonicalText();
+                        //E.g. 'Mockito.verifyNoInteractions'
+                        return MOCKITO_VERIFY_PATTERN.matcher(canonicalText).matches()
+                            //E.g. 'verifyNoInteractions' when static-imported
+                            || (VERIFY_PATTERN.matcher(canonicalText).matches() && isMethodDeclaredInMockitoClass(element));
                     }
                 }));
 

@@ -2,18 +2,18 @@
 
 package com.picimako.mockitools.intention;
 
+import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
+import static com.picimako.mockitools.inspection.consecutive.TypeConversionMethod.TO_CLASSES;
+import static com.picimako.mockitools.inspection.consecutive.TypeConversionMethod.TO_THROWABLES;
 import static com.picimako.mockitools.util.PsiMethodUtil.containsCallToNonDefaultConstructor;
 import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaretOrEmpty;
-import static com.picimako.mockitools.inspection.consecutive.TypeConversionMethod.TO_CLASSES;
-import static com.picimako.mockitools.inspection.consecutive.TypeConversionMethod.TO_THROWABLES;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClassObjectAccessExpression;
@@ -23,8 +23,8 @@ import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNewExpression;
 import com.intellij.util.IncorrectOperationException;
 import com.picimako.mockitools.StubbingApproach;
-import com.picimako.mockitools.inspection.stubbing.ExceptionStubber;
 import com.picimako.mockitools.inspection.consecutive.TypeConversionMethod;
+import com.picimako.mockitools.inspection.stubbing.ExceptionStubber;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
@@ -77,12 +77,12 @@ final class ConvertThrowStubbingArgumentsIntention implements IntentionAction {
     }
 
     private boolean isArgumentListConvertible(PsiMethodCallExpression call, ExceptionStubber stubber) {
-        if (ReadAction.compute(() -> stubber.classMatcher.matches(call))) {
+        if (compute(() -> stubber.classMatcher.matches(call))) {
             if (areAllClassObjectAccessExpressions(getArguments(call))) {
                 message = TO_THROWABLES.message;
                 return true;
             }
-        } else if (ReadAction.compute(() -> stubber.throwablesMatcher.matches(call))) {
+        } else if (compute(() -> stubber.throwablesMatcher.matches(call))) {
             var arguments = getArguments(call);
             if (areAllNewExpressions(arguments) && !containsCallToNonDefaultConstructor(arguments)) {
                 message = TO_CLASSES.message;
@@ -96,7 +96,7 @@ final class ConvertThrowStubbingArgumentsIntention implements IntentionAction {
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        WriteCommandAction.runWriteCommandAction(project, () -> {
+        runWriteCommandAction(project, () -> {
             var arguments = getArguments(getMethodCallAtCaret(file, editor));
             if (areAllClassObjectAccessExpressions(arguments)) convert(arguments, TO_THROWABLES);
             else if (areAllNewExpressions(arguments)) convert(arguments, TO_CLASSES);
