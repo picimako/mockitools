@@ -46,7 +46,6 @@ Some messages, like inspection titles are not yet included, and simply are in th
 
 The following markers are placed on extension point implementations and more important types, to help identify certain aspects of the code:
 - `@since <version number>` in javadocs
-- `@HasSonarLintAlternative` annotation if an inspection has an alternative in SonarLint
 
 ## CI/CD
 
