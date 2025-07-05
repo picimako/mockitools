@@ -22,19 +22,13 @@ import com.intellij.psi.PsiMethodCallExpression;
 import com.picimako.mockitools.StubType;
 import com.picimako.mockitools.StubbingApproach;
 import com.picimako.mockitools.util.PsiClassUtil;
-import lombok.RequiredArgsConstructor;
 
 /**
  * Converts stubbing call chains between the different approaches.
  * <p>
  * {@code Mockito.lenient()} is not supported at the moment.
  */
-@RequiredArgsConstructor
-public final class StubbingConverter {
-
-    private final Project project;
-    private final Document document;
-    private final PsiFile file;
+public record StubbingConverter(Project project, Document document, PsiFile file) {
 
     /**
      * Converts the call chain started by the argument {@code firstCallInChain} to the target stubbing approach.
