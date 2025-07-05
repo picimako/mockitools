@@ -20,7 +20,7 @@ class ExpandMockCreationIntentionTest extends MockitoolsIntentionTestBase {
 
     @Test
     void shouldNotBeAvailableForNonJavaFile() {
-        checkIntentionIsNotAvailable("NotAvailable.xml", "<tag<caret>></tag>");
+        checkIntentionIsNotAvailable("NotAvailable.json", "{<caret>}");
     }
 
     @Test

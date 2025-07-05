@@ -28,7 +28,7 @@ class ConvertFromMockitoDoIntentionTest extends EnforceConventionAwareIntentionT
 
     @Test
     void testNotAvailableForNonJavaFile() {
-        checkIntentionIsNotAvailable("NotJava.xml", "<tag><caret></tag>");
+        checkIntentionIsNotAvailable("NotJava.json", "{<caret>}");
     }
 
     @Test
