@@ -1,4 +1,4 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.migrationaids.v4;
 
@@ -74,10 +74,10 @@ final class UsageOfAnyMatchersInspection extends MigrationAidBase.V23ToV4BaseIns
         }
 
         @Override
-        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
-            var parentCall = getParentCall(descriptor.getPsiElement());
+        protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor, PsiElement problemElement) {
+            var parentCall = getParentCall(problemElement);
             if (parentCall != null) {
-                PsiElement elementAfterReplace = descriptor.getPsiElement().replace(PsiElementFactory.getInstance(project).createIdentifier(ANY));
+                PsiElement elementAfterReplace = problemElement.replace(PsiElementFactory.getInstance(project).createIdentifier(ANY));
                 replaceMatchersQualifierAndStaticImportMatcher(parentCall, ANY, elementAfterReplace);
             }
         }
@@ -97,10 +97,10 @@ final class UsageOfAnyMatchersInspection extends MigrationAidBase.V23ToV4BaseIns
         }
 
         @Override
-        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
-            var parentCall = getParentCall(descriptor.getPsiElement());
+        protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor, PsiElement problemElement) {
+            var parentCall = getParentCall(problemElement);
             if (parentCall != null) {
-                PsiElement elementAfterReplace = descriptor.getPsiElement().replace(PsiElementFactory.getInstance(project).createIdentifier(anyX));
+                PsiElement elementAfterReplace = problemElement.replace(PsiElementFactory.getInstance(project).createIdentifier(anyX));
                 PsiMethodUtil.deleteArguments(parentCall); //delete all matcher call arguments, since any<collectionType>() methods don't have arguments
                 replaceMatchersQualifierAndStaticImportMatcher(parentCall, anyX, elementAfterReplace);
             }

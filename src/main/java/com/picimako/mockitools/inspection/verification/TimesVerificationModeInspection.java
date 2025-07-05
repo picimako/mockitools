@@ -1,4 +1,4 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.verification;
 
@@ -23,16 +23,13 @@ import com.intellij.codeInspection.options.OptPane;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiExpression;
-import com.intellij.psi.PsiMethodCallExpression;
+import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.util.PsiLiteralUtil;
 import com.picimako.mockitools.MockitoolsPsiUtil;
+import com.picimako.mockitools.inspection.BaseQuickFix;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;
-import com.siyeh.ig.InspectionGadgetsFix;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
 
@@ -125,8 +122,8 @@ final class TimesVerificationModeInspection extends MockitoolsBaseInspection {
      */
     private static final class ReplaceTimesZeroWithNeverQuickFix extends TimesQuickFix {
         @Override
-        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
-            var methodCall = (PsiMethodCallExpression) descriptor.getPsiElement();
+        protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor, PsiElement problemElement) {
+            var methodCall = (PsiMethodCallExpression) problemElement;
             var replaced = methodCall.replace(
                 JavaPsiFacade.getElementFactory(project).createExpressionFromText(ORG_MOCKITO_MOCKITO_NEVER + "()", methodCall));
             JavaCodeStyleManager.getInstance(project).shortenClassReferences(replaced);
@@ -145,8 +142,8 @@ final class TimesVerificationModeInspection extends MockitoolsBaseInspection {
      */
     private static final class DeleteTimesOneQuickFix extends TimesQuickFix {
         @Override
-        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
-            descriptor.getPsiElement().delete();
+        protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor, PsiElement problemElement) {
+            problemElement.delete();
         }
 
         @Override
@@ -155,7 +152,7 @@ final class TimesVerificationModeInspection extends MockitoolsBaseInspection {
         }
     }
 
-    private abstract static class TimesQuickFix extends InspectionGadgetsFix {
+    private abstract static class TimesQuickFix extends BaseQuickFix {
         @Override
         public @IntentionFamilyName @NotNull String getFamilyName() {
             return MockitoolsBundle.message("quick.fix.times.family.name");

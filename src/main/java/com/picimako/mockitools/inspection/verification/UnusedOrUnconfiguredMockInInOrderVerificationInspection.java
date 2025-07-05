@@ -1,4 +1,4 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.verification;
 
@@ -50,12 +50,11 @@ final class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loca
         return new JavaElementVisitor() {
             @Override
             public void visitLocalVariable(@NotNull PsiLocalVariable variable) {
-                if (!typeEquals(ORG_MOCKITO_INORDER, variable.getType()) || !(variable.getInitializer() instanceof PsiMethodCallExpression))
+                if (!typeEquals(ORG_MOCKITO_INORDER, variable.getType()) || !(variable.getInitializer() instanceof PsiMethodCallExpression mockitoInOrder))
                     return;
 
                 var inOrderRefs = ReferencesSearch.search(variable).toArray(PsiReference.EMPTY_ARRAY);
                 if (inOrderRefs.length > 0 && areAllVerifications(inOrderRefs)) {
-                    var mockitoInOrder = (PsiMethodCallExpression) variable.getInitializer();
                     //The mock arguments in 'Mockito.inOrder()'
                     var mocksInMockitoInOrder = getArguments(mockitoInOrder);
 
@@ -97,7 +96,8 @@ final class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loca
         return Arrays.stream(inOrderRefs).allMatch(ref -> {
             if (ref instanceof PsiReferenceExpression inOrderRef) {
                 var verifyOrShould = getParentOfType(inOrderRef, PsiMethodCallExpression.class);
-                return VerificationApproach.INORDER_VERIFY.isVerifiedBy(verifyOrShould) || VerificationApproach.BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(verifyOrShould);
+                return VerificationApproach.INORDER_VERIFY.isVerifiedBy(verifyOrShould)
+                    || VerificationApproach.BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(verifyOrShould);
             } else return false;
         });
     }

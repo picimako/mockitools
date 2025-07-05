@@ -1,4 +1,4 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.stubbing;
 
@@ -19,7 +19,6 @@ import com.picimako.mockitools.intention.convert.verification.ConvertVerificatio
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Optional;
@@ -42,6 +41,7 @@ import java.util.Optional;
  *
  * @since 0.4.0
  */
+@SuppressWarnings("ExtensionClassShouldBeFinalAndNonPublic")
 public final class EnforceConventionInspection extends MockitoolsBaseInspection {
     //MockedStatic specific verify() methods are excluded, since BDDMockito has no way to verify MockedStatic
     public static final CallMatcher IN_ORDER_VERIFY_NON_MOCKED_STATIC = CallMatcher.anyOf(
@@ -61,7 +61,6 @@ public final class EnforceConventionInspection extends MockitoolsBaseInspection 
     @SuppressWarnings("PublicField")
     public Convention conventionToEnforce = Convention.MOCKITO;
 
-    @Nullable
     @Override
     public JComponent createOptionsPanel() {
         final var panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 5, true, false));

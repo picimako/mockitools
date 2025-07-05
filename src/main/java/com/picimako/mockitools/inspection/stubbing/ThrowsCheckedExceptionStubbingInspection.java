@@ -1,4 +1,4 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.stubbing;
 
@@ -15,19 +15,13 @@ import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiCall;
-import com.intellij.psi.PsiClassType;
-import com.intellij.psi.PsiExpression;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.psi.SmartPsiElementPointer;
+import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.picimako.mockitools.StubType;
 import com.picimako.mockitools.StubbingApproach;
+import com.picimako.mockitools.inspection.BaseQuickFix;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;
-import com.siyeh.ig.InspectionGadgetsFix;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -153,12 +147,11 @@ final class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInspe
      * @since 0.5.0
      */
     @RequiredArgsConstructor
-    private static final class AddExceptionToThrowsClauseQuickFix extends InspectionGadgetsFix {
+    private static final class AddExceptionToThrowsClauseQuickFix extends BaseQuickFix {
         private final SmartPsiElementPointer<PsiMethod> stubbedMethod;
 
         @Override
-        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
-            var exception = descriptor.getPsiElement();
+        protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor, PsiElement exception) {
             if (!(exception instanceof PsiExpression)) return;
 
             var stubbedExceptionType = evaluateClassObjectOrNewExpressionType(exception);

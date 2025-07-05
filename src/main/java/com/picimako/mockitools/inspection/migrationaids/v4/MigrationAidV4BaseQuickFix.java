@@ -1,4 +1,4 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.picimako.mockitools.inspection.migrationaids.v4;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT_MATCHERS;
@@ -9,15 +9,15 @@ import static com.siyeh.ig.psiutils.ImportUtils.isAlreadyStaticallyImported;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.picimako.mockitools.inspection.BaseQuickFix;
 import com.picimako.mockitools.inspection.migrationaids.v4.ArgumentMatchersCalledViaMatchersInspection.ReplaceMatchersWithArgumentMatchersQuickFix;
 import com.picimako.mockitools.resources.MockitoolsBundle;
-import com.siyeh.ig.InspectionGadgetsFix;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Base class for Mockito v4 migration aid quick fixes.
  */
-public abstract class MigrationAidV4BaseQuickFix extends InspectionGadgetsFix {
+public abstract class MigrationAidV4BaseQuickFix extends BaseQuickFix {
 
     @Override
     public @IntentionFamilyName @NotNull String getFamilyName() {

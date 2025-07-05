@@ -1,4 +1,4 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.stub;
 
@@ -22,19 +22,13 @@ import com.intellij.psi.PsiMethodCallExpression;
 import com.picimako.mockitools.StubType;
 import com.picimako.mockitools.StubbingApproach;
 import com.picimako.mockitools.util.PsiClassUtil;
-import lombok.RequiredArgsConstructor;
 
 /**
  * Converts stubbing call chains between the different approaches.
  * <p>
  * {@code Mockito.lenient()} is not supported at the moment.
  */
-@RequiredArgsConstructor
-public final class StubbingConverter {
-
-    private final Project project;
-    private final Document document;
-    private final PsiFile file;
+public record StubbingConverter(Project project, Document document, PsiFile file) {
 
     /**
      * Converts the call chain started by the argument {@code firstCallInChain} to the target stubbing approach.

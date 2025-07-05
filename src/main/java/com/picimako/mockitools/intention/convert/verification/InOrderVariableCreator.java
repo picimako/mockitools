@@ -1,4 +1,4 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.verification;
 
@@ -14,17 +14,13 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.picimako.mockitools.MockitoQualifiedNames;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 /**
  * Creates {@code InOrder} type local variables in the form of an {@code InOrder inOrder = Mockito.inOrder([mock objects])} call.
  */
-@RequiredArgsConstructor
-public class InOrderVariableCreator {
-
-    private final Document document;
+public record InOrderVariableCreator(Document document) {
 
     /**
      * Creates an {@code org.mockito.InOrder} type local variable and inserts it right before the verification call

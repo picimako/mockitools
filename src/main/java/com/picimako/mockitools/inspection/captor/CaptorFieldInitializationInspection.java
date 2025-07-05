@@ -1,4 +1,4 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.captor;
 
@@ -12,10 +12,11 @@ import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiField;
+import com.picimako.mockitools.inspection.BaseQuickFix;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
-import com.siyeh.ig.InspectionGadgetsFix;
 import org.jetbrains.annotations.NotNull;
 
 import com.picimako.mockitools.resources.MockitoolsBundle;
@@ -49,7 +50,7 @@ final class CaptorFieldInitializationInspection extends MockitoolsBaseInspection
         }
     }
 
-    private static final class RemoveArgumentCaptorInitQuickFix extends InspectionGadgetsFix {
+    private static final class RemoveArgumentCaptorInitQuickFix extends BaseQuickFix {
 
         @Override
         public @IntentionName @NotNull String getName() {
@@ -62,8 +63,8 @@ final class CaptorFieldInitializationInspection extends MockitoolsBaseInspection
         }
 
         @Override
-        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
-            descriptor.getPsiElement().delete();
+        protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor, PsiElement problemElement) {
+            problemElement.delete();
         }
     }
 }

@@ -1,4 +1,4 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.migrationaids.v4;
 
@@ -53,11 +53,11 @@ final class ArgumentMatchersCalledViaMatchersInspection extends MigrationAidBase
         }
 
         @Override
-        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
-            replace((PsiExpression) descriptor.getPsiElement(), project);
+        protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor, PsiElement problemElement) {
+            replace((PsiExpression) problemElement, project);
         }
 
-        public void replace(PsiExpression qualifier, @NotNull Project project) {
+        void replace(PsiExpression qualifier, @NotNull Project project) {
             //if the matcher is referenced with fully qualified name: replace the fqn appropriately
             //This also respects that the class is referenced by its fqn rather via import by keeping the fqn of ArgumentMatchers.
             if (qualifier.textMatches(ORG_MOCKITO_MATCHERS)) {

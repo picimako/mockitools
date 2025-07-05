@@ -1,4 +1,4 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.captor;
 
@@ -20,9 +20,9 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
+import com.picimako.mockitools.inspection.BaseQuickFix;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;
-import com.siyeh.ig.InspectionGadgetsFix;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -55,7 +55,7 @@ final class CaptorFieldOfTypeArgumentCaptorInspection extends MockitoolsBaseInsp
      * <p>
      * With that said, it imports {@code org.mockito.ArgumentCaptor} upon applying the quick fix.
      */
-    private static final class ConvertFieldTypeToArgumentCaptorQuickFix extends InspectionGadgetsFix {
+    private static final class ConvertFieldTypeToArgumentCaptorQuickFix extends BaseQuickFix {
 
         @Override
         public @IntentionName @NotNull String getName() {
@@ -68,17 +68,16 @@ final class CaptorFieldOfTypeArgumentCaptorInspection extends MockitoolsBaseInsp
         }
 
         @Override
-        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
-            var context = descriptor.getPsiElement().getContext();
-            if (context instanceof PsiField field) {
+        protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor, PsiElement problemElement) {
+            if (problemElement.getContext() instanceof PsiField field) {
                 var fieldType = field.getTypeElement();
                 if (fieldType != null) {
                     PsiType type = fieldType.getType();
                     //If the field type is a primitive, then it converts it to its boxed type, otherwise leaves it as it is.
-                    PsiType boxedType = type instanceof PsiPrimitiveType primitiveType ? primitiveType.getBoxedType(context) : type;
+                    PsiType boxedType = type instanceof PsiPrimitiveType primitiveType ? primitiveType.getBoxedType(field) : type;
                     if (boxedType != null) {
                         PsiElement replaced = fieldType.replace(JavaPsiFacade.getElementFactory(project)
-                            .createTypeElementFromText(ORG_MOCKITO_ARGUMENT_CAPTOR + "<" + boxedType.getCanonicalText() + ">", context));
+                            .createTypeElementFromText(ORG_MOCKITO_ARGUMENT_CAPTOR + "<" + boxedType.getCanonicalText() + ">", field));
                         JavaCodeStyleManager.getInstance(project).shortenClassReferences(replaced);
                     }
                 }

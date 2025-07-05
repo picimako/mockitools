@@ -1,4 +1,4 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.verification.inorderverify;
 
@@ -26,7 +26,7 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
 
     @Test
     void testNotAvailableForNonJavaFile() {
-        checkIntentionIsNotAvailable("NotJava.xml", "<tag><caret></tag>");
+        checkIntentionIsNotAvailable("NotJava.json", "{<caret>}");
     }
 
     @Test

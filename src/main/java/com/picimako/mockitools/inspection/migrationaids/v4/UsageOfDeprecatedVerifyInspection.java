@@ -1,4 +1,4 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.migrationaids.v4;
 
@@ -70,8 +70,8 @@ final class UsageOfDeprecatedVerifyInspection extends MigrationAidBase.V3ToV4Bas
         }
 
         @Override
-        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
-            var parentCall = getParentCall(descriptor.getPsiElement());
+        protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor, PsiElement problemElement) {
+            var parentCall = getParentCall(problemElement);
             if (parentCall != null) {
                 var arguments = getArguments(parentCall);
                 var save = JavaPsiFacade.getElementFactory(project).createExpressionFromText(arguments[0].getText(), parentCall);
@@ -89,10 +89,10 @@ final class UsageOfDeprecatedVerifyInspection extends MigrationAidBase.V3ToV4Bas
         }
 
         @Override
-        protected void doFix(@NotNull Project project, ProblemDescriptor descriptor) {
-            var parentCall = getParentCall(descriptor.getPsiElement());
+        protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor, PsiElement problemElement) {
+            var parentCall = getParentCall(problemElement);
             if (parentCall != null) {
-                PsiElement elementAfterReplace = descriptor.getPsiElement().replace(PsiElementFactory.getInstance(project).createIdentifier(VERIFY_NO_MORE_INTERACTIONS));
+                PsiElement elementAfterReplace = problemElement.replace(PsiElementFactory.getInstance(project).createIdentifier(VERIFY_NO_MORE_INTERACTIONS));
                 if (!parentCall.getMethodExpression().isQualified()) {
                     staticImport(parentCall, ORG_MOCKITO_MOCKITO, VERIFY_NO_MORE_INTERACTIONS, elementAfterReplace);
                 }

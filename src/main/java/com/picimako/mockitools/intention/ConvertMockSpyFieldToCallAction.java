@@ -1,4 +1,4 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention;
 
@@ -114,6 +114,7 @@ final class ConvertMockSpyFieldToCallAction extends AnAction {
     /**
      * Adds the new variable declaration as the first statement of method body.
      */
+    @SuppressWarnings("UnstableApiUsage")
     public static void introduceMockitoMockingCall(PsiField fieldToConvert, PsiMethod targetMethod, PsiFile file) {
         final var mockitoMockingCall = new Ref<StringBuilder>();
 

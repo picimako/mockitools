@@ -1,6 +1,6 @@
-//Copyright 2024 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.picimako.mockitools.inspection.verification;
+    package com.picimako.mockitools.inspection.verification;
 
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiMethodCallExpression;
@@ -31,9 +31,7 @@ final class StubOnlyMockInVerificationInspection extends MockitoolsBaseInspectio
             .filter(PsiReferenceExpression.class::isInstance)
             .map(PsiReferenceExpression.class::cast)
             .map(MockObject::isStubOnly)
-            .ifPresent(isStubOnly -> {
-                if (isStubOnly)
-                    holder.registerProblem(verifiedMock.get(), MockitoolsBundle.message("inspection.stub.only.mock.used.in.verification"));
-            });
+            .filter(Boolean.TRUE::equals)
+            .ifPresent(__ -> holder.registerProblem(verifiedMock.get(), MockitoolsBundle.message("inspection.stub.only.mock.used.in.verification")));
     }
 }

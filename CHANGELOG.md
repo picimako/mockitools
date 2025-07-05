@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+## [1.6.0]
+### Changed
+- Removed the until-build version, so that the plugin potentially will need less new releases when
+there is no compatibility issue with a newer IDE major version. The earliest IDE version supported now is 2025.1. 
+- Updated project dependency versions and fine-tuned their configuration.
+- Added some minor simplifications to features.
+
 ## [1.5.0]
 ### Changed
 - New supported IDE version range: 2024.3 - 2025.1.*.
