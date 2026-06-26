@@ -1,6 +1,5 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
-import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 plugins {
@@ -38,6 +37,7 @@ dependencies {
     testImplementation(libs.junitJupiterApi)
     testRuntimeOnly(libs.junitJupiterEngine)
     testImplementation(libs.junitJupiterParams)
+    testImplementation(libs.junitPlatformLauncher)
 
     // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
 
@@ -55,6 +55,7 @@ dependencies {
         testFramework(TestFrameworkType.Platform)
         //Required for 'LightJavaCodeInsightFixtureTestCase5'
         testFramework(TestFrameworkType.Plugin.Java)
+        testFramework(TestFrameworkType.JUnit5)
     }
 }
 
@@ -103,22 +104,6 @@ intellijPlatform {
     }
 }
 
-intellijPlatformTesting {
-    val runTestsInIJCommunity by intellijPlatformTesting.testIde.registering {
-        type = IntelliJPlatformType.IntellijIdeaCommunity
-        version = "2025.1"
-        task {
-            useJUnitPlatform {
-                isScanForTestClasses = false
-                include("**/*Test.class")
-                //Excluded due to https://github.com/picimako/mockitools/issues/69
-                exclude("**/MockFieldInitializationInspectionTest.class, **/StubOnlyMockInVerificationInspectionTest.class")
-                environment("NO_FS_ROOTS_ACCESS_CHECK", true)
-            }
-        }
-    }
-}
-
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
 changelog {
     groups.empty()
@@ -128,5 +113,15 @@ changelog {
 tasks {
     wrapper {
         gradleVersion = providers.gradleProperty("gradleVersion").get()
+    }
+
+    test {
+        useJUnitPlatform {
+            isScanForTestClasses = false
+            include("**/*Test.class")
+            //Excluded due to https://github.com/picimako/mockitools/issues/69
+            exclude("**/MockFieldInitializationInspectionTest.class, **/StubOnlyMockInVerificationInspectionTest.class")
+            environment("NO_FS_ROOTS_ACCESS_CHECK", true)
+        }
     }
 }
