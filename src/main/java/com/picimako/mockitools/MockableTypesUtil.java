@@ -3,7 +3,7 @@
 package com.picimako.mockitools;
 
 import static com.intellij.codeInsight.AnnotationUtil.getStringAttributeValue;
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.intellij.psi.util.InheritanceUtil.getSuperClasses;
 import static com.intellij.psi.util.TypeConversionUtil.isPrimitive;
 import static com.intellij.psi.util.TypeConversionUtil.isPrimitiveWrapper;
@@ -41,18 +41,18 @@ public final class MockableTypesUtil {
      */
     public static Optional<DoNotMockType> getDoNotMockTypeInHierarchy(@Nullable PsiType type) {
         if (type instanceof PsiClassType classType) {
-            PsiClass referencedClass = compute(classType::resolve);
+            PsiClass referencedClass = computeBlocking(classType::resolve);
             if (referencedClass != null) {
                 //Checks if the use class type is annotated
                 var doNotMock = getDoNotMockAnnotationOn(referencedClass);
                 if (doNotMock.isPresent()) {
-                    return Optional.of(new DoNotMockType(compute(() -> getStringAttributeValue(doNotMock.get(), "reason"))));
+                    return Optional.of(new DoNotMockType(computeBlocking(() -> getStringAttributeValue(doNotMock.get(), "reason"))));
                 }
                 //If the direct class type is not annotated, proceeds to check all its super classes
                 for (PsiClass cls : getSuperClasses(referencedClass)) {
                     var doNotMockInHierarchy = getDoNotMockAnnotationOn(cls);
                     if (doNotMockInHierarchy.isPresent()) {
-                        return Optional.of(new DoNotMockType(compute(() -> getStringAttributeValue(doNotMockInHierarchy.get(), "reason"))));
+                        return Optional.of(new DoNotMockType(computeBlocking(() -> getStringAttributeValue(doNotMockInHierarchy.get(), "reason"))));
                     }
                 }
             }
@@ -61,11 +61,11 @@ public final class MockableTypesUtil {
     }
 
     private static Optional<PsiAnnotation> getDoNotMockAnnotationOn(PsiClass clazz) {
-        return compute(() -> !CommonClassNames.JAVA_LANG_OBJECT.equals(clazz.getQualifiedName())
-                             ? Arrays.stream(clazz.getAnnotations())
-                                 .filter(annotation -> annotation.getQualifiedName().endsWith(MockitoQualifiedNames.ORG_MOCKITO_DO_NOT_MOCK))
-                                 .findFirst()
-                             : Optional.empty());
+        return computeBlocking(() -> !CommonClassNames.JAVA_LANG_OBJECT.equals(clazz.getQualifiedName())
+            ? Arrays.stream(clazz.getAnnotations())
+            .filter(annotation -> annotation.getQualifiedName().endsWith(MockitoQualifiedNames.ORG_MOCKITO_DO_NOT_MOCK))
+            .findFirst()
+            : Optional.empty());
     }
 
     /**
@@ -86,11 +86,11 @@ public final class MockableTypesUtil {
      */
     public static boolean isMockableType(@Nullable PsiType type) {
         if (type != null) {
-            return compute(() -> {
-                if (compute(() -> !isPrimitiveWrapper(type))) {
-                    String canonicalText = compute(type::getCanonicalText);
-                    return compute(() -> !isPrimitive(canonicalText))
-                           && !NON_MOCKABLE_TYPES.contains(compute(type::getCanonicalText));
+            return computeBlocking(() -> {
+                if (computeBlocking(() -> !isPrimitiveWrapper(type))) {
+                    String canonicalText = computeBlocking(type::getCanonicalText);
+                    return computeBlocking(() -> !isPrimitive(canonicalText))
+                        && !NON_MOCKABLE_TYPES.contains(computeBlocking(type::getCanonicalText));
                 }
                 return false;
             });
@@ -108,10 +108,10 @@ public final class MockableTypesUtil {
      */
     private static boolean isDoNotMockAnnotatedInHierarchy(@Nullable PsiType type) {
         if (type instanceof PsiClassType classType) {
-            PsiClass referencedClass = compute(classType::resolve);
+            PsiClass referencedClass = computeBlocking(classType::resolve);
             if (referencedClass != null) {
                 return getDoNotMockAnnotationOn(referencedClass).isPresent()
-                       || compute(() -> getSuperClasses(referencedClass).stream().anyMatch(cls -> getDoNotMockAnnotationOn(cls).isPresent()));
+                       || computeBlocking(() -> getSuperClasses(referencedClass).stream().anyMatch(cls -> getDoNotMockAnnotationOn(cls).isPresent()));
             }
         }
         return false;

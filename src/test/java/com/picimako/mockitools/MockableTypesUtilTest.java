@@ -2,9 +2,9 @@
 
 package com.picimako.mockitools;
 
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiType;
 import org.junit.jupiter.api.Test;
@@ -60,6 +60,6 @@ class MockableTypesUtilTest extends MockitoolsTestBase {
     }
 
     private PsiType getFieldType() {
-        return ReadAction.compute(() -> ((PsiField) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent()).getTypeElement().getType());
+        return computeBlocking(() -> ((PsiField) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent()).getTypeElement().getType());
     }
 }

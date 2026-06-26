@@ -2,7 +2,7 @@
 
 package com.picimako.mockitools.intention;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 
 import com.google.common.collect.ImmutableList;
 import com.intellij.psi.PsiMethod;
@@ -47,8 +47,8 @@ public final class MethodRearranger {
         var restOfMethods = new SmartList<PsiMethod>();
 
         for (var method : methods) {
-            if (BEFORE_ANNOTATIONS.stream().anyMatch(annotation -> compute(() -> method.hasAnnotation(annotation)))) beforeHooks.add(method);
-            else if (TEST_ANNOTATIONS.stream().anyMatch(annotation -> compute(() -> method.hasAnnotation(annotation)))) testMethods.add(method);
+            if (BEFORE_ANNOTATIONS.stream().anyMatch(annotation -> computeBlocking(() -> method.hasAnnotation(annotation)))) beforeHooks.add(method);
+            else if (TEST_ANNOTATIONS.stream().anyMatch(annotation -> computeBlocking(() -> method.hasAnnotation(annotation)))) testMethods.add(method);
             else restOfMethods.add(method);
         }
 

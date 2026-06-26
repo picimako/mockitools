@@ -2,7 +2,7 @@
 
 package com.picimako.mockitools;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.psi.PsiField;
@@ -372,11 +372,11 @@ class MockitoolsPsiUtilTest extends MockitoolsTestBase {
     }
 
     private PsiMethodCallExpression getMethodCall() {
-        return (PsiMethodCallExpression) compute(() -> getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent());
+        return (PsiMethodCallExpression) computeBlocking(() -> getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent());
     }
 
     private PsiField getField() {
-        return (PsiField) compute(() -> getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent());
+        return (PsiField) computeBlocking(() -> getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent());
     }
 
     private record TestData(String fileName, String fileContent, Supplier<Boolean> isSpecificMethod) {

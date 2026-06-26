@@ -2,7 +2,7 @@
 
 package com.picimako.mockitools.intention;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_SPY;
 import static com.picimako.mockitools.intention.ConvertMockSpyFieldToCallAction.introduceMockitoMockingCall;
@@ -61,7 +61,7 @@ final class ConvertMockSpyFieldToCallIntention implements IntentionAction {
 
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-        return compute(() -> {
+        return computeBlocking(() -> {
             final var element = file.findElementAt(editor.getCaretModel().getOffset());
             //If the caret is at a field identifier and the parent class has at least one method
             if (isIdentifierOfField(element)) {
@@ -87,9 +87,9 @@ final class ConvertMockSpyFieldToCallIntention implements IntentionAction {
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        final var element = file.findElementAt(compute(() -> editor.getCaretModel().getOffset()));
-        var field = (PsiField) compute(element::getParent);
-        var methodsInClass = compute(() -> ((PsiClass) field.getParent()).getMethods());
+        final var element = file.findElementAt(computeBlocking(() -> editor.getCaretModel().getOffset()));
+        var field = (PsiField) computeBlocking(element::getParent);
+        var methodsInClass = computeBlocking(() -> ((PsiClass) field.getParent()).getMethods());
         if (methodsInClass.length > 1) {
             showActionsInListPopup(
                 MockitoolsBundle.message("intention.convert.mocking.field.to.call.select.method"),
@@ -101,7 +101,7 @@ final class ConvertMockSpyFieldToCallIntention implements IntentionAction {
     }
 
     private boolean isIdentifierOfField(PsiElement element) {
-        return element instanceof PsiIdentifier && compute(element::getParent) instanceof PsiField;
+        return element instanceof PsiIdentifier && computeBlocking(element::getParent) instanceof PsiField;
     }
 
     @Override

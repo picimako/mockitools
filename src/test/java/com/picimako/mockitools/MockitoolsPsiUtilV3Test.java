@@ -2,9 +2,9 @@
 
 package com.picimako.mockitools;
 
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.psi.PsiMethodCallExpression;
 import org.junit.jupiter.api.Test;
 
@@ -34,6 +34,6 @@ class MockitoolsPsiUtilV3Test extends MockitoolsTestBase {
 
 
     private PsiMethodCallExpression getMethodCall() {
-        return (PsiMethodCallExpression) ReadAction.compute(() -> getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent());
+        return (PsiMethodCallExpression) computeBlocking(() -> getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent());
     }
 }

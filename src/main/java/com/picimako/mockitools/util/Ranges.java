@@ -2,7 +2,7 @@
 
 package com.picimako.mockitools.util;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
@@ -26,7 +26,7 @@ public final class Ranges {
     }
 
     public static boolean isWithinSelection(@Nullable PsiElement element, Editor editor) {
-        return element != null && endOffsetOf(element) <= compute(() -> editor.getSelectionModel().getSelectionEnd());
+        return element != null && endOffsetOf(element) <= computeBlocking(() -> editor.getSelectionModel().getSelectionEnd());
     }
 
     private Ranges() {

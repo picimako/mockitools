@@ -2,8 +2,9 @@
 
 package com.picimako.mockitools.intention;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.intellij.openapi.application.ReadAction.run;
+import static com.intellij.openapi.application.ReadAction.runBlocking;
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 import static com.picimako.mockitools.MockitoQualifiedNames.ANSWER;
 import static com.picimako.mockitools.MockitoQualifiedNames.DEFAULT_ANSWER;
@@ -87,10 +88,10 @@ final class ConvertMockSpyFieldToCallAction extends AnAction {
     public ConvertMockSpyFieldToCallAction(PsiField fieldToConvert, PsiMethod method) {
         super(
             //The element text is always method name and the parameter list, e.g. 'testMethod(String)'
-            compute(() -> PsiFormatUtil.formatMethod(method, PsiSubstitutor.EMPTY,
+            computeBlocking(() -> PsiFormatUtil.formatMethod(method, PsiSubstitutor.EMPTY,
                 PsiFormatUtilBase.SHOW_NAME | PsiFormatUtilBase.SHOW_PARAMETERS, PsiFormatUtilBase.SHOW_TYPE)),
             "",
-            compute(() -> getIcon(method)));
+            computeBlocking(() -> getIcon(method)));
         this.fieldToConvert = fieldToConvert;
         this.method = method;
     }
@@ -119,11 +120,11 @@ final class ConvertMockSpyFieldToCallAction extends AnAction {
         final var mockitoMockingCall = new Ref<StringBuilder>();
 
         //This if-else is safe since isAvailable() returns true only in case of @Mock and @Spy annotations
-        if (compute(() -> fieldToConvert.hasAnnotation(ORG_MOCKITO_MOCK))) {
+        if (computeBlocking(() -> fieldToConvert.hasAnnotation(ORG_MOCKITO_MOCK))) {
             final var mockAnnotation = new Ref<PsiAnnotation>();
             final var isMockSettingsOverride = new Ref<Boolean>();
 
-            run(() -> {
+            runBlocking(() -> {
                 //org.mockito.Mockito.mock(<fieldtype>.class
                 mockitoMockingCall.set(new StringBuilder("Mockito").append(".").append(MOCK).append("("));
                 appendType(fieldToConvert, mockitoMockingCall.get());
@@ -149,9 +150,9 @@ final class ConvertMockSpyFieldToCallAction extends AnAction {
             //if there is no attribute specified, no action is needed
             //If there is at least one attribute specified, but it is not the answer and name specific overrides of Mockito.mock(),
             // then build the MockSettings for Mockito.mock(Class, MockSettings)
-            if (compute(() -> !mockAnnotation.get().getAttributes().isEmpty()) && isMockSettingsOverride.get()) {
+            if (computeBlocking(() -> !mockAnnotation.get().getAttributes().isEmpty()) && isMockSettingsOverride.get()) {
                 StringBuilder mockSettings = new StringBuilder("Mockito").append(".withSettings()");
-                run(() -> {
+                runBlocking(() -> {
                     //Handle boolean attributes
                     BOOLEAN_ATTRIBUTES.forEach(attributeName -> {
                         if (isAttributeEnabledOnMockAnnotation(mockAnnotation.get(), attributeName))
@@ -185,7 +186,7 @@ final class ConvertMockSpyFieldToCallAction extends AnAction {
                     });
                 });
 
-                compute(() -> valueOf(mockAnnotation.get().findAttribute(STRICTNESS))
+                computeBlocking(() -> valueOf(mockAnnotation.get().findAttribute(STRICTNESS))
                     .filter(PsiReferenceExpression.class::isInstance)
                     .map(PsiReferenceExpression.class::cast)
                     .map(PsiReference::resolve)
@@ -246,7 +247,7 @@ final class ConvertMockSpyFieldToCallAction extends AnAction {
     }
 
     private static Optional<PsiAnnotationMemberValue> valueOf(JvmAnnotationAttribute attribute) {
-        return compute(() -> attribute instanceof PsiNameValuePair attributeNameValue && attributeNameValue.getValue() != null
+        return computeBlocking(() -> attribute instanceof PsiNameValuePair attributeNameValue && attributeNameValue.getValue() != null
                              ? Optional.ofNullable(attributeNameValue.getValue())
                              : Optional.empty());
     }

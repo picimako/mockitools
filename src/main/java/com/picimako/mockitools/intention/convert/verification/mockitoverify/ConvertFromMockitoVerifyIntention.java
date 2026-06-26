@@ -2,7 +2,7 @@
 
 package com.picimako.mockitools.intention.convert.verification.mockitoverify;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.picimako.mockitools.EnforceConventionUtil.isBDDMockitoEnforced;
 import static com.picimako.mockitools.EnforceConventionUtil.isMockitoEnforced;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
@@ -41,14 +41,14 @@ final class ConvertFromMockitoVerifyIntention extends ConvertVerificationIntenti
 
     @Override
     protected boolean isQualifierHaveCorrectType(PsiExpression qualifier) {
-        return compute(() -> qualifier instanceof PsiReferenceExpression qualifierAsRef
-                             && qualifierAsRef.resolve() instanceof PsiClass qualifierClass
-                             && ORG_MOCKITO_MOCKITO.equals(qualifierClass.getQualifiedName()));
+        return computeBlocking(() -> qualifier instanceof PsiReferenceExpression qualifierAsRef
+            && qualifierAsRef.resolve() instanceof PsiClass qualifierClass
+            && ORG_MOCKITO_MOCKITO.equals(qualifierClass.getQualifiedName()));
     }
 
     @Override
     public List<AnAction> actionSelectionOptions(Editor editor, PsiFile file) {
-        boolean isBulkMode = compute(() -> editor.getSelectionModel().hasSelection());
+        boolean isBulkMode = computeBlocking(() -> editor.getSelectionModel().hasSelection());
         var actions = new ArrayList<AnAction>(2);
         if (!isBDDMockitoEnforced(file)) {
             actions.add(new ConvertMockitoVerifyToInOrderVerifyAction(isBulkMode));

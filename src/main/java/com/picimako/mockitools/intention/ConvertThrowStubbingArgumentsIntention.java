@@ -2,7 +2,7 @@
 
 package com.picimako.mockitools.intention;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 import static com.picimako.mockitools.inspection.consecutive.TypeConversionMethod.TO_CLASSES;
 import static com.picimako.mockitools.inspection.consecutive.TypeConversionMethod.TO_THROWABLES;
@@ -77,12 +77,12 @@ final class ConvertThrowStubbingArgumentsIntention implements IntentionAction {
     }
 
     private boolean isArgumentListConvertible(PsiMethodCallExpression call, ExceptionStubber stubber) {
-        if (compute(() -> stubber.classMatcher.matches(call))) {
+        if (computeBlocking(() -> stubber.classMatcher.matches(call))) {
             if (areAllClassObjectAccessExpressions(getArguments(call))) {
                 message = TO_THROWABLES.message;
                 return true;
             }
-        } else if (compute(() -> stubber.throwablesMatcher.matches(call))) {
+        } else if (computeBlocking(() -> stubber.throwablesMatcher.matches(call))) {
             var arguments = getArguments(call);
             if (areAllNewExpressions(arguments) && !containsCallToNonDefaultConstructor(arguments)) {
                 message = TO_CLASSES.message;

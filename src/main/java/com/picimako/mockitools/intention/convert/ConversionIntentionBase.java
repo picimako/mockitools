@@ -2,7 +2,7 @@
 
 package com.picimako.mockitools.intention.convert;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getPrevSiblingOfType;
@@ -29,8 +29,8 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.util.IncorrectOperationException;
-import com.picimako.mockitools.util.ListPopupHelper;
 import com.picimako.mockitools.intention.convert.verification.NoActionAvailableAction;
+import com.picimako.mockitools.util.ListPopupHelper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -52,8 +52,8 @@ public abstract class ConversionIntentionBase implements IntentionAction {
 
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-        if (compute(() -> !editor.getSelectionModel().hasSelection())) {
-            final var element = file.findElementAt(compute(() -> editor.getCaretModel().getOffset()));
+        if (computeBlocking(() -> !editor.getSelectionModel().hasSelection())) {
+            final var element = file.findElementAt(computeBlocking(() -> editor.getCaretModel().getOffset()));
             return isIdentifierOfMethodCall(element) && isAvailableFor(getMethodCallForIdentifier(element));
         } else return isAvailableForBulkConversion(editor, file);
     }
@@ -65,13 +65,13 @@ public abstract class ConversionIntentionBase implements IntentionAction {
      */
     private boolean isAvailableForBulkConversion(Editor editor, PsiFile file) {
         var model = editor.getSelectionModel();
-        int selectionStart = compute(model::getSelectionStart);
-        int selectionEnd = compute(model::getSelectionEnd);
+        int selectionStart = computeBlocking(model::getSelectionStart);
+        int selectionEnd = computeBlocking(model::getSelectionEnd);
 
         //This is to prevent executing further logic for unnecessarily short selections.
         if (selectionLengthIn(model) < minSelectionLength
             || containsOnlyWhiteSpaces(charSequenceInRange(editor, selectionStart, selectionEnd))
-            || !isSymbolAfterMethodCallChain(compute(() -> file.findElementAt(selectionEnd))))
+            || !isSymbolAfterMethodCallChain(computeBlocking(() -> file.findElementAt(selectionEnd))))
             return false;
 
         var statementsInSelection = collectStatementsInSelection(editor, file);
@@ -79,9 +79,9 @@ public abstract class ConversionIntentionBase implements IntentionAction {
         if (statementsInSelection.isEmpty()) return false;
 
         for (var statement : statementsInSelection) {
-            var identifier = compute(() -> findChildOfType(statement, PsiIdentifier.class));
+            var identifier = computeBlocking(() -> findChildOfType(statement, PsiIdentifier.class));
             if (identifier == null) return false;
-            var verificationCall = compute(() -> getParentOfType(identifier, PsiMethodCallExpression.class));
+            var verificationCall = computeBlocking(() -> getParentOfType(identifier, PsiMethodCallExpression.class));
             if (verificationCall == null) return false;
             //If we find at least one call chain in the selection that doesn't satisfy the current intention's availability criteria,
             //then the intention won't be available.
@@ -98,7 +98,7 @@ public abstract class ConversionIntentionBase implements IntentionAction {
      */
     private boolean isCorrectIdentifier(@NotNull PsiElement identifier, @NotNull PsiMethodCallExpression verificationCall) {
         var qualifier = getQualifier(verificationCall);
-        return PsiManager.getInstance(identifier.getProject()).areElementsEquivalent(compute(identifier::getParent), qualifier)
+        return PsiManager.getInstance(identifier.getProject()).areElementsEquivalent(computeBlocking(identifier::getParent), qualifier)
             && isQualifierHaveCorrectType(qualifier);
     }
 
