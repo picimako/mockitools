@@ -3,7 +3,6 @@
 package com.picimako.mockitools.intention;
 
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
-import static com.intellij.openapi.application.ReadAction.run;
 import static com.intellij.openapi.application.ReadAction.runBlocking;
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 import static com.picimako.mockitools.MockitoQualifiedNames.ANSWER;
@@ -202,12 +201,12 @@ final class ConvertMockSpyFieldToCallAction extends AnAction {
                         }
                     });
 
-                run(() -> valueOf(mockAnnotation.get().findAttribute(MOCK_MAKER)).ifPresent(value -> appendSetting(mockSettings, MOCK_MAKER, value.getText())));
+                runBlocking(() -> valueOf(mockAnnotation.get().findAttribute(MOCK_MAKER)).ifPresent(value -> appendSetting(mockSettings, MOCK_MAKER, value.getText())));
 
                 mockitoMockingCall.get().append(", ").append(mockSettings); //Adds the second parameter to Mockito.mock(Class, MockSettings)
             }
         } else { //@Spy -> Mockito.spy()
-            run(() -> {
+            runBlocking(() -> {
                 mockitoMockingCall.set(new StringBuilder("Mockito").append(".").append(SPY).append("("));
                 if (fieldToConvert.hasInitializer()) {
                     mockitoMockingCall.get().append(fieldToConvert.getInitializer().getText());
@@ -260,7 +259,7 @@ final class ConvertMockSpyFieldToCallAction extends AnAction {
      * This is to make sure that the mock()/spy() call's argument (when a PsiClassObjectAccessExpression), doesn't include the generic type arguments.
      */
     private static void appendType(PsiField fieldToConvert, StringBuilder mockitoMockingCall) {
-        run(() -> {
+        runBlocking(() -> {
             Optional.ofNullable(fieldToConvert.getTypeElement())
                 .map(PsiTypeElement::getInnermostComponentReferenceElement)
                 .map(PsiQualifiedReference::getReferenceName)
