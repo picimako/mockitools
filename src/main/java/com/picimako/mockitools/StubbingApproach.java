@@ -383,6 +383,7 @@ public enum StubbingApproach {
      *
      * @param mockObjectOrCallToStubbedMethod the mock object or a call to a stubbed method
      */
+    @SuppressWarnings("unused")
     protected abstract boolean isValidStubbingArgument(PsiExpression mockObjectOrCallToStubbedMethod);
 
     /**

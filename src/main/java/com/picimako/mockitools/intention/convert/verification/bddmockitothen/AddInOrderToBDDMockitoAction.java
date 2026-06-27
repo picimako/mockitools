@@ -36,7 +36,7 @@ public class AddInOrderToBDDMockitoAction extends ConvertVerificationActionBase 
         super(MockitoolsBundle.message("intention.convert.verification.bddmockito.with.inorder"), isBulkMode);
     }
 
-    //Caret based conversion
+    //Caret-based conversion
 
     @Override
     protected void perform(PsiMethodCallExpression bddMockitoThen, Project project) {
@@ -48,7 +48,7 @@ public class AddInOrderToBDDMockitoAction extends ConvertVerificationActionBase 
         MemberInplaceRenameHelper.rename(inOrderVariable.getFirstChild(), editor);
     }
 
-    //Selection based conversion
+    //Selection-based conversion
 
     @Override
     protected void performActionInBulk(List<PsiExpressionStatement> statementsInSelection,

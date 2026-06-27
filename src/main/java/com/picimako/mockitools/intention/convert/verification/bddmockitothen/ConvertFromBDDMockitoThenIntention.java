@@ -112,7 +112,7 @@ final class ConvertFromBDDMockitoThenIntention extends ConvertVerificationIntent
      */
     private boolean areAllVerificationsWithoutInOrder(Editor editor, PsiFile file, boolean isBulkMode) {
         return !isBulkMode
-               ? !BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(getSubsequentMethodCall(getMethodCallAtCaret(file, editor)))
-               : collectShouldCalls(editor, file).stream().noneMatch(BDDMOCKITO_THEN_SHOULD::isInOrderSpecific);
+            ? !BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(getSubsequentMethodCall(getMethodCallAtCaret(file, editor)))
+            : none(collectShouldCalls(editor, file), BDDMOCKITO_THEN_SHOULD::isInOrderSpecific);
     }
 }

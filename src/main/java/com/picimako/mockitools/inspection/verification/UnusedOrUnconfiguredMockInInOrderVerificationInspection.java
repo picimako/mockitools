@@ -4,6 +4,7 @@ package com.picimako.mockitools.inspection.verification;
 
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
 import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
@@ -60,7 +61,7 @@ final class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loca
 
                     var mocksInVerifications = collectMocksInVerifications(inOrderRefs);
                     //The mock arguments from each 'InOrder.verify()' and 'BDDMockito.then().should(InOrder)' call
-                    var mocksInVerificationsAsString = mocksInVerifications.stream().map(PsiElement::getText).toList();
+                    var mocksInVerificationsAsString = map(mocksInVerifications, PsiElement::getText);
                     //Report all mocks in 'Mockito.inOrder()' that are not used in a verification
                     for (var mockInInOrder : mocksInMockitoInOrder) {
                         //Exclude Type.class-type arguments that are (most probably) used in MockedStatic verifications
