@@ -92,10 +92,9 @@ public final class MockableTypesUtil {
     public static boolean isMockableType(@Nullable PsiType type) {
         if (type != null) {
             return computeBlocking(() -> {
-                if (computeBlocking(() -> !isPrimitiveWrapper(type))) {
-                    String canonicalText = computeBlocking(type::getCanonicalText);
-                    return computeBlocking(() -> !isPrimitive(canonicalText))
-                        && !NON_MOCKABLE_TYPES.contains(computeBlocking(type::getCanonicalText));
+                if (!isPrimitiveWrapper(type)) {
+                    String canonicalText = type.getCanonicalText();
+                    return !isPrimitive(canonicalText) && !NON_MOCKABLE_TYPES.contains(canonicalText);
                 }
                 return false;
             });

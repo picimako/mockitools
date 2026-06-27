@@ -19,6 +19,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
+import com.intellij.psi.PsiMethod;
 import com.intellij.util.IncorrectOperationException;
 import com.picimako.mockitools.MockitoQualifiedNames;
 import com.picimako.mockitools.resources.MockitoolsBundle;
@@ -87,16 +88,18 @@ final class ConvertMockSpyFieldToCallIntention implements IntentionAction {
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        final var element = file.findElementAt(computeBlocking(() -> editor.getCaretModel().getOffset()));
-        var field = (PsiField) computeBlocking(element::getParent);
-        var methodsInClass = computeBlocking(() -> ((PsiClass) field.getParent()).getMethods());
-        if (methodsInClass.length > 1) {
+        var fwm = computeBlocking(() -> {
+            final var element = file.findElementAt(editor.getCaretModel().getOffset());
+            var field = (PsiField) element.getParent();
+            return new FieldWithMethodsInClass(field, ((PsiClass) field.getParent()).getMethods());
+        });
+        if (fwm.methodsInClass.length > 1) {
             showActionsInListPopup(
                 MockitoolsBundle.message("intention.convert.mocking.field.to.call.select.method"),
-                reOrder(methodsInClass).stream().map(method -> new ConvertMockSpyFieldToCallAction(field, method)).toList(),
+                reOrder(fwm.methodsInClass).stream().map(method -> new ConvertMockSpyFieldToCallAction(fwm.field, method)).toList(),
                 editor);
-        } else if (methodsInClass.length == 1) {
-            introduceMockitoMockingCall(field, methodsInClass[0], file);
+        } else if (fwm.methodsInClass.length == 1) {
+            introduceMockitoMockingCall(fwm.field, fwm.methodsInClass[0], file);
         }
     }
 
@@ -108,4 +111,6 @@ final class ConvertMockSpyFieldToCallIntention implements IntentionAction {
     public boolean startInWriteAction() {
         return false;
     }
+
+    private record FieldWithMethodsInClass(PsiField field, PsiMethod[] methodsInClass) { }
 }
