@@ -13,10 +13,12 @@ import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiType;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -34,38 +36,41 @@ public final class MockableTypesUtil {
     private static final Set<String> NON_MOCKABLE_TYPES = Set.of(CommonClassNames.JAVA_LANG_CLASS, CommonClassNames.JAVA_LANG_STRING);
 
     /**
-     * Finds the first @DoNotMock annotated type in the class hierarchy, and returns it with the optional reason provided.
+     * Finds the first @DoNotMock annotated type in the class hierarchy, and returns it with the reason provided.
      *
      * @param type the type to check the type hierarchy of for the @DoNotMock annotation
-     * @return the optional reason of the @DoNotMock annotation, or empty optional if no @DoNotMock annotation is found
+     * @return the reason of the @DoNotMock annotation, or null if no @DoNotMock annotation is found
      */
-    public static Optional<DoNotMockType> getDoNotMockTypeInHierarchy(@Nullable PsiType type) {
+    @Nullable
+    public static DoNotMockType getDoNotMockTypeInHierarchy(@Nullable PsiType type) {
         if (type instanceof PsiClassType classType) {
             PsiClass referencedClass = computeBlocking(classType::resolve);
             if (referencedClass != null) {
                 //Checks if the use class type is annotated
                 var doNotMock = getDoNotMockAnnotationOn(referencedClass);
-                if (doNotMock.isPresent()) {
-                    return Optional.of(new DoNotMockType(computeBlocking(() -> getStringAttributeValue(doNotMock.get(), "reason"))));
+                if (doNotMock != null) {
+                    return new DoNotMockType(doNotMock);
                 }
                 //If the direct class type is not annotated, proceeds to check all its super classes
                 for (PsiClass cls : getSuperClasses(referencedClass)) {
                     var doNotMockInHierarchy = getDoNotMockAnnotationOn(cls);
-                    if (doNotMockInHierarchy.isPresent()) {
-                        return Optional.of(new DoNotMockType(computeBlocking(() -> getStringAttributeValue(doNotMockInHierarchy.get(), "reason"))));
+                    if (doNotMockInHierarchy != null) {
+                        return new DoNotMockType(doNotMockInHierarchy);
                     }
                 }
             }
         }
-        return Optional.empty();
+        return null;
     }
 
-    private static Optional<PsiAnnotation> getDoNotMockAnnotationOn(PsiClass clazz) {
+    @Nullable
+    private static PsiAnnotation getDoNotMockAnnotationOn(PsiClass clazz) {
         return computeBlocking(() -> !CommonClassNames.JAVA_LANG_OBJECT.equals(clazz.getQualifiedName())
             ? Arrays.stream(clazz.getAnnotations())
             .filter(annotation -> annotation.getQualifiedName().endsWith(MockitoQualifiedNames.ORG_MOCKITO_DO_NOT_MOCK))
             .findFirst()
-            : Optional.empty());
+            .orElse(null)
+            : null);
     }
 
     /**
@@ -110,8 +115,8 @@ public final class MockableTypesUtil {
         if (type instanceof PsiClassType classType) {
             PsiClass referencedClass = computeBlocking(classType::resolve);
             if (referencedClass != null) {
-                return getDoNotMockAnnotationOn(referencedClass).isPresent()
-                       || computeBlocking(() -> getSuperClasses(referencedClass).stream().anyMatch(cls -> getDoNotMockAnnotationOn(cls).isPresent()));
+                return getDoNotMockAnnotationOn(referencedClass) != null
+                    || computeBlocking(() -> getSuperClasses(referencedClass).stream().anyMatch(cls -> getDoNotMockAnnotationOn(cls) != null));
             }
         }
         return false;
@@ -121,8 +126,16 @@ public final class MockableTypesUtil {
         //Utility class
     }
 
-    public record DoNotMockType(@Nullable String reason) {
+    @RequiredArgsConstructor
+    public static final class DoNotMockType {
+        @NotNull
+        private final PsiAnnotation doNotMock;
+        @Getter
+        @Nullable
+        private String reason;
+
         public boolean hasReason() {
+            reason = computeBlocking(() -> getStringAttributeValue(doNotMock, "reason"));
             return reason != null && !reason.isBlank();
         }
     }

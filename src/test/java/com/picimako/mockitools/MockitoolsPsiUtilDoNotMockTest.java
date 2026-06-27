@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Functional test for {@link com.picimako.mockitools.MockitoolsPsiUtil}.
  */
-@SuppressWarnings("OptionalGetWithoutIsPresent")
 @TestDataPath("$CONTENT_ROOT/testData/inspection/donotmockreason")
 class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
 
@@ -37,8 +36,7 @@ class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 }
                 """);
 
-        var doNotMock = getDoNotMockTypeInHierarchy(getFieldType());
-        assertThat(doNotMock.get().reason()).isEqualTo("Create a real instance instead.");
+        assertHasReason(getDoNotMockTypeInHierarchy(getFieldType()), "Create a real instance instead.");
     }
 
     @Test
@@ -58,8 +56,7 @@ class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 }
                 """);
 
-        var doNotMock = getDoNotMockTypeInHierarchy(getFieldType());
-        assertThat(doNotMock.get().reason()).isEqualTo("A custom reason");
+        assertHasReason(getDoNotMockTypeInHierarchy(getFieldType()), "A custom reason");
     }
 
     @Test
@@ -79,8 +76,7 @@ class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 }
                 """);
 
-        var doNotMock = getDoNotMockTypeInHierarchy(getFieldType());
-        assertThat(doNotMock.get().reason()).isEmpty();
+        assertHasNoReason(getDoNotMockTypeInHierarchy(getFieldType()));
     }
 
     @Test
@@ -101,8 +97,7 @@ class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 }
                 """);
 
-        var doNotMock = getDoNotMockTypeInHierarchy(getFieldType());
-        assertThat(doNotMock.get().reason()).isEqualTo("Default reason");
+        assertHasReason(getDoNotMockTypeInHierarchy(getFieldType()), "Default reason");
     }
 
     @Test
@@ -123,8 +118,7 @@ class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 }
                 """);
 
-        var doNotMock = getDoNotMockTypeInHierarchy(getFieldType());
-        assertThat(doNotMock.get().reason()).isEqualTo("Custom reason");
+        assertHasReason(getDoNotMockTypeInHierarchy(getFieldType()), "Custom reason");
     }
 
     @Test
@@ -145,8 +139,7 @@ class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
                 }
                 """);
 
-        var doNotMock = getDoNotMockTypeInHierarchy(getFieldType());
-        assertThat(doNotMock.get().reason()).isEmpty();
+        assertHasNoReason(getDoNotMockTypeInHierarchy(getFieldType()));
     }
 
     //isMockableTypeInAnyWay
@@ -190,5 +183,20 @@ class MockitoolsPsiUtilDoNotMockTest extends MockitoolsTestBase {
 
     private PsiType getFieldType() {
         return computeBlocking(() -> ((PsiField) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent()).getTypeElement().getType());
+    }
+
+    private static void assertHasReason(MockableTypesUtil.DoNotMockType doNotMock, String expected) {
+        assertThat(doNotMock)
+            .isNotNull()
+            .extracting(MockableTypesUtil.DoNotMockType::hasReason)
+            .isEqualTo(true);
+        assertThat(doNotMock.getReason()).isEqualTo(expected);
+    }
+
+    private static void assertHasNoReason(MockableTypesUtil.DoNotMockType doNotMock) {
+        assertThat(doNotMock)
+            .isNotNull()
+            .extracting(MockableTypesUtil.DoNotMockType::hasReason)
+            .isEqualTo(false);
     }
 }

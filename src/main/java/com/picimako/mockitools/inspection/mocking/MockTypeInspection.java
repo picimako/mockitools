@@ -8,8 +8,10 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_SPY;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoMock;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoSpy;
+import static com.picimako.mockitools.resources.MockitoolsBundle.message;
 import static com.picimako.mockitools.util.EvaluationHelper.evaluateClassObjectOrNewExpressionType;
-import static com.picimako.mockitools.util.PsiMethodUtil.*;
+import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
+import static com.picimako.mockitools.util.PsiMethodUtil.hasArgument;
 import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
@@ -20,7 +22,6 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiType;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
-import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -69,7 +70,7 @@ final class MockTypeInspection extends MockitoolsBaseInspection {
 
     private void registerIfNotMockable(PsiType type, PsiElement toHighlight, @NotNull ProblemsHolder holder) {
         if (!isMockableType(type))
-            holder.registerProblem(toHighlight, MockitoolsBundle.message("inspection.non.mockable.type"));
+            holder.registerProblem(toHighlight, message("inspection.non.mockable.type"));
         else checkForDoNotMockType(type, holder, toHighlight);
     }
 
@@ -78,9 +79,11 @@ final class MockTypeInspection extends MockitoolsBaseInspection {
     }
 
     private void checkForDoNotMockType(PsiType type, @NotNull ProblemsHolder holder, PsiElement toHighlight) {
-        getDoNotMockTypeInHierarchy(type).ifPresent(doNotMockType ->
+        var doNotMockType = getDoNotMockTypeInHierarchy(type);
+        if (doNotMockType != null) {
             holder.registerProblem(toHighlight, doNotMockType.hasReason()
-                ? MockitoolsBundle.message("inspection.non.mockable.type.do.not.mock.reason", doNotMockType.reason())
-                : MockitoolsBundle.message("inspection.non.mockable.type.do.not.mock.no.reason")));
+                ? message("inspection.non.mockable.type.do.not.mock.reason", doNotMockType.getReason())
+                : message("inspection.non.mockable.type.do.not.mock.no.reason"));
+        }
     }
 }
