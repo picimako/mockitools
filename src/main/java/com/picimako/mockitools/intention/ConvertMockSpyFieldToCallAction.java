@@ -5,6 +5,7 @@ package com.picimako.mockitools.intention;
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.intellij.openapi.application.ReadAction.runBlocking;
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
+import static com.intellij.util.containers.ContainerUtil.exists;
 import static com.picimako.mockitools.MockitoQualifiedNames.ANSWER;
 import static com.picimako.mockitools.MockitoQualifiedNames.DEFAULT_ANSWER;
 import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
@@ -97,9 +98,9 @@ final class ConvertMockSpyFieldToCallAction extends AnAction {
 
     private static Icon getIcon(PsiElement element) {
         var method = (PsiMethod) element;
-        if (BEFORE_ANNOTATIONS.stream().anyMatch(method::hasAnnotation))
+        if (exists(BEFORE_ANNOTATIONS, method::hasAnnotation))
             return AllIcons.Gutter.ExtAnnotation;
-        else if (TEST_ANNOTATIONS.stream().anyMatch(method::hasAnnotation))
+        else if (exists(TEST_ANNOTATIONS, method::hasAnnotation))
             return AllIcons.Actions.Execute;
         return element.getIcon(Iconable.ICON_FLAG_READ_STATUS);
     }

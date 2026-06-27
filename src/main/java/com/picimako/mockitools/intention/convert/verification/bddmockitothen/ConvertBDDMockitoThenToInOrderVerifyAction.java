@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 
+import static com.intellij.util.containers.ContainerUtil.map;
 import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectMockObjects;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
@@ -80,8 +81,7 @@ public class ConvertBDDMockitoThenToInOrderVerifyAction extends ConvertVerificat
      */
     private void convertWithinSelection(TriConsumer<PsiMethodCallExpression, List<PsiMethodCallExpression>, PsiMethodCallExpression> converter,
                                         List<PsiExpressionStatement> statementsInSelection) {
-        statementsInSelection.stream()
-            .map(this::getVerificationCall)
+        map(statementsInSelection, this::getVerificationCall)
             .forEach(bddMockitoThen -> {
                 var calls = collectCallsInChainFromFirst(bddMockitoThen, true);
                 converter.accept(bddMockitoThen, calls, /*should*/calls.get(1));

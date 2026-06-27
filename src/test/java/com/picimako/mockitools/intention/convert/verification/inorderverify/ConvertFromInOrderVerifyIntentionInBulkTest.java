@@ -2,7 +2,7 @@
 
 package com.picimako.mockitools.intention.convert.verification.inorderverify;
 
-import static java.util.stream.Collectors.toList;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
@@ -262,8 +262,10 @@ class ConvertFromInOrderVerifyIntentionInBulkTest extends EnforceConventionAware
                         <selection>inOrder.verify(mock).doSomething();</selection>
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(
             ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderAction.class,
@@ -286,8 +288,10 @@ class ConvertFromInOrderVerifyIntentionInBulkTest extends EnforceConventionAware
                         <selection>inOrder.verify(mock).doSomething();</selection>
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(ConvertInOrderVerifyToMockitoVerifyAction.class);
     }
@@ -306,8 +310,10 @@ class ConvertFromInOrderVerifyIntentionInBulkTest extends EnforceConventionAware
                         <selection>inOrder.verify(mock).doSomething();</selection>
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(
             ConvertInOrderVerifyToMockitoVerifyAction.class,
@@ -332,8 +338,10 @@ class ConvertFromInOrderVerifyIntentionInBulkTest extends EnforceConventionAware
                             <selection>mock.verify(List::of);</selection>
                         }    }
                 }""");
-        List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(ConvertInOrderVerifyToMockedStaticVerifyAction.class);
     }
@@ -352,8 +360,10 @@ class ConvertFromInOrderVerifyIntentionInBulkTest extends EnforceConventionAware
                             <selection>mock.verify(List::copyOf, Mockito.times(3));</selection>
                         }    }
                 }""");
-        List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(ConvertInOrderVerifyToMockedStaticVerifyAction.class);
     }

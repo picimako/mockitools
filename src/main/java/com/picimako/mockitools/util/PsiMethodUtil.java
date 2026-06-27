@@ -3,6 +3,7 @@
 package com.picimako.mockitools.util;
 
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import com.intellij.openapi.editor.Editor;
@@ -227,7 +228,7 @@ public final class PsiMethodUtil {
                 current = previousCall;
             } else break;
         }
-        return calls.stream().map(PsiMethodCallExpression.class::cast).toList();
+        return map(calls, PsiMethodCallExpression.class::cast);
     }
 
     public static List<PsiMethodCallExpression> collectCallsInChainFromFirst(PsiExpression expression, boolean includeMySelf) {

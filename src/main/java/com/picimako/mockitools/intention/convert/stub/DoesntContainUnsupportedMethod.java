@@ -2,12 +2,13 @@
 
 package com.picimako.mockitools.intention.convert.stub;
 
+import static com.picimako.mockitools.util.MockitoolsContainerUtil.none;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
-
-import java.util.List;
 
 import com.intellij.psi.PsiMethodCallExpression;
 import com.picimako.mockitools.CallChainAnalyzer;
+
+import java.util.List;
 
 /**
  * Analyzes a call chain whether it contains a call to the method with a predefined name.
@@ -22,6 +23,6 @@ public record DoesntContainUnsupportedMethod(String unsupportedMethodName) imple
 
     @Override
     public boolean analyze(List<PsiMethodCallExpression> calls) {
-        return calls.stream().noneMatch(call -> unsupportedMethodName.equals(getMethodName(call)));
+        return none(calls, call -> unsupportedMethodName.equals(getMethodName(call)));
     }
 }

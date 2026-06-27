@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools.dsl;
 
+import static com.intellij.util.containers.ContainerUtil.exists;
 import static com.picimako.mockitools.MockitoMockMatchers.MOCK_WITH_SETTINGS;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromLast;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
@@ -44,7 +45,7 @@ public final class MockSettings {
      * @param methodName   the MockSettings method name to look for
      */
     public static boolean hasCallTo(@NotNull PsiExpression mockSettings, @NotNull String methodName) {
-        return collectCallsInChainFromLast(mockSettings).stream().anyMatch(call -> methodName.equals(getMethodName(call)));
+        return exists(collectCallsInChainFromLast(mockSettings), call -> methodName.equals(getMethodName(call)));
     }
 
     private MockSettings() {

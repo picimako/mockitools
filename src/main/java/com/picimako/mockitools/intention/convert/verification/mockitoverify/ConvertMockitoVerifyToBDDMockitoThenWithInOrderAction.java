@@ -2,8 +2,9 @@
 
 package com.picimako.mockitools.intention.convert.verification.mockitoverify;
 
-import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectMockObjects;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
+import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectMockObjects;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
@@ -49,8 +50,7 @@ public final class ConvertMockitoVerifyToBDDMockitoThenWithInOrderAction extends
                                        List<PsiMethodCallExpression> callsInFirstVerification) {
         var inOrderVariable = createAndAddInOrderVariable(firstVerification, callsInFirstVerification, collectMockObjects(statementsInSelection));
 
-        statementsInSelection.stream()
-            .map(this::getVerificationCall)
+        map(statementsInSelection, this::getVerificationCall)
             .forEach(verify -> {
                 var calls = collectCallsInChainFromFirst(verify, true);
                 performAndCommitDocument(() -> performConversion(inOrderVariable, verify, calls));

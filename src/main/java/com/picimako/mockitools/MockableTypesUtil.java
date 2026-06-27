@@ -7,6 +7,7 @@ import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.intellij.psi.util.InheritanceUtil.getSuperClasses;
 import static com.intellij.psi.util.TypeConversionUtil.isPrimitive;
 import static com.intellij.psi.util.TypeConversionUtil.isPrimitiveWrapper;
+import static com.intellij.util.containers.ContainerUtil.exists;
 
 import com.intellij.psi.CommonClassNames;
 import com.intellij.psi.PsiAnnotation;
@@ -115,7 +116,7 @@ public final class MockableTypesUtil {
             PsiClass referencedClass = computeBlocking(classType::resolve);
             if (referencedClass != null) {
                 return getDoNotMockAnnotationOn(referencedClass) != null
-                    || computeBlocking(() -> getSuperClasses(referencedClass).stream().anyMatch(cls -> getDoNotMockAnnotationOn(cls) != null));
+                    || computeBlocking(() -> exists(getSuperClasses(referencedClass), cls -> getDoNotMockAnnotationOn(cls) != null));
             }
         }
         return false;

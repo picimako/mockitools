@@ -3,6 +3,7 @@
 package com.picimako.mockitools.intention;
 
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_SPY;
 import static com.picimako.mockitools.intention.ConvertMockSpyFieldToCallAction.introduceMockitoMockingCall;
@@ -96,7 +97,7 @@ final class ConvertMockSpyFieldToCallIntention implements IntentionAction {
         if (fwm.methodsInClass.length > 1) {
             showActionsInListPopup(
                 MockitoolsBundle.message("intention.convert.mocking.field.to.call.select.method"),
-                reOrder(fwm.methodsInClass).stream().map(method -> new ConvertMockSpyFieldToCallAction(fwm.field, method)).toList(),
+                map(reOrder(fwm.methodsInClass), method -> new ConvertMockSpyFieldToCallAction(fwm.field, method)),
                 editor);
         } else if (fwm.methodsInClass.length == 1) {
             introduceMockitoMockingCall(fwm.field, fwm.methodsInClass[0], file);

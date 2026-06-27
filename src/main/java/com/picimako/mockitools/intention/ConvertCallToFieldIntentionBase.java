@@ -3,6 +3,7 @@
 package com.picimako.mockitools.intention;
 
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
+import static com.intellij.util.containers.ContainerUtil.exists;
 import static com.picimako.mockitools.util.ClassObjectAccessUtil.resolveOperandType;
 import static com.picimako.mockitools.util.ListPopupHelper.selectItemAndRun;
 import static com.picimako.mockitools.util.PsiClassUtil.getParentClasses;
@@ -16,7 +17,6 @@ import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.ide.util.PsiClassListCellRenderer;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -149,7 +149,7 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
 
     protected void introduceField(ConversionContext ctx, Supplier<Couple<String>> typeAndFieldName, Supplier<String> initializer) {
         if (ctx.spyOrMockCall.getParent() instanceof PsiLocalVariable variable) {
-            var field = createField(ReadAction.computeBlocking(() -> variable.getType().getCanonicalText()), getLocalVariableName(variable), initializer, ctx);
+            var field = createField(computeBlocking(() -> variable.getType().getCanonicalText()), getLocalVariableName(variable), initializer, ctx);
             doIntroduceFieldForLocalVariable(ctx, field, variable);
         } else {
             var typeAndField = typeAndFieldName.get();
@@ -169,10 +169,10 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
      * Field rename is triggered only when there is already a field existing with the to be introduced field's name.
      */
     private void doIntroduceFieldForLocalVariable(ConversionContext ctx, PsiElement fieldToAdd, PsiLocalVariable variableDeclaration) {
-        boolean hasFieldWithSameNameAlready = Arrays.stream(ReadAction.computeBlocking(() -> ctx.targetClass.getFields())).anyMatch(f -> ((PsiField) fieldToAdd).getName().equals(f.getName()));
+        boolean hasFieldWithSameNameAlready = exists(computeBlocking(() -> ctx.targetClass.getFields()), f -> ((PsiField) fieldToAdd).getName().equals(f.getName()));
         if (hasFieldWithSameNameAlready && !ApplicationManager.getApplication().isUnitTestMode()) {
             //Moving the caret to the identifier is needed, so that rename doesn't run into an underlying NPE
-            ctx.editor.getCaretModel().moveToOffset(ReadAction.computeBlocking(() -> variableDeclaration.getNameIdentifier().getTextOffset()));
+            ctx.editor.getCaretModel().moveToOffset(computeBlocking(() -> variableDeclaration.getNameIdentifier().getTextOffset()));
             new VariableInplaceRenamer(variableDeclaration, ctx.editor, ctx.project) {
                 @Override
                 protected void moveOffsetAfter(boolean success) {
@@ -239,7 +239,7 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
      * </pre>
      */
     protected Couple<String> constructFieldTypeAndName(PsiJavaCodeReferenceElement classReference) {
-        return ReadAction.computeBlocking(() -> {
+        return computeBlocking(() -> {
             String fieldName = classReference.getTypeParameters().length == 0
                 ? classReference.getReferenceName()
                 : classReference.getReferenceName() + "<" + Arrays.stream(classReference.getTypeParameters()).map(PsiType::getCanonicalText).collect(joining(", ")) + ">";

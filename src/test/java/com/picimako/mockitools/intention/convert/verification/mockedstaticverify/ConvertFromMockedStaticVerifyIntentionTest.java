@@ -2,7 +2,7 @@
 
 package com.picimako.mockitools.intention.convert.verification.mockedstaticverify;
 
-import static java.util.stream.Collectors.toList;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
@@ -109,8 +109,10 @@ class ConvertFromMockedStaticVerifyIntentionTest extends EnforceConventionAwareI
                         Mockito.ve<caret>rify(Mockito.mock(Object.class)).doSomething();
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromMockedStaticVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromMockedStaticVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(ConvertMockedStaticVerifyToInOrderVerifyAction.class);
     }

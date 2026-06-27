@@ -5,11 +5,13 @@ package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
+import static com.intellij.util.containers.ContainerUtil.all;
 import static com.picimako.mockitools.EnforceConventionUtil.isBDDMockitoEnforced;
 import static com.picimako.mockitools.EnforceConventionUtil.isMockitoEnforced;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
 import static com.picimako.mockitools.VerificationApproach.BDDMOCKITO_THEN_SHOULD;
 import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
+import static com.picimako.mockitools.util.MockitoolsContainerUtil.none;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;
 import static com.picimako.mockitools.util.PsiMethodUtil.getSubsequentMethodCall;
 
@@ -68,7 +70,7 @@ final class ConvertFromBDDMockitoThenIntention extends ConvertVerificationIntent
             if (!isBulkMode) actions.add(new ConvertBDDMockitoThenToInOrderVerifyAction(false));
             else {
                 var shoulds = collectShouldCalls(editor, file);
-                boolean areAllVerificationsWithoutInOrder = shoulds.stream().noneMatch(BDDMOCKITO_THEN_SHOULD::isInOrderSpecific);
+                boolean areAllVerificationsWithoutInOrder = none(shoulds, BDDMOCKITO_THEN_SHOULD::isInOrderSpecific);
 
                 //In bulk mode, we only allow conversion if either none of the should() calls use an IrOrder variable,
                 // or all of them use the same one.
@@ -97,7 +99,7 @@ final class ConvertFromBDDMockitoThenIntention extends ConvertVerificationIntent
     }
 
     private boolean areAllVerificationsWithInOrder(List<PsiMethodCallExpression> shoulds) {
-        return shoulds.stream().allMatch(BDDMOCKITO_THEN_SHOULD::isInOrderSpecific);
+        return all(shoulds, BDDMOCKITO_THEN_SHOULD::isInOrderSpecific);
     }
 
     private boolean areAllVerificationsUsingSameInOrder(List<PsiMethodCallExpression> shoulds) {

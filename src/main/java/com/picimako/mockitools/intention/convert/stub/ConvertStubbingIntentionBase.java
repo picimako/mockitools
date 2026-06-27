@@ -3,6 +3,8 @@
 package com.picimako.mockitools.intention.convert.stub;
 
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
+import static com.intellij.util.containers.ContainerUtil.exists;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;
@@ -68,10 +70,10 @@ public abstract class ConvertStubbingIntentionBase extends ConversionIntentionBa
     }
 
     protected boolean doAllCallChainsMatch(CallChainAnalyzer analyzer, boolean isBulkMode, Editor editor, PsiFile file) {
-        if (isBulkMode)
-            return collectStatementsInSelection(editor, file).stream()
-                .map(ConvertStubbingAction::getFirstCallInChain)
-                .allMatch(firstCall -> isCallChainMatch(firstCall, analyzer));
+        if (isBulkMode) {
+            var firstCallsInSelectedStatements = map(collectStatementsInSelection(editor, file), ConvertStubbingAction::getFirstCallInChain);
+            return exists(firstCallsInSelectedStatements, firstCall -> isCallChainMatch(firstCall, analyzer));
+        }
         else return isCallChainMatch(getMethodCallAtCaret(file, editor), analyzer);
     }
 

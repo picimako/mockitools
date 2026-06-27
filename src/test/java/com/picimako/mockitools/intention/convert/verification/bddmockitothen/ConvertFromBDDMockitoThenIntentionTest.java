@@ -2,7 +2,7 @@
 
 package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 
-import static java.util.stream.Collectors.toList;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
@@ -180,8 +180,10 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
                         BDDMockito.th<caret>en(Mockito.mock(Object.class)).should().doSomething();
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(AddInOrderToBDDMockitoAction.class);
     }
@@ -200,8 +202,10 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
                         BDDMockito.th<caret>en(mock).should(Mockito.inOrder(mock)).doSomething();
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(NoActionAvailableAction.class);
     }
@@ -220,8 +224,10 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
                         BDDMockito.then(Mockito.mock(Object.class)).should().doSomething();</selection>
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(AddInOrderToBDDMockitoAction.class);
     }
@@ -239,8 +245,10 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
                         BDDMockito.th<caret>en(Mockito.mock(Object.class)).should().doSomething();
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(
             ConvertBDDMockitoThenToMockitoVerifyAction.class,
@@ -261,8 +269,10 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
                         BDDMockito.th<caret>en(mock).should(Mockito.inOrder(mock)).doSomething();
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(
             ConvertBDDMockitoThenToMockitoVerifyAction.class,
@@ -282,8 +292,10 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
                         BDDMockito.th<caret>en(Mockito.mock(Object.class)).should().doSomething();
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(
             ConvertBDDMockitoThenToMockitoVerifyAction.class,
@@ -305,8 +317,10 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
                         BDDMockito.th<caret>en(mock).should(Mockito.inOrder(mock)).doSomething();
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(
             ConvertBDDMockitoThenToMockitoVerifyAction.class,
@@ -327,8 +341,10 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
                         BDDMockito.then(Mockito.mock(Object.class)).should().doSomething();</selection>
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(
             ConvertBDDMockitoThenToMockitoVerifyAction.class,
