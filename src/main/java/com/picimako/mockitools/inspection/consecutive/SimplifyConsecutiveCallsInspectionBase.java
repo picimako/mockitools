@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools.inspection.consecutive;
 
+import static com.intellij.util.containers.ContainerUtil.find;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
@@ -34,10 +35,8 @@ abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsBaseInsp
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
-        analyzers().stream()
-            .filter(analyzer -> analyzer.canAnalyze(expression))
-            .findFirst()
-            .ifPresent(analyzer -> checkCallChainAndRegister(analyzer, expression, holder));
+        var firstAnalyzer = find(analyzers(), analyzer -> analyzer.canAnalyze(expression));
+        if (firstAnalyzer != null) checkCallChainAndRegister(firstAnalyzer, expression, holder);
     }
 
     /**
