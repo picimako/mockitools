@@ -1,13 +1,13 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.stubbing;
 
+import static com.intellij.util.containers.ContainerUtil.filter;
 import static com.picimako.mockitools.StubbingApproach.BDDMOCKITO_WILL_X;
 import static com.picimako.mockitools.StubbingApproach.MOCKITO_DO_X;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
-import static java.util.stream.Collectors.toSet;
 
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiCall;
@@ -20,6 +20,7 @@ import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -69,7 +70,7 @@ final class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBase
      * @param calls      the stubbing call chain
      */
     private static Set<PsiMethodCallExpression> findMethodCalls(@NotNull String methodName, List<PsiMethodCallExpression> calls) {
-        return calls.stream().filter(call -> methodName.equals(getMethodName(call))).collect(toSet());
+        return new HashSet<>(filter(calls, call -> methodName.equals(getMethodName(call))));
     }
 
     /**

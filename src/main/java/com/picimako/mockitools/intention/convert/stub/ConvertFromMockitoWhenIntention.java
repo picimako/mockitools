@@ -1,7 +1,8 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.stub;
 
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.picimako.mockitools.EnforceConventionUtil.isBDDMockitoEnforced;
 import static com.picimako.mockitools.EnforceConventionUtil.isMockitoEnforced;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
@@ -9,7 +10,6 @@ import static com.picimako.mockitools.StubbingApproach.MOCKITO_WHEN;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_THEN;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
@@ -39,7 +39,7 @@ final class ConvertFromMockitoWhenIntention extends ConvertStubbingIntentionBase
 
     @Override
     public List<AnAction> actionSelectionOptions(Editor editor, PsiFile file) {
-        boolean isBulkMode = ReadAction.compute(() -> editor.getSelectionModel().hasSelection());
+        boolean isBulkMode = computeBlocking(() -> editor.getSelectionModel().hasSelection());
         var actions = new ArrayList<AnAction>(3);
         if (!isBDDMockitoEnforced(file) && doAllCallChainsMatch(DOESNT_CONTAIN_THEN, isBulkMode, editor, file)) {
             addConversion(actions, StubbingApproach.MOCKITO_DO_X, isBulkMode);

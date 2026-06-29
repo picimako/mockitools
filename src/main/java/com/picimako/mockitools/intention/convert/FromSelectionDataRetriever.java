@@ -1,8 +1,8 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getNextSiblingOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
@@ -29,7 +29,7 @@ import java.util.List;
 public final class FromSelectionDataRetriever {
 
     public static int selectionLengthIn(SelectionModel model) {
-        return compute(() -> model.getSelectionEnd() - model.getSelectionStart());
+        return computeBlocking(() -> model.getSelectionEnd() - model.getSelectionStart());
     }
 
     /**
@@ -37,7 +37,7 @@ public final class FromSelectionDataRetriever {
      */
     @NotNull
     public static List<PsiExpressionStatement> collectStatementsInSelection(Editor editor, PsiFile file) {
-        return compute(() -> {
+        return computeBlocking(() -> {
             var statements = new SmartList<PsiExpressionStatement>();
             var statement = findFirstSelectedStatement(editor, file);
             while (isWithinSelection(statement, editor)) {
@@ -56,7 +56,7 @@ public final class FromSelectionDataRetriever {
      */
     @Nullable
     private static PsiExpressionStatement findFirstSelectedStatement(Editor editor, PsiFile file) {
-        return compute(() -> {
+        return computeBlocking(() -> {
             var elementAtStart = file.findElementAt(editor.getSelectionModel().getSelectionStart());
             if (elementAtStart instanceof PsiIdentifier)
                 return getParentOfType(elementAtStart, PsiExpressionStatement.class);

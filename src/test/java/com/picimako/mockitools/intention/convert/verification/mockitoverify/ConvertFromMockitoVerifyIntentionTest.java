@@ -1,8 +1,8 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.verification.mockitoverify;
 
-import static java.util.stream.Collectors.toList;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
@@ -151,8 +151,10 @@ class ConvertFromMockitoVerifyIntentionTest extends EnforceConventionAwareIntent
                         Mockito.ve<caret>rify(Mockito.mock(Object.class)).doSomething();
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromMockitoVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromMockitoVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(ConvertMockitoVerifyToInOrderVerifyAction.class);
     }
@@ -169,8 +171,10 @@ class ConvertFromMockitoVerifyIntentionTest extends EnforceConventionAwareIntent
                         Mockito.ve<caret>rify(Mockito.mock(Object.class)).doSomething();
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromMockitoVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromMockitoVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(
             ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderAction.class,
@@ -189,8 +193,10 @@ class ConvertFromMockitoVerifyIntentionTest extends EnforceConventionAwareIntent
                         Mockito.ve<caret>rify(Mockito.mock(Object.class)).doSomething();
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromMockitoVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromMockitoVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(
             ConvertMockitoVerifyToInOrderVerifyAction.class,

@@ -1,11 +1,9 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.framework;
 
+import static com.intellij.util.containers.ContainerUtil.exists;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_NOT_EXTENSIBLE;
-
-import java.util.Arrays;
-import java.util.Optional;
 
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.LocalInspectionToolSession;
@@ -15,9 +13,10 @@ import com.intellij.psi.PsiAnonymousClass;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiTypeParameter;
+import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
-import com.picimako.mockitools.resources.MockitoolsBundle;
+import java.util.Optional;
 
 /**
  * Reports any types of classes or interfaces that extend a class or at least one interface annotated as Mockito's {@code NotExtensible} annotation.
@@ -44,8 +43,11 @@ final class NotExtensibleClassInspection extends LocalInspectionTool {
                     return;
                 }
                 if (aClass.isInterface()) {
-                    if (Arrays.stream(aClass.getExtendsListTypes())
-                        .anyMatch(superInterface -> Optional.ofNullable(superInterface.resolve()).map(i -> i.hasAnnotation(ORG_MOCKITO_NOT_EXTENSIBLE)).orElse(false))) {
+                    var isAnySuperInterfaceHasNotExtensible = exists(
+                        aClass.getExtendsListTypes(),
+                        superInterface -> Optional.ofNullable(superInterface.resolve()).map(i -> i.hasAnnotation(ORG_MOCKITO_NOT_EXTENSIBLE)).orElse(false));
+
+                    if (isAnySuperInterfaceHasNotExtensible) {
                         //at this point the name identifier should not be null
                         holder.registerProblem(aClass.getNameIdentifier(), MockitoolsBundle.message("inspection.interface.extends.not.extensible"));
                     }

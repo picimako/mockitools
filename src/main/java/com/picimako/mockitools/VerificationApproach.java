@@ -1,8 +1,8 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO_THEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
@@ -72,18 +72,18 @@ public enum VerificationApproach {
 
         @Override
         public boolean isVerifiedBy(PsiMethodCallExpression expression) {
-            return compute(() -> BDDMOCKITO_THEN.matches(expression));
+            return computeBlocking(() -> BDDMOCKITO_THEN.matches(expression));
         }
 
         @Override
         public boolean isValid(PsiMethodCallExpression verificationCall) {
             var should = getSubsequentMethodCall(verificationCall);
-            return compute(() -> THEN_SHOULD.matches(should) && hasSubsequentMethodCall(should));
+            return computeBlocking(() -> THEN_SHOULD.matches(should) && hasSubsequentMethodCall(should));
         }
 
         @Override
         public boolean isInOrderSpecific(PsiMethodCallExpression should) {
-            return compute(() -> THEN_SHOULD_WITH_INORDER.matches(should) && !THEN_SHOULD_WITHOUT_INORDER.matches(should));
+            return computeBlocking(() -> THEN_SHOULD_WITH_INORDER.matches(should) && !THEN_SHOULD_WITHOUT_INORDER.matches(should));
         }
 
         @Override
@@ -94,7 +94,7 @@ public enum VerificationApproach {
     INORDER_VERIFY("InOrder.verify()") {
         @Override
         public boolean isVerifiedBy(PsiMethodCallExpression expression) {
-            return compute(() -> EnforceConventionInspection.IN_ORDER_VERIFY_NON_MOCKED_STATIC.matches(expression));
+            return computeBlocking(() -> EnforceConventionInspection.IN_ORDER_VERIFY_NON_MOCKED_STATIC.matches(expression));
         }
 
         @Override
@@ -119,7 +119,7 @@ public enum VerificationApproach {
 
         @Override
         public boolean isVerifiedBy(PsiMethodCallExpression expression) {
-            return compute(() -> IN_ORDER_VERIFY_MOCKED_STATIC.matches(expression));
+            return computeBlocking(() -> IN_ORDER_VERIFY_MOCKED_STATIC.matches(expression));
         }
 
         @Override
@@ -141,7 +141,7 @@ public enum VerificationApproach {
 
         @Override
         public boolean isVerifiedBy(PsiMethodCallExpression expression) {
-            return compute(() -> MOCKED_STATIC_VERIFY.matches(expression));
+            return computeBlocking(() -> MOCKED_STATIC_VERIFY.matches(expression));
         }
 
         @Override

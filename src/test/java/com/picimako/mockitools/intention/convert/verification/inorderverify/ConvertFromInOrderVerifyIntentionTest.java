@@ -1,8 +1,8 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.verification.inorderverify;
 
-import static java.util.stream.Collectors.toList;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
@@ -165,8 +165,10 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
                         inOrder.ve<caret>rify(mock).doSomething();
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(
             ConvertInOrderVerifyToBDDMockitoThenWithoutInOrderAction.class,
@@ -189,8 +191,10 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
                         inOrder.ve<caret>rify(mock).doSomething();
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(ConvertInOrderVerifyToMockitoVerifyAction.class);
     }
@@ -209,8 +213,10 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
                         inOrder.ve<caret>rify(mock).doSomething();
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(
             ConvertInOrderVerifyToMockitoVerifyAction.class,
@@ -235,8 +241,10 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
                             mock.ve<caret>rify(List::of);
                         }    }
                 }""");
-        List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(ConvertInOrderVerifyToMockedStaticVerifyAction.class);
     }
@@ -255,8 +263,10 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
                             mock.ver<caret>ify(List::copyOf, Mockito.times(3));
                         }    }
                 }""");
-        List<Class<?>> actions = new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(ConvertInOrderVerifyToMockedStaticVerifyAction.class);
     }

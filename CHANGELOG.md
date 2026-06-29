@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+## [1.7.0]
+### Changed
+- New supported IDE version range: 2026.1 and later.
+- Various minor improvements and removal of deprecated API usage.
+
 ## [1.6.0]
 ### Changed
 - Removed the until-build version, so that the plugin potentially will need less new releases when

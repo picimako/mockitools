@@ -1,15 +1,17 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
+import static com.intellij.util.containers.ContainerUtil.all;
 import static com.picimako.mockitools.EnforceConventionUtil.isBDDMockitoEnforced;
 import static com.picimako.mockitools.EnforceConventionUtil.isMockitoEnforced;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
 import static com.picimako.mockitools.VerificationApproach.BDDMOCKITO_THEN_SHOULD;
 import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
+import static com.picimako.mockitools.util.MockitoolsContainerUtil.none;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;
 import static com.picimako.mockitools.util.PsiMethodUtil.getSubsequentMethodCall;
 
@@ -51,14 +53,14 @@ final class ConvertFromBDDMockitoThenIntention extends ConvertVerificationIntent
 
     @Override
     protected boolean isQualifierHaveCorrectType(PsiExpression qualifier) {
-        return compute(() -> qualifier instanceof PsiReferenceExpression qualifierAsRef
-                             && qualifierAsRef.resolve() instanceof PsiClass qualifierClass
-                             && ORG_MOCKITO_BDDMOCKITO.equals(qualifierClass.getQualifiedName()));
+        return computeBlocking(() -> qualifier instanceof PsiReferenceExpression qualifierAsRef
+            && qualifierAsRef.resolve() instanceof PsiClass qualifierClass
+            && ORG_MOCKITO_BDDMOCKITO.equals(qualifierClass.getQualifiedName()));
     }
 
     @Override
     public List<AnAction> actionSelectionOptions(Editor editor, PsiFile file) {
-        boolean isBulkMode = compute(() -> editor.getSelectionModel().hasSelection());
+        boolean isBulkMode = computeBlocking(() -> editor.getSelectionModel().hasSelection());
         var actions = new ArrayList<AnAction>(3);
 
         if (!isBDDMockitoEnforced(file)) {
@@ -68,7 +70,7 @@ final class ConvertFromBDDMockitoThenIntention extends ConvertVerificationIntent
             if (!isBulkMode) actions.add(new ConvertBDDMockitoThenToInOrderVerifyAction(false));
             else {
                 var shoulds = collectShouldCalls(editor, file);
-                boolean areAllVerificationsWithoutInOrder = shoulds.stream().noneMatch(BDDMOCKITO_THEN_SHOULD::isInOrderSpecific);
+                boolean areAllVerificationsWithoutInOrder = none(shoulds, BDDMOCKITO_THEN_SHOULD::isInOrderSpecific);
 
                 //In bulk mode, we only allow conversion if either none of the should() calls use an IrOrder variable,
                 // or all of them use the same one.
@@ -89,7 +91,7 @@ final class ConvertFromBDDMockitoThenIntention extends ConvertVerificationIntent
 
     @NotNull
     private List<PsiMethodCallExpression> collectShouldCalls(Editor editor, PsiFile file) {
-        return compute(() -> collectStatementsInSelection(editor, file).stream()
+        return computeBlocking(() -> collectStatementsInSelection(editor, file).stream()
             .map(statement -> findChildOfType(statement, PsiIdentifier.class))
             .map(identifier -> getParentOfType(identifier, PsiMethodCallExpression.class))
             .map(PsiMethodUtil::getSubsequentMethodCall)
@@ -97,11 +99,11 @@ final class ConvertFromBDDMockitoThenIntention extends ConvertVerificationIntent
     }
 
     private boolean areAllVerificationsWithInOrder(List<PsiMethodCallExpression> shoulds) {
-        return shoulds.stream().allMatch(BDDMOCKITO_THEN_SHOULD::isInOrderSpecific);
+        return all(shoulds, BDDMOCKITO_THEN_SHOULD::isInOrderSpecific);
     }
 
     private boolean areAllVerificationsUsingSameInOrder(List<PsiMethodCallExpression> shoulds) {
-        return shoulds.stream().map(PsiMethodUtil::getFirstArgument).map(arg -> compute(arg::getText)).distinct().count() == 1;
+        return shoulds.stream().map(PsiMethodUtil::getFirstArgument).map(arg -> computeBlocking(arg::getText)).distinct().count() == 1;
     }
 
     /**
@@ -110,7 +112,7 @@ final class ConvertFromBDDMockitoThenIntention extends ConvertVerificationIntent
      */
     private boolean areAllVerificationsWithoutInOrder(Editor editor, PsiFile file, boolean isBulkMode) {
         return !isBulkMode
-               ? !BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(getSubsequentMethodCall(getMethodCallAtCaret(file, editor)))
-               : collectShouldCalls(editor, file).stream().noneMatch(BDDMOCKITO_THEN_SHOULD::isInOrderSpecific);
+            ? !BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(getSubsequentMethodCall(getMethodCallAtCaret(file, editor)))
+            : none(collectShouldCalls(editor, file), BDDMOCKITO_THEN_SHOULD::isInOrderSpecific);
     }
 }

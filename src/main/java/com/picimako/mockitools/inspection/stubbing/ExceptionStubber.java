@@ -1,12 +1,12 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.inspection.stubbing;
 
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.siyeh.ig.callMatcher.CallMatcher.anyOf;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.Nullable;
@@ -36,7 +36,7 @@ public final class ExceptionStubber {
     }
 
     public boolean isApplicableTo(PsiMethodCallExpression call) {
-        return ReadAction.compute(() -> matcher.matches(call));
+        return computeBlocking(() -> matcher.matches(call));
     }
 
     /**

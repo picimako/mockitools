@@ -1,10 +1,10 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention;
 
 import static com.google.common.collect.Iterables.getLast;
-import static com.intellij.openapi.application.ReadAction.compute;
-import static com.intellij.openapi.application.ReadAction.run;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
+import static com.intellij.openapi.application.ReadAction.runBlocking;
 import static com.picimako.mockitools.MockableTypesUtil.isMockableTypeInAnyWay;
 import static com.picimako.mockitools.MockitoMockMatchers.MOCK_WITH_ANSWER;
 import static com.picimako.mockitools.MockitoMockMatchers.MOCK_WITH_NAME;
@@ -124,7 +124,7 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
         return getMethodCallAtCaretOrEmpty(file, editor)
             .filter(call -> MockitoQualifiedNames.MOCK.equals(getMethodName(call)))
-            .map(call -> compute(() -> {
+            .map(call -> computeBlocking(() -> {
                 var mockTypeArg = getFirstArgument(call);
                 //Mockito.mock(<type>, ...)
                 if (mockTypeArg != null) {
@@ -140,9 +140,9 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
                 else {
                     var parentVariable = PsiTreeUtil.getParentOfType(call, PsiLocalVariable.class);
                     return parentVariable != null
-                           //SomeObject someVariable = ...;
-                           && !parentVariable.getTypeElement().isInferredType()
-                           && isMockableTypeInAnyWay(parentVariable.getType());
+                        //SomeObject someVariable = ...;
+                        && !parentVariable.getTypeElement().isInferredType()
+                        && isMockableTypeInAnyWay(parentVariable.getType());
                 }
                 return false;
             }))
@@ -177,7 +177,7 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
     @Override
     protected PsiElement createField(String fieldType, String fieldName, Supplier<String> initializer, ConversionContext ctx) {
         String mockFieldText = "@" + MockitoQualifiedNames.ORG_MOCKITO_MOCK + " " + fieldType + " " + fieldName + ";";
-        PsiField mockField = (PsiField) compute(() -> JavaCodeStyleManager.getInstance(ctx.project)
+        PsiField mockField = (PsiField) computeBlocking(() -> JavaCodeStyleManager.getInstance(ctx.project)
             .shortenClassReferences(JavaPsiFacade.getElementFactory(ctx.project).createFieldFromText(mockFieldText, ctx.targetClass)));
 
         if (hasTwoArguments(ctx.spyOrMockCall)) setMockAnnotationAttributes(mockField, ctx);
@@ -195,7 +195,7 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
      * </pre>
      */
     private void setMockAnnotationAttributes(PsiField field, ConversionContext ctx) {
-        run(() -> {
+        runBlocking(() -> {
             var configArg = get2ndArgument(ctx.spyOrMockCall);
             var configurer = new MockSettingsBasedAnnotationConfigurer(ctx.project, field.getAnnotation(ORG_MOCKITO_MOCK));
 
@@ -233,7 +233,7 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
      * Returns whether the argument Answer expression is a reference to {@code org.mockito.Answers.RETURNS_DEFAULTS}.
      */
     public static boolean isDefaultAnswer(PsiExpression answer) {
-        return answer instanceof PsiReferenceExpression answerExpr && isAnswersReturnDefaults(compute(answerExpr::resolve));
+        return answer instanceof PsiReferenceExpression answerExpr && isAnswersReturnDefaults(computeBlocking(answerExpr::resolve));
     }
 
     private static boolean isAnswersReturnDefaults(PsiElement element) {
@@ -274,7 +274,7 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
             if (arguments.length == 1) {
                 setDeclaredAttributeValue(EXTRA_INTERFACES, attributeValue(arguments[0].getText()));
             } else {
-                String interfaces = Arrays.stream(arguments).map(arg -> compute(arg::getText)).collect(joining(","));
+                String interfaces = Arrays.stream(arguments).map(arg -> computeBlocking(arg::getText)).collect(joining(","));
                 setDeclaredAttributeValue(EXTRA_INTERFACES, attributeValue("{" + interfaces + "}"));
             }
         }
@@ -283,7 +283,7 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
             var strictnessArg = getFirstArgument(call);
             //null value passed into MockSettings.strictness() is not handled since it is invalid anyway.
             if (strictnessArg instanceof PsiReferenceExpression strictnessExpr
-                && compute(strictnessExpr::resolve) instanceof PsiEnumConstant strictness) {
+                && computeBlocking(strictnessExpr::resolve) instanceof PsiEnumConstant strictness) {
                 PsiClassUtil.importClass("org.mockito.Mock.Strictness", mockAnnotation);
                 setDeclaredAttributeValue(STRICTNESS, attributeValue("Mock.Strictness." + strictness.getName()));
             }
@@ -295,11 +295,11 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
 
         @NotNull
         private PsiExpression attributeValue(String text) {
-            return compute(() -> JavaPsiFacade.getElementFactory(project).createExpressionFromText(text, mockAnnotation));
+            return computeBlocking(() -> JavaPsiFacade.getElementFactory(project).createExpressionFromText(text, mockAnnotation));
         }
 
         private void setDeclaredAttributeValue(String attributeName, PsiExpression value) {
-            run(() -> mockAnnotation.setDeclaredAttributeValue(attributeName, value));
+            runBlocking(() -> mockAnnotation.setDeclaredAttributeValue(attributeName, value));
         }
     }
 }

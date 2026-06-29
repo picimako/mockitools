@@ -1,8 +1,8 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 
-import static java.util.stream.Collectors.toList;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
@@ -257,9 +257,10 @@ class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConventionAwar
                         }
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
-
+        List<Class<?>> actions = map(
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
         assertThat(actions).containsExactly(
             ConvertBDDMockitoThenToMockitoVerifyAction.class,
             ConvertBDDMockitoThenToInOrderVerifyAction.class,
@@ -286,8 +287,10 @@ class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConventionAwar
                         }
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(
             ConvertBDDMockitoThenToMockitoVerifyAction.class,
@@ -314,8 +317,10 @@ class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConventionAwar
                         }
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(ConvertBDDMockitoThenToMockitoVerifyAction.class);
     }
@@ -341,8 +346,10 @@ class ConvertFromBDDMockitoThenIntentionInBulkTest extends EnforceConventionAwar
                         }
                     }
                 }""");
-        List<Class<?>> actions = new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream().map(Object::getClass).collect(toList());
+        List<Class<?>> actions = map(
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            Object::getClass
+        );
 
         assertThat(actions).containsExactly(ConvertBDDMockitoThenToMockitoVerifyAction.class);
     }

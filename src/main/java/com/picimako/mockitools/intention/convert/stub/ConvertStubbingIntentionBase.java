@@ -1,8 +1,10 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.stub;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
+import static com.intellij.util.containers.ContainerUtil.exists;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;
@@ -62,16 +64,16 @@ public abstract class ConvertStubbingIntentionBase extends ConversionIntentionBa
      */
     @Override
     protected boolean isQualifierHaveCorrectType(PsiExpression qualifier) {
-        return compute(() -> qualifier instanceof PsiReferenceExpression qualifierAsRef
-                             && qualifierAsRef.resolve() instanceof PsiClass qualifierClass
-                             && qualifierType.equals(qualifierClass.getQualifiedName()));
+        return computeBlocking(() -> qualifier instanceof PsiReferenceExpression qualifierAsRef
+            && qualifierAsRef.resolve() instanceof PsiClass qualifierClass
+            && qualifierType.equals(qualifierClass.getQualifiedName()));
     }
 
     protected boolean doAllCallChainsMatch(CallChainAnalyzer analyzer, boolean isBulkMode, Editor editor, PsiFile file) {
-        if (isBulkMode)
-            return collectStatementsInSelection(editor, file).stream()
-                .map(ConvertStubbingAction::getFirstCallInChain)
-                .allMatch(firstCall -> isCallChainMatch(firstCall, analyzer));
+        if (isBulkMode) {
+            var firstCallsInSelectedStatements = map(collectStatementsInSelection(editor, file), ConvertStubbingAction::getFirstCallInChain);
+            return exists(firstCallsInSelectedStatements, firstCall -> isCallChainMatch(firstCall, analyzer));
+        }
         else return isCallChainMatch(getMethodCallAtCaret(file, editor), analyzer);
     }
 

@@ -1,8 +1,8 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.mocking;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 import static com.picimako.mockitools.MockitoMockMatchers.MOCKITO_SPY_T;
 import static com.picimako.mockitools.MockitoMockMatchers.MOCK_WITH_ANSWER;
@@ -12,8 +12,6 @@ import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaretOrEmpty;
 import static com.picimako.mockitools.util.PsiMethodUtil.hasArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.hasTwoArguments;
-
-import java.util.function.Supplier;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.util.IntentionFamilyName;
@@ -30,6 +28,8 @@ import com.intellij.util.IncorrectOperationException;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 /**
  * This intention action converts certain mock/spy creation calls to use concrete {@code MockSettings}
@@ -58,7 +58,7 @@ final class ExpandMockCreationIntention implements IntentionAction {
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
         return getMethodCallAtCaretOrEmpty(file, editor)
-            .map(call -> compute(() -> {
+            .map(call -> computeBlocking(() -> {
                 if (MOCKITO_SPY_T.matches(call)) return hasArgument(call);
                 if (MOCK_WITH_NAME.matches(call) || MOCK_WITH_ANSWER.matches(call))
                     return hasTwoArguments(call);
@@ -72,7 +72,7 @@ final class ExpandMockCreationIntention implements IntentionAction {
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
         getMethodCallAtCaretOrEmpty(file, editor).ifPresent(call -> {
             //Mockito.spy(spiedInstance) -> Mockito.mock(<raw type of spiedInstance>, withSettings().spiedInstance(spiedInstance))
-            if (compute(() -> MOCKITO_SPY_T.matches(call))) {
+            if (computeBlocking(() -> MOCKITO_SPY_T.matches(call))) {
                 expand(call, project, () -> {
                     var spiedInstance = getFirstArgument(call);
                     return String.format(
@@ -81,13 +81,13 @@ final class ExpandMockCreationIntention implements IntentionAction {
                 });
             }
             //Mockito.mock(<type>.class, <name>) -> Mockito.mock(<type>.class, withSettings().name(<name>))
-            else if (compute(() -> MOCK_WITH_NAME.matches(call))) {
+            else if (computeBlocking(() -> MOCK_WITH_NAME.matches(call))) {
                 expand(call, project, () -> String.format(
                     "org.mockito.Mockito.mock(%s, org.mockito.Mockito.withSettings().name(%s))",
                     getFirstArgument(call).getText(), get2ndArgument(call).getText()));
             }
             //Mockito.mock(<type>.class, <answer>) -> Mockito.mock(<type>.class, withSettings().defaultAnswer(<answer>))
-            else if (compute(() -> MOCK_WITH_ANSWER.matches(call))) {
+            else if (computeBlocking(() -> MOCK_WITH_ANSWER.matches(call))) {
                 expand(call, project, () -> String.format(
                     "org.mockito.Mockito.mock(%s, org.mockito.Mockito.withSettings().defaultAnswer(%s))",
                     getFirstArgument(call).getText(), get2ndArgument(call).getText()));

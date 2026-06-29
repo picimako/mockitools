@@ -1,4 +1,4 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 
@@ -36,7 +36,7 @@ public class AddInOrderToBDDMockitoAction extends ConvertVerificationActionBase 
         super(MockitoolsBundle.message("intention.convert.verification.bddmockito.with.inorder"), isBulkMode);
     }
 
-    //Caret based conversion
+    //Caret-based conversion
 
     @Override
     protected void perform(PsiMethodCallExpression bddMockitoThen, Project project) {
@@ -48,7 +48,7 @@ public class AddInOrderToBDDMockitoAction extends ConvertVerificationActionBase 
         MemberInplaceRenameHelper.rename(inOrderVariable.getFirstChild(), editor);
     }
 
-    //Selection based conversion
+    //Selection-based conversion
 
     @Override
     protected void performActionInBulk(List<PsiExpressionStatement> statementsInSelection,

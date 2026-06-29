@@ -1,8 +1,9 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_SPY;
 import static com.picimako.mockitools.intention.ConvertMockSpyFieldToCallAction.introduceMockitoMockingCall;
@@ -19,6 +20,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
+import com.intellij.psi.PsiMethod;
 import com.intellij.util.IncorrectOperationException;
 import com.picimako.mockitools.MockitoQualifiedNames;
 import com.picimako.mockitools.resources.MockitoolsBundle;
@@ -61,7 +63,7 @@ final class ConvertMockSpyFieldToCallIntention implements IntentionAction {
 
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-        return compute(() -> {
+        return computeBlocking(() -> {
             final var element = file.findElementAt(editor.getCaretModel().getOffset());
             //If the caret is at a field identifier and the parent class has at least one method
             if (isIdentifierOfField(element)) {
@@ -87,25 +89,29 @@ final class ConvertMockSpyFieldToCallIntention implements IntentionAction {
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        final var element = file.findElementAt(compute(() -> editor.getCaretModel().getOffset()));
-        var field = (PsiField) compute(element::getParent);
-        var methodsInClass = compute(() -> ((PsiClass) field.getParent()).getMethods());
-        if (methodsInClass.length > 1) {
+        var fwm = computeBlocking(() -> {
+            final var element = file.findElementAt(editor.getCaretModel().getOffset());
+            var field = (PsiField) element.getParent();
+            return new FieldWithMethodsInClass(field, ((PsiClass) field.getParent()).getMethods());
+        });
+        if (fwm.methodsInClass.length > 1) {
             showActionsInListPopup(
                 MockitoolsBundle.message("intention.convert.mocking.field.to.call.select.method"),
-                reOrder(methodsInClass).stream().map(method -> new ConvertMockSpyFieldToCallAction(field, method)).toList(),
+                map(reOrder(fwm.methodsInClass), method -> new ConvertMockSpyFieldToCallAction(fwm.field, method)),
                 editor);
-        } else if (methodsInClass.length == 1) {
-            introduceMockitoMockingCall(field, methodsInClass[0], file);
+        } else if (fwm.methodsInClass.length == 1) {
+            introduceMockitoMockingCall(fwm.field, fwm.methodsInClass[0], file);
         }
     }
 
     private boolean isIdentifierOfField(PsiElement element) {
-        return element instanceof PsiIdentifier && compute(element::getParent) instanceof PsiField;
+        return element instanceof PsiIdentifier && computeBlocking(element::getParent) instanceof PsiField;
     }
 
     @Override
     public boolean startInWriteAction() {
         return false;
     }
+
+    private record FieldWithMethodsInClass(PsiField field, PsiMethod[] methodsInClass) { }
 }

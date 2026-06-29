@@ -1,8 +1,8 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.dsl;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.psi.PsiAnnotation;
@@ -26,7 +26,7 @@ public final class MockAnnotation {
      * @param attributeName  the name of a boolean-value attribute on the @Mock annotation.
      */
     public static boolean isAttributeEnabledOnMockAnnotation(PsiAnnotation mockAnnotation, String attributeName) {
-        Boolean attributeValue = compute(() -> AnnotationUtil.getBooleanAttributeValue(mockAnnotation, attributeName));
+        Boolean attributeValue = computeBlocking(() -> AnnotationUtil.getBooleanAttributeValue(mockAnnotation, attributeName));
         return Boolean.TRUE.equals(attributeValue); //Given that the default values are false, and to be true they have to be specified explicitly
     }
 

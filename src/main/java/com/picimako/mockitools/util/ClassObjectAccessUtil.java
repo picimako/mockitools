@@ -1,9 +1,8 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.util;
 
-import static com.intellij.openapi.application.ReadAction.compute;
-
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiClassType;
@@ -25,7 +24,7 @@ public final class ClassObjectAccessUtil {
     @Nullable
     public static PsiType getOperandType(@Nullable PsiElement element) {
         return element instanceof PsiClassObjectAccessExpression objectAccessExpr
-            ? compute(() -> objectAccessExpr.getOperand().getType())
+            ? computeBlocking(() -> objectAccessExpr.getOperand().getType())
             : null;
     }
 
@@ -44,7 +43,7 @@ public final class ClassObjectAccessUtil {
      */
     @Nullable
     public static PsiClass resolveOperandType(@NotNull PsiElement element) {
-        return compute(() -> getOperandType(element) instanceof PsiClassType operandType ? operandType.resolve() : null);
+        return computeBlocking(() -> getOperandType(element) instanceof PsiClassType operandType ? operandType.resolve() : null);
     }
 
     private ClassObjectAccessUtil() {

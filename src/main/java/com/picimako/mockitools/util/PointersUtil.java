@@ -1,6 +1,8 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.util;
+
+import static com.intellij.util.containers.ContainerUtil.map;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
@@ -15,7 +17,7 @@ import java.util.List;
 public final class PointersUtil {
 
     public static <T extends PsiElement> List<SmartPsiElementPointer<T>> toPointers(List<T> calls) {
-        return calls.stream().map(PointersUtil::toPointer).toList();
+        return map(calls, PointersUtil::toPointer);
     }
 
     @NotNull

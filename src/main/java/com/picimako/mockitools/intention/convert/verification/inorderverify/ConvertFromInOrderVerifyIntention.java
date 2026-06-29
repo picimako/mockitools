@@ -1,8 +1,8 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.intention.convert.verification.inorderverify;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static com.picimako.mockitools.EnforceConventionUtil.isBDDMockitoEnforced;
@@ -63,20 +63,20 @@ final class ConvertFromInOrderVerifyIntention extends ConvertVerificationIntenti
      */
     @Override
     protected boolean isQualifierHaveCorrectType(PsiExpression qualifier) {
-        return compute(() -> typeEquals(ORG_MOCKITO_INORDER, qualifier.getType()));
+        return computeBlocking(() -> typeEquals(ORG_MOCKITO_INORDER, qualifier.getType()));
     }
 
     //Invocation
 
     @Override
     public List<AnAction> actionSelectionOptions(Editor editor, PsiFile file) {
-        boolean isBulkMode = compute(() -> editor.getSelectionModel().hasSelection());
+        boolean isBulkMode = computeBlocking(() -> editor.getSelectionModel().hasSelection());
 
         var verificationCall = !isBulkMode
             //the method call at the caret position. The identifier at this point cannot be null.
-            ? getMethodCallForIdentifier(file.findElementAt(compute(() -> editor.getCaretModel().getOffset())))
+            ? getMethodCallForIdentifier(file.findElementAt(computeBlocking(() -> editor.getCaretModel().getOffset())))
             //the method call of the first selected statement
-            : compute(() -> getParentOfType(findChildOfType(collectStatementsInSelection(editor, file).getFirst(), PsiIdentifier.class), PsiMethodCallExpression.class));
+            : computeBlocking(() -> getParentOfType(findChildOfType(collectStatementsInSelection(editor, file).getFirst(), PsiIdentifier.class), PsiMethodCallExpression.class));
 
         if (INORDER_VERIFY.isVerifiedBy(verificationCall)) {
             var actions = new ArrayList<AnAction>(3);

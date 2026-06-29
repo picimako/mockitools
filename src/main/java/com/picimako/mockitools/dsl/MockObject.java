@@ -1,4 +1,4 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.dsl;
 
@@ -60,10 +60,8 @@ public final class MockObject {
         return Optional.of(ref)
             .map(PsiReference::resolve)
             .map(mockVariable -> {
-                if (mockVariable instanceof PsiField mockField)
-                    return isFieldMock(mockField);
-                else if (mockVariable instanceof PsiLocalVariable mockLocalVar)
-                    return isVariableMock(mockLocalVar);
+                if (mockVariable instanceof PsiField mockField) return isFieldMock(mockField);
+                if (mockVariable instanceof PsiLocalVariable mockLocalVar) return isVariableMock(mockLocalVar);
                 return false;
             }).orElse(false);
     }

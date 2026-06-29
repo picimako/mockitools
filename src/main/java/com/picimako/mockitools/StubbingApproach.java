@@ -1,9 +1,9 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools;
 
 import static com.google.common.collect.Iterables.getLast;
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.picimako.mockitools.CallChainEndsWith.ENDS_WITH_GIVEN;
 import static com.picimako.mockitools.CallChainEndsWith.ENDS_WITH_WHEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.DO_THROW;
@@ -81,12 +81,12 @@ public enum StubbingApproach {
 
         @Override
         public boolean isStubbedBy(PsiMethodCallExpression expression) {
-            return compute(() -> MOCKITO_WHEN.matches(expression));
+            return computeBlocking(() -> MOCKITO_WHEN.matches(expression));
         }
 
         @Override
         public boolean isAnyOfStubs(PsiMethodCallExpression expression) {
-            return compute(() -> MOCKITO_WHEN_THEN_X.matches(expression));
+            return computeBlocking(() -> MOCKITO_WHEN_THEN_X.matches(expression));
         }
 
         @Override
@@ -138,12 +138,12 @@ public enum StubbingApproach {
 
         @Override
         public boolean isStubbedBy(PsiMethodCallExpression expression) {
-            return compute(() -> MOCKITO_DO_X_WHEN.matches(expression));
+            return computeBlocking(() -> MOCKITO_DO_X_WHEN.matches(expression));
         }
 
         @Override
         public boolean isAnyOfStubs(PsiMethodCallExpression expression) {
-            return compute(() -> MOCKITO_DO_X.matches(expression));
+            return computeBlocking(() -> MOCKITO_DO_X.matches(expression));
         }
 
         @Override
@@ -192,12 +192,12 @@ public enum StubbingApproach {
 
         @Override
         public boolean isStubbedBy(PsiMethodCallExpression expression) {
-            return compute(() -> BDDMOCKITO_GIVEN.matches(expression));
+            return computeBlocking(() -> BDDMOCKITO_GIVEN.matches(expression));
         }
 
         @Override
         public boolean isAnyOfStubs(PsiMethodCallExpression expression) {
-            return compute(() -> BDDMOCKITO_GIVEN_WILL_X.matches(expression));
+            return computeBlocking(() -> BDDMOCKITO_GIVEN_WILL_X.matches(expression));
         }
 
         @Override
@@ -247,12 +247,12 @@ public enum StubbingApproach {
 
         @Override
         public boolean isStubbedBy(PsiMethodCallExpression expression) {
-            return compute(() -> BDDMOCKITO_WILL_X_GIVEN.matches(expression));
+            return computeBlocking(() -> BDDMOCKITO_WILL_X_GIVEN.matches(expression));
         }
 
         @Override
         public boolean isAnyOfStubs(PsiMethodCallExpression expression) {
-            return compute(() -> BDDMOCKITO_WILL_X.matches(expression));
+            return computeBlocking(() -> BDDMOCKITO_WILL_X.matches(expression));
         }
 
         @Override
@@ -383,6 +383,7 @@ public enum StubbingApproach {
      *
      * @param mockObjectOrCallToStubbedMethod the mock object or a call to a stubbed method
      */
+    @SuppressWarnings("unused")
     protected abstract boolean isValidStubbingArgument(PsiExpression mockObjectOrCallToStubbedMethod);
 
     /**

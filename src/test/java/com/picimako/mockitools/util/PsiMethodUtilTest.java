@@ -1,8 +1,8 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.util;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.openapi.application.ApplicationManager;
@@ -194,7 +194,7 @@ class PsiMethodUtilTest extends MockitoolsTestBase {
                     }
                 }""");
 
-        assertThat(compute(() -> PsiMethodUtil.getFirstArgument(getMethodCall()).getText())).isEqualTo("new Object()");
+        assertThat(computeBlocking(() -> PsiMethodUtil.getFirstArgument(getMethodCall()).getText())).isEqualTo("new Object()");
     }
 
     //deleteArguments
@@ -219,7 +219,7 @@ class PsiMethodUtilTest extends MockitoolsTestBase {
                     getFixture().getProject(),
                     () -> PsiMethodUtil.deleteArguments(methodCall), "Delete", "group.id")));
 
-        assertThat(compute(() -> methodCall.getArgumentList().isEmpty())).isTrue();
+        assertThat(computeBlocking(() -> methodCall.getArgumentList().isEmpty())).isTrue();
     }
 
     //getSubsequentMethodCall
@@ -279,7 +279,7 @@ class PsiMethodUtilTest extends MockitoolsTestBase {
 
         var foundCall = PsiMethodUtil.findCallUpwardsInChain(getMethodCall(), "substring");
 
-        assertThat(compute(() -> foundCall.get().getText())).isEqualTo("\"string\".substring(1)");
+        assertThat(computeBlocking(() -> foundCall.get().getText())).isEqualTo("\"string\".substring(1)");
     }
 
     @Test
@@ -314,7 +314,7 @@ class PsiMethodUtilTest extends MockitoolsTestBase {
 
         var foundCall = PsiMethodUtil.findCallDownwardsInChain(getMethodCall(), "toString");
 
-        assertThat(compute(() -> foundCall.get().getText())).isEqualTo("\"string\".substring(1).subSequence(2, 3).toString()");
+        assertThat(computeBlocking(() -> foundCall.get().getText())).isEqualTo("\"string\".substring(1).subSequence(2, 3).toString()");
     }
 
     @Test
@@ -336,6 +336,6 @@ class PsiMethodUtilTest extends MockitoolsTestBase {
     //Helpers
 
     private PsiMethodCallExpression getMethodCall() {
-        return compute(() -> (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent());
+        return computeBlocking(() -> (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent());
     }
 }

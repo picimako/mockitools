@@ -1,12 +1,10 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.picimako.mockitools.completion;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
 import static com.intellij.psi.util.PsiTreeUtil.findChildrenOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
-
-import java.util.regex.Pattern;
 
 import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
@@ -25,11 +23,15 @@ import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiResolveHelper;
 import com.intellij.util.ProcessingContext;
 import com.picimako.mockitools.MockitoolsPsiUtil;
 import com.picimako.mockitools.dsl.MockObject;
 import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
+import java.util.regex.Pattern;
 
 /**
  * Provides code completion items for Mockito methods that accept mock objects as arguments.
@@ -86,11 +88,7 @@ final class MockCompletionContributor extends CompletionContributor {
             //Look up and add fields annotated with either @Mock, @Spy or @InjectMocks in the current class
             result.addAllElements(findChildrenOfType(parameters.getOriginalFile(), PsiField.class).stream()
                 .filter(MockObject::isAnyKindOfMock)
-                .map(field ->
-                    LookupElementBuilder.create(field)
-                        .withIcon(AllIcons.Nodes.Field)
-                        .withTypeText(MockObject.getMockAnnotationName(field))
-                        .withCaseSensitivity(false))
+                .map(field -> create(field, AllIcons.Nodes.Field, MockObject.getMockAnnotationName(field)))
                 .toList());
 
             //Look up and add local variables in the current method initialized with 'Mockito.mock()' or 'Mockito.spy()'.
@@ -98,14 +96,17 @@ final class MockCompletionContributor extends CompletionContributor {
             var parentMethod = getParentOfType(parameters.getOriginalPosition(), PsiMethod.class);
             result.addAllElements(findChildrenOfType(parentMethod, PsiLocalVariable.class).stream()
                 .filter(MockObject::isAnyKindOfMock)
-                .map(localVar ->
-                    LookupElementBuilder.create(localVar)
-                        .withIcon(AllIcons.Nodes.Variable)
-                        .withTypeText(MockObject.getMockInitializerAsString(localVar))
-                        .withCaseSensitivity(false))
+                .map(localVar -> create(localVar, AllIcons.Nodes.Variable, MockObject.getMockInitializerAsString(localVar)))
                 .toList());
 
             result.stopHere();
+        }
+
+        private <T extends PsiNamedElement> LookupElementBuilder create(T element, Icon icon, String typeText) {
+            return LookupElementBuilder.create(element)
+                .withIcon(icon)
+                .withTypeText(typeText)
+                .withCaseSensitivity(false);
         }
     };
 

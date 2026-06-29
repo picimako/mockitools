@@ -1,8 +1,9 @@
-//Copyright 2025 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+//Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.picimako.mockitools.util;
 
-import static com.intellij.openapi.application.ReadAction.compute;
+import static com.intellij.openapi.application.ReadAction.computeBlocking;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import com.intellij.openapi.editor.Editor;
@@ -32,21 +33,21 @@ public final class PsiMethodUtil {
      * Returns whether the argument method call has any argument.
      */
     public static boolean hasArgument(@NotNull PsiMethodCallExpression methodCall) {
-        return compute(() -> methodCall.getArgumentList() != null && methodCall.getArgumentList().getExpressionCount() > 0);
+        return computeBlocking(() -> methodCall.getArgumentList() != null && methodCall.getArgumentList().getExpressionCount() > 0);
     }
 
     /**
      * Returns whether the argument method call has only one argument.
      */
     public static boolean hasOneArgument(@NotNull PsiMethodCallExpression methodCall) {
-        return compute(() -> methodCall.getArgumentList() != null && methodCall.getArgumentList().getExpressionCount() == 1);
+        return computeBlocking(() -> methodCall.getArgumentList() != null && methodCall.getArgumentList().getExpressionCount() == 1);
     }
 
     /**
      * Returns whether the argument method call has 2 arguments.
      */
     public static boolean hasTwoArguments(@NotNull PsiMethodCallExpression methodCall) {
-        return compute(() -> methodCall.getArgumentList() != null && methodCall.getArgumentList().getExpressionCount() == 2);
+        return computeBlocking(() -> methodCall.getArgumentList() != null && methodCall.getArgumentList().getExpressionCount() == 2);
     }
 
     /**
@@ -54,11 +55,11 @@ public final class PsiMethodUtil {
      * (you've probably made sure beforehand), that the caret is at a method call identifier.
      */
     public static PsiMethodCallExpression getMethodCallAtCaret(PsiFile file, Editor editor) {
-        return compute(() -> getMethodCallForIdentifier(file.findElementAt(editor.getCaretModel().getOffset())));
+        return computeBlocking(() -> getMethodCallForIdentifier(file.findElementAt(editor.getCaretModel().getOffset())));
     }
 
     public static Optional<PsiMethodCallExpression> getMethodCallAtCaretOrEmpty(PsiFile file, Editor editor) {
-        var elementAtCaret = file.findElementAt(compute(() -> editor.getCaretModel().getOffset()));
+        var elementAtCaret = file.findElementAt(computeBlocking(() -> editor.getCaretModel().getOffset()));
         return isIdentifierOfMethodCall(elementAtCaret)
                ? Optional.ofNullable(getMethodCallForIdentifier(elementAtCaret))
                : Optional.empty();
@@ -70,7 +71,7 @@ public final class PsiMethodUtil {
      */
     @Nullable
     public static PsiMethodCallExpression getMethodCallForIdentifier(@NotNull PsiElement identifier) {
-        return compute(() -> (PsiMethodCallExpression) identifier.getParent().getParent());
+        return computeBlocking(() -> (PsiMethodCallExpression) identifier.getParent().getParent());
     }
 
     /**
@@ -112,7 +113,7 @@ public final class PsiMethodUtil {
      * Gets the arguments of the provided method call, given that the argument list exists and is not null.
      */
     public static PsiExpression[] getArguments(@NotNull PsiMethodCallExpression methodCall) {
-        return compute(() -> methodCall.getArgumentList().getExpressions());
+        return computeBlocking(() -> methodCall.getArgumentList().getExpressions());
     }
 
     /**
@@ -166,9 +167,9 @@ public final class PsiMethodUtil {
      * Return whether the argument PSI element is identifier that belongs to a PsiMethodCallExpression.
      */
     public static boolean isIdentifierOfMethodCall(PsiElement element) {
-        return compute(() -> element instanceof PsiIdentifier
-                             && element.getParent() instanceof PsiReferenceExpression parentRef
-                             && parentRef.getParent() instanceof PsiMethodCallExpression);
+        return computeBlocking(() -> element instanceof PsiIdentifier
+            && element.getParent() instanceof PsiReferenceExpression parentRef
+            && parentRef.getParent() instanceof PsiMethodCallExpression);
     }
 
     /**
@@ -227,7 +228,7 @@ public final class PsiMethodUtil {
                 current = previousCall;
             } else break;
         }
-        return calls.stream().map(PsiMethodCallExpression.class::cast).toList();
+        return map(calls, PsiMethodCallExpression.class::cast);
     }
 
     public static List<PsiMethodCallExpression> collectCallsInChainFromFirst(PsiExpression expression, boolean includeMySelf) {
@@ -250,8 +251,8 @@ public final class PsiMethodUtil {
     public static boolean containsCallToNonDefaultConstructor(PsiExpression[] arguments) {
         for (var argument : arguments) {
             if (argument instanceof PsiNewExpression constructorCall) {
-                var argumentList = compute(constructorCall::getArgumentList);
-                if (argumentList != null && compute(() -> !argumentList.isEmpty())) return true;
+                var argumentList = computeBlocking(constructorCall::getArgumentList);
+                if (argumentList != null && computeBlocking(() -> !argumentList.isEmpty())) return true;
             }
         }
         return false;
