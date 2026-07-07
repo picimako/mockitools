@@ -118,6 +118,17 @@ public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
         getFixture().checkResult(afterText);
     }
 
+    /**
+     * Configures a test file with a fix name and {@code beforeText},
+     * launches the quick of the provided {@code quickFixName} and checks if the file text has changed to the after state
+     * provided in {@code afterText}.
+     */
+    protected void doQuickFixTest(String quickFixName, String beforeText, String afterText) {
+        getFixture().configureByText("QuickFix.java", beforeText);
+        launchQuickFix(quickFixName);
+        getFixture().checkResult(afterText);
+    }
+
     private void launchQuickFix(String quickFixName) {
         getFixture().enableInspections(getInspection());
         getFixture().doHighlighting();

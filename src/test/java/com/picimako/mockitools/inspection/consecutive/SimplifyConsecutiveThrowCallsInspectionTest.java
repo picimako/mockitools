@@ -520,73 +520,76 @@ class SimplifyConsecutiveThrowCallsInspectionTest extends MockitoolsInspectionTe
     @ParameterizedTest
     @MethodSource("whenThenThrowCases")
     void testReplacesWhenThenThrows(String before, String after) {
-        doQuickFixTest("Merge thenThrow calls", "QuickFix.java", createClassText(before), createClassText(after));
+        doQuickFixTest("Merge thenThrow calls", classText(before), classText(after));
     }
 
     @ParameterizedTest
     @MethodSource("doThrowWhenCases")
     void testReplacesDoThrowWhens(String before, String after) {
-        doQuickFixTest("Merge doThrow calls", "QuickFix.java", createClassText(before), createClassText(after));
+        doQuickFixTest("Merge doThrow calls", classText(before), classText(after));
     }
 
     @ParameterizedTest
     @MethodSource("givenWillThrowCases")
     void testReplacesGivenWillThrows(String before, String after) {
-        doQuickFixTest("Merge willThrow calls", "QuickFix.java", createClassText(before), createClassText(after));
+        doQuickFixTest("Merge willThrow calls", classText(before), classText(after));
     }
 
     @ParameterizedTest
     @MethodSource("willThrowGivenCases")
     void testReplacesWillThrowGivens(String before, String after) {
-        doQuickFixTest("Merge willThrow calls", "QuickFix.java", createClassText(before), createClassText(after));
+        doQuickFixTest("Merge willThrow calls", classText(before), classText(after));
     }
 
     @ParameterizedTest
     @MethodSource("toClassesMixedCases")
     void testMixedToClassesCases(String before, String after) {
-        doQuickFixTest("Merge calls, convert parameters to Class objects", "QuickFix.java", createClassText(before), createClassText(after));
+        doQuickFixTest("Merge calls, convert parameters to Class objects", classText(before), classText(after));
     }
 
     @ParameterizedTest
     @MethodSource("toThrowableMixedCases")
     void testMixedToThrowablesCases(String before, String after) {
-        doQuickFixTest("Merge calls, convert parameters to Throwables", "QuickFix.java", createClassText(before), createClassText(after));
+        doQuickFixTest("Merge calls, convert parameters to Throwables", classText(before), classText(after));
     }
 
     @ParameterizedTest
     @MethodSource("mockedStaticWhenThenThrowsCases")
     void testReplacesMockedStaticWhenThenThrows(String before, String after) {
-        doQuickFixTest("Merge thenThrow calls", "QuickFix.java", createMockedStaticClassText(before), createMockedStaticClassText(after));
+        doQuickFixTest("Merge thenThrow calls", mockedStaticClassText(before), mockedStaticClassText(after));
     }
 
-    private String createClassText(String beforeOrAfter) {
-        return "import org.mockito.Mockito;\n" +
-               "import org.mockito.BDDMockito;\n" +
-               "import java.io.IOException;\n" +
-               "\n" +
-               "class QuickFix {\n" +
-               "   void testMethod() {\n" +
-               "       MockObject mockObject = Mockito.mock(MockObject.class);\n" +
-               beforeOrAfter + "\n" +
-               "   }\n" +
-               "\n" +
-               MOCK_OBJECT_CLASS +
-               "}";
+    private String classText(String beforeOrAfter) {
+        return """
+            import org.mockito.Mockito;
+            import org.mockito.BDDMockito;
+            import java.io.IOException;
+            
+            class QuickFix {
+                void testMethod() {
+                    MockObject mockObject = Mockito.mock(MockObject.class);
+            %s
+                }
+            %s
+            }
+            """.formatted(beforeOrAfter, MOCK_OBJECT_CLASS);
     }
 
-    private String createMockedStaticClassText(String beforeOrAfter) {
-        return "import org.mockito.Mockito;\n" +
-               "import org.mockito.MockedStatic;\n" +
-               "import java.util.Collections;\n" +
-               "import java.util.List;\n" +
-               "import java.io.IOException;\n" +
-               "\n" +
-               "class QuickFix {\n" +
-               "   void testMethod() {\n" +
-               "       try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {\n" +
-               beforeOrAfter + "\n" +
-               "       }\n" +
-               "   }\n" +
-               "}";
+    private String mockedStaticClassText(String beforeOrAfter) {
+        return """
+            import org.mockito.Mockito;
+            import org.mockito.MockedStatic;
+            import java.util.Collections;
+            import java.util.List;
+            import java.io.IOException;
+            
+            class QuickFix {
+                void testMethod() {
+                    try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {
+            %s
+                    }
+                }
+            }
+            """.formatted(beforeOrAfter);
     }
 }
