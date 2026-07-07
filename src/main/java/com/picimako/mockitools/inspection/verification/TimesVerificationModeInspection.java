@@ -49,7 +49,7 @@ import java.util.Objects;
  * {@code Mockito.times(1)} calls are reported only when they have no subsequent calls on them, e.g.
  * {@code Mockito.times(1).description("message")}.
  *
- * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#exact_verification">Mockito exact verification documentation</a>
+ * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#exact_verification">Mockito exact verification documentation</a>
  * @since 0.1.0
  */
 final class TimesVerificationModeInspection extends MockitoolsBaseInspection {

@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
  * TODO: Additional customization option may be added in IDE settings to configure classes that also provide static methods for creating argument matchers,
  *  besides ArgumentMatchers and AdditionalMatchers.
  *
- * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#argument_matchers">Argument matchers documentation</a>
+ * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#argument_matchers">Argument matchers documentation</a>
  * @see <a href="https://javadoc.io/static/org.mockito/mockito-core/3.11.2/org/mockito/ArgumentMatchers.html">ArgumentMatchers javadoc</a>
  * @see <a href="https://rules.sonarsource.com/java/tag/mockito/RSPEC-6073">SonarLint alternative</a>
  * @since 0.1.0

@@ -28,8 +28,8 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * It also provides a quick fix to remove the field initializer.
  *
- * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#mock_annotation">@Mock annotation</a>
- * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#21">@InjectMocks annotation</a>
+ * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#mock_annotation">@Mock annotation</a>
+ * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#21">@InjectMocks annotation</a>
  * @see <a href="https://www.baeldung.com/mockito-annotations">Baeldung - Mockito Annotations</a>
  * @since 1.3.0
  */

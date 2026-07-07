@@ -27,7 +27,7 @@ The following ways of stubbing are supported by this inspection:
 - `Mockito.when()`, `BDDMockito.given()`, `Mockito.do...().when()`, matchers in `AdditionalMatchers`
 
 You can find more information in the official documents and source code:
-- [Argument matchers documentation](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#argument_matchers)
+- [Argument matchers documentation](https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#argument_matchers)
 - [ArgumentMatchers javadoc](https://javadoc.io/static/org.mockito/mockito-core/3.11.2/org/mockito/ArgumentMatchers.html)
 - [org.mockito.internal.exceptions.Reporter#invalidUseOfMatchers(int, List)](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java)
 - [org.mockito.internal.exceptions.Reporter#incorrectUseOfAdditionalMatchers(String, int, Collection)](https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java)
