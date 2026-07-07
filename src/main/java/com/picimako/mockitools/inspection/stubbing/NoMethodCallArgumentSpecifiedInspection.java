@@ -34,7 +34,7 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
 final class NoMethodCallArgumentSpecifiedInspection extends MockitoolsBaseInspection {
 
     private static final CallMatcher VERIFY_CALLS =
-        CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, VERIFY_NO_INTERACTIONS, VERIFY_NO_MORE_INTERACTIONS, VERIFY_ZERO_INTERACTIONS, IN_ORDER);
+        CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, VERIFY_NO_INTERACTIONS, VERIFY_NO_MORE_INTERACTIONS, VERIFY_ZERO_INTERACTIONS /*Mockito v3*/, IN_ORDER);
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

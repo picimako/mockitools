@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Functional test for {@link EnforceConventionInspection}.
  */
-class EnforceConventionInspectionMockitoTest extends MockitoolsInspectionTestBase.MockitoV4 {
+class EnforceConventionInspectionMockitoTest extends MockitoolsInspectionTestBase {
 
     @Override
     protected InspectionProfileEntry getInspection() {

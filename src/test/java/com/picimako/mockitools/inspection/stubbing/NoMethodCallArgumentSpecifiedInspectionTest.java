@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Functional test for {@link NoMethodCallArgumentSpecifiedInspection}.
  */
-class NoMethodCallArgumentSpecifiedInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class NoMethodCallArgumentSpecifiedInspectionTest extends MockitoolsInspectionTestBase {
 
     @Override
     protected InspectionProfileEntry getInspection() {

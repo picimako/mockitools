@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ThirdPartyLibrary {
     MOCKITO_V3("org.mockito:mockito-core:3.12.4"),
-    MOCKITO_V4("org.mockito:mockito-core:4.11.0"),
     MOCKITO_V5("org.mockito:mockito-core:5.23.0"),
     JUNIT_4("junit:junit:4.13.2");
 

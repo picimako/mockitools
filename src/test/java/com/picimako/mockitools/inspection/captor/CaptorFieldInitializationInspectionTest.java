@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Functional test for {@link CaptorFieldInitializationInspection}.
  */
-class CaptorFieldInitializationInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class CaptorFieldInitializationInspectionTest extends MockitoolsInspectionTestBase {
 
     @Override
     protected InspectionProfileEntry getInspection() {

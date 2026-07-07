@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 /**
  * Functional test for {@link SimplifyConsecutiveReturnCallsInspection}.
  */
-class SimplifyConsecutiveReturnCallsInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
+class SimplifyConsecutiveReturnCallsInspectionTest extends MockitoolsInspectionTestBase {
 
     private static final String MOCK_OBJECT_CLASS =
         """

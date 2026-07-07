@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
  * Functional test for {@link NotExtensibleClassInspection}.
  */
 @TestDataPath("$CONTENT_ROOT/testData/framework/inspection")
-class NotExtensibleClassInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class NotExtensibleClassInspectionTest extends MockitoolsInspectionTestBase {
 
     @Override
     protected InspectionProfileEntry getInspection() {

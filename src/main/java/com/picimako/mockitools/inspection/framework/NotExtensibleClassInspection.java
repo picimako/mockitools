@@ -21,7 +21,7 @@ import java.util.Optional;
 /**
  * Reports any types of classes or interfaces that extend a class or at least one interface annotated as Mockito's {@code NotExtensible} annotation.
  * <p>
- * This inspection is meant for Mockito framework integrators, not regular end-users, this is disabled by default in the plugin.xml.
+ * This inspection is meant for Mockito framework integrators, not regular end-users. This is disabled by default in the plugin.xml.
  *
  * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#framework_integrations_api">Advanced public API for framework integrations (Since 2.10.+)</a>
  * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/NotExtensible.html">@NotExtensible javadoc</a>

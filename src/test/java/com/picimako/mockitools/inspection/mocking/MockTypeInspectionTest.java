@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Functional test for {@link MockTypeInspection}.
  */
-class MockTypeInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
+class MockTypeInspectionTest extends MockitoolsInspectionTestBase {
     
     @Override
     protected InspectionProfileEntry getInspection() {

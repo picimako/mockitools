@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Integration test for {@link StubbingAndMethodReturnTypeMismatchInspection}.
  */
-class StubbingAndMethodReturnTypeMismatchInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
+class StubbingAndMethodReturnTypeMismatchInspectionTest extends MockitoolsInspectionTestBase {
 
     @Override
     protected InspectionProfileEntry getInspection() {

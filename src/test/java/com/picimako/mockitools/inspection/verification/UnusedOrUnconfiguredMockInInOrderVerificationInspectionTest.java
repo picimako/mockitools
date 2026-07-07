@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Integration test for {@link UnusedOrUnconfiguredMockInInOrderVerificationInspection}.
  */
-class UnusedOrUnconfiguredMockInInOrderVerificationInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
+class UnusedOrUnconfiguredMockInInOrderVerificationInspectionTest extends MockitoolsInspectionTestBase {
 
     @Override
     protected InspectionProfileEntry getInspection() {

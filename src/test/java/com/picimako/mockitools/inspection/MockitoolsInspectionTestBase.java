@@ -147,13 +147,4 @@ public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
             super(libraries);
         }
     }
-
-    /**
-     * Base class for testing Mockito 4 specific inspections.
-     */
-    public static abstract class MockitoV4 extends MockitoolsInspectionTestBase {
-        public MockitoV4() {
-            super(ThirdPartyLibrary.MOCKITO_V4);
-        }
-    }
 }
