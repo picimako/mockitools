@@ -17,11 +17,11 @@ import com.picimako.mockitools.intention.MockitoolsIntentionTestBase;
 public abstract class EnforceConventionAwareIntentionTestBase extends MockitoolsIntentionTestBase {
 
     protected void addEnforceConventionInspection(Convention convention) {
-        var profile = InspectionProfileManager.getInstance(getFixture().getProject()).getCurrentProfile();
+        var profile = InspectionProfileManager.getInstance(getProject()).getCurrentProfile();
         var inspection = new EnforceConventionInspection();
         inspection.conventionToEnforce = convention;
         InspectionsKt.disableAllTools(profile);
-        profile.addTool(getFixture().getProject(), new LocalInspectionToolWrapper(inspection), null);
-        profile.enableTool(EnforceConventionUtil.ENFORCE_CONVENTION_INSPECTION_SHORT_NAME, getFixture().getProject());
+        profile.addTool(getProject(), new LocalInspectionToolWrapper(inspection), null);
+        profile.enableTool(EnforceConventionUtil.ENFORCE_CONVENTION_INSPECTION_SHORT_NAME, getProject());
     }
 }

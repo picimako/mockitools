@@ -34,6 +34,6 @@ class MockitoolsPsiUtilV3Test extends MockitoolsTestBase {
 
 
     private PsiMethodCallExpression getMethodCall() {
-        return (PsiMethodCallExpression) computeBlocking(() -> getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent());
+        return (PsiMethodCallExpression) computeBlocking(() -> getFile().findElementAt(getCaretOffset()).getParent().getParent());
     }
 }

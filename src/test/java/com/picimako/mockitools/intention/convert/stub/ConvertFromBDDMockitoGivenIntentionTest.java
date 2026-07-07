@@ -281,7 +281,7 @@ class ConvertFromBDDMockitoGivenIntentionTest extends EnforceConventionAwareInte
 
     @NotNull
     private List<String> getActionTexts() {
-        return new ConvertFromBDDMockitoGivenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
+        return new ConvertFromBDDMockitoGivenIntention().actionSelectionOptions(getEditor(), getFile())
             .stream()
             .map(action -> (ConvertStubbingAction) action)
             .map(ConvertStubbingAction::getTo)

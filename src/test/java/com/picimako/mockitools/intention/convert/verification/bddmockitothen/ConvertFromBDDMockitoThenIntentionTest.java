@@ -181,7 +181,7 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
                     }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 
@@ -203,7 +203,7 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
                     }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 
@@ -225,7 +225,7 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
                     }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 
@@ -246,7 +246,7 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
                     }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 
@@ -270,7 +270,7 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
                     }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 
@@ -293,7 +293,7 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
                     }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 
@@ -318,7 +318,7 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
                     }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 
@@ -342,7 +342,7 @@ class ConvertFromBDDMockitoThenIntentionTest extends EnforceConventionAwareInten
                     }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromBDDMockitoThenIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 

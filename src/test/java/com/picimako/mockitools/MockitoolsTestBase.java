@@ -5,6 +5,7 @@ package com.picimako.mockitools;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdk;
+import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.TestDataPath;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase5;
@@ -93,5 +94,13 @@ public abstract class MockitoolsTestBase extends LightJavaCodeInsightFixtureTest
 
     protected Editor getEditor() {
         return getFixture().getEditor();
+    }
+
+    protected PsiFile getFile() {
+        return getFixture().getFile();
+    }
+
+    protected int getCaretOffset() {
+        return getFixture().getCaretOffset();
     }
 }

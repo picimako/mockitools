@@ -372,11 +372,11 @@ class MockitoolsPsiUtilTest extends MockitoolsTestBase {
     }
 
     private PsiMethodCallExpression getMethodCall() {
-        return (PsiMethodCallExpression) computeBlocking(() -> getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent());
+        return (PsiMethodCallExpression) computeBlocking(() -> getFile().findElementAt(getCaretOffset()).getParent().getParent());
     }
 
     private PsiField getField() {
-        return (PsiField) computeBlocking(() -> getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent());
+        return (PsiField) computeBlocking(() -> getFile().findElementAt(getCaretOffset()).getParent());
     }
 
     private record TestData(String fileName, String fileContent, Supplier<Boolean> isSpecificMethod) {

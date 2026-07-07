@@ -216,7 +216,7 @@ class PsiMethodUtilTest extends MockitoolsTestBase {
         ApplicationManager.getApplication().invokeAndWait(() ->
             WriteAction.run(() ->
                 CommandProcessor.getInstance().executeCommand(
-                    getFixture().getProject(),
+                    getProject(),
                     () -> PsiMethodUtil.deleteArguments(methodCall), "Delete", "group.id")));
 
         assertThat(computeBlocking(() -> methodCall.getArgumentList().isEmpty())).isTrue();
@@ -336,6 +336,6 @@ class PsiMethodUtilTest extends MockitoolsTestBase {
     //Helpers
 
     private PsiMethodCallExpression getMethodCall() {
-        return computeBlocking(() -> (PsiMethodCallExpression) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent().getParent());
+        return computeBlocking(() -> (PsiMethodCallExpression) getFile().findElementAt(getCaretOffset()).getParent().getParent());
     }
 }

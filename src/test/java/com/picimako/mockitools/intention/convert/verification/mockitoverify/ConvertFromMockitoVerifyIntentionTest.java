@@ -152,7 +152,7 @@ class ConvertFromMockitoVerifyIntentionTest extends EnforceConventionAwareIntent
                     }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromMockitoVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromMockitoVerifyIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 
@@ -172,7 +172,7 @@ class ConvertFromMockitoVerifyIntentionTest extends EnforceConventionAwareIntent
                     }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromMockitoVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromMockitoVerifyIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 
@@ -194,7 +194,7 @@ class ConvertFromMockitoVerifyIntentionTest extends EnforceConventionAwareIntent
                     }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromMockitoVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromMockitoVerifyIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 

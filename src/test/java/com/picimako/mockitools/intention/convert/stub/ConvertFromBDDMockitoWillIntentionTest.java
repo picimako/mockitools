@@ -367,7 +367,7 @@ class ConvertFromBDDMockitoWillIntentionTest extends EnforceConventionAwareInten
 
     @NotNull
     private List<String> getActionTexts() {
-        return new ConvertFromBDDMockitoWillIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
+        return new ConvertFromBDDMockitoWillIntention().actionSelectionOptions(getEditor(), getFile())
             .stream()
             .map(action -> (ConvertStubbingAction) action)
             .map(ConvertStubbingAction::getTo)

@@ -166,7 +166,7 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
                     }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 
@@ -192,7 +192,7 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
                     }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 
@@ -214,7 +214,7 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
                     }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 
@@ -242,7 +242,7 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
                         }    }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 
@@ -264,7 +264,7 @@ class ConvertFromInOrderVerifyIntentionTest extends EnforceConventionAwareIntent
                         }    }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 

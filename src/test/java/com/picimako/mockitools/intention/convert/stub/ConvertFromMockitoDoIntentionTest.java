@@ -357,7 +357,7 @@ class ConvertFromMockitoDoIntentionTest extends EnforceConventionAwareIntentionT
 
     @NotNull
     private List<String> getActionTexts() {
-        return new ConvertFromMockitoDoIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
+        return new ConvertFromMockitoDoIntention().actionSelectionOptions(getEditor(), getFile())
             .stream()
             .map(action -> (ConvertStubbingAction) action)
             .map(ConvertStubbingAction::getTo)
