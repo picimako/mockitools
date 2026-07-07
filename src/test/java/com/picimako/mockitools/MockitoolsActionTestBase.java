@@ -22,10 +22,4 @@ public abstract class MockitoolsActionTestBase extends MockitoolsTestBase {
         ApplicationManager.getApplication().invokeAndWait(() -> getFixture().testAction(action.get()));
         getFixture().checkResult(afterText);
     }
-
-    protected void checkActionFlexible(Supplier<AnAction> action, String beforeText, String afterText) {
-        getFixture().configureByText("ConversionTest.java", beforeText);
-        ApplicationManager.getApplication().invokeAndWait(() -> getFixture().testAction(action.get()));
-        Assertions.assertThat(getFixture().getEditor().getDocument().getText()).endsWith(afterText);
-    }
 }
