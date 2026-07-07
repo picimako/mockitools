@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools.completion;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -145,7 +146,7 @@ class MockCompletionContributorTest extends MockitoolsCodeCompletionTestBase {
             "mock", "spy", "someInjectMocks", "someMock", "someSpy");
     }
 
-    private void testCompletionContains(String importStatement, String mockContainerCall, String... completionItems) {
+    private void testCompletionContains(@NotNull String importStatement, @NotNull String mockContainerCall, @NotNull String... completionItems) {
         doTestCodeCompletionContains(COMPLETION_TEST_CLASS.formatted(importStatement, mockContainerCall), completionItems);
     }
 }

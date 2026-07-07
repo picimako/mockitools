@@ -4,7 +4,7 @@ package com.picimako.mockitools;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
-import org.assertj.core.api.Assertions;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -13,7 +13,11 @@ import java.util.function.Supplier;
  */
 public abstract class MockitoolsActionTestBase extends MockitoolsTestBase {
 
-    protected void checkAction(Supplier<AnAction> action, String beforeText, String afterText) {
+    /**
+     * Configures a test file with {@code beforeText}, runs the provided {@code action} and checks
+     * that the test file's content has changed to {@code afterText}.
+     */
+    protected void checkAction(@NotNull Supplier<AnAction> action, @NotNull String beforeText, @NotNull String afterText) {
         getFixture().configureByText("ConversionTest.java", beforeText);
         ApplicationManager.getApplication().invokeAndWait(() -> getFixture().testAction(action.get()));
         getFixture().checkResult(afterText);
