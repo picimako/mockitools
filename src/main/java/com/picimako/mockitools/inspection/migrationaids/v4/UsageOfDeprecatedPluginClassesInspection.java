@@ -7,7 +7,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_PLUGINS_
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_PLUGINS_INSTANTIATOR_PROVIDER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_PLUGINS_INSTANTIATOR_PROVIDER_2;
 import static com.picimako.mockitools.inspection.migrationaids.v4.ModuleDependencyHelper.isMockitoCore2xOr3xAvailableInModuleOf;
-import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.inspection.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;

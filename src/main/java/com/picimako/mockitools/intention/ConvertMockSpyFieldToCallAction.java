@@ -52,7 +52,6 @@ import com.intellij.psi.PsiSubstitutor;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.util.PsiFormatUtil;
 import com.intellij.psi.util.PsiFormatUtilBase;
-import com.picimako.mockitools.util.PsiClassUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

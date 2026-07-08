@@ -4,10 +4,10 @@ package com.picimako.mockitools.inspection.stubbing;
 
 import static com.intellij.psi.CommonClassNames.JAVA_LANG_EXCEPTION;
 import static com.intellij.psi.CommonClassNames.JAVA_LANG_THROWABLE;
-import static com.picimako.mockitools.util.EvaluationHelper.evaluateClassObjectOrNewExpressionType;
-import static com.picimako.mockitools.util.EvaluationHelper.evaluateType;
-import static com.picimako.mockitools.util.ExceptionUtil.isCheckedException;
-import static com.picimako.mockitools.util.PointersUtil.toPointer;
+import static com.picimako.mockitools.inspection.EvaluationHelper.evaluateClassObjectOrNewExpressionType;
+import static com.picimako.mockitools.inspection.EvaluationHelper.evaluateType;
+import static com.picimako.mockitools.inspection.stubbing.ExceptionUtil.isCheckedException;
+import static com.picimako.mockitools.inspection.PointersUtil.toPointer;
 import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.util.PsiMethodUtil.getSubsequentMethodCall;
 

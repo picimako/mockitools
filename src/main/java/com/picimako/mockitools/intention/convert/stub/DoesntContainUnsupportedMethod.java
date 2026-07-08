@@ -2,7 +2,7 @@
 
 package com.picimako.mockitools.intention.convert.stub;
 
-import static com.picimako.mockitools.util.MockitoolsContainerUtil.none;
+import static com.picimako.mockitools.intention.convert.MockitoolsContainerUtil.none;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import com.intellij.psi.PsiMethodCallExpression;

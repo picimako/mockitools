@@ -1,23 +1,24 @@
 //Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.picimako.mockitools.util;
+package com.picimako.mockitools.inspection.stubbing;
 
 import com.intellij.psi.CommonClassNames;
 import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.util.InheritanceUtil;
+import com.picimako.mockitools.util.ClassObjectAccessUtil;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Utility for exceptions.
  */
-public final class ExceptionUtil {
+final class ExceptionUtil {
 
     /**
      * Returns whether the exception class referenced by the argument expression is a checked exception.
      */
-    public static boolean isCheckedException(PsiExpression expression) {
+    static boolean isCheckedException(PsiExpression expression) {
         return expression instanceof PsiClassObjectAccessExpression
             ? isCheckedException(ClassObjectAccessUtil.getOperandType(expression))
             : isCheckedException(expression.getType());

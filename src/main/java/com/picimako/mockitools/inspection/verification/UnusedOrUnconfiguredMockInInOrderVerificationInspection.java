@@ -8,7 +8,7 @@ import static com.intellij.util.containers.ContainerUtil.map;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
 import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.inspection.UnitTestPsiUtil.isInTestSourceContent;
 import static com.siyeh.ig.psiutils.TypeUtils.typeEquals;
 
 import com.intellij.codeInspection.LocalInspectionTool;

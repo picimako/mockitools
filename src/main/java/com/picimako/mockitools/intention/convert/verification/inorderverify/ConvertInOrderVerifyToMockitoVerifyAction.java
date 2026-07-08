@@ -7,7 +7,7 @@ import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFrom
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.util.PsiClassUtil;
+import com.picimako.mockitools.intention.PsiClassUtil;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationActionBase;
 
 /**

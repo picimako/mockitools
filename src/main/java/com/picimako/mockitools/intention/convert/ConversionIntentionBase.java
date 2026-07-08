@@ -13,7 +13,7 @@ import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallForIdentif
 import static com.picimako.mockitools.util.PsiMethodUtil.getQualifier;
 import static com.picimako.mockitools.util.PsiMethodUtil.isIdentifierOfMethodCall;
 import static com.picimako.mockitools.util.Ranges.charSequenceInRange;
-import static com.picimako.mockitools.util.TokenTypes.isTokenType;
+import static com.picimako.mockitools.intention.convert.TokenTypes.isTokenType;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -30,7 +30,7 @@ import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.util.IncorrectOperationException;
 import com.picimako.mockitools.intention.convert.verification.NoActionAvailableAction;
-import com.picimako.mockitools.util.ListPopupHelper;
+import com.picimako.mockitools.intention.ListPopupHelper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;

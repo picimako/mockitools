@@ -1,6 +1,6 @@
 //Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.picimako.mockitools.util;
+package com.picimako.mockitools.inspection;
 
 import static com.picimako.mockitools.util.ClassObjectAccessUtil.getOperandType;
 
@@ -9,6 +9,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiNewExpression;
 import com.intellij.psi.PsiType;
+import com.picimako.mockitools.util.ClassObjectAccessUtil;
 import org.jetbrains.annotations.Nullable;
 
 /**

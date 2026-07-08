@@ -12,7 +12,7 @@ import static com.picimako.mockitools.MockitoolsPsiUtil.isTimes;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromLast;
 import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.inspection.UnitTestPsiUtil.isInTestSourceContent;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;

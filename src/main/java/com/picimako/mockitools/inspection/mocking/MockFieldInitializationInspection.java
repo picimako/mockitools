@@ -4,7 +4,7 @@ package com.picimako.mockitools.inspection.mocking;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INJECT_MOCKS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
-import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.inspection.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemDescriptor;

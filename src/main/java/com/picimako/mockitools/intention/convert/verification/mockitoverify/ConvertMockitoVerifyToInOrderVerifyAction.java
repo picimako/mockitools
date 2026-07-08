@@ -8,7 +8,7 @@ import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFrom
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.MemberInplaceRenameHelper;
+import com.picimako.mockitools.intention.MemberInplaceRenameHelper;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationActionBase;
 
 import java.util.List;

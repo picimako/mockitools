@@ -3,7 +3,7 @@
 package com.picimako.mockitools.inspection.consecutive;
 
 import static com.google.common.collect.Iterables.getLast;
-import static com.picimako.mockitools.util.PointersUtil.toPointers;
+import static com.picimako.mockitools.inspection.PointersUtil.toPointers;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiMethodCallExpression;

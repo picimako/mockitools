@@ -21,7 +21,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.picimako.mockitools.StubType;
 import com.picimako.mockitools.StubbingApproach;
-import com.picimako.mockitools.util.PsiClassUtil;
+import com.picimako.mockitools.intention.PsiClassUtil;
 
 /**
  * Converts stubbing call chains between the different approaches.

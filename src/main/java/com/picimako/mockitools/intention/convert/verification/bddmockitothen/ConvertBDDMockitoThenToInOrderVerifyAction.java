@@ -16,7 +16,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.util.TriConsumer;
-import com.picimako.mockitools.MemberInplaceRenameHelper;
+import com.picimako.mockitools.intention.MemberInplaceRenameHelper;
 import com.picimako.mockitools.VerificationApproach;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationActionBase;
 

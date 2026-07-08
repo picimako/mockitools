@@ -4,7 +4,7 @@ package com.picimako.mockitools.intention.convert.verification;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
-import static com.picimako.mockitools.util.PsiClassUtil.importClassAndCommit;
+import static com.picimako.mockitools.intention.PsiClassUtil.importClassAndCommit;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 
 import com.intellij.openapi.editor.Document;
