@@ -10,14 +10,13 @@ import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.picimako.mockitools.inspection.BaseQuickFix;
-import com.picimako.mockitools.inspection.migrationaids.v4.ArgumentMatchersCalledViaMatchersInspection.ReplaceMatchersWithArgumentMatchersQuickFix;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Base class for Mockito v4 migration aid quick fixes.
  */
-public abstract class MigrationAidV4BaseQuickFix extends BaseQuickFix {
+abstract class MigrationAidV4BaseQuickFix extends BaseQuickFix {
 
     @Override
     public @IntentionFamilyName @NotNull String getFamilyName() {
@@ -48,7 +47,7 @@ public abstract class MigrationAidV4BaseQuickFix extends BaseQuickFix {
      */
     protected boolean replaceMatchersQualifier(PsiMethodCallExpression parentCall) {
         if (parentCall.getMethodExpression().isQualified()) {
-            new ReplaceMatchersWithArgumentMatchersQuickFix().replace(getQualifier(parentCall), parentCall.getProject());
+            QualifierReplacements.replaceMatchersWithArgumentMatchers(getQualifier(parentCall), parentCall.getProject());
             return true;
         }
         return false;
