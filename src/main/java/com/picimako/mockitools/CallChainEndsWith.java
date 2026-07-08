@@ -9,13 +9,13 @@ import java.util.List;
 import com.intellij.psi.PsiMethodCallExpression;
 
 /**
- * Analyzes a call chain whether the penultimate call is a call to a predefined method name, either {@code when()} or {@code given()}, in which the mock
- * object, or the call to a mock object is specified.
+ * Analyzes a call chain whether the penultimate call is a call to a predefined method name,
+ * either {@code when()} or {@code given()}, in which the mock object or the call to a mock object is specified.
  */
-public record CallChainEndsWith(String stubbingCallName) implements CallChainAnalyzer {
+record CallChainEndsWith(String stubbingCallName) implements CallChainAnalyzer {
 
-    public static final CallChainEndsWith ENDS_WITH_WHEN = new CallChainEndsWith("when");
-    public static final CallChainEndsWith ENDS_WITH_GIVEN = new CallChainEndsWith("given");
+    static final CallChainEndsWith ENDS_WITH_WHEN = new CallChainEndsWith("when");
+    static final CallChainEndsWith ENDS_WITH_GIVEN = new CallChainEndsWith("given");
 
     @Override
     public boolean analyze(List<PsiMethodCallExpression> calls) {

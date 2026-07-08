@@ -15,11 +15,11 @@ import java.util.List;
  * <p>
  * It is used to filter out call chains for stubbing approach conversions with no matching alternative in the target approach.
  */
-public record DoesntContainUnsupportedMethod(String unsupportedMethodName) implements CallChainAnalyzer {
-    public static final DoesntContainUnsupportedMethod DOESNT_CONTAIN_THEN = new DoesntContainUnsupportedMethod("then");
-    public static final DoesntContainUnsupportedMethod DOESNT_CONTAIN_WILL = new DoesntContainUnsupportedMethod("will");
-    public static final DoesntContainUnsupportedMethod DOESNT_CONTAIN_DO_NOTHING = new DoesntContainUnsupportedMethod("doNothing");
-    public static final DoesntContainUnsupportedMethod DOESNT_CONTAIN_WILL_DO_NOTHING = new DoesntContainUnsupportedMethod("willDoNothing");
+record DoesntContainUnsupportedMethod(String unsupportedMethodName) implements CallChainAnalyzer {
+    static final DoesntContainUnsupportedMethod DOESNT_CONTAIN_THEN = new DoesntContainUnsupportedMethod("then");
+    static final DoesntContainUnsupportedMethod DOESNT_CONTAIN_WILL = new DoesntContainUnsupportedMethod("will");
+    static final DoesntContainUnsupportedMethod DOESNT_CONTAIN_DO_NOTHING = new DoesntContainUnsupportedMethod("doNothing");
+    static final DoesntContainUnsupportedMethod DOESNT_CONTAIN_WILL_DO_NOTHING = new DoesntContainUnsupportedMethod("willDoNothing");
 
     @Override
     public boolean analyze(List<PsiMethodCallExpression> calls) {
