@@ -2,20 +2,11 @@
 
 package com.picimako.mockitools.inspection.migrationaids.v4;
 
-import static com.intellij.psi.JavaPsiFacade.getElementFactory;
-import static com.intellij.psi.search.GlobalSearchScope.moduleWithLibrariesScope;
-
-import java.util.Optional;
-
 import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-
-import com.picimako.mockitools.resources.MockitoolsBundle;
 
 /**
  * Replaces code reference elements with the predefined class ({@link #replacementClassFqn}).
@@ -24,21 +15,18 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  * <p>
  * In any case, the reference is replaced with the short name of the predefined fully qualified name.
  */
-@RequiredArgsConstructor
-public class NameCollisionlessReferenceReplacerQuickFix extends MigrationAidV4BaseQuickFix {
+public final class NameCollisionlessReferenceReplacerQuickFix extends ReferenceReplacerQuickFix {
 
-    private final String nameMessageKey;
-    private final String replacementClassFqn;
-
-    @Override
-    public @IntentionName @NotNull String getName() {
-        return MockitoolsBundle.message(nameMessageKey);
+    public NameCollisionlessReferenceReplacerQuickFix(String nameMessageKey, String replacementClassFqn) {
+        super(nameMessageKey, replacementClassFqn);
     }
 
     @Override
     protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor, PsiElement problemElement) {
-        Optional.ofNullable(ModuleUtilCore.findModuleForFile(problemElement.getContainingFile().getVirtualFile(), project))
-            .map(module -> getElementFactory(project).createReferenceElementByFQClassName(replacementClassFqn, moduleWithLibrariesScope(module)))
-            .ifPresent(problemElement::replace);
+        var module = ModuleUtilCore.findModuleForFile(problemElement.getContainingFile().getVirtualFile(), project);
+        if (module == null) return;
+
+        var refElement = createRefElementByFQN(project, module);
+        if (refElement != null) problemElement.replace(refElement);
     }
 }
