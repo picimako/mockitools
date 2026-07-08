@@ -34,14 +34,6 @@ final class NotExtensibleClassInspection extends LocalInspectionTool {
         return new JavaElementVisitor() {
             @Override
             public void visitClass(@NotNull PsiClass aClass) {
-                if (aClass.isAnnotationType()
-                    || aClass.isEnum()
-                    || aClass.isRecord()
-                    || aClass instanceof PsiTypeParameter
-                    || aClass instanceof PsiAnonymousClass
-                    || aClass.getExtendsList() == null) {
-                    return;
-                }
                 if (aClass.isInterface()) {
                     var isAnySuperInterfaceHasNotExtensible = exists(
                         aClass.getExtendsListTypes(),
@@ -51,7 +43,7 @@ final class NotExtensibleClassInspection extends LocalInspectionTool {
                         //at this point the name identifier should not be null
                         holder.registerProblem(aClass.getNameIdentifier(), MockitoolsBundle.message("inspection.interface.extends.not.extensible"));
                     }
-                } else {
+                } else if (isRegularClassWithSuperClass(aClass)) {
                     var superClass = aClass.getSuperClass();
                     if (superClass != null && superClass.hasAnnotation(ORG_MOCKITO_NOT_EXTENSIBLE)) {
                         //at this point the name identifier should not be null
@@ -60,5 +52,14 @@ final class NotExtensibleClassInspection extends LocalInspectionTool {
                 }
             }
         };
+    }
+
+    private boolean isRegularClassWithSuperClass(PsiClass aClass) {
+        return !aClass.isAnnotationType()
+                    && !aClass.isEnum()
+                    && !aClass.isRecord()
+                    && !(aClass instanceof PsiTypeParameter)
+                    && !(aClass instanceof PsiAnonymousClass)
+                    && aClass.getExtendsList() != null;
     }
 }
