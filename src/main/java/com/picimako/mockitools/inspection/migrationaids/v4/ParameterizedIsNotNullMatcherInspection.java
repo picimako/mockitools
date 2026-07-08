@@ -15,11 +15,11 @@ import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.siyeh.ig.callMatcher.CallMatcher;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,13 +55,10 @@ final class ParameterizedIsNotNullMatcherInspection extends MigrationAidBase.V23
     }
 
     @RequiredArgsConstructor
+    @Getter
     private static final class ReplaceNullMatcherWithNonParameterizedVariantQuickfix extends MigrationAidV4BaseQuickFix {
-        private final String quickFixName;
-
-        @Override
-        public @IntentionName @NotNull String getName() {
-            return quickFixName;
-        }
+        @NotNull
+        private final String name;
 
         @Override
         protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor, PsiElement problemElement) {
