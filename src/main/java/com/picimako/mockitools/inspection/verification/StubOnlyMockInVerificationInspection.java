@@ -5,7 +5,7 @@ package com.picimako.mockitools.inspection.verification;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
-import com.picimako.mockitools.VerificationApproach;
+import com.picimako.mockitools.dsl.VerificationApproach;
 import com.picimako.mockitools.dsl.MockObject;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;

@@ -5,7 +5,7 @@ package com.picimako.mockitools.intention.convert;
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.psi.PsiElement;
-import com.picimako.mockitools.Convention;
+import com.picimako.mockitools.dsl.Convention;
 import com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection;
 
 /**

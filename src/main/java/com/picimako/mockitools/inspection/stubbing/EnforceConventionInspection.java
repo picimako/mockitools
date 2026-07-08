@@ -13,7 +13,7 @@ import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.util.ui.JBUI;
-import com.picimako.mockitools.Convention;
+import com.picimako.mockitools.dsl.Convention;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;

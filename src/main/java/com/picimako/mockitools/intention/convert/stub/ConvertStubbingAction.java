@@ -18,7 +18,7 @@ import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.StubbingApproach;
+import com.picimako.mockitools.dsl.StubbingApproach;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

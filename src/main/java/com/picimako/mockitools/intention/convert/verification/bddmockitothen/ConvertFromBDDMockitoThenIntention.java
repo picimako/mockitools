@@ -9,7 +9,7 @@ import static com.intellij.util.containers.ContainerUtil.all;
 import static com.picimako.mockitools.intention.convert.EnforceConventionUtil.isBDDMockitoEnforced;
 import static com.picimako.mockitools.intention.convert.EnforceConventionUtil.isMockitoEnforced;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
-import static com.picimako.mockitools.VerificationApproach.BDDMOCKITO_THEN_SHOULD;
+import static com.picimako.mockitools.dsl.VerificationApproach.BDDMOCKITO_THEN_SHOULD;
 import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
 import static com.picimako.mockitools.intention.convert.MockitoolsContainerUtil.none;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;

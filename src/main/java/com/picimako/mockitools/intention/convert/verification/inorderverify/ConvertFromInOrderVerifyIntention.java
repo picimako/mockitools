@@ -8,7 +8,7 @@ import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static com.picimako.mockitools.intention.convert.EnforceConventionUtil.isBDDMockitoEnforced;
 import static com.picimako.mockitools.intention.convert.EnforceConventionUtil.isMockitoEnforced;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
-import static com.picimako.mockitools.VerificationApproach.INORDER_VERIFY;
+import static com.picimako.mockitools.dsl.VerificationApproach.INORDER_VERIFY;
 import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallForIdentifier;
 import static com.siyeh.ig.psiutils.TypeUtils.typeEquals;
@@ -19,7 +19,7 @@ import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.VerificationApproach;
+import com.picimako.mockitools.dsl.VerificationApproach;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase;
 
 import java.util.ArrayList;

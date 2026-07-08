@@ -3,7 +3,7 @@
 package com.picimako.mockitools.intention.convert.stub;
 
 import com.picimako.mockitools.MockitoolsActionTestBase;
-import com.picimako.mockitools.StubbingApproach;
+import com.picimako.mockitools.dsl.StubbingApproach;
 import org.junit.jupiter.api.Test;
 
 /**

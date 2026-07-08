@@ -3,7 +3,7 @@
 package com.picimako.mockitools.inspection.stubbing;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
-import com.picimako.mockitools.Convention;
+import com.picimako.mockitools.dsl.Convention;
 import com.picimako.mockitools.inspection.MockitoolsInspectionTestBase;
 import org.junit.jupiter.api.Test;
 

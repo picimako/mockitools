@@ -10,7 +10,7 @@ import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiModifier;
-import com.picimako.mockitools.StubbingApproach;
+import com.picimako.mockitools.dsl.StubbingApproach;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.util.PsiMethodUtil;
 import com.siyeh.ig.psiutils.MethodUtils;

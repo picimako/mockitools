@@ -9,7 +9,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiFile;
-import com.picimako.mockitools.VerificationApproach;
+import com.picimako.mockitools.dsl.VerificationApproach;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase;
 import com.siyeh.ig.psiutils.TypeUtils;
 

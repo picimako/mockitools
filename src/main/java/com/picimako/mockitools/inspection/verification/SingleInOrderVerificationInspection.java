@@ -16,7 +16,7 @@ import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.search.searches.ReferencesSearch;
-import com.picimako.mockitools.VerificationApproach;
+import com.picimako.mockitools.dsl.VerificationApproach;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 

@@ -8,7 +8,7 @@ import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.VerificationApproach;
+import com.picimako.mockitools.dsl.VerificationApproach;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;

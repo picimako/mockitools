@@ -13,7 +13,7 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReferenceExpression;
-import com.picimako.mockitools.VerificationApproach;
+import com.picimako.mockitools.dsl.VerificationApproach;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase;
 
 import java.util.ArrayList;

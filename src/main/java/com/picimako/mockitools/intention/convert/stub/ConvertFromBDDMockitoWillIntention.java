@@ -6,7 +6,7 @@ import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.picimako.mockitools.intention.convert.EnforceConventionUtil.isBDDMockitoEnforced;
 import static com.picimako.mockitools.intention.convert.EnforceConventionUtil.isMockitoEnforced;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
-import static com.picimako.mockitools.StubbingApproach.BDDMOCKITO_WILL_X;
+import static com.picimako.mockitools.dsl.StubbingApproach.BDDMOCKITO_WILL_X;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_WILL;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_WILL_DO_NOTHING;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
@@ -15,7 +15,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.StubbingApproach;
+import com.picimako.mockitools.dsl.StubbingApproach;
 
 import java.util.ArrayList;
 import java.util.List;

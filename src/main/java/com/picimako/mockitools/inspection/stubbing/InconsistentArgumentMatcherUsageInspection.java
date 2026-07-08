@@ -5,9 +5,9 @@ package com.picimako.mockitools.inspection.stubbing;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ADDITIONAL_MATCHERS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT_MATCHERS;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isAdditionalMatchers;
-import static com.picimako.mockitools.StubbingApproach.BDDMOCKITO_GIVEN;
-import static com.picimako.mockitools.StubbingApproach.MOCKITO_DO_X;
-import static com.picimako.mockitools.StubbingApproach.MOCKITO_WHEN;
+import static com.picimako.mockitools.dsl.StubbingApproach.BDDMOCKITO_GIVEN;
+import static com.picimako.mockitools.dsl.StubbingApproach.MOCKITO_DO_X;
+import static com.picimako.mockitools.dsl.StubbingApproach.MOCKITO_WHEN;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 

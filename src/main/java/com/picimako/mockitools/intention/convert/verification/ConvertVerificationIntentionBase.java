@@ -5,7 +5,7 @@ package com.picimako.mockitools.intention.convert.verification;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.VerificationApproach;
+import com.picimako.mockitools.dsl.VerificationApproach;
 import com.picimako.mockitools.intention.convert.ConversionIntentionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;

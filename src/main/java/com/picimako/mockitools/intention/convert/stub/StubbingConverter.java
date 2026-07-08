@@ -19,8 +19,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.StubType;
-import com.picimako.mockitools.StubbingApproach;
+import com.picimako.mockitools.dsl.StubType;
+import com.picimako.mockitools.dsl.StubbingApproach;
 import com.picimako.mockitools.intention.PsiClassUtil;
 
 /**
