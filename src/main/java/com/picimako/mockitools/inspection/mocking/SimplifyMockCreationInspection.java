@@ -83,15 +83,19 @@ final class SimplifyMockCreationInspection extends MockitoolsBaseInspection {
 
                 if (SPIED_INSTANCE.equals(settingsMethodName)) {
                     //org.mockito.Mockito.spy(<spiedInstance>)
-                    String mockitoSpy = "org.mockito.Mockito.spy(" + getFirstArgument(settingsMethodCall).getText() + ")";
+                    String mockitoSpy = "org.mockito.Mockito.spy(" + textOfFirstArg(settingsMethodCall) + ")";
                     simplify(mockitoMock, mockitoSpy, project);
                 } else if (NAME.equals(settingsMethodName) || DEFAULT_ANSWER.equals(settingsMethodName)) {
                     //org.mockito.Mockito.mock(<clazz>.class, <answer>)
                     //org.mockito.Mockito.mock(<clazz>.class, <name>)
-                    String newMockitoMock = "org.mockito.Mockito.mock(" + getFirstArgument(mockitoMock).getText() + ", " + getFirstArgument(settingsMethodCall).getText() + ")";
+                    String newMockitoMock = "org.mockito.Mockito.mock(" + textOfFirstArg(mockitoMock) + ", " + textOfFirstArg(settingsMethodCall) + ")";
                     simplify(mockitoMock, newMockitoMock, project);
                 }
             }
+        }
+
+        private String textOfFirstArg(PsiMethodCallExpression call) {
+            return getFirstArgument(call).getText();
         }
 
         /**
