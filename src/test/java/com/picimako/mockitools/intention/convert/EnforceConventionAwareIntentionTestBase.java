@@ -7,7 +7,6 @@ import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.testFramework.InspectionsKt;
 
 import com.picimako.mockitools.Convention;
-import com.picimako.mockitools.EnforceConventionUtil;
 import com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection;
 import com.picimako.mockitools.intention.MockitoolsIntentionTestBase;
 
