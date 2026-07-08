@@ -6,7 +6,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_JUNIT_MO
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_RUNNERS_CONSOLE_SPAMMING_MOCKITO_JUNIT_RUNNER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_RUNNERS_MOCKITO_JUNIT_RUNNER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_RUNNERS_VERBOSE_MOCKITO_JUNIT_RUNNER;
-import static com.picimako.mockitools.util.ModuleDependencyHelper.isMockitoCore2xOr3xAvailableInModuleOf;
+import static com.picimako.mockitools.inspection.migrationaids.v4.ModuleDependencyHelper.isMockitoCore2xOr3xAvailableInModuleOf;
 import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
