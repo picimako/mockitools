@@ -8,7 +8,9 @@ import com.siyeh.ig.callMatcher.CallMatcher;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ANSWER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK_SETTINGS;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE;
 import static com.picimako.mockitools.MockitoQualifiedNames.SPY;
+import static com.picimako.mockitools.MockitoolsPsiUtil.INORDER_VERIFY;
 import static com.picimako.mockitools.MockitoolsPsiUtil.MOCKITO_MOCK;
 import static com.siyeh.ig.callMatcher.CallMatcher.anyOf;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
@@ -25,6 +27,11 @@ public final class MockitoMockMatchers {
     public static final CallMatcher MOCK_WITH_NAME = MOCKITO_MOCK.parameterTypes(JAVA_LANG_CLASS, CommonClassNames.JAVA_LANG_STRING);
     public static final CallMatcher MOCK_WITH_ANSWER = MOCKITO_MOCK.parameterTypes(JAVA_LANG_CLASS, ORG_MOCKITO_ANSWER);
     public static final CallMatcher MOCK_WITH_SETTINGS = MOCKITO_MOCK.parameterTypes(JAVA_LANG_CLASS, ORG_MOCKITO_MOCK_SETTINGS);
+
+    //MockedStatic specific verify() methods are excluded, since BDDMockito has no way to verify MockedStatic
+    public static final CallMatcher IN_ORDER_VERIFY_NON_MOCKED_STATIC = CallMatcher.anyOf(
+        INORDER_VERIFY.parameterTypes("T"),
+        INORDER_VERIFY.parameterTypes("T", ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE));
 
     //Spy
 

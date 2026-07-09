@@ -2,10 +2,9 @@
 
 package com.picimako.mockitools.inspection.stubbing;
 
+import static com.picimako.mockitools.MockitoMockMatchers.IN_ORDER_VERIFY_NON_MOCKED_STATIC;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE;
-import static com.picimako.mockitools.MockitoolsPsiUtil.INORDER_VERIFY;
 import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 
@@ -41,12 +40,7 @@ import java.util.Optional;
  *
  * @since 0.4.0
  */
-@SuppressWarnings("ExtensionClassShouldBeFinalAndNonPublic")
 public final class EnforceConventionInspection extends MockitoolsBaseInspection {
-    //MockedStatic specific verify() methods are excluded, since BDDMockito has no way to verify MockedStatic
-    public static final CallMatcher IN_ORDER_VERIFY_NON_MOCKED_STATIC = CallMatcher.anyOf(
-        INORDER_VERIFY.parameterTypes("T"),
-        INORDER_VERIFY.parameterTypes("T", ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE));
     private static final CallMatcher MOCKITO_MATCHER = CallMatcher.anyOf(
         staticCall(ORG_MOCKITO_MOCKITO,
             "when", "doReturn", "doThrow", "doAnswer", "doCallRealMethod", "doNothing", //stubbing
@@ -58,7 +52,6 @@ public final class EnforceConventionInspection extends MockitoolsBaseInspection 
         "then" //verification
     );
 
-    @SuppressWarnings("PublicField")
     public Convention conventionToEnforce = Convention.MOCKITO;
 
     @Override

@@ -3,6 +3,7 @@
 package com.picimako.mockitools.dsl;
 
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
+import static com.picimako.mockitools.MockitoMockMatchers.IN_ORDER_VERIFY_NON_MOCKED_STATIC;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO_THEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
@@ -21,7 +22,6 @@ import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import lombok.RequiredArgsConstructor;
 
@@ -94,7 +94,7 @@ public enum VerificationApproach {
     INORDER_VERIFY("InOrder.verify()") {
         @Override
         public boolean isVerifiedBy(PsiMethodCallExpression expression) {
-            return computeBlocking(() -> EnforceConventionInspection.IN_ORDER_VERIFY_NON_MOCKED_STATIC.matches(expression));
+            return computeBlocking(() -> IN_ORDER_VERIFY_NON_MOCKED_STATIC.matches(expression));
         }
 
         @Override
