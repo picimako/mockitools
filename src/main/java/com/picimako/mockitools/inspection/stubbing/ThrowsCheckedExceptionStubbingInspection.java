@@ -38,8 +38,6 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-
 /**
  * Reports exception references in {@code *Throw()} stubbing methods based on Mockito's rule on checked exceptions:
  * <i>If [the specified exception types] contain a checked exception then it has to match one of the checked exceptions of method signature.</i>
@@ -117,7 +115,8 @@ final class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInspe
 
     private static boolean doesntHaveMatchingCheckedExceptionInThrowsClause(PsiClassType[] exceptionTypesInThrowsClause, PsiExpression stubbedException) {
         var stubbedExceptionType = evaluateType(stubbedException);
-        return stubbedExceptionType != null && Arrays.stream(exceptionTypesInThrowsClause).noneMatch(type -> type.getCanonicalText().equals(stubbedExceptionType.getCanonicalText()));
+        return stubbedExceptionType != null
+            && none(exceptionTypesInThrowsClause, type -> type.getCanonicalText().equals(stubbedExceptionType.getCanonicalText()));
     }
 
     private static boolean doesntHaveExceptionOrThrowableInThrowsClause(PsiClassType[] exceptionTypesInThrowsClause) {

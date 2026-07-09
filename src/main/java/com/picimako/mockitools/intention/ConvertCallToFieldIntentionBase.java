@@ -3,10 +3,12 @@
 package com.picimako.mockitools.intention;
 
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
+import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 import static com.intellij.util.containers.ContainerUtil.exists;
-import static com.picimako.mockitools.util.ClassObjectAccessUtil.resolveOperandType;
 import static com.picimako.mockitools.intention.ListPopupHelper.selectItemAndRun;
 import static com.picimako.mockitools.intention.PsiClassUtil.getParentClasses;
+import static com.picimako.mockitools.util.ClassObjectAccessUtil.resolveOperandType;
+import static com.picimako.mockitools.util.MockitoolsContainerUtil.none;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.util.Ranges.endOffsetOf;
 import static java.util.stream.Collectors.joining;
@@ -17,7 +19,6 @@ import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.ide.util.PsiClassListCellRenderer;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -180,9 +181,9 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
                     if (!success) return;
 
                     Optional.ofNullable(getVariable())
-                        .filter(renamedVariable -> Arrays.stream(ctx.targetClass.getFields()).noneMatch(f -> renamedVariable.getName().equals(f.getName())))
+                        .filter(renamedVariable -> none(ctx.targetClass.getFields(), f -> renamedVariable.getName().equals(f.getName())))
                         .ifPresentOrElse(renamedVariable ->
-                                WriteCommandAction.runWriteCommandAction(ctx.project, () -> {
+                                runWriteCommandAction(ctx.project, () -> {
                                     PsiDocumentManager.getInstance(ctx.project).commitAllDocuments();
                                     //set the name of the field to be introduced, so that it is created with the name specified by the user
                                     if (renamedVariable.getName() != null) {
@@ -197,7 +198,7 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
                 }
             }.performInplaceRename();
         } else {
-            WriteCommandAction.runWriteCommandAction(ctx.project, () -> {
+            runWriteCommandAction(ctx.project, () -> {
                 PsiDocumentManager.getInstance(ctx.project).commitAllDocuments();
                 ctx.targetClass.add(fieldToAdd);
                 ctx.spyOrMockCall.getParent().delete(); //remove local variable declaration
@@ -212,11 +213,11 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
         var manager = PsiDocumentManager.getInstance(ctx.project);
         ApplicationManager.getApplication().invokeAndWait(manager::commitAllDocuments);
         var addedField = new Ref<PsiField>();
-        WriteCommandAction.runWriteCommandAction(ctx.project, () -> {
+        runWriteCommandAction(ctx.project, () -> {
             addedField.set((PsiField) ctx.targetClass.add(field));
             manager.commitDocument(ctx.getDocument());
         });
-        WriteCommandAction.runWriteCommandAction(ctx.project, () -> {
+        runWriteCommandAction(ctx.project, () -> {
             //replace standalone spy() call with the name of the new field.
             ctx.getDocument().replaceString(ctx.spyOrMockCall.getTextOffset(), endOffsetOf(ctx.spyOrMockCall), addedField.get().getName());
             manager.commitDocument(ctx.getDocument());
