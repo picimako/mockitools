@@ -62,10 +62,7 @@ final class TimesVerificationModeInspection extends MockitoolsBaseInspection {
     private static final CallMatcher BDDMOCKITO_SHOULD =
         instanceCall(ORG_MOCKITO_BDDMOCKITO_THEN, "should").parameterTypes(ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE);
 
-    @SuppressWarnings("PublicField")
     public boolean reportTimesZeroToNever = true;
-
-    @SuppressWarnings("PublicField")
     public boolean reportTimesOneCanBeOmitted = true;
 
     @Override
