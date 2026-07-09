@@ -38,14 +38,12 @@ final class SingleInOrderVerificationInspection extends LocalInspectionTool {
 
                 var inOrderRefs = ReferencesSearch.search(variable).findAll();
                 //If there is only one reference to/usage of the InOrder variable
-                if (inOrderRefs.size() == 1) {
-                    var ref = inOrderRefs.iterator().next();
-                    if (ref instanceof PsiReferenceExpression inOrderRef) {
-                        var verifyOrShould = getParentOfType(inOrderRef, PsiMethodCallExpression.class);
-                        //If the only usage is a method call to InOrder.verify() or BDDMockito.should(InOrder)
-                        if (VerificationApproach.INORDER_VERIFY.isVerifiedBy(verifyOrShould) || VerificationApproach.BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(verifyOrShould))
-                            holder.registerProblem(variable.getNameIdentifier(), MockitoolsBundle.message("inspection.in.order.is.used.only.once"));
-                    }
+                if (inOrderRefs.size() == 1 && inOrderRefs.iterator().next() instanceof PsiReferenceExpression inOrderRef) {
+                    var verifyOrShould = getParentOfType(inOrderRef, PsiMethodCallExpression.class);
+                    //If the only usage is a method call to InOrder.verify() or BDDMockito.should(InOrder)
+                    if (VerificationApproach.INORDER_VERIFY.isVerifiedBy(verifyOrShould)
+                        || VerificationApproach.BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(verifyOrShould))
+                        holder.registerProblem(variable.getNameIdentifier(), MockitoolsBundle.message("inspection.in.order.is.used.only.once"));
                 }
 
                 super.visitLocalVariable(variable);
