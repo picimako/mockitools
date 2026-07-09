@@ -54,13 +54,13 @@ import java.util.Objects;
  */
 final class TimesVerificationModeInspection extends MockitoolsBaseInspection {
 
+    private static final CallMatcher.Simple SHOULD = instanceCall(ORG_MOCKITO_BDDMOCKITO_THEN, "should");
     private static final CallMatcher VERIFICATION = CallMatcher.anyOf(
         MockitoolsPsiUtil.MOCKITO_VERIFY.parameterTypes("T", ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE),
         MockitoolsPsiUtil.INORDER_VERIFY.parameterTypes("T", ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE),
         MockitoolsPsiUtil.MOCKED_STATIC_VERIFY.parameterTypes(ORG_MOCKITO_MOCKED_STATIC_VERIFICATION, ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE),
-        instanceCall(ORG_MOCKITO_BDDMOCKITO_THEN, "should").parameterTypes(ORG_MOCKITO_INORDER, ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE));
-    private static final CallMatcher BDDMOCKITO_SHOULD =
-        instanceCall(ORG_MOCKITO_BDDMOCKITO_THEN, "should").parameterTypes(ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE);
+        SHOULD.parameterTypes(ORG_MOCKITO_INORDER, ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE));
+    private static final CallMatcher BDDMOCKITO_SHOULD = SHOULD.parameterTypes(ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE);
 
     public boolean reportTimesZeroToNever = true;
     public boolean reportTimesOneCanBeOmitted = true;
