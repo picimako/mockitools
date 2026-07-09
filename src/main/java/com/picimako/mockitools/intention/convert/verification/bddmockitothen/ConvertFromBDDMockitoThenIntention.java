@@ -11,7 +11,7 @@ import static com.picimako.mockitools.intention.convert.EnforceConventionUtil.is
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
 import static com.picimako.mockitools.dsl.VerificationApproach.BDDMOCKITO_THEN_SHOULD;
 import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
-import static com.picimako.mockitools.intention.convert.MockitoolsContainerUtil.none;
+import static com.picimako.mockitools.util.MockitoolsContainerUtil.none;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;
 import static com.picimako.mockitools.util.PsiMethodUtil.getSubsequentMethodCall;
 
