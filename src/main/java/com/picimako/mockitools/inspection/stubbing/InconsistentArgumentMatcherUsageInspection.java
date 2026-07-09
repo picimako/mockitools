@@ -18,7 +18,6 @@ import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiTypeCastExpression;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 import com.picimako.mockitools.resources.MockitoolsBundle;
-import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -90,9 +89,7 @@ final class InconsistentArgumentMatcherUsageInspection extends MockitoolsBaseIns
     }
 
     private boolean isArgumentMatcher(PsiExpression arg, String methodName) {
-        return CallMatcher.anyOf(
-            staticCall(ORG_MOCKITO_ARGUMENT_MATCHERS, methodName),
-            staticCall(ORG_MOCKITO_ADDITIONAL_MATCHERS, methodName)
-        ).matches(arg);
+        return staticCall(ORG_MOCKITO_ARGUMENT_MATCHERS, methodName).matches(arg)
+            || staticCall(ORG_MOCKITO_ADDITIONAL_MATCHERS, methodName).matches(arg);
     }
 }
