@@ -4,8 +4,8 @@ package com.picimako.mockitools.dsl;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
-import static com.picimako.mockitools.dsl.CallChainEndsWith.ENDS_WITH_GIVEN;
-import static com.picimako.mockitools.dsl.CallChainEndsWith.ENDS_WITH_WHEN;
+import static com.intellij.openapi.util.text.StringUtil.substringAfterLast;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static com.picimako.mockitools.MockitoQualifiedNames.DO_THROW;
 import static com.picimako.mockitools.MockitoQualifiedNames.GIVEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
@@ -19,6 +19,8 @@ import static com.picimako.mockitools.MockitoQualifiedNames.THEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.THEN_THROW;
 import static com.picimako.mockitools.MockitoQualifiedNames.WHEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.WILL_THROW;
+import static com.picimako.mockitools.dsl.CallChainEndsWith.ENDS_WITH_GIVEN;
+import static com.picimako.mockitools.dsl.CallChainEndsWith.ENDS_WITH_WHEN;
 import static com.picimako.mockitools.util.PsiMethodUtil.findCallDownwardsInChain;
 import static com.picimako.mockitools.util.PsiMethodUtil.findCallUpwardsInChain;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
@@ -34,7 +36,6 @@ import com.picimako.mockitools.inspection.stubbing.ExceptionStubber;
 import com.picimako.mockitools.util.PsiMethodUtil;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -46,14 +47,13 @@ import java.util.stream.Stream;
  *
  * @since 0.7.0
  */
-@RequiredArgsConstructor
 @Getter
 public enum StubbingApproach {
 
     /**
      * Mockito.when().then*()
      */
-    MOCKITO_WHEN(StubType.STUBBING, "when", "Mockito.when()", ORG_MOCKITO_MOCKITO, "Mockito", THEN) {
+    MOCKITO_WHEN(StubType.STUBBING, "Mockito.when()", ORG_MOCKITO_MOCKITO, "when", THEN) {
         private final CallMatcher MOCKITO_WHEN = staticCall(ORG_MOCKITO_MOCKITO, WHEN).parameterCount(1);
         private final CallMatcher MOCKITO_WHEN_THEN_X = instanceCall(ORG_MOCKITO_ONGOING_STUBBING,
             "then", "thenReturn", "thenThrow", "thenAnswer", "thenCallRealMethod");
@@ -95,7 +95,7 @@ public enum StubbingApproach {
         }
 
         @Override
-        public boolean isValidStubbingArgument(PsiExpression mockObjectOrCallToStubbedMethod) {
+        protected boolean isValidStubbingArgument(PsiExpression mockObjectOrCallToStubbedMethod) {
             return mockObjectOrCallToStubbedMethod instanceof PsiMethodCallExpression;
         }
 
@@ -108,7 +108,7 @@ public enum StubbingApproach {
     /**
      * Mockito.do*().when()
      */
-    MOCKITO_DO_X(StubType.STUBBER, "when", "Mockito.do*()", ORG_MOCKITO_MOCKITO, "Mockito", "do") {
+    MOCKITO_DO_X(StubType.STUBBER, "Mockito.do*()", ORG_MOCKITO_MOCKITO, "when", "do") {
         private final CallMatcher MOCKITO_DO_X_WHEN = instanceCall(ORG_MOCKITO_STUBBING_STUBBER, WHEN);
         private final CallMatcher MOCKITO_DO_X =
             staticCall(ORG_MOCKITO_MOCKITO, "doReturn", "doThrow", "doAnswer", "doCallRealMethod", "doNothing");
@@ -152,7 +152,7 @@ public enum StubbingApproach {
         }
 
         @Override
-        public boolean isValidStubbingArgument(PsiExpression mockObjectOrCallToStubbedMethod) {
+        protected boolean isValidStubbingArgument(PsiExpression mockObjectOrCallToStubbedMethod) {
             return mockObjectOrCallToStubbedMethod instanceof PsiReferenceExpression;
         }
 
@@ -165,7 +165,7 @@ public enum StubbingApproach {
     /**
      * BDDMockito.given().will*()
      */
-    BDDMOCKITO_GIVEN(StubType.STUBBING, "given", "BDDMockito.given()", ORG_MOCKITO_BDDMOCKITO, "BDDMockito", "will") {
+    BDDMOCKITO_GIVEN(StubType.STUBBING, "BDDMockito.given()", ORG_MOCKITO_BDDMOCKITO, "given", "will") {
         private final CallMatcher BDDMOCKITO_GIVEN = staticCall(ORG_MOCKITO_BDDMOCKITO, GIVEN).parameterCount(1);
         private final CallMatcher BDDMOCKITO_GIVEN_WILL_X = instanceCall(ORG_MOCKITO_BDD_MY_ONGOING_STUBBING,
             "will", "willReturn", "willThrow", "willAnswer", "willCallRealMethod");
@@ -206,7 +206,7 @@ public enum StubbingApproach {
         }
 
         @Override
-        public boolean isValidStubbingArgument(PsiExpression mockObjectOrCallToStubbedMethod) {
+        protected boolean isValidStubbingArgument(PsiExpression mockObjectOrCallToStubbedMethod) {
             return mockObjectOrCallToStubbedMethod instanceof PsiMethodCallExpression;
         }
 
@@ -219,7 +219,7 @@ public enum StubbingApproach {
     /**
      * BDDMockito.will*().given()
      */
-    BDDMOCKITO_WILL_X(StubType.STUBBER, "given", "BDDMockito.will*()", ORG_MOCKITO_BDDMOCKITO, "BDDMockito", "will") {
+    BDDMOCKITO_WILL_X(StubType.STUBBER, "BDDMockito.will*()", ORG_MOCKITO_BDDMOCKITO, "given", "will") {
         private final CallMatcher BDDMOCKITO_WILL_X =
             staticCall(ORG_MOCKITO_BDDMOCKITO, "will", "willReturn", "willThrow", "willAnswer", "willCallRealMethod", "willDoNothing");
         private final CallMatcher BDDMOCKITO_WILL_X_GIVEN =
@@ -261,7 +261,7 @@ public enum StubbingApproach {
         }
 
         @Override
-        public boolean isValidStubbingArgument(PsiExpression mockObjectOrCallToStubbedMethod) {
+        protected boolean isValidStubbingArgument(PsiExpression mockObjectOrCallToStubbedMethod) {
             return mockObjectOrCallToStubbedMethod instanceof PsiReferenceExpression;
         }
 
@@ -272,18 +272,24 @@ public enum StubbingApproach {
         }
     };
 
-    public static final List<ExceptionStubber> EXCEPTION_STUBBERS = List.of(
-        MOCKITO_WHEN.getExceptionStubber(),
-        MOCKITO_DO_X.getExceptionStubber(),
-        BDDMOCKITO_GIVEN.getExceptionStubber(),
-        BDDMOCKITO_WILL_X.getExceptionStubber());
+    private static final List<ExceptionStubber> EXCEPTION_STUBBERS =
+        map(StubbingApproach.values(), StubbingApproach::getExceptionStubber);
 
     public final StubType stubType;
-    public final String methodCallStubber;
     public final String presentableText;
+    public final String methodCallStubber;
     public final String stubStarterClassFqn;
-    public final String stubStarterClassName;
+    final String stubStarterClassName;
     public final String stubPrefix;
+
+    StubbingApproach(StubType stubType, String presentableText, String stubStarterClassFqn, String methodCallStubber, String stubPrefix) {
+        this.stubType = stubType;
+        this.presentableText = presentableText;
+        this.methodCallStubber = methodCallStubber;
+        this.stubStarterClassFqn = stubStarterClassFqn;
+        this.stubStarterClassName = substringAfterLast(stubStarterClassFqn, ".");
+        this.stubPrefix = stubPrefix;
+    }
 
     /**
      * For example:
