@@ -30,7 +30,7 @@ import java.util.List;
 final class ConvertFromMockitoDoIntention extends ConvertStubbingIntentionBase {
 
     public ConvertFromMockitoDoIntention() {
-        super("Mockito.do*()", ORG_MOCKITO_MOCKITO);
+        super(StubbingApproach.MOCKITO_DO_X, ORG_MOCKITO_MOCKITO);
     }
 
     @Override

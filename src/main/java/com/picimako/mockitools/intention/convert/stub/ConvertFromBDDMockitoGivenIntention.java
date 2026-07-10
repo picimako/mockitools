@@ -29,7 +29,7 @@ import java.util.List;
 final class ConvertFromBDDMockitoGivenIntention extends ConvertStubbingIntentionBase {
 
     public ConvertFromBDDMockitoGivenIntention() {
-        super("BDDMockito.given()", ORG_MOCKITO_BDDMOCKITO);
+        super(StubbingApproach.BDDMOCKITO_GIVEN, ORG_MOCKITO_BDDMOCKITO);
     }
 
     @Override

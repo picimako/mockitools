@@ -52,10 +52,14 @@ public abstract class ConversionIntentionBase implements IntentionAction {
 
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-        if (computeBlocking(() -> !editor.getSelectionModel().hasSelection())) {
-            final var element = file.findElementAt(computeBlocking(() -> editor.getCaretModel().getOffset()));
-            return isIdentifierOfMethodCall(element) && isAvailableFor(getMethodCallForIdentifier(element));
-        } else return isAvailableForBulkConversion(editor, file);
+        @Nullable final var elementAtCaret = computeBlocking(() -> {
+            var hasSelection = editor.getSelectionModel().hasSelection();
+            return !hasSelection ? file.findElementAt(editor.getCaretModel().getOffset()) : null;
+        });
+
+        return elementAtCaret != null
+            ? isIdentifierOfMethodCall(elementAtCaret) && isAvailableFor(getMethodCallForIdentifier(elementAtCaret))
+            : isAvailableForBulkConversion(editor, file);
     }
 
     /**

@@ -31,7 +31,7 @@ import java.util.List;
 final class ConvertFromBDDMockitoWillIntention extends ConvertStubbingIntentionBase {
 
     public ConvertFromBDDMockitoWillIntention() {
-        super("BDDMockito.will*()", ORG_MOCKITO_BDDMOCKITO);
+        super(StubbingApproach.BDDMOCKITO_WILL_X, ORG_MOCKITO_BDDMOCKITO);
     }
 
     @Override

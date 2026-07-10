@@ -29,7 +29,7 @@ import java.util.List;
 final class ConvertFromMockitoWhenIntention extends ConvertStubbingIntentionBase {
 
     public ConvertFromMockitoWhenIntention() {
-        super("Mockito.when()", ORG_MOCKITO_MOCKITO);
+        super(StubbingApproach.MOCKITO_WHEN, ORG_MOCKITO_MOCKITO);
     }
 
     @Override
