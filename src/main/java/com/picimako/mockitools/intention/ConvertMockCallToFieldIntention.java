@@ -15,13 +15,13 @@ import static com.picimako.mockitools.MockitoQualifiedNames.LENIENT;
 import static com.picimako.mockitools.MockitoQualifiedNames.MOCK_MAKER;
 import static com.picimako.mockitools.MockitoQualifiedNames.NAME;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK_SERIALIZABLE_MODE;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK_SETTINGS;
 import static com.picimako.mockitools.MockitoQualifiedNames.SERIALIZABLE;
 import static com.picimako.mockitools.MockitoQualifiedNames.STRICTNESS;
 import static com.picimako.mockitools.MockitoQualifiedNames.STUB_ONLY;
 import static com.picimako.mockitools.MockitoQualifiedNames.WITHOUT_ANNOTATIONS;
+import static com.picimako.mockitools.MockitoolsPsiUtil.MOCKITO_WITH_SETTINGS;
 import static com.picimako.mockitools.util.ClassObjectAccessUtil.getOperandType;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromLast;
 import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
@@ -31,7 +31,6 @@ import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaretOrE
 import static com.picimako.mockitools.util.PsiMethodUtil.hasOneArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.hasTwoArguments;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
-import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 import static java.util.stream.Collectors.joining;
 
@@ -92,9 +91,8 @@ import java.util.function.Supplier;
  * @since 0.4.0
  */
 final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionBase {
-    private static final CallMatcher MOCKITO_WITH_SETTINGS = staticCall(ORG_MOCKITO_MOCKITO, "withSettings");
-
-    private static final CallMatcher MOCK_SETTINGS_SERIALIZABLE_WITH_MODE = instanceCall(ORG_MOCKITO_MOCK_SETTINGS, SERIALIZABLE).parameterTypes(ORG_MOCKITO_MOCK_SERIALIZABLE_MODE);
+    private static final CallMatcher MOCK_SETTINGS_SERIALIZABLE_WITH_MODE =
+        instanceCall(ORG_MOCKITO_MOCK_SETTINGS, SERIALIZABLE).parameterTypes(ORG_MOCKITO_MOCK_SERIALIZABLE_MODE);
     /**
      * {@code MockSettings.spiedInstance()} could be a special case for converting into a {@code @Spy} field,
      * but {@code @Mock} doesn't support such configuration, and there is also the actual object instance that is passed in,
