@@ -40,6 +40,7 @@ import java.util.Optional;
  *
  * @since 0.4.0
  */
+@SuppressWarnings("ExtensionClassShouldBeFinalAndNonPublic")
 public final class EnforceConventionInspection extends MockitoolsInspectionBase {
     private static final CallMatcher MOCKITO_MATCHER = CallMatcher.anyOf(
         staticCall(ORG_MOCKITO_MOCKITO,
