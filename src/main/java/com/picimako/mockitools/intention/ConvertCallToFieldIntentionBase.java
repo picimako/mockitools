@@ -23,7 +23,6 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassObjectAccessExpression;
@@ -88,24 +87,17 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
             return new ConversionContext((PsiMethodCallExpression) element.getParent().getParent(), editor, project);
         });
 
-        if (ctx.mockTypeOrObject instanceof PsiClassObjectAccessExpression) {
-            selectTargetClassAndIntroduceField(getParentClasses(ctx.mockTypeOrObject),
-                project,
-                editor,
-                targetClass -> introduceFieldForClassObjectAccess(ctx.targetClass(targetClass)));
-        }
-        //This branch is valid only in case of ConvertSpyCallToFieldIntention
-        else if (ctx.mockTypeOrObject instanceof PsiNewExpression) {
-            selectTargetClassAndIntroduceField(getParentClasses(ctx.mockTypeOrObject),
-                project,
-                editor,
-                targetClass -> introduceFieldForNewExpression(ctx.targetClass(targetClass)));
-        } else if (ctx.mockTypeOrObject instanceof PsiLocalVariable) {
-            selectTargetClassAndIntroduceField(getParentClasses(ctx.mockTypeOrObject),
-                project,
-                editor,
-                targetClass -> introduceFieldForLocalVariableType(ctx.targetClass(targetClass)));
-        }
+        @Nullable Consumer<PsiClass> introduceField = switch (ctx.mockTypeOrObject) {
+            case PsiClassObjectAccessExpression __ ->
+                targetClass -> introduceFieldForClassObjectAccess(ctx.targetClass(targetClass));
+            //This branch is valid only in case of ConvertSpyCallToFieldIntention
+            case PsiNewExpression __ -> targetClass -> introduceFieldForNewExpression(ctx.targetClass(targetClass));
+            case PsiLocalVariable __ -> targetClass -> introduceFieldForLocalVariableType(ctx.targetClass(targetClass));
+            case null, default -> null;
+        };
+
+        if (introduceField != null)
+            selectTargetClassAndIntroduceField(getParentClasses(ctx.mockTypeOrObject), project, editor, introduceField);
     }
 
     /**
@@ -124,7 +116,7 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
      */
     protected void introduceFieldForClassObjectAccess(ConversionContext ctx) {
         introduceField(ctx,
-            () -> Couple.of(resolveOperandType(ctx.mockTypeOrObject).getName(), toLowerCamel(resolveOperandType(ctx.mockTypeOrObject).getName())),
+            () -> new FieldTypeAndName(resolveOperandType(ctx.mockTypeOrObject).getName(), toLowerCamel(resolveOperandType(ctx.mockTypeOrObject).getName())),
             NO_INITIALIZER);
     }
 
@@ -134,7 +126,7 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
      */
     protected void introduceFieldForLocalVariableType(ConversionContext ctx) {
         var localVar = (PsiLocalVariable) ctx.mockTypeOrObject;
-        introduceField(ctx, () -> Couple.of(localVar.getType().getPresentableText(), localVar.getName()), NO_INITIALIZER);
+        introduceField(ctx, () -> new FieldTypeAndName(localVar.getType().getPresentableText(), localVar.getName()), NO_INITIALIZER);
     }
 
     /**
@@ -148,13 +140,13 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
         }
     }
 
-    protected void introduceField(ConversionContext ctx, Supplier<Couple<String>> typeAndFieldName, Supplier<String> initializer) {
+    protected void introduceField(ConversionContext ctx, Supplier<FieldTypeAndName> typeAndFieldName, Supplier<String> initializer) {
         if (ctx.spyOrMockCall.getParent() instanceof PsiLocalVariable variable) {
             var field = createField(computeBlocking(() -> variable.getType().getCanonicalText()), getLocalVariableName(variable), initializer, ctx);
             doIntroduceFieldForLocalVariable(ctx, field, variable);
         } else {
-            var typeAndField = typeAndFieldName.get();
-            var field = createField(typeAndField.first, typeAndField.second, initializer, ctx);
+            var typeAndName = typeAndFieldName.get();
+            var field = createField(typeAndName.type, typeAndName.name, initializer, ctx);
             doIntroduceFieldForStandaloneMethodCall(ctx, field);
         }
     }
@@ -235,16 +227,17 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
      * <p>
      * For example:
      * <pre>
-     * new MockableObject(); -> Pair("MockableObject", "mockableObject")
-     * new MockableObject&lt;String, Integer>(); -> Pair("MockableObject&lt;java.lang.String, java.lang.Integer>", "mockableObject")
-     * </pre>
+     * {@code
+     * new MockableObject(); -> FieldTypeAndName("MockableObject", "mockableObject")
+     * new MockableObject<String, Integer>(); -> FieldTypeAndName("MockableObject<java.lang.String, java.lang.Integer>", "mockableObject")
+     * }</pre>
      */
-    protected Couple<String> constructFieldTypeAndName(PsiJavaCodeReferenceElement classReference) {
+    protected FieldTypeAndName constructFieldTypeAndName(PsiJavaCodeReferenceElement classReference) {
         return computeBlocking(() -> {
-            String fieldName = classReference.getTypeParameters().length == 0
+            String fieldType = classReference.getTypeParameters().length == 0
                 ? classReference.getReferenceName()
                 : classReference.getReferenceName() + "<" + Arrays.stream(classReference.getTypeParameters()).map(PsiType::getCanonicalText).collect(joining(", ")) + ">";
-            return Couple.of(fieldName, toLowerCamel(classReference.getReferenceName()));
+            return new FieldTypeAndName(fieldType, toLowerCamel(classReference.getReferenceName()));
         });
     }
 
@@ -283,5 +276,8 @@ abstract class ConvertCallToFieldIntentionBase implements IntentionAction {
         Document getDocument() {
             return editor.getDocument();
         }
+    }
+
+    protected record FieldTypeAndName(String type, String name) {
     }
 }
