@@ -2,7 +2,6 @@
 
 package com.picimako.mockitools.intention.convert.verification.mockitoverify;
 
-import static com.google.common.collect.Iterables.getLast;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
 import static com.picimako.mockitools.MockitoolsPsiUtil.MOCKITO_VERIFY;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
@@ -41,7 +40,7 @@ public final class ConvertMockitoVerifyToBDDMockitoThenWithoutInOrderAction exte
             //Replace Mockito.verify with BDDMockito.then
             replaceBeginningOfChain(calls, "BDDMockito.then", ORG_MOCKITO_BDDMOCKITO);
             //Insert should() after BDDMockito.then
-            performAndCommitDocument(() -> editor.getDocument().insertString(getReferenceNameElement(getLast(calls)).getTextOffset() - 1, ".should()"));
+            performAndCommitDocument(() -> editor.getDocument().insertString(getReferenceNameElement(calls.getLast()).getTextOffset() - 1, ".should()"));
         } else if (MOCKITO_VERIFY_MOCK_MODE.matches(mockitoVerify)) {
             //It replaces the text between the two arguments of Mockito.verify() with the text ").should("
             //E.g. 'Mockito.verify(mock, times(2))' becomes 'Mockito.verify(mock).should(times(2))'

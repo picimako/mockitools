@@ -53,7 +53,7 @@ class ConsecutiveCallRegistrar {
      * Returns the last consecutive call from the current section of calls.
      */
     PsiMethodCallExpression getLastConsecutiveCall() {
-        return callsInWholeChain.get(getLast(consecutiveCallIndeces));
+        return callsInWholeChain.get(consecutiveCallIndeces.getLast());
     }
 
     boolean isCallToClasses(PsiMethodCallExpression call) {

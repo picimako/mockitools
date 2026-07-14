@@ -2,7 +2,6 @@
 
 package com.picimako.mockitools.intention;
 
-import static com.google.common.collect.Iterables.getLast;
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.intellij.openapi.application.ReadAction.runBlocking;
 import static com.picimako.mockitools.MockableTypesUtil.isMockableTypeInAnyWay;
@@ -159,7 +158,7 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
     private boolean isSettingsSupportedByMockAnnotation(PsiExpression settingsArg) {
         if (settingsArg instanceof PsiMethodCallExpression) {
             var settingsCalls = collectCallsInChainFromLast(settingsArg);
-            return MOCKITO_WITH_SETTINGS.matches(getLast(settingsCalls))
+            return MOCKITO_WITH_SETTINGS.matches(settingsCalls.getLast())
                    && settingsCalls.stream()
                        .limit(settingsCalls.size() - 1L) //Skip analyzing the Mockito.withSettings() call as it has already been checked
                        .allMatch(call -> {

@@ -2,7 +2,6 @@
 
 package com.picimako.mockitools.intention.convert.stub;
 
-import static com.google.common.collect.Iterables.getLast;
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
@@ -89,7 +88,7 @@ public record StubbingConverter(Project project, Document document, PsiFile file
 
         //Adds the '.when(mock).doSomething()' part at the end of the call chain, so the example becomes: 'Mockito.do*().when(mock).doSomething();'
         document.insertString(
-            endOffsetOf(getLast(calls)),
+            endOffsetOf(calls.getLast()),
             "." + to.methodCallStubber + "(" + stubbedCallQualifier + ")" + stubbedCallText.replace(stubbedCallQualifier, ""));
     }
 

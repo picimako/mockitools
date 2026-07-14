@@ -2,7 +2,6 @@
 
 package com.picimako.mockitools.dsl;
 
-import static com.google.common.collect.Iterables.getLast;
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.intellij.openapi.util.text.StringUtil.substringAfterLast;
 import static com.intellij.util.containers.ContainerUtil.map;
@@ -128,7 +127,7 @@ public enum StubbingApproach {
 
         @Override
         public Optional<PsiMethodCallExpression> getStubbedMethodCall(List<PsiMethodCallExpression> stubbingCalls) {
-            return Optional.of(getLast(stubbingCalls));
+            return Optional.of(stubbingCalls.getLast());
         }
 
         @Override
@@ -237,7 +236,7 @@ public enum StubbingApproach {
 
         @Override
         public Optional<PsiMethodCallExpression> getStubbedMethodCall(List<PsiMethodCallExpression> stubbingCalls) {
-            return Optional.of(getLast(stubbingCalls));
+            return Optional.of(stubbingCalls.getLast());
         }
 
         @Override

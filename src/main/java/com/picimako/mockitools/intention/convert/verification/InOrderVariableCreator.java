@@ -2,7 +2,6 @@
 
 package com.picimako.mockitools.intention.convert.verification;
 
-import static com.google.common.collect.Iterables.getLast;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static com.picimako.mockitools.intention.PsiClassUtil.importClassAndCommit;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
@@ -57,9 +56,9 @@ public record InOrderVariableCreator(Document document) {
         //Add the new variable to the parent block, before the Mockito.verify()/BDDMockito.then() call chain
         var parentBlock = getParentOfType(verificationCall, PsiCodeBlock.class);
 
-        //'Iterables.getLast(calls)' returns the call expression for the whole call chain.
+        //'calls.getLast()' returns the call expression for the whole call chain.
         // The addition has to happen to before the whole call chain, so it has the proper formatting and underlying PSI.
-        var addedVariable = parentBlock.addBefore(inOrderVariable, getLast(calls).getParent());
+        var addedVariable = parentBlock.addBefore(inOrderVariable, calls.getLast().getParent());
         PsiDocumentManager.getInstance(project).doPostponedOperationsAndUnblockDocument(document);
         return addedVariable;
     }
