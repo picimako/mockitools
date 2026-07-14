@@ -3,6 +3,7 @@
 package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 
 import static com.intellij.util.containers.ContainerUtil.map;
+import static com.picimako.mockitools.dsl.VerificationApproach.INORDER_VERIFY;
 import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectMockObjects;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
@@ -35,7 +36,7 @@ import java.util.List;
  */
 public class ConvertBDDMockitoThenToInOrderVerifyAction extends ConvertVerificationActionBase {
     public ConvertBDDMockitoThenToInOrderVerifyAction(boolean isBulkMode) {
-        super("InOrder.verify()", isBulkMode);
+        super(INORDER_VERIFY.presentableText, isBulkMode);
     }
 
     //Caret based conversion

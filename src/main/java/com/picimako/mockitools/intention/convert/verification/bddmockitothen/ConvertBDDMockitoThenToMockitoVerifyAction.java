@@ -5,6 +5,7 @@ package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE;
+import static com.picimako.mockitools.dsl.VerificationApproach.MOCKITO_VERIFY;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
@@ -27,7 +28,7 @@ import com.picimako.mockitools.intention.convert.verification.ConvertVerificatio
  */
 public class ConvertBDDMockitoThenToMockitoVerifyAction extends ConvertVerificationActionBase {
     public ConvertBDDMockitoThenToMockitoVerifyAction(boolean isBulkMode) {
-        super("Mockito.verify()", isBulkMode);
+        super(MOCKITO_VERIFY.presentableText, isBulkMode);
     }
 
     @Override

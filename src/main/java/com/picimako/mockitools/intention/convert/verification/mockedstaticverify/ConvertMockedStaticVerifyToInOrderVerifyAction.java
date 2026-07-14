@@ -3,6 +3,7 @@
 package com.picimako.mockitools.intention.convert.verification.mockedstaticverify;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
+import static com.picimako.mockitools.dsl.VerificationApproach.INORDER_VERIFY;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.getQualifier;
@@ -43,7 +44,7 @@ public class ConvertMockedStaticVerifyToInOrderVerifyAction extends ConvertVerif
     );
 
     public ConvertMockedStaticVerifyToInOrderVerifyAction(boolean isBulkMode) {
-        super("InOrder.verify()", isBulkMode);
+        super(INORDER_VERIFY.presentableText, isBulkMode);
     }
 
     @Override
