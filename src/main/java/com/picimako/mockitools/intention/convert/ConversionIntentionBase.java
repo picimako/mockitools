@@ -25,9 +25,11 @@ import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
+import com.intellij.psi.PsiJavaToken;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.picimako.mockitools.intention.convert.verification.NoActionAvailableAction;
 import com.picimako.mockitools.intention.ListPopupHelper;
@@ -112,6 +114,13 @@ public abstract class ConversionIntentionBase implements IntentionAction {
     private boolean isSymbolAfterMethodCallChain(PsiElement element) {
         return (element instanceof PsiWhiteSpace && getPrevSiblingOfType(element, PsiExpressionStatement.class) != null)
             || (isTokenType(element, JavaTokenType.SEMICOLON) && getPrevSiblingOfType(element, PsiMethodCallExpression.class) != null);
+    }
+
+    /**
+     * Returns if the element is of the provided type.
+     */
+    private static boolean isTokenType(PsiElement element, IElementType type) {
+        return element instanceof PsiJavaToken && element.getNode().getElementType() == type;
     }
 
     /**
