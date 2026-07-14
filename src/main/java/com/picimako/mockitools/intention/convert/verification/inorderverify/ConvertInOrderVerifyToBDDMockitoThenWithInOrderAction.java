@@ -40,13 +40,14 @@ public class ConvertInOrderVerifyToBDDMockitoThenWithInOrderAction extends Conve
         //E.g. 'inOrder.verify(mock)' becomes 'BDDMockito.then(mock).should(<inOrder>)'
         //E.g. 'inOrder.verify(mock, times(2))' becomes 'BDDMockito.then(mock).should(<inOrder>, times(2))'
         int endOffsetOfMockArgument = endOffsetOf(getFirstArgument(inOrderVerify));
-        if (hasTwoArguments(inOrderVerify)) {
-            editor.getDocument().replaceString(
-                endOffsetOfMockArgument,
-                get2ndArgument(inOrderVerify).getTextOffset(),
-                ").should(" + inOrderVariableName + ", ");
-        } else {
-            editor.getDocument().replaceString(endOffsetOfMockArgument, endOffsetOfMockArgument, ").should(" + inOrderVariableName);
-        }
+
+        var hasTwoArguments = hasTwoArguments(inOrderVerify);
+        var endOffset = hasTwoArguments
+            ? get2ndArgument(inOrderVerify).getTextOffset()
+            : endOffsetOfMockArgument;
+        var replacement = hasTwoArguments
+            ? ").should(" + inOrderVariableName + ", "
+            : ").should(" + inOrderVariableName;
+        editor.getDocument().replaceString(endOffsetOfMockArgument, endOffset, replacement);
     }
 }
