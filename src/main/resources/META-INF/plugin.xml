@@ -13,169 +13,169 @@
         <!-- Inspections for Mockito end-users -->
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.stubbing.InconsistentArgumentMatcherUsageInspection"
-                id="mockitools.inconsistentArgumentMatcherUsage" language="JAVA"
-                displayName="Inconsistent argument matcher usage" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+                id="mockitools.inconsistentArgumentMatcherUsage"
+                displayName="Inconsistent argument matcher usage"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.verification.VerificationModeValuesBetweenLimitsInspection"
-                id="mockitools.verificationModeValuesBetweenLimits" language="JAVA"
-                displayName="Verification mode values are out of bounds" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+                id="mockitools.verificationModeValuesBetweenLimits"
+                displayName="Verification mode values are out of bounds"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.captor.CaptorFieldInitializationInspection"
-                id="mockitools.captorFieldInitialization" language="JAVA"
-                displayName="@Captor field is explicitly initialized" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+                id="mockitools.captorFieldInitialization"
+                displayName="@Captor field is explicitly initialized"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="WARNING"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.captor.CaptorFieldOfTypeArgumentCaptorInspection"
-                id="mockitools.captorFieldOfTypeArgumentCaptor" language="JAVA"
-                displayName="@Captor field is not of the type ArgumentCaptor" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+                id="mockitools.captorFieldOfTypeArgumentCaptor"
+                displayName="@Captor field is not of the type ArgumentCaptor"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.verification.TimesVerificationModeInspection"
-                id="mockitools.timesVerificationMode" language="JAVA"
-                displayName="Mockito.times() argument validations" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+                id="mockitools.timesVerificationMode"
+                displayName="Mockito.times() argument validations"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="WARNING"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.stubbing.ExtraInterfacesInspection"
-                id="mockitools.extraInterfaces" language="JAVA"
-                displayName="@Mock#extraInterfaces and MockSettings.extraInterfaces() validations" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+                id="mockitools.extraInterfaces"
+                displayName="@Mock#extraInterfaces and MockSettings.extraInterfaces() validations"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <!-- Disabled due to https://github.com/picimako/mockitools/issues/69 -->
-<!--        <localInspection-->
-<!--                implementationClass="com.picimako.mockitools.inspection.mocking.MockFieldInitializationInspection"-->
-<!--                id="mockitools.mockFieldInitialization" language="JAVA"-->
-<!--                displayName="@Mock or @InjectMocks field is explicitly initialized" groupPath="Java"-->
-<!--                groupName="Mockito" enabledByDefault="true" level="WARNING"/>-->
+        <!--        <localInspection-->
+        <!--                implementationClass="com.picimako.mockitools.inspection.mocking.MockFieldInitializationInspection"-->
+        <!--                id="mockitools.mockFieldInitialization"-->
+        <!--                displayName="@Mock or @InjectMocks field is explicitly initialized"-->
+        <!--                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="WARNING"/>-->
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.mocking.MockTypeInspection"
-                id="mockitools.mockType" language="JAVA"
-                displayName="Mocking/spying non-mockable types" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+                id="mockitools.mockType"
+                displayName="Mocking/spying non-mockable types"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.CallOnMockitoResetInspection"
-                id="mockitools.callOnMockitoReset" language="JAVA"
-                displayName="Call on Mockito.reset()" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+                id="mockitools.callOnMockitoReset"
+                displayName="Call on Mockito.reset()"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="WARNING"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.stubbing.NoMethodCallArgumentSpecifiedInspection"
-                id="mockitools.noMethodCallArgument" language="JAVA"
-                displayName="No Mockito method call argument specified" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+                id="mockitools.noMethodCallArgument"
+                displayName="No Mockito method call argument specified"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.stubbing.ThrowsCheckedExceptionStubbingInspection"
-                id="mockitools.methodSignatureBasedThrowsExceptionStubbing" language="JAVA"
-                displayName="Checked exception stubbing based on method throws clause" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+                id="mockitools.methodSignatureBasedThrowsExceptionStubbing"
+                displayName="Checked exception stubbing based on method throws clause"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.consecutive.SimplifyConsecutiveReturnCallsInspection"
-                id="mockitools.simplifyConsecutiveReturnStubbingCalls" language="JAVA"
-                displayName="Consecutive *Return() stubbing calls can be simplified" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+                id="mockitools.simplifyConsecutiveReturnStubbingCalls"
+                displayName="Consecutive *Return() stubbing calls can be simplified"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="WARNING"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.consecutive.SimplifyConsecutiveThrowCallsInspection"
-                id="mockitools.simplifyConsecutiveThrowStubbingCalls" language="JAVA"
-                displayName="Consecutive *Throw() stubbing calls can be simplified" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+                id="mockitools.simplifyConsecutiveThrowStubbingCalls"
+                displayName="Consecutive *Throw() stubbing calls can be simplified"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="WARNING"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.stubbing.CannotStubMethodInspection"
-                id="mockitools.cannotStubMethod" language="JAVA"
-                displayName="Stubbing of private/native/equals()/hashCode methods" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+                id="mockitools.cannotStubMethod"
+                displayName="Stubbing of private/native/equals()/hashCode methods"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection"
-                id="mockitools.enforce.convention" language="JAVA"
-                displayName="Enforce conventions" groupPath="Java"
-                groupName="Mockito" enabledByDefault="false" level="ERROR"/>
+                id="mockitools.enforce.convention"
+                displayName="Enforce conventions"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="false" level="ERROR"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.verification.SingleInOrderVerificationInspection"
-                id="mockitools.single.inorder.reference" language="JAVA"
-                displayName="InOrder variable is used only once" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+                id="mockitools.single.inorder.reference"
+                displayName="InOrder variable is used only once"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="WARNING"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.verification.UnusedOrUnconfiguredMockInInOrderVerificationInspection"
-                id="mockitools.unused.inorder.mock" language="JAVA"
-                displayName="Unused or unconfigured mock objects in InOrder verifications" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="WARNING"/>
+                id="mockitools.unused.inorder.mock"
+                displayName="Unused or unconfigured mock objects in InOrder verifications"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="WARNING"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.stubbing.StubbingAndMethodReturnTypeMismatchInspection"
-                id="mockitools.stubbing.method.return.type.mismatch" language="JAVA"
-                displayName="Stubbing call's and stubbed method's return type don't match" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+                id="mockitools.stubbing.method.return.type.mismatch"
+                displayName="Stubbing call's and stubbed method's return type don't match"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.verification.CannotVerifyToStringInspection"
-                id="mockitools.cannot.verify.to.string" language="JAVA"
-                displayName="'toString()' call in verification" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+                id="mockitools.cannot.verify.to.string"
+                displayName="'toString()' call in verification"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.verification.StubOnlyMockInVerificationInspection"
-                id="mockitools.stub.only.mock.in.verification" language="JAVA"
-                displayName="Stub-only mock used in verification" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+                id="mockitools.stub.only.mock.in.verification"
+                displayName="Stub-only mock used in verification"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.mocking.SpyOnMockInspection"
-                id="mockitools.spy.on.mock" language="JAVA"
-                displayName="Spying on mock objects" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+                id="mockitools.spy.on.mock"
+                displayName="Spying on mock objects"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.mocking.GenericInferredMockAndSpyCreationInspection"
-                id="mockitools.arg.in.generic.inferred.mock.spy.creation" language="JAVA"
-                displayName="Argument in generic inferred mock()/spy() creation" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+                id="mockitools.arg.in.generic.inferred.mock.spy.creation"
+                displayName="Argument in generic inferred mock()/spy() creation"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.captor.GenericInferredCaptorCreationInspection"
-                id="mockitools.arg.in.generic.inferred.captor.creation" language="JAVA"
-                displayName="Argument in generic inferred ArgumentCaptor creation" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+                id="mockitools.arg.in.generic.inferred.captor.creation"
+                displayName="Argument in generic inferred ArgumentCaptor creation"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.mocking.MockSpiedInstanceTypeMismatchInspection"
-                id="mockitools.mock.spied.instance.type.mismatch" language="JAVA"
-                displayName="Mocked type and spied instance type mismatch" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="ERROR"/>
+                id="mockitools.mock.spied.instance.type.mismatch"
+                displayName="Mocked type and spied instance type mismatch"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="ERROR"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.mocking.SimplifyMockCreationInspection"
-                id="mockitools.simplify.mock.creation" language="JAVA"
-                displayName="Simplify mock creation" groupPath="Java"
-                groupName="Mockito" enabledByDefault="true" level="INFO"/>
+                id="mockitools.simplify.mock.creation"
+                displayName="Simplify mock creation"
+                language="JAVA" groupPath="Java" groupName="Mockito" enabledByDefault="true" level="INFO"/>
 
         <!-- v4 migration aids -->
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.migrationaids.v4.ArgumentMatchersCalledViaMatchersInspection"
-                id="mockitools.aid.v4.useArgumentMatchers" language="JAVA"
-                displayName="Argument matchers are used via Matchers" groupPath="Java,Mockito"
-                groupName="Migration aids (v4)" enabledByDefault="false" level="WARNING"/>
+                id="mockitools.aid.v4.useArgumentMatchers"
+                displayName="Argument matchers are used via Matchers"
+                language="JAVA" groupPath="Java,Mockito" groupName="Migration aids (v4)" enabledByDefault="false" level="WARNING"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.migrationaids.v4.UsageOfAnyMatchersInspection"
-                id="mockitools.aid.v4.useAny" language="JAVA"
-                displayName="Using deprecated anyX() matcher" groupPath="Java,Mockito"
-                groupName="Migration aids (v4)" enabledByDefault="false" level="WARNING"/>
+                id="mockitools.aid.v4.useAny"
+                displayName="Using deprecated anyX() matcher"
+                language="JAVA" groupPath="Java,Mockito" groupName="Migration aids (v4)" enabledByDefault="false" level="WARNING"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.migrationaids.v4.ParameterizedIsNotNullMatcherInspection"
-                id="mockitools.aid.v4.use.non.param.null" language="JAVA"
-                displayName="Using parameterized null matcher" groupPath="Java,Mockito"
-                groupName="Migration aids (v4)" enabledByDefault="false" level="WARNING"/>
+                id="mockitools.aid.v4.use.non.param.null"
+                displayName="Using parameterized null matcher"
+                language="JAVA" groupPath="Java,Mockito" groupName="Migration aids (v4)" enabledByDefault="false" level="WARNING"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.migrationaids.v4.UsageOfDeprecatedVerifyInspection"
-                id="mockitools.aid.v4.mocked.static.verify" language="JAVA"
-                displayName="Using deprecated Mockito and MockedStatic.verify" groupPath="Java,Mockito"
-                groupName="Migration aids (v4)" enabledByDefault="false" level="WARNING"/>
+                id="mockitools.aid.v4.mocked.static.verify"
+                displayName="Using deprecated Mockito and MockedStatic.verify"
+                language="JAVA" groupPath="Java,Mockito" groupName="Migration aids (v4)" enabledByDefault="false" level="WARNING"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.migrationaids.v4.UsageOfDeprecatedPluginClassesInspection"
-                id="mockitools.aid.v4.plugin.classes" language="JAVA"
-                displayName="Using deprecated plugins classes" groupPath="Java,Mockito"
-                groupName="Migration aids (v4)" enabledByDefault="false" level="WARNING"/>
+                id="mockitools.aid.v4.plugin.classes"
+                displayName="Using deprecated plugins classes"
+                language="JAVA" groupPath="Java,Mockito" groupName="Migration aids (v4)" enabledByDefault="false" level="WARNING"/>
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.migrationaids.v4.UsageOfOldJUnitRunnerInspection"
-                id="mockitools.aid.v4.junit.runners" language="JAVA"
-                displayName="Using deprecated JUnit runner" groupPath="Java,Mockito"
-                groupName="Migration aids (v4)" enabledByDefault="false" level="WARNING"/>
+                id="mockitools.aid.v4.junit.runners"
+                displayName="Using deprecated JUnit runner"
+                language="JAVA" groupPath="Java,Mockito" groupName="Migration aids (v4)" enabledByDefault="false" level="WARNING"/>
 
         <!-- Inspections for Mockito framework integration -->
         <localInspection
                 implementationClass="com.picimako.mockitools.inspection.framework.NotExtensibleClassInspection"
-                id="mockitools.framework.notExtensibleClass" language="JAVA"
-                displayName="Class extends @NotExtensible class" groupPath="Java,Mockito"
-                groupName="Framework" enabledByDefault="false" level="WARNING"/>
+                id="mockitools.framework.notExtensibleClass"
+                displayName="Class extends @NotExtensible class"
+                language="JAVA" groupPath="Java,Mockito" groupName="Framework" enabledByDefault="false" level="WARNING"/>
 
         <!-- Convert/expand mocking -->
         <intentionAction>
@@ -240,19 +240,22 @@
         <intentionAction>
             <language>JAVA</language>
             <categoryKey>mockito.intention.category</categoryKey>
-            <className>com.picimako.mockitools.intention.convert.verification.mockitoverify.ConvertFromMockitoVerifyIntention
+            <className>
+                com.picimako.mockitools.intention.convert.verification.mockitoverify.ConvertFromMockitoVerifyIntention
             </className>
         </intentionAction>
         <intentionAction>
             <language>JAVA</language>
             <categoryKey>mockito.intention.category</categoryKey>
-            <className>com.picimako.mockitools.intention.convert.verification.bddmockitothen.ConvertFromBDDMockitoThenIntention
+            <className>
+                com.picimako.mockitools.intention.convert.verification.bddmockitothen.ConvertFromBDDMockitoThenIntention
             </className>
         </intentionAction>
         <intentionAction>
             <language>JAVA</language>
             <categoryKey>mockito.intention.category</categoryKey>
-            <className>com.picimako.mockitools.intention.convert.verification.inorderverify.ConvertFromInOrderVerifyIntention
+            <className>
+                com.picimako.mockitools.intention.convert.verification.inorderverify.ConvertFromInOrderVerifyIntention
             </className>
         </intentionAction>
         <intentionAction>
@@ -263,6 +266,7 @@
             </className>
         </intentionAction>
 
-        <completion.contributor language="JAVA" implementationClass="com.picimako.mockitools.completion.MockCompletionContributor"/>
+        <completion.contributor language="JAVA"
+                                implementationClass="com.picimako.mockitools.completion.MockCompletionContributor"/>
     </extensions>
 </idea-plugin>
