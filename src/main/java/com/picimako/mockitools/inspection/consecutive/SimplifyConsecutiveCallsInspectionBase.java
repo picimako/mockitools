@@ -12,7 +12,7 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.util.SmartList;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +29,7 @@ import java.util.function.Predicate;
  * {@link #register} ->
  * {@link #doRegister}
  */
-abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsBaseInspection {
+abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsInspectionBase {
 
     protected abstract List<ConsecutiveCallAnalyzer> analyzers();
 

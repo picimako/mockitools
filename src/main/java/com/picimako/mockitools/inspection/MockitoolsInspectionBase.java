@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Base class for inspections that has to distinguish validation between files in test sources and actual unit test classes.
  */
-public abstract class MockitoolsBaseInspection extends LocalInspectionTool {
+public abstract class MockitoolsInspectionBase extends LocalInspectionTool {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {

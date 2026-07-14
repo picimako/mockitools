@@ -21,7 +21,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiType;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -44,7 +44,7 @@ import org.jetbrains.annotations.NotNull;
  * @see <a href="https://github.com/mockito/mockito/pull/1833/files">Mockito: Add annotation to mark a type as DoNotMock</a>
  * @since 0.1.0
  */
-final class MockTypeInspection extends MockitoolsBaseInspection {
+final class MockTypeInspection extends MockitoolsInspectionBase {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {

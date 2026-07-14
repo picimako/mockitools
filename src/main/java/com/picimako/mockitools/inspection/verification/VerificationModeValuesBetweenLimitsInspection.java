@@ -20,7 +20,7 @@ import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.options.OptPane;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.util.PsiLiteralUtil;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +42,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @since 0.1.0
  */
-final class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBaseInspection {
+final class VerificationModeValuesBetweenLimitsInspection extends MockitoolsInspectionBase {
 
     private static final CallMatcher MOCKITO_OCCURRENCE_BASED_VERIFICATION_MODES = staticCall(ORG_MOCKITO_MOCKITO, TIMES, AT_LEAST, AT_MOST).parameterCount(1);
 

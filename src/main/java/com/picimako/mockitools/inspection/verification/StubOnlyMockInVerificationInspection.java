@@ -7,7 +7,7 @@ import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
 import com.picimako.mockitools.dsl.VerificationApproach;
 import com.picimako.mockitools.dsl.MockObject;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @since 0.8.0
  */
-final class StubOnlyMockInVerificationInspection extends MockitoolsBaseInspection {
+final class StubOnlyMockInVerificationInspection extends MockitoolsInspectionBase {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

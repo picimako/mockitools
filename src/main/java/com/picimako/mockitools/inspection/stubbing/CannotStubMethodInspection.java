@@ -11,7 +11,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiModifier;
 import com.picimako.mockitools.dsl.StubbingApproach;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.util.PsiMethodUtil;
 import com.siyeh.ig.psiutils.MethodUtils;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +25,7 @@ import java.util.function.Supplier;
  * @see <a href="https://github.com/mockito/mockito/pull/3283/files">Add native method to exception message</a>
  * @since 1.3.0
  */
-final class CannotStubMethodInspection extends MockitoolsBaseInspection {
+final class CannotStubMethodInspection extends MockitoolsInspectionBase {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

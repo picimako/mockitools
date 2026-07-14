@@ -16,7 +16,7 @@ import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiExpressionList;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiTypeCastExpression;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
  * @see <a href="https://rules.sonarsource.com/java/tag/mockito/RSPEC-6073">SonarLint alternative</a>
  * @since 0.1.0
  */
-final class InconsistentArgumentMatcherUsageInspection extends MockitoolsBaseInspection {
+final class InconsistentArgumentMatcherUsageInspection extends MockitoolsInspectionBase {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

@@ -10,7 +10,7 @@ import static com.picimako.mockitools.util.Ranges.endOffsetOf;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
  * @see com.picimako.mockitools.inspection.mocking.GenericInferredMockAndSpyCreationInspection
  * @since 1.3.0
  */
-final class GenericInferredCaptorCreationInspection extends MockitoolsBaseInspection {
+final class GenericInferredCaptorCreationInspection extends MockitoolsInspectionBase {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

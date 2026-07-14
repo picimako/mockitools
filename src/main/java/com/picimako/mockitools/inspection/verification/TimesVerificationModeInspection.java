@@ -28,7 +28,7 @@ import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.util.PsiLiteralUtil;
 import com.picimako.mockitools.MockitoolsPsiUtil;
 import com.picimako.mockitools.inspection.BaseQuickFix;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +52,7 @@ import java.util.Objects;
  * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#exact_verification">Mockito exact verification documentation</a>
  * @since 0.1.0
  */
-final class TimesVerificationModeInspection extends MockitoolsBaseInspection {
+final class TimesVerificationModeInspection extends MockitoolsInspectionBase {
 
     private static final CallMatcher.Simple SHOULD = instanceCall(ORG_MOCKITO_BDDMOCKITO_THEN, "should");
     private static final CallMatcher VERIFICATION = CallMatcher.anyOf(

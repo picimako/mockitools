@@ -16,7 +16,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiField;
 import com.picimako.mockitools.inspection.BaseQuickFix;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
  * @see <a href="https://www.baeldung.com/mockito-annotations">Baeldung - Mockito Annotations</a>
  * @since 1.3.0
  */
-final class MockFieldInitializationInspection extends MockitoolsBaseInspection {
+final class MockFieldInitializationInspection extends MockitoolsInspectionBase {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {

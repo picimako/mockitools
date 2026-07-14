@@ -12,7 +12,7 @@ import static com.picimako.mockitools.util.Ranges.endOffsetOf;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Range;
  * @see com.picimako.mockitools.inspection.captor.GenericInferredCaptorCreationInspection
  * @since 0.11.0
  */
-final class GenericInferredMockAndSpyCreationInspection extends MockitoolsBaseInspection {
+final class GenericInferredMockAndSpyCreationInspection extends MockitoolsInspectionBase {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

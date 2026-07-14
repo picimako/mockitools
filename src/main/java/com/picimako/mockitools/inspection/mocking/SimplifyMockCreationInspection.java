@@ -22,7 +22,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.picimako.mockitools.inspection.BaseQuickFix;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
  * @see com.picimako.mockitools.intention.mocking.ExpandMockCreationIntention
  * @since 0.11.0
  */
-final class SimplifyMockCreationInspection extends MockitoolsBaseInspection {
+final class SimplifyMockCreationInspection extends MockitoolsInspectionBase {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

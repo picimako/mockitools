@@ -17,7 +17,7 @@ import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +30,7 @@ import java.util.Optional;
  *
  * @since 0.1.0
  */
-final class NoMethodCallArgumentSpecifiedInspection extends MockitoolsBaseInspection {
+final class NoMethodCallArgumentSpecifiedInspection extends MockitoolsInspectionBase {
 
     private static final CallMatcher VERIFY_CALLS =
         CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, VERIFY_NO_INTERACTIONS, VERIFY_NO_MORE_INTERACTIONS, VERIFY_ZERO_INTERACTIONS /*Mockito v3*/, IN_ORDER);

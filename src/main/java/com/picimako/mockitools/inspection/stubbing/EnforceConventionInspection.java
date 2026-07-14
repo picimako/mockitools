@@ -13,7 +13,7 @@ import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.util.ui.JBUI;
 import com.picimako.mockitools.dsl.Convention;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.callMatcher.CallMatcher;
@@ -40,7 +40,7 @@ import java.util.Optional;
  *
  * @since 0.4.0
  */
-public final class EnforceConventionInspection extends MockitoolsBaseInspection {
+public final class EnforceConventionInspection extends MockitoolsInspectionBase {
     private static final CallMatcher MOCKITO_MATCHER = CallMatcher.anyOf(
         staticCall(ORG_MOCKITO_MOCKITO,
             "when", "doReturn", "doThrow", "doAnswer", "doCallRealMethod", "doNothing", //stubbing

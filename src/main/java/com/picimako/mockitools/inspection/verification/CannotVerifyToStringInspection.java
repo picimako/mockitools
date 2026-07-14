@@ -9,7 +9,7 @@ import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.picimako.mockitools.dsl.VerificationApproach;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
  * @see <a href="https://github.com/mockito/mockito/blob/main/mockito-core/src/main/java/org/mockito/internal/exceptions/Reporter.java#L774">Cannot verify toString()</a>
  * @since 0.7.0
  */
-final class CannotVerifyToStringInspection extends MockitoolsBaseInspection {
+final class CannotVerifyToStringInspection extends MockitoolsInspectionBase {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

@@ -31,7 +31,7 @@ import com.intellij.psi.util.InheritanceUtil;
 import com.picimako.mockitools.dsl.StubType;
 import com.picimako.mockitools.dsl.StubbingApproach;
 import com.picimako.mockitools.inspection.BaseQuickFix;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.picimako.mockitools.util.ClassObjectAccessUtil;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +56,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @since 0.3.0
  */
-final class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInspection {
+final class ThrowsCheckedExceptionStubbingInspection extends MockitoolsInspectionBase {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

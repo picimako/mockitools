@@ -18,7 +18,7 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#resetting_mocks">Resetting mocks</a>
  * @since 0.1.0
  */
-final class CallOnMockitoResetInspection extends MockitoolsBaseInspection {
+final class CallOnMockitoResetInspection extends MockitoolsInspectionBase {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

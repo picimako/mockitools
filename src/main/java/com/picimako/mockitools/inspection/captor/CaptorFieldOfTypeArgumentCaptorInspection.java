@@ -21,7 +21,7 @@ import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.picimako.mockitools.inspection.BaseQuickFix;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @since 0.1.0
  */
-final class CaptorFieldOfTypeArgumentCaptorInspection extends MockitoolsBaseInspection {
+final class CaptorFieldOfTypeArgumentCaptorInspection extends MockitoolsInspectionBase {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {

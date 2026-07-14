@@ -5,7 +5,7 @@ package com.picimako.mockitools.inspection.mocking;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,7 +29,7 @@ import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
  *
  * @since 0.11.0
  */
-final class MockSpiedInstanceTypeMismatchInspection extends MockitoolsBaseInspection {
+final class MockSpiedInstanceTypeMismatchInspection extends MockitoolsInspectionBase {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

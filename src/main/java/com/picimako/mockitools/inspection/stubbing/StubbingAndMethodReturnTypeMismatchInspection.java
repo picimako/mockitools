@@ -17,7 +17,7 @@ import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiTypes;
 import com.picimako.mockitools.dsl.StubbingApproach;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -40,7 +40,7 @@ import java.util.function.Supplier;
  *
  * @since 0.7.0
  */
-final class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBaseInspection {
+final class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsInspectionBase {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
