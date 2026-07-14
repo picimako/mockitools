@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+## [1.8.0]
+### Changed
+- Various minor code improvements and cleanups.
+- Improved the code documentation and inspection descriptions.
+
 ## [1.7.0]
 ### Changed
 - New supported IDE version range: 2026.1 and later.
