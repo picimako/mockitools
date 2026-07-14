@@ -33,7 +33,7 @@ final class ArgumentMatchersCalledViaMatchersInspection extends MigrationAidBase
         }
     }
 
-    public static final class ReplaceMatchersWithArgumentMatchersQuickFix extends MigrationAidV4BaseQuickFix {
+    public static final class ReplaceMatchersWithArgumentMatchersQuickFix extends MigrationAidV4QuickFix {
         @Override
         public @IntentionName @NotNull String getName() {
             return MockitoolsBundle.message("quick.fix.migration.aid.v4.use.argument.matchers.instead.of.matchers");

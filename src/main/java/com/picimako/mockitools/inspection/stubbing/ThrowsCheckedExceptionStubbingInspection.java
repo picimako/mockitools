@@ -30,7 +30,7 @@ import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.psi.util.InheritanceUtil;
 import com.picimako.mockitools.dsl.StubType;
 import com.picimako.mockitools.dsl.StubbingApproach;
-import com.picimako.mockitools.inspection.BaseQuickFix;
+import com.picimako.mockitools.inspection.QuickFixBase;
 import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.picimako.mockitools.util.ClassObjectAccessUtil;
@@ -171,7 +171,7 @@ final class ThrowsCheckedExceptionStubbingInspection extends MockitoolsInspectio
      * @since 0.5.0
      */
     @RequiredArgsConstructor
-    private static final class AddExceptionToThrowsClauseQuickFix extends BaseQuickFix {
+    private static final class AddExceptionToThrowsClauseQuickFix extends QuickFixBase {
         private final SmartPsiElementPointer<PsiMethod> stubbedMethod;
 
         @Override

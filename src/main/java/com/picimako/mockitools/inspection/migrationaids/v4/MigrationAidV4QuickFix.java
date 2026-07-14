@@ -9,14 +9,14 @@ import static com.siyeh.ig.psiutils.ImportUtils.isAlreadyStaticallyImported;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.inspection.BaseQuickFix;
+import com.picimako.mockitools.inspection.QuickFixBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Base class for Mockito v4 migration aid quick fixes.
  */
-abstract class MigrationAidV4BaseQuickFix extends BaseQuickFix {
+abstract class MigrationAidV4QuickFix extends QuickFixBase {
 
     @Override
     public @IntentionFamilyName @NotNull String getFamilyName() {

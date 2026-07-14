@@ -67,7 +67,7 @@ final class UsageOfAnyMatchersInspection extends MigrationAidBase.V23ToV4BaseIns
         }
     }
 
-    private static final class ReplaceAnyObjectOrAnyVarargWithAnyQuickFix extends MigrationAidV4BaseQuickFix {
+    private static final class ReplaceAnyObjectOrAnyVarargWithAnyQuickFix extends MigrationAidV4QuickFix {
         @Override
         public @IntentionName @NotNull String getName() {
             return MockitoolsBundle.message("quick.fix.migration.aid.v4.replace.with", ANY);
@@ -83,7 +83,7 @@ final class UsageOfAnyMatchersInspection extends MigrationAidBase.V23ToV4BaseIns
         }
     }
 
-    private static final class ReplaceAnyXOfWithAnyXQuickFix extends MigrationAidV4BaseQuickFix {
+    private static final class ReplaceAnyXOfWithAnyXQuickFix extends MigrationAidV4QuickFix {
         private static final Pattern ANY_X_OF_PATTERN = Pattern.compile("(?<anyX>any(Collection|Iterable|List|Map|Set))Of");
         private final String anyX;
 

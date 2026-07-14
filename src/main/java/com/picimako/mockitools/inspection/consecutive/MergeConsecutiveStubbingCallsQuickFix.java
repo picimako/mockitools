@@ -11,7 +11,7 @@ import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
-import com.picimako.mockitools.inspection.BaseQuickFix;
+import com.picimako.mockitools.inspection.QuickFixBase;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +22,7 @@ import java.util.Arrays;
  * Only a single section of consecutive calls is merged if there are multiple ones.
  */
 @RequiredArgsConstructor
-public class MergeConsecutiveStubbingCallsQuickFix extends BaseQuickFix {
+public class MergeConsecutiveStubbingCallsQuickFix extends QuickFixBase {
     private final ConsecutiveCallRegistrar registrar;
     private final TypeConversionMethod argumentTypeConverter;
 

@@ -27,7 +27,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.util.PsiLiteralUtil;
 import com.picimako.mockitools.MockitoolsPsiUtil;
-import com.picimako.mockitools.inspection.BaseQuickFix;
+import com.picimako.mockitools.inspection.QuickFixBase;
 import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.callMatcher.CallMatcher;
@@ -149,7 +149,7 @@ final class TimesVerificationModeInspection extends MockitoolsInspectionBase {
         }
     }
 
-    private abstract static class TimesQuickFix extends BaseQuickFix {
+    private abstract static class TimesQuickFix extends QuickFixBase {
         @Override
         public @IntentionFamilyName @NotNull String getFamilyName() {
             return MockitoolsBundle.message("quick.fix.times.family.name");

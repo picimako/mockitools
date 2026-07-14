@@ -15,7 +15,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiField;
-import com.picimako.mockitools.inspection.BaseQuickFix;
+import com.picimako.mockitools.inspection.QuickFixBase;
 import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,7 +50,7 @@ final class CaptorFieldInitializationInspection extends MockitoolsInspectionBase
         }
     }
 
-    private static final class RemoveArgumentCaptorInitQuickFix extends BaseQuickFix {
+    private static final class RemoveArgumentCaptorInitQuickFix extends QuickFixBase {
 
         @Override
         public @IntentionName @NotNull String getName() {

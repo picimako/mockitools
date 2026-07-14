@@ -20,7 +20,7 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
-import com.picimako.mockitools.inspection.BaseQuickFix;
+import com.picimako.mockitools.inspection.QuickFixBase;
 import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
@@ -55,7 +55,7 @@ final class CaptorFieldOfTypeArgumentCaptorInspection extends MockitoolsInspecti
      * <p>
      * With that said, it imports {@code org.mockito.ArgumentCaptor} upon applying the quick fix.
      */
-    private static final class ConvertFieldTypeToArgumentCaptorQuickFix extends BaseQuickFix {
+    private static final class ConvertFieldTypeToArgumentCaptorQuickFix extends QuickFixBase {
 
         @Override
         public @IntentionName @NotNull String getName() {

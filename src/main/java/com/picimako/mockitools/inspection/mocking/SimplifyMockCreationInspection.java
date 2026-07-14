@@ -21,7 +21,7 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
-import com.picimako.mockitools.inspection.BaseQuickFix;
+import com.picimako.mockitools.inspection.QuickFixBase;
 import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
@@ -68,7 +68,7 @@ final class SimplifyMockCreationInspection extends MockitoolsInspectionBase {
             new ReplaceWithSimplerMockCreationQuickFix());
     }
 
-    private static final class ReplaceWithSimplerMockCreationQuickFix extends BaseQuickFix {
+    private static final class ReplaceWithSimplerMockCreationQuickFix extends QuickFixBase {
 
         @Override
         public @IntentionFamilyName @NotNull String getFamilyName() {

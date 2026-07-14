@@ -18,7 +18,7 @@ import org.jetbrains.annotations.PropertyKey;
  * Base class for quick fixes that perform reference replacements.
  */
 @RequiredArgsConstructor
-public abstract class ReferenceReplacerQuickFix extends MigrationAidV4BaseQuickFix {
+public abstract class ReferenceReplacerQuickFix extends MigrationAidV4QuickFix {
 
     @PropertyKey(resourceBundle = "messages.MockitoolsBundle")
     protected final String nameMessageKey;

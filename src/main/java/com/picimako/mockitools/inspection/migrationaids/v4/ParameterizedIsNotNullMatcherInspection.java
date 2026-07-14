@@ -56,7 +56,7 @@ final class ParameterizedIsNotNullMatcherInspection extends MigrationAidBase.V23
 
     @RequiredArgsConstructor
     @Getter
-    private static final class ReplaceNullMatcherWithNonParameterizedVariantQuickfix extends MigrationAidV4BaseQuickFix {
+    private static final class ReplaceNullMatcherWithNonParameterizedVariantQuickfix extends MigrationAidV4QuickFix {
         @NotNull
         private final String name;
 
