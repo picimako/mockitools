@@ -38,7 +38,7 @@ import java.util.List;
  * <ul>
  *     <li>The mock is added to the arguments of {@code Mockito.inOrder()} but is not used in any verification
  *     performed via that {@code InOrder} object.</li>
- *     <li>The mock is used in an {@code InOrder} verification but it is not added to the arguments of {@code Mockito.inOrder()}.</li>
+ *     <li>The mock is used in an {@code InOrder} verification, but it is not added to the arguments of {@code Mockito.inOrder()}.</li>
  * </ul>
  *
  * @since 0.5.0
@@ -74,7 +74,7 @@ final class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loca
                     var mocksInMockitoInOrderAsString = map(mocksInMockitoInOrder, PsiElement::getText);
                     //Report all mocks in verifications that are not configured in 'Mockito.inOrder()'
                     //This corresponds to the 'inOrderRequiresFamiliarMock()' method in
-                    // https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java
+                    // https://github.com/mockito/mockito/blob/main/mockito-core/src/main/java/org/mockito/internal/exceptions/Reporter.java
                     for (var mockInVerification : mocksInVerifications) {
                         if (!mocksInMockitoInOrderAsString.contains(mockInVerification.getText()))
                             holder.registerProblem(mockInVerification, MockitoolsBundle.message("inspection.mock.is.not.configured.in.in.order"));

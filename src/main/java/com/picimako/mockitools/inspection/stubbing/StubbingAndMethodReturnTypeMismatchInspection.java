@@ -5,6 +5,7 @@ package com.picimako.mockitools.inspection.stubbing;
 import static com.intellij.util.containers.ContainerUtil.filter;
 import static com.picimako.mockitools.dsl.StubbingApproach.BDDMOCKITO_WILL_X;
 import static com.picimako.mockitools.dsl.StubbingApproach.MOCKITO_DO_X;
+import static com.picimako.mockitools.resources.MockitoolsBundle.message;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
@@ -17,7 +18,6 @@ import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiTypes;
 import com.picimako.mockitools.dsl.StubbingApproach;
 import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
-import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -28,11 +28,13 @@ import java.util.function.Supplier;
 /**
  * Reports {@code doNothing()} and {@code willDoNothing()} calls when the stubbed method's return type is not void.
  * <p>
- * Based on Mockito's <a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java#L568">corresponding error handling</a>,
+ * Based on Mockito's
+ * <a href="https://github.com/mockito/mockito/blob/main/mockito-core/src/main/java/org/mockito/internal/exceptions/Reporter.java#L626">corresponding error handling</a>,
  * <i>Only void methods can doNothing()</i>.
  * <p>
  * Also reports {@code *Return()} calls when the stubbed method's return type is void,
- * which is based on Mockito's <a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java#L546">corresponding error handling</a>,
+ * which is based on Mockito's
+ * <a href="https://github.com/mockito/mockito/blob/main/mockito-core/src/main/java/org/mockito/internal/exceptions/Reporter.java#L601">corresponding error handling</a>,
  * <p>
  * It highlights every instance of {@code doNothing()}, {@code willDoNothing()} and {@code *Return()} calls in the affected call chains.
  *
@@ -74,6 +76,7 @@ final class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBase
      *
      * @param stubbedMethod the stubbed method called sequent to {@code given(mock)} or {@code when(mock)}
      */
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private void registerIfStubbedMethodsReturnTypeIsNotVoid(Optional<PsiMethodCallExpression> stubbedMethod,
                                                              @NotNull Supplier<List<PsiMethodCallExpression>> doNothingMethodCalls,
                                                              @NotNull ProblemsHolder holder) {
@@ -83,7 +86,7 @@ final class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBase
             .ifPresent(__ -> {
                 for (var doNothing : new HashSet<>(doNothingMethodCalls.get())) {
                     holder.registerProblem(getReferenceNameElement(doNothing),
-                        MockitoolsBundle.message("inspection.void.method.is.stubbed.to.do.nothing", getMethodName(stubbedMethod.get())));
+                        message("inspection.void.method.is.stubbed.to.do.nothing", getMethodName(stubbedMethod.get())));
                 }
             });
     }
@@ -93,6 +96,7 @@ final class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBase
      *
      * @param stubbedMethod the stubbed method called sequent to {@code given(mock)} or {@code when(mock)}
      */
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private void registerIfStubbedMethodsReturnTypeIsVoid(Optional<PsiMethodCallExpression> stubbedMethod,
                                                           @NotNull Supplier<List<PsiMethodCallExpression>> doReturnMethodCalls,
                                                           @NotNull ProblemsHolder holder) {
@@ -102,7 +106,7 @@ final class StubbingAndMethodReturnTypeMismatchInspection extends MockitoolsBase
             .ifPresent(__ -> {
                 for (var doReturn : new HashSet<>(doReturnMethodCalls.get())) {
                     holder.registerProblem(getReferenceNameElement(doReturn),
-                        MockitoolsBundle.message("inspection.non.void.method.is.stubbed.with.return.value", getMethodName(stubbedMethod.get())));
+                        message("inspection.non.void.method.is.stubbed.with.return.value", getMethodName(stubbedMethod.get())));
                 }
             });
     }

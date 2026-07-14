@@ -30,8 +30,8 @@ public final class MockableTypesUtil {
     /**
      * The original logic and set of non-mockable types can be found in Mockito's
      * <ul>
-     *     <li><a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java">InlineDelegateByteBuddyMockMaker#isTypeMockable(Class) method</a>,</li>
-     *     <li><a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineBytecodeGenerator.java">InlineBytecodeGenerator#EXCLUDES set</a>.</li>
+     *     <li><a href="https://github.com/mockito/mockito/blob/main/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java">InlineDelegateByteBuddyMockMaker#isTypeMockable(Class) method</a>,</li>
+     *     <li><a href="https://github.com/mockito/mockito/blob/main/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/InlineBytecodeGenerator.java">InlineBytecodeGenerator#EXCLUDES set</a>.</li>
      * </ul>
      */
     private static final Set<String> NON_MOCKABLE_TYPES = Set.of(CommonClassNames.JAVA_LANG_CLASS, CommonClassNames.JAVA_LANG_STRING);
@@ -49,15 +49,13 @@ public final class MockableTypesUtil {
             if (referencedClass != null) {
                 //Checks if the use class type is annotated
                 var doNotMock = getDoNotMockAnnotationOn(referencedClass);
-                if (doNotMock != null) {
-                    return new DoNotMockType(doNotMock);
-                }
+                if (doNotMock != null) return new DoNotMockType(doNotMock);
+
                 //If the direct class type is not annotated, proceeds to check all its super classes
                 for (PsiClass cls : getSuperClasses(referencedClass)) {
                     var doNotMockInHierarchy = getDoNotMockAnnotationOn(cls);
-                    if (doNotMockInHierarchy != null) {
-                        return new DoNotMockType(doNotMockInHierarchy);
-                    }
+                    if (doNotMockInHierarchy != null) return new DoNotMockType(doNotMockInHierarchy);
+
                 }
             }
         }

@@ -17,12 +17,12 @@ import com.picimako.mockitools.MockitoQualifiedNames;
 import java.util.List;
 
 /**
- * Creates {@code InOrder} type local variables in the form of an {@code InOrder inOrder = Mockito.inOrder([mock objects])} call.
+ * Creates {@code InOrder}-type local variables in the form of an {@code InOrder inOrder = Mockito.inOrder([mock objects])} call.
  */
 public record InOrderVariableCreator(Document document) {
 
     /**
-     * Creates an {@code org.mockito.InOrder} type local variable and inserts it right before the verification call
+     * Creates an {@code org.mockito.InOrder}-type local variable and inserts it right before the verification call
      * that is being converted.
      * <p>
      * The arguments of the {@code Mockito.inOrder()} call will be the mock object used in {@code verificationCall}-
@@ -36,7 +36,7 @@ public record InOrderVariableCreator(Document document) {
     }
 
     /**
-     * Creates an {@code org.mockito.InOrder} type local variable and inserts it right before the verification call
+     * Creates an {@code org.mockito.InOrder}-type local variable and inserts it right before the verification call
      * that is being converted.
      *
      * @param verificationCall the verification call being converted

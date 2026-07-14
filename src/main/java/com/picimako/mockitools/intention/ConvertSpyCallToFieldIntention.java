@@ -73,7 +73,7 @@ import java.util.function.Supplier;
  */
 final class ConvertSpyCallToFieldIntention extends ConvertCallToFieldIntentionBase {
 
-    public ConvertSpyCallToFieldIntention() {
+    ConvertSpyCallToFieldIntention() {
         super(SPY, "@Spy");
     }
 

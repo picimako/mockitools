@@ -16,10 +16,17 @@ import java.util.List;
  */
 public final class PointersUtil {
 
+    /**
+     * Converts all items in {@code calls} to a {@code SmartPsiElementPointer}.
+     */
+    @NotNull
     public static <T extends PsiElement> List<SmartPsiElementPointer<T>> toPointers(List<T> calls) {
         return map(calls, PointersUtil::toPointer);
     }
 
+    /**
+     * Converts the provided {@code element} to a {@code SmartPsiElementPointer}.
+     */
     @NotNull
     public static <T extends PsiElement> SmartPsiElementPointer<T> toPointer(T element) {
         return SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element, element.getContainingFile());

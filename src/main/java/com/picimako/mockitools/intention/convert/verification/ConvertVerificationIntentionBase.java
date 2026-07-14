@@ -20,6 +20,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class ConvertVerificationIntentionBase extends ConversionIntentionBase {
 
+    /**
+     * The verification approach the conversion is performed from.
+     */
     private final VerificationApproach sourceApproach;
 
     protected ConvertVerificationIntentionBase(VerificationApproach sourceApproach, int minSelectionLength) {

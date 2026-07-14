@@ -21,8 +21,9 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Since {@code @Mock} and {@code InjectMocks} annotated fields are initialized automagically by Mockito via {@code MockitoJUnitRunner}, {@code MockitoJUnit.rule()} or
- * {@code MockitoAnnotations.initMocks()} / {@code MockitoAnnotations.openMocks()}, there is no need for explicit initialization of them.
+ * Since {@code @Mock} and {@code InjectMocks} annotated fields are initialized automagically by Mockito via
+ * {@code MockitoJUnitRunner}, {@code MockitoJUnit.rule()} or {@code MockitoAnnotations.initMocks()} / {@code MockitoAnnotations.openMocks()},
+ * there is no need for explicit initialization of them.
  * <p>
  * Explicit initializer is reported only when the field is annotated as either {@code @Mock} or {@code InjectMocks}.
  * <p>

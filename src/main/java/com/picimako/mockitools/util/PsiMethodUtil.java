@@ -219,6 +219,7 @@ public final class PsiMethodUtil {
      * <p>
      * Thus, the calls will be in a reverse order compared to the order they are actually called.
      */
+    @NotNull
     public static List<PsiMethodCallExpression> collectCallsInChainFromLast(@NotNull PsiExpression lastCallInChain) {
         var calls = new SmartList<PsiElement>(lastCallInChain);
         PsiElement current = lastCallInChain;
@@ -231,15 +232,18 @@ public final class PsiMethodUtil {
         return map(calls, PsiMethodCallExpression.class::cast);
     }
 
-    public static List<PsiMethodCallExpression> collectCallsInChainFromFirst(PsiExpression expression, boolean includeMySelf) {
+    @NotNull
+    public static List<PsiMethodCallExpression> collectCallsInChainFromFirst(@NotNull PsiExpression expression, boolean includeMySelf) {
         return PsiTreeUtil.collectParents(expression,
             PsiMethodCallExpression.class, includeMySelf, e -> e instanceof PsiExpressionList || e instanceof PsiStatement);
     }
 
+    @NotNull
     public static List<PsiMethodCallExpression> collectCallsInChainFromFirst(PsiMethodCallExpression expression) {
         return collectCallsInChainFromFirst(expression, false);
     }
 
+    @NotNull
     public static List<PsiMethodCallExpression> collectCallsInChainFromFirst(PsiExpression expression) {
         return collectCallsInChainFromFirst(expression, false);
     }

@@ -103,7 +103,6 @@ final class SimplifyMockCreationInspection extends MockitoolsBaseInspection {
          *
          * @param mockitoMock     the {@code Mockito.mock()} call to simplify
          * @param replacementText the text of the simplified replacement call
-         * @param project         the current project
          */
         private void simplify(PsiMethodCallExpression mockitoMock, String replacementText, Project project) {
             var simplifiedReplacementCall = JavaCodeStyleManager.getInstance(project)

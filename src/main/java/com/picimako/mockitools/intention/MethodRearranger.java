@@ -18,9 +18,9 @@ import java.util.Set;
  * @see ConvertMockSpyFieldToCallIntention
  * @since 0.7.0
  */
-public final class MethodRearranger {
+final class MethodRearranger {
 
-    public static final Set<String> BEFORE_ANNOTATIONS = Set.of(
+    static final Set<String> BEFORE_ANNOTATIONS = Set.of(
         //JUnit 4
         "org.junit.Before", "org.junit.BeforeClass",
         //JUnit 5
@@ -46,7 +46,7 @@ public final class MethodRearranger {
      *
      * @param methods the methods to reorder
      */
-    public static List<PsiMethod> reOrder(PsiMethod[] methods) {
+    static List<PsiMethod> reOrder(PsiMethod[] methods) {
         var beforeHooks = new SmartList<PsiMethod>();
         var testMethods = new SmartList<PsiMethod>();
         var restOfMethods = new SmartList<PsiMethod>();

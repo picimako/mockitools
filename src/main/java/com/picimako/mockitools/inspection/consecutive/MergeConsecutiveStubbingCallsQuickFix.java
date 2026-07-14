@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 /**
  * Quick fix that merges consecutive {@code *Throw()} or {@code *Return()} calls, respectively.
- * Only a single section of consecutive calls is merged if there are multiple.
+ * Only a single section of consecutive calls is merged if there are multiple ones.
  */
 @RequiredArgsConstructor
 public class MergeConsecutiveStubbingCallsQuickFix extends BaseQuickFix {

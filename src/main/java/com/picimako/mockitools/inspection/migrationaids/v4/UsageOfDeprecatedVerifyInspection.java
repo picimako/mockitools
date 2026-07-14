@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 
 /**
- * Reports calls to various verify methods which are deprecated, and removed in v4.
+ * Reports calls to various verify methods which are deprecated and removed in v4.
  * <p>
  * Reported calls:
  * <ul>

@@ -26,16 +26,16 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Reports {@code @Mock} and {@code @Spy} annotated fields' types and the types specified as the arguments of
- * {@code Mockito.mock()} and {@code Mockito.spy()} calls, since certain types are not mockable by Mockito, or are annotated as
- * {@code @DoNotMock} be it Mockito's own such annotation or a custom one.
+ * {@code Mockito.mock()} and {@code Mockito.spy()} calls, since certain types are not mockable by Mockito,
+ * or are annotated as {@code @DoNotMock} be it Mockito's own such annotation or a custom one.
  * <p>
  * You can find the logic and the types in the linked resources.
  * <p>
- * {@code @Mock} and {@code @Spy} annotated fields are validated only in actual unit test classes, while Mockito calls are validated in any file
- * within test sources.
+ * {@code @Mock} and {@code @Spy} annotated fields are validated only in actual unit test classes,
+ * while Mockito calls are validated in any file within test sources.
  * <p>
- * Types' class hierarchy is inspected and the first type annotated with {@code @DoNotMock} is returned, and used for constructing the inspection message
- * including the annotation's reason in it, if there is any.
+ * Types' class hierarchy is inspected and the first type annotated with {@code @DoNotMock} is returned,
+ * and used for constructing the inspection message including the annotation's reason in it, if there is any.
  *
  * @see <a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java">InlineDelegateByteBuddyMockMaker#isTypeMockable(Class)</a>
  * @see <a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineBytecodeGenerator.java">InlineBytecodeGenerator#EXCLUDES</a>

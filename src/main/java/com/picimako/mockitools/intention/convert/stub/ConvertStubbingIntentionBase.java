@@ -35,6 +35,10 @@ import java.util.Arrays;
  * @since 0.6.0
  */
 public abstract class ConvertStubbingIntentionBase extends ConversionIntentionBase {
+    /**
+     * The fully qualified name of the Mockito class from which the conversion happens.
+     * Either {@code org.mockito.Mockito} or {@code org.mockito.BDDMockito}.
+     */
     private final String qualifierType;
 
     protected ConvertStubbingIntentionBase(StubbingApproach sourceApproachName, @NotNull String qualifierType) {

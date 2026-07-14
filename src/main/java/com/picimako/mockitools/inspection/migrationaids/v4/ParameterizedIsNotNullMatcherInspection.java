@@ -49,7 +49,7 @@ final class ParameterizedIsNotNullMatcherInspection extends MigrationAidBase.V23
                 : MockitoolsBundle.message("quick.fix.migration.aid.v4.use.non.parameterized.null.matcher");
             holder.registerProblem(
                 getReferenceNameElement(expression), //referenceName null value is already checked by the CallMatcher
-                MockitoolsBundle.message("inspection.migration.aid.v4.use.non.parameterized.null.matcher", methodName),
+                MockitoolsBundle.message("inspection.migration.aid.v4.use.non.parameterized.null.matcher"),
                 new ReplaceNullMatcherWithNonParameterizedVariantQuickfix(quickFixName));
         }
     }

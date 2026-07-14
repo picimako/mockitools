@@ -11,6 +11,9 @@ import java.util.function.Predicate;
  */
 public final class MockitoolsContainerUtil {
 
+    /**
+     * Returns if the {@code iterable} doesn't contain any item matching the {@code predicate}.
+     */
     public static <T> boolean none(@NotNull Iterable<? extends T> iterable, @NotNull Predicate<? super T> predicate) {
         for (T t : iterable) {
             if (predicate.test(t)) return false;
@@ -19,6 +22,9 @@ public final class MockitoolsContainerUtil {
         return true;
     }
 
+    /**
+     * Returns if the {@code array} doesn't contain any item matching the {@code predicate}.
+     */
     public static <T> boolean none(T @NotNull [] array, @NotNull Predicate<? super T> predicate) {
         for (T t : array) {
             if (predicate.test(t)) return false;

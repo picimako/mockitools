@@ -26,7 +26,13 @@ public final class ExceptionStubber {
      * The method name that accepts the mock object or the call on a mock object. Usually {@code given} or {@code when}.
      */
     private final CallMatcher matcher;
+    /**
+     * Call matcher for the {@code Class<? extends Throwable>} specific override of {@code *Throw()} calls.
+     */
     public final CallMatcher classMatcher;
+    /**
+     * Call matcher for the {@code Throwable} specific override of {@code *Throw()} calls.
+     */
     public final CallMatcher throwablesMatcher;
 
     public ExceptionStubber(String methodName, String instanceClassName, @Nullable String staticClassName) {

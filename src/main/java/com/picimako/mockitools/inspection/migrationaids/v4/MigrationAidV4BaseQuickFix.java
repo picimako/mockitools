@@ -24,8 +24,8 @@ abstract class MigrationAidV4BaseQuickFix extends BaseQuickFix {
     }
 
     /**
-     * Replaces org.mockito.Matchers qualifiers with org.mockito.ArgumentMatchers and static imports the matcher
-     * that is provided in {@code matcherToImport}.
+     * Replaces {@code org.mockito.Matchers} qualifiers with {@code org.mockito.ArgumentMatchers} and
+     * static-imports the matcher that is provided in {@code matcherToImport}.
      */
     protected void replaceMatchersQualifierAndStaticImportMatcher(PsiMethodCallExpression parentCall, String matcherToImport, PsiElement context) {
         if (!replaceMatchersQualifier(parentCall) && !isAlreadyStaticallyImported(parentCall.getMethodExpression())) {
@@ -43,7 +43,8 @@ abstract class MigrationAidV4BaseQuickFix extends BaseQuickFix {
     }
 
     /**
-     * Returns whether the argument method call has a qualifier or not.
+     * Replaces {@code org.mockito.Matchers} qualifiers with {@code org.mockito.ArgumentMatchers}.
+     * Returns whether the argument method call had a qualifier.
      */
     protected boolean replaceMatchersQualifier(PsiMethodCallExpression parentCall) {
         if (parentCall.getMethodExpression().isQualified()) {

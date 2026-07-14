@@ -11,9 +11,11 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Replaces code reference elements with the predefined class ({@link #replacementClassFqn}).
  * <p>
- * This quick fix is for locations where it doesn't matter whether the qualifier of the reference should remain untouched or not.
+ * This quick fix is for locations where it doesn't matter if the qualifier of the reference should remain untouched.
  * <p>
  * In any case, the reference is replaced with the short name of the predefined fully qualified name.
+ *
+ * @see NameCollisionAwareReferenceReplacerQuickFix
  */
 public final class NameCollisionlessReferenceReplacerQuickFix extends ReferenceReplacerQuickFix {
 

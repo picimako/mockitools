@@ -100,7 +100,7 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
     private static final Set<String> SUPPORTED_MOCK_SETTINGS_METHODS =
         Set.of(DEFAULT_ANSWER, STUB_ONLY, NAME, EXTRA_INTERFACES, LENIENT, STRICTNESS, MOCK_MAKER, WITHOUT_ANNOTATIONS);
 
-    public ConvertMockCallToFieldIntention() {
+    ConvertMockCallToFieldIntention() {
         super(MockitoQualifiedNames.MOCK, "@Mock");
     }
 
@@ -131,7 +131,7 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
                             return hasTwoArguments(call) && isSettingsSupportedByMockAnnotation(get2ndArgument(call));
                     }
                 }
-                //Generic inferred Mockito.mock()
+                //Generic-inferred Mockito.mock()
                 else {
                     var parentVariable = PsiTreeUtil.getParentOfType(call, PsiLocalVariable.class);
                     return parentVariable != null
@@ -156,13 +156,13 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
         if (settingsArg instanceof PsiMethodCallExpression) {
             var settingsCalls = collectCallsInChainFromLast(settingsArg);
             return MOCKITO_WITH_SETTINGS.matches(settingsCalls.getLast())
-                   && settingsCalls.stream()
-                       .limit(settingsCalls.size() - 1L) //Skip analyzing the Mockito.withSettings() call as it has already been checked
-                       .allMatch(call -> {
-                           String methodName = getMethodName(call);
-                           return SUPPORTED_MOCK_SETTINGS_METHODS.contains(methodName)
-                                  || (SERIALIZABLE.equals(methodName) && !MOCK_SETTINGS_SERIALIZABLE_WITH_MODE.matches(call));
-                       });
+                && settingsCalls.stream()
+                .limit(settingsCalls.size() - 1L) //Skip analyzing the Mockito.withSettings() call as it has already been checked
+                .allMatch(call -> {
+                    String methodName = getMethodName(call);
+                    return SUPPORTED_MOCK_SETTINGS_METHODS.contains(methodName)
+                        || (SERIALIZABLE.equals(methodName) && !MOCK_SETTINGS_SERIALIZABLE_WITH_MODE.matches(call));
+                });
         }
         return false;
     }
@@ -185,9 +185,10 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
      * In case of answers (whether via {@code Mockito.mock(Class, Answer)} or {@code Mockito.mock(Class, MockSettings)}),
      * if the specified Answer is {@code org.mockito.Answers.RETURNS_DEFAULTS}, then the @Mock annotation won't specify explicitly this value:
      * <pre>
+     * {@code
      * Mockito.mock(Type.class, Answers.RETURNS_DEFAULTS) -> @Mock
      * Mockito.mock(Type.class, Mockito.withSettings().defaultAnswer(Answers.RETURNS_DEFAULTS)) -> @Mock
-     * </pre>
+     * }</pre>
      */
     private void setMockAnnotationAttributes(PsiField field, ConversionContext ctx) {
         runBlocking(() -> {
@@ -234,8 +235,8 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
 
     private static boolean isAnswersReturnDefaults(PsiElement element) {
         return element instanceof PsiEnumConstant constant
-               && MockitoQualifiedNames.ORG_MOCKITO_ANSWERS.equals(constant.getContainingClass().getQualifiedName())
-               && "RETURNS_DEFAULTS".equals(constant.getName());
+            && MockitoQualifiedNames.ORG_MOCKITO_ANSWERS.equals(constant.getContainingClass().getQualifiedName())
+            && "RETURNS_DEFAULTS".equals(constant.getName());
     }
 
     /**

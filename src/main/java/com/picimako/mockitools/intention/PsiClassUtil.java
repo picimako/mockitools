@@ -30,7 +30,7 @@ public final class PsiClassUtil {
      * <p>
      * Based on {@link com.intellij.refactoring.introduceField.BaseExpressionToFieldHandler}.
      */
-    public static List<PsiClass> getParentClasses(@NotNull PsiElement expression) {
+    static List<PsiClass> getParentClasses(@NotNull PsiElement expression) {
         var parentClasses = new SmartList<PsiClass>();
         PsiElement parent = Optional.ofNullable(expression.getUserData(ElementToWorkOn.PARENT)).orElseGet(expression::getParent);
         while (parent != null) {
@@ -40,7 +40,7 @@ public final class PsiClassUtil {
         return parentClasses;
     }
 
-    public static void importClass(String fqn, PsiElement context) {
+    static void importClass(String fqn, PsiElement context) {
         runBlocking(() -> {
             PsiClass collectionClass = JavaPsiFacade.getInstance(context.getProject()).findClass(fqn, ProjectScope.getAllScope(context.getProject()));
             ImportUtils.addImportIfNeeded(collectionClass, context);

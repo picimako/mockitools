@@ -13,13 +13,15 @@ import com.intellij.psi.PsiJavaFile;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Replaces code reference elements with the predefined class ({@link #replacementClassFqn}).
+ * Replaces code reference elements with the predefined class ({@link replacementClassFqn}).
  * <p>
  * This quick fix is for locations where it matters whether the qualifier of the reference should remain untouched,
  * due to a possible name collision between the original and the replacement names.
  * <p>
  * If the reference is qualified, the reference is replaced with the predefined fully qualified name,
  * otherwise it is the import statement of the reference that is replaced.
+ *
+ * @see NameCollisionlessReferenceReplacerQuickFix
  */
 public final class NameCollisionAwareReferenceReplacerQuickFix extends ReferenceReplacerQuickFix {
 

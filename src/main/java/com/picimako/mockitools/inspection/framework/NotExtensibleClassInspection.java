@@ -19,7 +19,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 /**
- * Reports any types of classes or interfaces that extend a class or at least one interface annotated as Mockito's {@code NotExtensible} annotation.
+ * Reports any types of classes/interfaces that extend a class or implements at least one interface annotated as
+ * Mockito's {@code NotExtensible} annotation.
  * <p>
  * This inspection is meant for Mockito framework integrators, not regular end-users. This is disabled by default in the plugin.xml.
  *

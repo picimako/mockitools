@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  * The inspection doesn't distinguish between {@code toString()} calls that come directly as overridden methods
  * from the mock objects' classes, or when they come from a type deeper in the class hierarchy.
  *
- * @see <a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java#L719">Cannot verify toString()</a>
+ * @see <a href="https://github.com/mockito/mockito/blob/main/mockito-core/src/main/java/org/mockito/internal/exceptions/Reporter.java#L774">Cannot verify toString()</a>
  * @since 0.7.0
  */
 final class CannotVerifyToStringInspection extends MockitoolsBaseInspection {

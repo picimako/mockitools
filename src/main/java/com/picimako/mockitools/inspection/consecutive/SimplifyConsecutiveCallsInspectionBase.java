@@ -31,6 +31,10 @@ import java.util.function.Predicate;
  */
 abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsBaseInspection {
 
+    protected abstract List<ConsecutiveCallAnalyzer> analyzers();
+
+    protected abstract void register(ConsecutiveCallRegistrar context, @NotNull ProblemsHolder holder);
+
     //Analysis workflow
 
     @Override
@@ -74,12 +78,12 @@ abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsBaseInsp
         return call -> true;
     }
 
-    protected abstract List<ConsecutiveCallAnalyzer> analyzers();
-
     //Registration workflow
 
-    private void registerMultiple(ConsecutiveCallAnalyzer analyzer, List<PsiMethodCallExpression> callsInWholeChain,
-                                  List<Integer> consecutiveCallIndeces, @NotNull ProblemsHolder holder) {
+    private void registerMultiple(ConsecutiveCallAnalyzer analyzer,
+                                  List<PsiMethodCallExpression> callsInWholeChain,
+                                  List<Integer> consecutiveCallIndeces,
+                                  @NotNull ProblemsHolder holder) {
         if (consecutiveCallIndeces.size() > 1) {
             register(new ConsecutiveCallRegistrar(analyzer, callsInWholeChain, consecutiveCallIndeces), holder);
         }

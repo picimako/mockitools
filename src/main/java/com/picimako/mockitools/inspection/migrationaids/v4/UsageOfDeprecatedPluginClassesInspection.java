@@ -19,7 +19,8 @@ import org.jetbrains.annotations.NotNull;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 
 /**
- * Reports usages of {@code org.mockito.configuration.AnnotationEngine} and {@code org.mockito.plugins.InstantiatorProvider},
+ * Reports usages of {@code org.mockito.configuration.AnnotationEngine} (with {@code org.mockito.plugins.AnnotationEngine})
+ * and {@code org.mockito.plugins.InstantiatorProvider} (with {@code org.mockito.plugins.InstantiatorProvider2}),
  * since they are removed in Mockito v4.
  * <p>
  * Related quick fixes can replace these references with the proper classes.

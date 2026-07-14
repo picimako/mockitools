@@ -26,6 +26,9 @@ public abstract class MockitoolsBaseInspection extends LocalInspectionTool {
         return isInTestSourceContent(session.getFile()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
     }
 
+    /**
+     * Creates a Java element visitor that visits only {@code PsiMethodCallExpression} nodes.
+     */
     @NotNull
     protected JavaElementVisitor methodCallVisitor(@NotNull ProblemsHolder holder) {
         return new JavaElementVisitor() {
@@ -46,6 +49,9 @@ public abstract class MockitoolsBaseInspection extends LocalInspectionTool {
         };
     }
 
+    /**
+     * Creates a Java element visitor that visits only {@code PsiField} nodes.
+     */
     @NotNull
     protected JavaElementVisitor fieldVisitor(@NotNull ProblemsHolder holder) {
         return new JavaElementVisitor() {
@@ -56,6 +62,9 @@ public abstract class MockitoolsBaseInspection extends LocalInspectionTool {
         };
     }
 
+    /**
+     * Creates a Java element visitor that visits only {@code PsiField} and {@code PsiMethodCallExpression} nodes.
+     */
     @NotNull
     protected JavaElementVisitor fieldAndMethodCallVisitor(@NotNull ProblemsHolder holder) {
         return new JavaElementVisitor() {
@@ -81,6 +90,9 @@ public abstract class MockitoolsBaseInspection extends LocalInspectionTool {
         };
     }
 
+    /**
+     * Creates a Java element visitor that visits only {@code PsiAnnotation} and {@code PsiMethodCallExpression} nodes.
+     */
     @NotNull
     protected JavaElementVisitor annotationAndMethodCallVisitor(@NotNull ProblemsHolder holder) {
         return new JavaElementVisitor() {

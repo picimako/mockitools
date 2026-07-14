@@ -4,7 +4,7 @@ package com.picimako.mockitools.dsl;
 
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.intellij.openapi.util.text.StringUtil.substringAfterLast;
-import static com.intellij.util.containers.ContainerUtil.map;
+import static com.intellij.util.containers.ContainerUtil.map2Set;
 import static com.picimako.mockitools.MockitoQualifiedNames.DO_THROW;
 import static com.picimako.mockitools.MockitoQualifiedNames.GIVEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
@@ -39,6 +39,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -271,8 +272,8 @@ public enum StubbingApproach {
         }
     };
 
-    private static final List<ExceptionStubber> EXCEPTION_STUBBERS =
-        map(StubbingApproach.values(), StubbingApproach::getExceptionStubber);
+    private static final Set<ExceptionStubber> EXCEPTION_STUBBERS =
+        map2Set(StubbingApproach.values(), StubbingApproach::getExceptionStubber);
 
     public final StubType stubType;
     public final String presentableText;
@@ -293,12 +294,13 @@ public enum StubbingApproach {
     /**
      * For example:
      * <pre>
+     * {@code
      * //Returns 'mock.doSomething()' if 'Mockito.when(mock.doSomething())' is passed in
      * Mockito.when(mock.doSomething()).thenReturn(10);
      *
      * //Returns 'mock.doSomething()' if 'given(mock)' is passed in
      * BDDMockito.willReturn(10).given(mock).doSomething();
-     * </pre>
+     * }</pre>
      *
      * @param methodCallStubber the call in a stubbing call chain that accepts the mock object,
      *                          or the method call on a mock object that is being stubbed
@@ -312,11 +314,12 @@ public enum StubbingApproach {
      * <p>
      * For example:
      * <pre>
+     * {@code
      * //Returns 'mock.doSomething()' is both cases:
      *
      * Mockito.when(mock.doSomething()).thenReturn(10);
      * BDDMockito.willReturn(10).given(mock).doSomething();
-     * </pre>
+     * }</pre>
      *
      * @param stubbingCalls the calls in the call chain constituting as a stubbing
      * @return the found call as PsiMethodCallExpression, or empty Optional if the call is not found, or the stubbing
@@ -341,9 +344,10 @@ public enum StubbingApproach {
      * <p>
      * For example:
      * <pre>
+     * {@code
      * Mockito.when(mock.doSomething()).thenReturn(10); //returns true if 'Mockito.when(mock.doSomething())' is passed in
      * BDDMockito.willReturn(10).given(mock).doSomething(); //return true if 'given(mock)' is passed in
-     * </pre>
+     * }</pre>
      *
      * @param expression the method accepting the mock object, or the call to the stubbed method
      */

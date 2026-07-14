@@ -13,7 +13,6 @@ import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallForIdentif
 import static com.picimako.mockitools.util.PsiMethodUtil.getQualifier;
 import static com.picimako.mockitools.util.PsiMethodUtil.isIdentifierOfMethodCall;
 import static com.picimako.mockitools.util.Ranges.charSequenceInRange;
-import static com.picimako.mockitools.intention.convert.TokenTypes.isTokenType;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -31,11 +30,12 @@ import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
-import com.picimako.mockitools.intention.convert.verification.NoActionAvailableAction;
 import com.picimako.mockitools.intention.ListPopupHelper;
+import com.picimako.mockitools.intention.convert.verification.NoActionAvailableAction;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +49,15 @@ import java.util.List;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class ConversionIntentionBase implements IntentionAction {
     protected static final List<AnAction> NO_ACTION_AVAILABLE = Collections.singletonList(NoActionAvailableAction.INSTANCE);
+    /**
+     * A display name for the stubbing or verification approach. Used in the intention actions' family names.
+     */
     protected final String sourceApproachName;
+    /**
+     * Used for bulk conversions to limit the execution of some logic when the selection is shorter than this value
+     *
+     * @see isAvailableForBulkConversion
+     */
     private final int minSelectionLength;
 
     @Override

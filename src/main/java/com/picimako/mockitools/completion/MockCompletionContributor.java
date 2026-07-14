@@ -49,7 +49,7 @@ final class MockCompletionContributor extends CompletionContributor {
     private static final Pattern VERIFY_PATTERN = Pattern.compile("verifyNoInteractions|verifyNoMoreInteractions|verifyZeroInteractions");
 
     /**
-     * This capture uses regex based identification of the target method calls because the CallMatcher based
+     * This capture uses regex-based identification of the target method calls because the CallMatcher-based
      * solution can't resolve calls to their methods when the completion is triggered in an empty argument list.
      */
     private static final PsiElementPattern.Capture<PsiElement> MOCK_OBJECT_PARAMETER_HOLDER_PATTERN =
@@ -70,8 +70,10 @@ final class MockCompletionContributor extends CompletionContributor {
                 }));
 
     /**
-     * Using {@link PsiResolveHelper} because neither {@link com.siyeh.ig.psiutils.ImportUtils#isAlreadyStaticallyImported(PsiJavaCodeReferenceElement)}
-     * nor {@link com.intellij.psi.impl.source.codeStyle.ImportHelper#isAlreadyImported(PsiJavaFile, String)} worked for determining if the method is already imported.
+     * Using {@link PsiResolveHelper} because neither
+     * {@link com.siyeh.ig.psiutils.ImportUtils#isAlreadyStaticallyImported(PsiJavaCodeReferenceElement)}
+     * nor {@link com.intellij.psi.impl.source.codeStyle.ImportHelper#isAlreadyImported(PsiJavaFile, String)}
+     * worked for determining if the method is already imported.
      */
     private static boolean isMethodDeclaredInMockitoClass(@NotNull PsiMethodCallExpression methodCall) {
         var referencedMethodCandidates = PsiResolveHelper.getInstance(methodCall.getProject()).getReferencedMethodCandidates(methodCall, false, true);

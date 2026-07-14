@@ -2,7 +2,6 @@
 
 package com.picimako.mockitools.inspection.consecutive;
 
-import static com.google.common.collect.Iterables.getLast;
 import static com.picimako.mockitools.inspection.PointersUtil.toPointers;
 
 import com.intellij.openapi.vfs.VirtualFile;
@@ -10,6 +9,7 @@ import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.picimako.mockitools.inspection.stubbing.ExceptionStubber;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -20,23 +20,27 @@ class ConsecutiveCallRegistrar {
     /**
      * @see ConsecutiveCallAnalyzer#consecutiveMethodName
      */
+    @NotNull
     final String consecutiveMethodName;
     /**
      * The full list of calls in the currently analyzed call chain.
      */
+    @NotNull
     final List<PsiMethodCallExpression> callsInWholeChain;
     /**
      * The indeces of the target section of consecutive calls within {@link #callsInWholeChain}.
      */
+    @NotNull
     final List<Integer> consecutiveCallIndeces;
     /**
      * @see ConsecutiveCallAnalyzer#exceptionStubber
      */
+    @Nullable
     private final ExceptionStubber exceptionStubber;
     /**
-     * The list of {@code callsInWholeChain} as {@link SmartPsiElementPointer}s used within the respective quick fix.
+     * The list of {@link callsInWholeChain} as {@link SmartPsiElementPointer}s used within the respective quick fix.
      * <p>
-     * This is lazy-initialized, and instantiated only when {@code MergeConsecutiveStubbingCallsQuickFix} is actually called.
+     * This is lazy-initialized and instantiated only when {@link MergeConsecutiveStubbingCallsQuickFix} is actually called.
      */
     private List<SmartPsiElementPointer<PsiMethodCallExpression>> wholeChainPointers = null;
 
@@ -66,16 +70,25 @@ class ConsecutiveCallRegistrar {
 
     //For quick fixes
 
+    /**
+     * Returns the {@code index}th method call from the call chain.
+     */
     PsiMethodCallExpression getElement(int index) {
         initializePointersIfNotAlready();
         return wholeChainPointers.get(index).getElement();
     }
 
+    /**
+     * Returns the first consecutive method call from the call chain.
+     */
     PsiMethodCallExpression getFirstConsecutiveCall() {
         initializePointersIfNotAlready();
         return wholeChainPointers.get(consecutiveCallIndeces.getFirst()).getElement();
     }
 
+    /**
+     * Returns the file the current registrar is working with.
+     */
     VirtualFile getContainingFile() {
         initializePointersIfNotAlready();
         return wholeChainPointers.getFirst().getVirtualFile();

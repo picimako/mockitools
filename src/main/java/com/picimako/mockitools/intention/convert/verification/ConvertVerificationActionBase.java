@@ -5,8 +5,8 @@ package com.picimako.mockitools.intention.convert.verification;
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
-import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
 import static com.picimako.mockitools.intention.PsiClassUtil.importClassAndCommit;
+import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;
 import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
@@ -15,6 +15,7 @@ import static com.picimako.mockitools.util.Ranges.endOffsetOf;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
@@ -34,7 +35,7 @@ import java.util.List;
  */
 public abstract class ConvertVerificationActionBase extends AnAction {
     /**
-     * Whether the conversion is caret- (single call chain) or selection-based (one or more call chains).
+     * Whether the conversion is caret- (single call chain - false) or selection-based (one or more call chains - true).
      */
     private final boolean isBulkMode;
     protected PsiDocumentManager documentManager;
@@ -42,7 +43,7 @@ public abstract class ConvertVerificationActionBase extends AnAction {
     private Document document;
     private InOrderVariableCreator inOrderCreator;
 
-    protected ConvertVerificationActionBase(String actionText, boolean isBulkMode) {
+    protected ConvertVerificationActionBase(@NotNull String actionText, boolean isBulkMode) {
         super(actionText);
         this.isBulkMode = isBulkMode;
     }
@@ -106,11 +107,12 @@ public abstract class ConvertVerificationActionBase extends AnAction {
      * <p>
      * For example:
      * <pre>
+     * {@code
      * //The following text:
      * Mockito.verify(mock).doSomething();
      * //becomes:
      * BDDMockito.then(mock).doSomething();
-     * </pre>
+     * }</pre>
      *
      * @param calls        the call chain
      * @param replacement  the replacement text

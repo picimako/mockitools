@@ -84,7 +84,7 @@ final class ConvertMockSpyFieldToCallAction extends AnAction {
 
     //Instantiation
 
-    public ConvertMockSpyFieldToCallAction(PsiField fieldToConvert, PsiMethod method) {
+    ConvertMockSpyFieldToCallAction(PsiField fieldToConvert, PsiMethod method) {
         super(
             //The element text is always method name and the parameter list, e.g. 'testMethod(String)'
             computeBlocking(() -> PsiFormatUtil.formatMethod(method, PsiSubstitutor.EMPTY,
