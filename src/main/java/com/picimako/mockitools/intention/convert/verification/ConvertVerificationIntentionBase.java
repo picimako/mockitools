@@ -29,8 +29,7 @@ public abstract class ConvertVerificationIntentionBase extends ConversionIntenti
 
     //The shortest option is selecting 'verify(y).z();'.
     protected ConvertVerificationIntentionBase(VerificationApproach sourceApproach) {
-        super(sourceApproach.presentableText, 14);
-        this.sourceApproach = sourceApproach;
+        this(sourceApproach, 14);
     }
 
     @Override
