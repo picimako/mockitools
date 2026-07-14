@@ -4,6 +4,7 @@ package com.picimako.mockitools.intention;
 
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
 import static com.intellij.openapi.application.ReadAction.runBlocking;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static com.picimako.mockitools.MockableTypesUtil.isMockableTypeInAnyWay;
 import static com.picimako.mockitools.MockitoMockMatchers.MOCK_WITH_ANSWER;
 import static com.picimako.mockitools.MockitoMockMatchers.MOCK_WITH_NAME;
@@ -32,7 +33,6 @@ import static com.picimako.mockitools.util.PsiMethodUtil.hasOneArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.hasTwoArguments;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
-import static java.util.stream.Collectors.joining;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -53,7 +53,6 @@ import com.picimako.mockitools.MockitoQualifiedNames;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -212,16 +211,17 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
         for (int i = calls.size() - 2; i >= 0; i--) {
             var call = calls.get(i);
             String methodName = getMethodName(call);
-            if (STUB_ONLY.equals(methodName)
-                || LENIENT.equals(methodName)
-                || SERIALIZABLE.equals(methodName)
-                || WITHOUT_ANNOTATIONS.equals(methodName))
-                configurer.configureBooleanAttribute(methodName);
-            else if (NAME.equals(methodName)) configurer.configureName(call);
-            else if (DEFAULT_ANSWER.equals(methodName)) configurer.configureAnswerFromCall(call);
-            else if (EXTRA_INTERFACES.equals(methodName)) configurer.configureExtraInterfaces(call);
-            else if (STRICTNESS.equals(methodName)) configurer.configureStrictness(call);
-            else if (MOCK_MAKER.equals(methodName)) configurer.configureMockMaker(call);
+            switch (methodName) {
+                case STUB_ONLY, LENIENT, SERIALIZABLE, WITHOUT_ANNOTATIONS ->
+                    configurer.configureBooleanAttribute(methodName);
+                case NAME -> configurer.configureName(call);
+                case DEFAULT_ANSWER -> configurer.configureAnswerFromCall(call);
+                case EXTRA_INTERFACES -> configurer.configureExtraInterfaces(call);
+                case STRICTNESS -> configurer.configureStrictness(call);
+                case MOCK_MAKER -> configurer.configureMockMaker(call);
+                case null, default -> {
+                }
+            }
         }
     }
 
@@ -270,7 +270,7 @@ final class ConvertMockCallToFieldIntention extends ConvertCallToFieldIntentionB
             if (arguments.length == 1) {
                 setDeclaredAttributeValue(EXTRA_INTERFACES, attributeValue(arguments[0].getText()));
             } else {
-                String interfaces = Arrays.stream(arguments).map(arg -> computeBlocking(arg::getText)).collect(joining(","));
+                String interfaces = String.join(",", map(arguments, arg -> computeBlocking(arg::getText)));
                 setDeclaredAttributeValue(EXTRA_INTERFACES, attributeValue("{" + interfaces + "}"));
             }
         }

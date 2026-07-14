@@ -246,9 +246,9 @@ final class ConvertMockSpyFieldToCallAction extends AnAction {
     }
 
     private static Optional<PsiAnnotationMemberValue> valueOf(JvmAnnotationAttribute attribute) {
-        return computeBlocking(() -> attribute instanceof PsiNameValuePair attributeNameValue && attributeNameValue.getValue() != null
-                             ? Optional.ofNullable(attributeNameValue.getValue())
-                             : Optional.empty());
+        return attribute instanceof PsiNameValuePair attributeNameValue && attributeNameValue.getValue() != null
+            ? Optional.ofNullable(attributeNameValue.getValue())
+            : Optional.empty();
     }
 
     private static void appendSetting(StringBuilder sb, String methodName, String argument) {
@@ -259,13 +259,11 @@ final class ConvertMockSpyFieldToCallAction extends AnAction {
      * This is to make sure that the mock()/spy() call's argument (when a PsiClassObjectAccessExpression), doesn't include the generic type arguments.
      */
     private static void appendType(PsiField fieldToConvert, StringBuilder mockitoMockingCall) {
-        runBlocking(() -> {
-            Optional.ofNullable(fieldToConvert.getTypeElement())
-                .map(PsiTypeElement::getInnermostComponentReferenceElement)
-                .map(PsiQualifiedReference::getReferenceName)
-                .ifPresentOrElse(mockitoMockingCall::append, () -> mockitoMockingCall.append(fieldToConvert.getType().getCanonicalText()));
-            mockitoMockingCall.append(".class");
-        });
+        Optional.ofNullable(fieldToConvert.getTypeElement())
+            .map(PsiTypeElement::getInnermostComponentReferenceElement)
+            .map(PsiQualifiedReference::getReferenceName)
+            .ifPresentOrElse(mockitoMockingCall::append, () -> mockitoMockingCall.append(fieldToConvert.getType().getCanonicalText()));
+        mockitoMockingCall.append(".class");
     }
 
     private static boolean isBlank(PsiAnnotationMemberValue value) {
