@@ -11,7 +11,6 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_S
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKED_STATIC_VERIFICATION;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE;
 import static com.picimako.mockitools.MockitoQualifiedNames.THEN;
-import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoVerify;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.getSubsequentMethodCall;
@@ -22,6 +21,7 @@ import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiMethodCallExpression;
+import com.picimako.mockitools.MockitoolsPsiUtil;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import lombok.RequiredArgsConstructor;
 
@@ -114,8 +114,8 @@ public enum VerificationApproach {
     },
     INORDER_VERIFY_MOCKED_STATIC("InOrder.verify()") {
         private final CallMatcher IN_ORDER_VERIFY_MOCKED_STATIC = CallMatcher.anyOf(
-            instanceCall(ORG_MOCKITO_INORDER, VERIFY).parameterTypes(ORG_MOCKITO_MOCKED_STATIC, ORG_MOCKITO_MOCKED_STATIC_VERIFICATION),
-            instanceCall(ORG_MOCKITO_INORDER, VERIFY).parameterCount(3));
+            MockitoolsPsiUtil.INORDER_VERIFY.parameterTypes(ORG_MOCKITO_MOCKED_STATIC, ORG_MOCKITO_MOCKED_STATIC_VERIFICATION),
+            MockitoolsPsiUtil.INORDER_VERIFY.parameterCount(3));
 
         @Override
         public boolean isVerifiedBy(PsiMethodCallExpression expression) {
@@ -135,9 +135,9 @@ public enum VerificationApproach {
     },
     MOCKED_STATIC_VERIFY("MockedStatic.verify()") {
         private final CallMatcher MOCKED_STATIC_VERIFY = CallMatcher.anyOf(
-            instanceCall(ORG_MOCKITO_MOCKED_STATIC, VERIFY).parameterCount(1),
+            MockitoolsPsiUtil.MOCKED_STATIC_VERIFY.parameterCount(1),
             //with mode
-            instanceCall(ORG_MOCKITO_MOCKED_STATIC, VERIFY).parameterCount(2));
+            MockitoolsPsiUtil.MOCKED_STATIC_VERIFY.parameterCount(2));
 
         @Override
         public boolean isVerifiedBy(PsiMethodCallExpression expression) {
