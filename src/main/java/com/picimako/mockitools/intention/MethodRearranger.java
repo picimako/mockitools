@@ -30,7 +30,11 @@ public final class MethodRearranger {
         "org.testng.annotations.BeforeGroups", "org.testng.annotations.BeforeClass",
         "org.testng.annotations.BeforeMethod"
     );
-    public static final Set<String> TEST_ANNOTATIONS = Set.of("org.junit.Test", "org.junit.jupiter.api.Test", "org.testng.annotations.Test");
+    static final Set<String> TEST_ANNOTATIONS = Set.of(
+        "org.junit.Test", "org.junit.jupiter.api.Test",
+        "org.junit.jupiter.api.TestFactory",
+        "org.junit.jupiter.params.ParameterizedTest",
+        "org.testng.annotations.Test");
 
     /**
      * Returns a reordered variant of the argument methods array.
