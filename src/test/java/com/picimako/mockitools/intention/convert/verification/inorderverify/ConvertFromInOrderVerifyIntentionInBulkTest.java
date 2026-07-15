@@ -6,7 +6,7 @@ import static com.intellij.util.containers.ContainerUtil.map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
-import com.picimako.mockitools.Convention;
+import com.picimako.mockitools.dsl.Convention;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
 import org.junit.jupiter.api.Test;
 
@@ -263,7 +263,7 @@ class ConvertFromInOrderVerifyIntentionInBulkTest extends EnforceConventionAware
                     }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 
@@ -289,7 +289,7 @@ class ConvertFromInOrderVerifyIntentionInBulkTest extends EnforceConventionAware
                     }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 
@@ -311,7 +311,7 @@ class ConvertFromInOrderVerifyIntentionInBulkTest extends EnforceConventionAware
                     }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 
@@ -339,7 +339,7 @@ class ConvertFromInOrderVerifyIntentionInBulkTest extends EnforceConventionAware
                         }    }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 
@@ -361,7 +361,7 @@ class ConvertFromInOrderVerifyIntentionInBulkTest extends EnforceConventionAware
                         }    }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromInOrderVerifyIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 

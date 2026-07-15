@@ -16,7 +16,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNamedElement;
-import com.picimako.mockitools.MemberInplaceRenameHelper;
+import com.picimako.mockitools.intention.MemberInplaceRenameHelper;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationActionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 
@@ -62,13 +62,14 @@ public final class ConvertMockitoVerifyToBDDMockitoThenWithInOrderAction extends
     private void performConversion(PsiElement inOrderVariable, PsiMethodCallExpression verificationCall, List<PsiMethodCallExpression> calls) {
         replaceBeginningOfChain(calls, "BDDMockito.then", ORG_MOCKITO_BDDMOCKITO);
         int endOffsetOfMockArgument = endOffsetOf(getFirstArgument(verificationCall));
-        if (hasTwoArguments(verificationCall)) {
-            editor.getDocument().replaceString(
-                endOffsetOfMockArgument,
-                get2ndArgument(verificationCall).getTextOffset(),
-                ").should(" + ((PsiNamedElement) inOrderVariable.getFirstChild()).getName() + ", ");
-        } else {
-            editor.getDocument().replaceString(endOffsetOfMockArgument, endOffsetOfMockArgument, ").should(" + ((PsiNamedElement) inOrderVariable.getFirstChild()).getName());
-        }
+
+        var hasTwoArguments = hasTwoArguments(verificationCall);
+        var endOffset = hasTwoArguments
+            ? get2ndArgument(verificationCall).getTextOffset()
+            : endOffsetOfMockArgument;
+        var replacement = hasTwoArguments
+            ? ").should(" + ((PsiNamedElement) inOrderVariable.getFirstChild()).getName() + ", "
+            : ").should(" + ((PsiNamedElement) inOrderVariable.getFirstChild()).getName();
+        editor.getDocument().replaceString(endOffsetOfMockArgument, endOffset, replacement);
     }
 }

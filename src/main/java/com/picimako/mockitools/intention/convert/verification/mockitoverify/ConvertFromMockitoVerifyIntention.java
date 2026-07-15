@@ -3,8 +3,8 @@
 package com.picimako.mockitools.intention.convert.verification.mockitoverify;
 
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
-import static com.picimako.mockitools.EnforceConventionUtil.isBDDMockitoEnforced;
-import static com.picimako.mockitools.EnforceConventionUtil.isMockitoEnforced;
+import static com.picimako.mockitools.intention.convert.EnforceConventionUtil.isBDDMockitoEnforced;
+import static com.picimako.mockitools.intention.convert.EnforceConventionUtil.isMockitoEnforced;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 
 import com.intellij.openapi.actionSystem.AnAction;
@@ -13,7 +13,7 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReferenceExpression;
-import com.picimako.mockitools.VerificationApproach;
+import com.picimako.mockitools.dsl.VerificationApproach;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationIntentionBase;
 
 import java.util.ArrayList;

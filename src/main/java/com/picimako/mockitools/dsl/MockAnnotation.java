@@ -20,7 +20,7 @@ public final class MockAnnotation {
      * Returns whether the provided boolean attribute is set to true (thus enabled) on the {@code mockAnnotation}.
      * <p>
      * This method doesn't check if the provided annotation is actually a {@code @Mock} one, that check has to be done
-     * separately, before calling this method.
+     * separately before calling this method.
      *
      * @param mockAnnotation the @Mock annotation on a field
      * @param attributeName  the name of a boolean-value attribute on the @Mock annotation.

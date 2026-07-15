@@ -15,11 +15,11 @@ import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.siyeh.ig.callMatcher.CallMatcher;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,19 +49,16 @@ final class ParameterizedIsNotNullMatcherInspection extends MigrationAidBase.V23
                 : MockitoolsBundle.message("quick.fix.migration.aid.v4.use.non.parameterized.null.matcher");
             holder.registerProblem(
                 getReferenceNameElement(expression), //referenceName null value is already checked by the CallMatcher
-                MockitoolsBundle.message("inspection.migration.aid.v4.use.non.parameterized.null.matcher", methodName),
+                MockitoolsBundle.message("inspection.migration.aid.v4.use.non.parameterized.null.matcher"),
                 new ReplaceNullMatcherWithNonParameterizedVariantQuickfix(quickFixName));
         }
     }
 
     @RequiredArgsConstructor
-    private static final class ReplaceNullMatcherWithNonParameterizedVariantQuickfix extends MigrationAidV4BaseQuickFix {
-        private final String quickFixName;
-
-        @Override
-        public @IntentionName @NotNull String getName() {
-            return quickFixName;
-        }
+    @Getter
+    private static final class ReplaceNullMatcherWithNonParameterizedVariantQuickfix extends MigrationAidV4QuickFix {
+        @NotNull
+        private final String name;
 
         @Override
         protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor, PsiElement problemElement) {

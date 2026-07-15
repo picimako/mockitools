@@ -18,6 +18,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
 import com.picimako.mockitools.CallChainAnalyzer;
+import com.picimako.mockitools.dsl.StubbingApproach;
 import com.picimako.mockitools.intention.convert.ConversionIntentionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
@@ -34,10 +35,14 @@ import java.util.Arrays;
  * @since 0.6.0
  */
 public abstract class ConvertStubbingIntentionBase extends ConversionIntentionBase {
+    /**
+     * The fully qualified name of the Mockito class from which the conversion happens.
+     * Either {@code org.mockito.Mockito} or {@code org.mockito.BDDMockito}.
+     */
     private final String qualifierType;
 
-    protected ConvertStubbingIntentionBase(String sourceApproachName, String qualifierType) {
-        super(sourceApproachName, 16);
+    protected ConvertStubbingIntentionBase(StubbingApproach sourceApproachName, @NotNull String qualifierType) {
+        super(sourceApproachName.presentableText, 16);
         this.qualifierType = qualifierType;
     }
 

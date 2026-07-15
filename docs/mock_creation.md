@@ -97,7 +97,7 @@ and validates test code regardless of the Mockito version.
 
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.11.0-blue) [![](https://img.shields.io/badge/implementation-GenericInferredMockAndSpyCreationInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/mocking/GenericInferredMockAndSpyCreationInspection.java)
 
-[Mockito 4.9.0](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#mock_without_class) introduced an enhancement to `Mockito.mock()` and `Mockito.spy()`
+[Mockito 4.9.0](https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#mock_without_class) introduced an enhancement to `Mockito.mock()` and `Mockito.spy()`
 based mock/spy creation, so that the mock type is not determined by the class passed in, instead by the type of the variable/field it is assigned to.
 
 These variants of `mock()` and `spy()` throw an exception if objects other than configuration are passed in, thus this inspection reports
@@ -166,7 +166,7 @@ class MockSpiedInstanceTypeMismatch {
 
 ![](https://img.shields.io/badge/inspection-orange) ![](https://img.shields.io/badge/since-0.1.0-blue) [![](https://img.shields.io/badge/implementation-CallOnMockitoResetInspection-blue)](../src/main/java/com/picimako/mockitools/inspection/CallOnMockitoResetInspection.java)
 
-Based on Mockito's documentation on [resetting mocks](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#resetting_mocks)
+Based on Mockito's documentation on [resetting mocks](https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#resetting_mocks)
 
 > Smart Mockito users hardly use this feature because they know it could be a sign of poor tests. Normally, you don't need to reset your mocks, just create new mocks for each test method.
 

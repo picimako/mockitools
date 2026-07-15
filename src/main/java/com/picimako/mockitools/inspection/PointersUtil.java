@@ -1,6 +1,6 @@
 //Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.picimako.mockitools.util;
+package com.picimako.mockitools.inspection;
 
 import static com.intellij.util.containers.ContainerUtil.map;
 
@@ -16,10 +16,17 @@ import java.util.List;
  */
 public final class PointersUtil {
 
+    /**
+     * Converts all items in {@code calls} to a {@code SmartPsiElementPointer}.
+     */
+    @NotNull
     public static <T extends PsiElement> List<SmartPsiElementPointer<T>> toPointers(List<T> calls) {
         return map(calls, PointersUtil::toPointer);
     }
 
+    /**
+     * Converts the provided {@code element} to a {@code SmartPsiElementPointer}.
+     */
     @NotNull
     public static <T extends PsiElement> SmartPsiElementPointer<T> toPointer(T element) {
         return SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element, element.getContainingFile());

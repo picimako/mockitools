@@ -47,7 +47,7 @@ Mockito.verify(mockObject, timeout(6000)).method(); //over threshold, since 5000
 This inspection reports `Mockito.times()` calls whether they can be optimized or deleted based on their argument values.
 
 - `times(0)` can be replaced with `Mockito.never()` for better readability,
-- `times(1)` can be removed since 1 is the default value when using `times()` verification. See [Mockito exact verification](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#exact_verification) documentation.
+- `times(1)` can be removed since 1 is the default value when using `times()` verification. See [Mockito exact verification](https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#exact_verification) documentation.
   - `Mockito.times(1)` calls are reported only when they have no sequent calls on them, thus `Mockito.times(1).description("message")` would not be reported.
 
 Both of them can be enabled/disabled on the inspection's settings panel.

@@ -9,7 +9,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.EXTRA_INTERFACES;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isExtraInterfaces;
 import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
-import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.inspection.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
@@ -18,7 +18,7 @@ import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.PropertyKey;
@@ -41,7 +41,7 @@ import java.util.Optional;
  * @see <a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java">Report.java: look for extraInterfacesRequiresAtLeastOneInterface()</a>
  * @since 0.1.0
  */
-final class ExtraInterfacesInspection extends MockitoolsBaseInspection {
+final class ExtraInterfacesInspection extends MockitoolsInspectionBase {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {

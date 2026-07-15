@@ -3,6 +3,7 @@
 package com.picimako.mockitools.intention.convert.verification.bddmockitothen;
 
 import static com.intellij.util.containers.ContainerUtil.map;
+import static com.picimako.mockitools.dsl.VerificationApproach.INORDER_VERIFY;
 import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectMockObjects;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
@@ -16,8 +17,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.util.TriConsumer;
-import com.picimako.mockitools.MemberInplaceRenameHelper;
-import com.picimako.mockitools.VerificationApproach;
+import com.picimako.mockitools.intention.MemberInplaceRenameHelper;
+import com.picimako.mockitools.dsl.VerificationApproach;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationActionBase;
 
 import java.util.List;
@@ -35,7 +36,7 @@ import java.util.List;
  */
 public class ConvertBDDMockitoThenToInOrderVerifyAction extends ConvertVerificationActionBase {
     public ConvertBDDMockitoThenToInOrderVerifyAction(boolean isBulkMode) {
-        super("InOrder.verify()", isBulkMode);
+        super(INORDER_VERIFY.presentableText, isBulkMode);
     }
 
     //Caret based conversion

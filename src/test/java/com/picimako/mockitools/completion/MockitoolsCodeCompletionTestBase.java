@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.completion.CompletionType;
 import com.picimako.mockitools.MockitoolsTestBase;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Base class for testing code completion.
@@ -12,13 +13,10 @@ import com.picimako.mockitools.MockitoolsTestBase;
 public abstract class MockitoolsCodeCompletionTestBase extends MockitoolsTestBase {
 
     /**
-     * Tests basic code completion in the provided file text at the marked caret position,
-     * and validates if the completion contains exactly the expected items.
-     *
-     * @param text            the file text on which the code completion is invoked
-     * @param completionItems the list of items that are expected to be in the displayed completion list
+     * Configures a file with the provided {@code text}, test basic code completion at the marked caret position,
+     * and validates if the completion contains exactly the expected {@code completionItems}.
      */
-    protected void doTestCodeCompletionContains(String text, String... completionItems) {
+    protected void doTestCodeCompletionContains(@NotNull String text, @NotNull String... completionItems) {
         assertThat(text).withFailMessage("File text must contain <caret> to invoke code completion.").contains("<caret>");
 
         getFixture().configureByText("CompletionTest.java", text);

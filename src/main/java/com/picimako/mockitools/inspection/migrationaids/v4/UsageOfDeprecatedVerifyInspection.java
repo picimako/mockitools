@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 
 /**
- * Reports calls to various verify methods which are deprecated, and removed in v4.
+ * Reports calls to various verify methods which are deprecated and removed in v4.
  * <p>
  * Reported calls:
  * <ul>
@@ -62,7 +62,7 @@ final class UsageOfDeprecatedVerifyInspection extends MigrationAidBase.V3ToV4Bas
         }
     }
 
-    private static final class SwitchMockedStaticVerifyArgumentsQuickFix extends MigrationAidV4BaseQuickFix {
+    private static final class SwitchMockedStaticVerifyArgumentsQuickFix extends MigrationAidV4QuickFix {
 
         @Override
         public @IntentionName @NotNull String getName() {
@@ -81,7 +81,7 @@ final class UsageOfDeprecatedVerifyInspection extends MigrationAidBase.V3ToV4Bas
         }
     }
 
-    private static final class ReplaceZeroInteractionsWithNoMoreInteractionsQuickFix extends MigrationAidV4BaseQuickFix {
+    private static final class ReplaceZeroInteractionsWithNoMoreInteractionsQuickFix extends MigrationAidV4QuickFix {
 
         @Override
         public @IntentionName @NotNull String getName() {

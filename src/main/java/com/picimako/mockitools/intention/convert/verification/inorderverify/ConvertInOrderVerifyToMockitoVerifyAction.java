@@ -3,11 +3,12 @@
 package com.picimako.mockitools.intention.convert.verification.inorderverify;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
+import static com.picimako.mockitools.dsl.VerificationApproach.MOCKITO_VERIFY;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.util.PsiClassUtil;
+import com.picimako.mockitools.intention.PsiClassUtil;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationActionBase;
 
 /**
@@ -21,7 +22,7 @@ import com.picimako.mockitools.intention.convert.verification.ConvertVerificatio
 public class ConvertInOrderVerifyToMockitoVerifyAction extends ConvertVerificationActionBase {
 
     public ConvertInOrderVerifyToMockitoVerifyAction(boolean isBulkMode) {
-        super("Mockito.verify()", isBulkMode);
+        super(MOCKITO_VERIFY.presentableText, isBulkMode);
     }
 
     @Override

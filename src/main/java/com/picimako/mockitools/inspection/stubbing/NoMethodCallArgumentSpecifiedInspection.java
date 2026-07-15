@@ -3,38 +3,37 @@
 package com.picimako.mockitools.inspection.stubbing;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.IN_ORDER;
+import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_NO_INTERACTIONS;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_NO_MORE_INTERACTIONS;
 import static com.picimako.mockitools.MockitoQualifiedNames.VERIFY_ZERO_INTERACTIONS;
-import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isExtraInterfaces;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isIgnoreStubs;
+import static com.picimako.mockitools.resources.MockitoolsBundle.message;
 import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
-
-import java.util.Optional;
 
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
 
-import com.picimako.mockitools.resources.MockitoolsBundle;
+import java.util.Optional;
 
 /**
- * Reports method calls that must have at least one argument passed but none is provided.
+ * Reports method calls that must have at least one argument passed in, but none is provided.
  * <p>
  * These are usually methods with a vararg as their only parameter.
  *
  * @since 0.1.0
  */
-final class NoMethodCallArgumentSpecifiedInspection extends MockitoolsBaseInspection {
+final class NoMethodCallArgumentSpecifiedInspection extends MockitoolsInspectionBase {
 
     private static final CallMatcher VERIFY_CALLS =
-        CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, VERIFY_NO_INTERACTIONS, VERIFY_NO_MORE_INTERACTIONS, VERIFY_ZERO_INTERACTIONS, IN_ORDER);
+        CallMatcher.staticCall(ORG_MOCKITO_MOCKITO, VERIFY_NO_INTERACTIONS, VERIFY_NO_MORE_INTERACTIONS, VERIFY_ZERO_INTERACTIONS /*Mockito v3*/, IN_ORDER);
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
@@ -49,6 +48,6 @@ final class NoMethodCallArgumentSpecifiedInspection extends MockitoolsBaseInspec
 
     private void registerProblem(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder, ProblemHighlightType problemHighlightType) {
         PsiElement elementToHighlight = Optional.ofNullable(getReferenceNameElement(expression)).orElseGet(expression::getMethodExpression);
-        holder.registerProblem(elementToHighlight, MockitoolsBundle.message("inspection.method.call.no.argument.specified", getMethodName(expression)), problemHighlightType);
+        holder.registerProblem(elementToHighlight, message("inspection.method.call.no.argument.specified", getMethodName(expression)), problemHighlightType);
     }
 }

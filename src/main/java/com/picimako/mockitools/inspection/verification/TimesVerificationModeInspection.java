@@ -12,7 +12,7 @@ import static com.picimako.mockitools.MockitoolsPsiUtil.isTimes;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromLast;
 import static com.picimako.mockitools.util.PsiMethodUtil.get2ndArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.inspection.UnitTestPsiUtil.isInTestSourceContent;
 import static com.siyeh.ig.callMatcher.CallMatcher.instanceCall;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
@@ -27,8 +27,8 @@ import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.util.PsiLiteralUtil;
 import com.picimako.mockitools.MockitoolsPsiUtil;
-import com.picimako.mockitools.inspection.BaseQuickFix;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.QuickFixBase;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
@@ -49,23 +49,20 @@ import java.util.Objects;
  * {@code Mockito.times(1)} calls are reported only when they have no subsequent calls on them, e.g.
  * {@code Mockito.times(1).description("message")}.
  *
- * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#exact_verification">Mockito exact verification documentation</a>
+ * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#exact_verification">Mockito exact verification documentation</a>
  * @since 0.1.0
  */
-final class TimesVerificationModeInspection extends MockitoolsBaseInspection {
+final class TimesVerificationModeInspection extends MockitoolsInspectionBase {
 
+    private static final CallMatcher.Simple SHOULD = instanceCall(ORG_MOCKITO_BDDMOCKITO_THEN, "should");
     private static final CallMatcher VERIFICATION = CallMatcher.anyOf(
         MockitoolsPsiUtil.MOCKITO_VERIFY.parameterTypes("T", ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE),
         MockitoolsPsiUtil.INORDER_VERIFY.parameterTypes("T", ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE),
         MockitoolsPsiUtil.MOCKED_STATIC_VERIFY.parameterTypes(ORG_MOCKITO_MOCKED_STATIC_VERIFICATION, ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE),
-        instanceCall(ORG_MOCKITO_BDDMOCKITO_THEN, "should").parameterTypes(ORG_MOCKITO_INORDER, ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE));
-    private static final CallMatcher BDDMOCKITO_SHOULD =
-        instanceCall(ORG_MOCKITO_BDDMOCKITO_THEN, "should").parameterTypes(ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE);
+        SHOULD.parameterTypes(ORG_MOCKITO_INORDER, ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE));
+    private static final CallMatcher BDDMOCKITO_SHOULD = SHOULD.parameterTypes(ORG_MOCKITO_VERIFICATION_VERIFICATION_MODE);
 
-    @SuppressWarnings("PublicField")
     public boolean reportTimesZeroToNever = true;
-
-    @SuppressWarnings("PublicField")
     public boolean reportTimesOneCanBeOmitted = true;
 
     @Override
@@ -152,7 +149,7 @@ final class TimesVerificationModeInspection extends MockitoolsBaseInspection {
         }
     }
 
-    private abstract static class TimesQuickFix extends BaseQuickFix {
+    private abstract static class TimesQuickFix extends QuickFixBase {
         @Override
         public @IntentionFamilyName @NotNull String getFamilyName() {
             return MockitoolsBundle.message("quick.fix.times.family.name");

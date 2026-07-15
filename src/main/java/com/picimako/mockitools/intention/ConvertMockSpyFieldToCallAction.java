@@ -52,7 +52,6 @@ import com.intellij.psi.PsiSubstitutor;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.util.PsiFormatUtil;
 import com.intellij.psi.util.PsiFormatUtilBase;
-import com.picimako.mockitools.util.PsiClassUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -85,7 +84,7 @@ final class ConvertMockSpyFieldToCallAction extends AnAction {
 
     //Instantiation
 
-    public ConvertMockSpyFieldToCallAction(PsiField fieldToConvert, PsiMethod method) {
+    ConvertMockSpyFieldToCallAction(PsiField fieldToConvert, PsiMethod method) {
         super(
             //The element text is always method name and the parameter list, e.g. 'testMethod(String)'
             computeBlocking(() -> PsiFormatUtil.formatMethod(method, PsiSubstitutor.EMPTY,
@@ -247,9 +246,9 @@ final class ConvertMockSpyFieldToCallAction extends AnAction {
     }
 
     private static Optional<PsiAnnotationMemberValue> valueOf(JvmAnnotationAttribute attribute) {
-        return computeBlocking(() -> attribute instanceof PsiNameValuePair attributeNameValue && attributeNameValue.getValue() != null
-                             ? Optional.ofNullable(attributeNameValue.getValue())
-                             : Optional.empty());
+        return attribute instanceof PsiNameValuePair attributeNameValue && attributeNameValue.getValue() != null
+            ? Optional.ofNullable(attributeNameValue.getValue())
+            : Optional.empty();
     }
 
     private static void appendSetting(StringBuilder sb, String methodName, String argument) {
@@ -260,13 +259,11 @@ final class ConvertMockSpyFieldToCallAction extends AnAction {
      * This is to make sure that the mock()/spy() call's argument (when a PsiClassObjectAccessExpression), doesn't include the generic type arguments.
      */
     private static void appendType(PsiField fieldToConvert, StringBuilder mockitoMockingCall) {
-        runBlocking(() -> {
-            Optional.ofNullable(fieldToConvert.getTypeElement())
-                .map(PsiTypeElement::getInnermostComponentReferenceElement)
-                .map(PsiQualifiedReference::getReferenceName)
-                .ifPresentOrElse(mockitoMockingCall::append, () -> mockitoMockingCall.append(fieldToConvert.getType().getCanonicalText()));
-            mockitoMockingCall.append(".class");
-        });
+        Optional.ofNullable(fieldToConvert.getTypeElement())
+            .map(PsiTypeElement::getInnermostComponentReferenceElement)
+            .map(PsiQualifiedReference::getReferenceName)
+            .ifPresentOrElse(mockitoMockingCall::append, () -> mockitoMockingCall.append(fieldToConvert.getType().getCanonicalText()));
+        mockitoMockingCall.append(".class");
     }
 
     private static boolean isBlank(PsiAnnotationMemberValue value) {

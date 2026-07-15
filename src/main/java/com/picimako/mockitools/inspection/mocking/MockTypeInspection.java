@@ -9,10 +9,10 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_SPY;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoMock;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isMockitoSpy;
 import static com.picimako.mockitools.resources.MockitoolsBundle.message;
-import static com.picimako.mockitools.util.EvaluationHelper.evaluateClassObjectOrNewExpressionType;
+import static com.picimako.mockitools.inspection.EvaluationHelper.evaluateClassObjectOrNewExpressionType;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.hasArgument;
-import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.inspection.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
@@ -21,21 +21,21 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiType;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Reports {@code @Mock} and {@code @Spy} annotated fields' types and the types specified as the arguments of
- * {@code Mockito.mock()} and {@code Mockito.spy()} calls, since certain types are not mockable by Mockito, or are annotated as
- * {@code @DoNotMock} be it Mockito's own such annotation or a custom one.
+ * {@code Mockito.mock()} and {@code Mockito.spy()} calls, since certain types are not mockable by Mockito,
+ * or are annotated as {@code @DoNotMock} be it Mockito's own such annotation or a custom one.
  * <p>
  * You can find the logic and the types in the linked resources.
  * <p>
- * {@code @Mock} and {@code @Spy} annotated fields are validated only in actual unit test classes, while Mockito calls are validated in any file
- * within test sources.
+ * {@code @Mock} and {@code @Spy} annotated fields are validated only in actual unit test classes,
+ * while Mockito calls are validated in any file within test sources.
  * <p>
- * Types' class hierarchy is inspected and the first type annotated with {@code @DoNotMock} is returned, and used for constructing the inspection message
- * including the annotation's reason in it, if there is any.
+ * Types' class hierarchy is inspected and the first type annotated with {@code @DoNotMock} is returned,
+ * and used for constructing the inspection message including the annotation's reason in it, if there is any.
  *
  * @see <a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java">InlineDelegateByteBuddyMockMaker#isTypeMockable(Class)</a>
  * @see <a href="https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/creation/bytebuddy/InlineBytecodeGenerator.java">InlineBytecodeGenerator#EXCLUDES</a>
@@ -44,7 +44,7 @@ import org.jetbrains.annotations.NotNull;
  * @see <a href="https://github.com/mockito/mockito/pull/1833/files">Mockito: Add annotation to mark a type as DoNotMock</a>
  * @since 0.1.0
  */
-final class MockTypeInspection extends MockitoolsBaseInspection {
+final class MockTypeInspection extends MockitoolsInspectionBase {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {

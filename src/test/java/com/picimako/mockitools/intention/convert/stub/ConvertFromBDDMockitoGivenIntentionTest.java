@@ -2,12 +2,11 @@
 
 package com.picimako.mockitools.intention.convert.stub;
 
-import static java.util.stream.Collectors.toList;
+import static com.intellij.util.containers.ContainerUtil.map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.intellij.codeInsight.intention.IntentionAction;
-import com.picimako.mockitools.Convention;
-import com.picimako.mockitools.StubbingApproach;
+import com.picimako.mockitools.dsl.Convention;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -281,11 +280,9 @@ class ConvertFromBDDMockitoGivenIntentionTest extends EnforceConventionAwareInte
 
     @NotNull
     private List<String> getActionTexts() {
-        return new ConvertFromBDDMockitoGivenIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile())
-            .stream()
-            .map(action -> (ConvertStubbingAction) action)
-            .map(ConvertStubbingAction::getTo)
-            .map(StubbingApproach::getPresentableText)
-            .collect(toList());
+        return map(
+            new ConvertFromBDDMockitoGivenIntention().actionSelectionOptions(getEditor(), getFile()),
+            action -> action.getTemplatePresentation().getText()
+        );
     }
 }

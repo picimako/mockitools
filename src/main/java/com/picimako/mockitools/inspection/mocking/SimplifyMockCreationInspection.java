@@ -21,8 +21,8 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
-import com.picimako.mockitools.inspection.BaseQuickFix;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.QuickFixBase;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
  * @see com.picimako.mockitools.intention.mocking.ExpandMockCreationIntention
  * @since 0.11.0
  */
-final class SimplifyMockCreationInspection extends MockitoolsBaseInspection {
+final class SimplifyMockCreationInspection extends MockitoolsInspectionBase {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
@@ -68,7 +68,7 @@ final class SimplifyMockCreationInspection extends MockitoolsBaseInspection {
             new ReplaceWithSimplerMockCreationQuickFix());
     }
 
-    private static final class ReplaceWithSimplerMockCreationQuickFix extends BaseQuickFix {
+    private static final class ReplaceWithSimplerMockCreationQuickFix extends QuickFixBase {
 
         @Override
         public @IntentionFamilyName @NotNull String getFamilyName() {
@@ -83,15 +83,19 @@ final class SimplifyMockCreationInspection extends MockitoolsBaseInspection {
 
                 if (SPIED_INSTANCE.equals(settingsMethodName)) {
                     //org.mockito.Mockito.spy(<spiedInstance>)
-                    String mockitoSpy = "org.mockito.Mockito.spy(" + getFirstArgument(settingsMethodCall).getText() + ")";
+                    String mockitoSpy = "org.mockito.Mockito.spy(" + textOfFirstArg(settingsMethodCall) + ")";
                     simplify(mockitoMock, mockitoSpy, project);
                 } else if (NAME.equals(settingsMethodName) || DEFAULT_ANSWER.equals(settingsMethodName)) {
                     //org.mockito.Mockito.mock(<clazz>.class, <answer>)
                     //org.mockito.Mockito.mock(<clazz>.class, <name>)
-                    String newMockitoMock = "org.mockito.Mockito.mock(" + getFirstArgument(mockitoMock).getText() + ", " + getFirstArgument(settingsMethodCall).getText() + ")";
+                    String newMockitoMock = "org.mockito.Mockito.mock(" + textOfFirstArg(mockitoMock) + ", " + textOfFirstArg(settingsMethodCall) + ")";
                     simplify(mockitoMock, newMockitoMock, project);
                 }
             }
+        }
+
+        private String textOfFirstArg(PsiMethodCallExpression call) {
+            return getFirstArgument(call).getText();
         }
 
         /**
@@ -99,7 +103,6 @@ final class SimplifyMockCreationInspection extends MockitoolsBaseInspection {
          *
          * @param mockitoMock     the {@code Mockito.mock()} call to simplify
          * @param replacementText the text of the simplified replacement call
-         * @param project         the current project
          */
         private void simplify(PsiMethodCallExpression mockitoMock, String replacementText, Project project) {
             var simplifiedReplacementCall = JavaCodeStyleManager.getInstance(project)

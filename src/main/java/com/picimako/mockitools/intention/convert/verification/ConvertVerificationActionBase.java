@@ -5,8 +5,8 @@ package com.picimako.mockitools.intention.convert.verification;
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
+import static com.picimako.mockitools.intention.PsiClassUtil.importClassAndCommit;
 import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectStatementsInSelection;
-import static com.picimako.mockitools.util.PsiClassUtil.importClassAndCommit;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallAtCaret;
 import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
@@ -15,6 +15,7 @@ import static com.picimako.mockitools.util.Ranges.endOffsetOf;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
@@ -23,7 +24,7 @@ import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.MemberInplaceRenameHelper;
+import com.picimako.mockitools.intention.MemberInplaceRenameHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,15 +34,16 @@ import java.util.List;
  * Base action class for verification approach conversion.
  */
 public abstract class ConvertVerificationActionBase extends AnAction {
-    protected Editor editor;
-    protected PsiDocumentManager documentManager;
     /**
-     * Whether the conversion is caret- (single call chain) or selection-based (one or more call chains).
+     * Whether the conversion is caret- (single call chain - false) or selection-based (one or more call chains - true).
      */
     private final boolean isBulkMode;
+    protected PsiDocumentManager documentManager;
+    protected Editor editor;
+    private Document document;
     private InOrderVariableCreator inOrderCreator;
 
-    protected ConvertVerificationActionBase(String actionText, boolean isBulkMode) {
+    protected ConvertVerificationActionBase(@NotNull String actionText, boolean isBulkMode) {
         super(actionText);
         this.isBulkMode = isBulkMode;
     }
@@ -52,13 +54,15 @@ public abstract class ConvertVerificationActionBase extends AnAction {
     public void actionPerformed(@NotNull AnActionEvent e) {
         editor = e.getData(CommonDataKeys.EDITOR);
         if (editor == null) return;
-        PsiFile file = e.getData(CommonDataKeys.PSI_FILE);
+        document = editor.getDocument();
+
+        var file = e.getData(CommonDataKeys.PSI_FILE);
         if (file == null) return;
-        Project project = e.getProject();
+        var project = e.getProject();
 
         runWriteCommandAction(project, () -> {
             documentManager = PsiDocumentManager.getInstance(project);
-            inOrderCreator = new InOrderVariableCreator(editor.getDocument());
+            inOrderCreator = new InOrderVariableCreator(document);
             if (isBulkMode) {
                 var statementsInSelection = collectStatementsInSelection(editor, file);
                 var firstVerification = getVerificationCall(statementsInSelection.getFirst());
@@ -93,7 +97,7 @@ public abstract class ConvertVerificationActionBase extends AnAction {
 
     protected final void performAndCommitDocument(Runnable runnable) {
         runnable.run();
-        documentManager.commitDocument(editor.getDocument());
+        documentManager.commitDocument(document);
     }
 
     //Helpers
@@ -103,11 +107,12 @@ public abstract class ConvertVerificationActionBase extends AnAction {
      * <p>
      * For example:
      * <pre>
+     * {@code
      * //The following text:
      * Mockito.verify(mock).doSomething();
      * //becomes:
      * BDDMockito.then(mock).doSomething();
-     * </pre>
+     * }</pre>
      *
      * @param calls        the call chain
      * @param replacement  the replacement text
@@ -117,9 +122,9 @@ public abstract class ConvertVerificationActionBase extends AnAction {
         //end offset of Mockito.verify/BDDMockito.then
         var verifyOrThen = calls.getFirst();
         int endOffset = endOffsetOf(getReferenceNameElement(verifyOrThen));
-        performAndCommitDocument(() -> editor.getDocument().replaceString(verifyOrThen.getTextOffset(), endOffset, replacement));
+        performAndCommitDocument(() -> document.replaceString(verifyOrThen.getTextOffset(), endOffset, replacement));
         if (mockitoClass.length == 1)
-            importClassAndCommit(mockitoClass[0], verifyOrThen.getProject(), verifyOrThen.getContainingFile(), editor.getDocument());
+            importClassAndCommit(mockitoClass[0], verifyOrThen.getProject(), verifyOrThen.getContainingFile(), document);
     }
 
     /**

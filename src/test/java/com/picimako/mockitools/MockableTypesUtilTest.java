@@ -60,6 +60,6 @@ class MockableTypesUtilTest extends MockitoolsTestBase {
     }
 
     private PsiType getFieldType() {
-        return computeBlocking(() -> ((PsiField) getFixture().getFile().findElementAt(getFixture().getCaretOffset()).getParent()).getTypeElement().getType());
+        return computeBlocking(() -> ((PsiField) getFile().findElementAt(getCaretOffset()).getParent()).getTypeElement().getType());
     }
 }

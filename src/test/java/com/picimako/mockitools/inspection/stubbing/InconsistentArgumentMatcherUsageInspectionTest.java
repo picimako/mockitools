@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Functional test for {@link InconsistentArgumentMatcherUsageInspection}.
  */
-class InconsistentArgumentMatcherUsageInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class InconsistentArgumentMatcherUsageInspectionTest extends MockitoolsInspectionTestBase {
 
     @Override
     protected InspectionProfileEntry getInspection() {

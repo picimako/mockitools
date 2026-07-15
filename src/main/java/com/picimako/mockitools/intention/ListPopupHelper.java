@@ -1,10 +1,11 @@
 //Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.picimako.mockitools.util;
+package com.picimako.mockitools.intention;
+
+import static com.intellij.openapi.application.ApplicationManager.getApplication;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.project.Project;
@@ -32,25 +33,23 @@ public final class ListPopupHelper {
         var step = new BaseListPopupStep<>(title, listItems) {
             @Override
             public @Nullable PopupStep<?> onChosen(T selectedItem, boolean finalChoice) {
-                action.consume(selectedItem);
-                return null;
+                return doFinalStep(() -> action.consume(selectedItem));
             }
         };
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
-            ApplicationManager.getApplication().invokeAndWait(() -> new ListPopupImpl(project, step) {
-                @Override
-                protected ListCellRenderer<?> getListElementRenderer() {
-                    return cellRenderer.get();
-                }
-            }.showInBestPositionFor(editor));
+        if (getApplication().isUnitTestMode()) {
+            getApplication().invokeAndWait(() -> showListPopup(project, step, cellRenderer, editor));
         } else {
-            new ListPopupImpl(project, step) {
-                @Override
-                protected ListCellRenderer<?> getListElementRenderer() {
-                    return cellRenderer.get();
-                }
-            }.showInBestPositionFor(editor);
+            showListPopup(project, step, cellRenderer, editor);
         }
+    }
+
+    private static void showListPopup(Project project, BaseListPopupStep<?> step, Supplier<ListCellRenderer<?>> cellRenderer, Editor editor) {
+        new ListPopupImpl(project, step) {
+            @Override
+            protected ListCellRenderer<?> getListElementRenderer() {
+                return cellRenderer.get();
+            }
+        }.showInBestPositionFor(editor);
     }
 
     /**

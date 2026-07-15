@@ -3,7 +3,7 @@
 package com.picimako.mockitools.intention.convert.verification.mockitoverify;
 
 import com.intellij.codeInsight.intention.IntentionAction;
-import com.picimako.mockitools.Convention;
+import com.picimako.mockitools.dsl.Convention;
 import com.picimako.mockitools.intention.convert.EnforceConventionAwareIntentionTestBase;
 import org.junit.jupiter.api.Test;
 

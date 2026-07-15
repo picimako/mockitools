@@ -8,9 +8,7 @@ import com.picimako.mockitools.MockitoolsTestBase;
 import com.picimako.mockitools.ThirdPartyLibrary;
 
 /**
- * Base test class for Mockitools inspection unit testing.
- * <p>
- * Loads the Java 11 mock JDK and the Mockito binary for testing.
+ * Base test class for inspection testing.
  */
 @TestDataPath("$CONTENT_ROOT/testData/inspection")
 public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
@@ -24,35 +22,57 @@ public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
     }
 
     /**
-     * Override this to configure the inspection to be tested.
+     * Returns the inspection instance that is the subject of this test.
      */
     protected abstract InspectionProfileEntry getInspection();
 
+    //Highlighting
+
+    /**
+     * Configures a Java test file
+     * <ul>
+     *     <li>with the name of the current test method without the {@code test} prefix</li>
+     *     <li>and the contents of the test data file with that name</li>
+     * </ul>
+     * and checks highlighting for the subject inspection without checking info-level highlights.
+     */
     protected void doJavaTest() {
         doJavaTest(getInspection(), false);
     }
 
     /**
-     * Tests highlighting for the pre-configured inspection against the java file matching the test method's name
-     * without the 'test' prefix.
+     * Configures a Java test file
+     * <ul>
+     *      <li>with the name of the current test method without the {@code test} prefix</li>
+     *      <li>and the contents of the test data file with that name</li>
+     * </ul>
+     * and checks highlighting for the subject inspection.
+     * Info-level highlights are included based on the {@code checkInfos} flag.
      */
     protected void doJavaTest(boolean checkInfos) {
         doJavaTest(getInspection(), checkInfos);
     }
 
     /**
-     * Tests highlighting for the argument inspection against the java file matching the test method's name
-     * without the 'test' prefix.
+     * Configures a Java test file
+     * <ul>
+     *      <li>with the name of the current test method without the {@code test} prefix</li>
+     *      <li>and the contents of the test data file with that name</li>
+     * </ul>
+     * and checks highlighting for the provided inspection without checking info-level highlights.
      */
     protected void doJavaTest(InspectionProfileEntry inspection) {
-        getFixture().configureByFile(getTestName(false) + ".java");
-        getFixture().enableInspections(inspection);
-        getFixture().testHighlighting(true, false, false);
+        doJavaTest(inspection, false);
     }
 
     /**
-     * Tests highlighting for the argument inspection against the java file matching the test method's name
-     * without the 'test' prefix.
+     * Configures a Java test file
+     * <ul>
+     *      <li>with the name of the current test method without the {@code test} prefix</li>
+     *      <li>and the contents of the test data file with that name</li>
+     * </ul>
+     * and checks highlighting for the provided inspection.
+     * Info-level highlights are included based on the {@code checkInfos} flag.
      */
     protected void doJavaTest(InspectionProfileEntry inspection, boolean checkInfos) {
         getFixture().configureByFile(getTestName(false) + ".java");
@@ -60,18 +80,26 @@ public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
         getFixture().testHighlighting(true, checkInfos, true);
     }
 
+    /**
+     * Configures a Java test file with the given {@code filename} and {@code text}
+     * and checks highlighting for the subject inspection.
+     */
     protected void doJavaTest(String filename, String text) {
         getFixture().configureByText(filename, text);
         getFixture().enableInspections(getInspection());
         getFixture().testHighlighting(true, false, false);
     }
 
+    //Quick fixes
+
     /**
-     * Tests highlighting and quick fix for the pre-configured inspection, applying the argument quick fix against the
-     * java file matching the test method's name without the 'test' prefix (e.g. SomeTest.java) as the before state,
-     * and e.g. SomeTest.after.java as the expected state after applying the quick fix.
-     *
-     * @param quickFixName the name/text of the quick fix
+     * Configures a Java test file (the before state)
+     * <ul>
+     *      <li>with the name of the current test method without the {@code test} prefix</li>
+     *      <li>and the contents of the test data file with that name</li>
+     * </ul>
+     * launches the quick of the provided name and checks if the file text has changed to the after state
+     * provided similarly via a corresponding {@code [testname].after.java} file.
      */
     protected void doQuickFixTest(String quickFixName) {
         getFixture().configureByFile(getTestName(false) + ".java");
@@ -80,20 +108,27 @@ public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
     }
 
     /**
-     * Tests highlighting and quick fix for the pre-configured inspection, applying the argument quick fix against the
-     * provided beforeText, and the after state against the argument afterText.
-     *
-     * @param quickFixName the name/text of the quick fix
-     * @param filename     the filename in which the before text will be configured
-     * @param beforeText   the code before applying the quick fix
-     * @param afterText    the code after applying the quick fix
+     * Configures a test file with the provided {@code filename} and {@code beforeText},
+     * launches the quick of the provided {@code quickFixName} and checks if the file text has changed to the after state
+     * provided in {@code afterText}.
      */
     protected void doQuickFixTest(String quickFixName, String filename, String beforeText, String afterText) {
         getFixture().configureByText(filename, beforeText);
         launchQuickFix(quickFixName);
         getFixture().checkResult(afterText);
     }
-    
+
+    /**
+     * Configures a test file with a fix name and {@code beforeText},
+     * launches the quick of the provided {@code quickFixName} and checks if the file text has changed to the after state
+     * provided in {@code afterText}.
+     */
+    protected void doQuickFixTest(String quickFixName, String beforeText, String afterText) {
+        getFixture().configureByText("QuickFix.java", beforeText);
+        launchQuickFix(quickFixName);
+        getFixture().checkResult(afterText);
+    }
+
     private void launchQuickFix(String quickFixName) {
         getFixture().enableInspections(getInspection());
         getFixture().doHighlighting();
@@ -110,15 +145,6 @@ public abstract class MockitoolsInspectionTestBase extends MockitoolsTestBase {
 
         public MockitoV3(ThirdPartyLibrary... libraries) {
             super(libraries);
-        }
-    }
-
-    /**
-     * Base class for testing Mockito 4 specific inspections.
-     */
-    public static abstract class MockitoV4 extends MockitoolsInspectionTestBase {
-        public MockitoV4() {
-            super(ThirdPartyLibrary.MOCKITO_V4);
         }
     }
 }

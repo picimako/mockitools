@@ -3,6 +3,7 @@
 package com.picimako.mockitools.intention.convert.verification.mockedstaticverify;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
+import static com.picimako.mockitools.dsl.VerificationApproach.INORDER_VERIFY;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 import static com.picimako.mockitools.util.PsiMethodUtil.getQualifier;
@@ -37,13 +38,15 @@ import java.util.List;
  */
 public class ConvertMockedStaticVerifyToInOrderVerifyAction extends ConvertVerificationActionBase {
 
+    private static final CallMatcher.Simple ORG_MOCKITO_MOCKITO_MOCKSTATIC =
+        staticCall(ORG_MOCKITO_MOCKITO, "mockStatic");
     private static final CallMatcher MOCK_STATIC = CallMatcher.anyOf(
-        staticCall(ORG_MOCKITO_MOCKITO, "mockStatic").parameterCount(1),
-        staticCall(ORG_MOCKITO_MOCKITO, "mockStatic").parameterCount(2)
+        ORG_MOCKITO_MOCKITO_MOCKSTATIC.parameterCount(1),
+        ORG_MOCKITO_MOCKITO_MOCKSTATIC.parameterCount(2)
     );
 
     public ConvertMockedStaticVerifyToInOrderVerifyAction(boolean isBulkMode) {
-        super("InOrder.verify()", isBulkMode);
+        super(INORDER_VERIFY.presentableText, isBulkMode);
     }
 
     @Override

@@ -2,16 +2,15 @@
 
 package com.picimako.mockitools.inspection.migrationaids.v4;
 
-import static com.picimako.mockitools.util.ModuleDependencyHelper.isMockitoCore2xOr3xAvailableInModuleOf;
-import static com.picimako.mockitools.util.ModuleDependencyHelper.isMockitoCore3xAvailableInModuleOf;
-import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.inspection.migrationaids.v4.ModuleDependencyHelper.isMockitoCore2xOr3xAvailableInModuleOf;
+import static com.picimako.mockitools.inspection.migrationaids.v4.ModuleDependencyHelper.isMockitoCore3xAvailableInModuleOf;
+import static com.picimako.mockitools.inspection.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElementVisitor;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import org.jetbrains.annotations.NotNull;
-
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
 
 /**
  * Provides base classes for migration aid inspections.
@@ -21,7 +20,7 @@ public interface MigrationAidBase {
     /**
      * Migration from 3.x to 4.x.
      */
-    abstract class V3ToV4BaseInspection extends MockitoolsBaseInspection {
+    abstract class V3ToV4BaseInspection extends MockitoolsInspectionBase {
         @Override
         public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
             return isInTestSourceContent(session.getFile()) && isMockitoCore3xAvailableInModuleOf(session.getFile(), holder.getProject()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
@@ -31,7 +30,7 @@ public interface MigrationAidBase {
     /**
      * Migration from 2.x or 3.x to 4.x.
      */
-    abstract class V23ToV4BaseInspection extends MockitoolsBaseInspection {
+    abstract class V23ToV4BaseInspection extends MockitoolsInspectionBase {
         @Override
         public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
             return isInTestSourceContent(session.getFile()) && isMockitoCore2xOr3xAvailableInModuleOf(session.getFile(), holder.getProject()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;

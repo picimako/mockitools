@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * Defines the conversion from {@link PsiClassObjectAccessExpression}s to {@link PsiNewExpression}s and vice versa.
  * <p>
- * It is used when users have multiple choices how to merge the *Throw() calls together.
+ * It is used when users have multiple choices for how to merge the *Throw() calls.
  */
 @RequiredArgsConstructor
 public enum TypeConversionMethod {

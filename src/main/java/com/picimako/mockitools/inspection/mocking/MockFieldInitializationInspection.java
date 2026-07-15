@@ -4,7 +4,7 @@ package com.picimako.mockitools.inspection.mocking;
 
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INJECT_MOCKS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
-import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.inspection.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemDescriptor;
@@ -15,25 +15,26 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiField;
-import com.picimako.mockitools.inspection.BaseQuickFix;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.QuickFixBase;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Since {@code @Mock} and {@code InjectMocks} annotated fields are initialized automagically by Mockito via {@code MockitoJUnitRunner}, {@code MockitoJUnit.rule()} or
- * {@code MockitoAnnotations.initMocks()} / {@code MockitoAnnotations.openMocks()}, there is no need for explicit initialization of them.
+ * Since {@code @Mock} and {@code InjectMocks} annotated fields are initialized automagically by Mockito via
+ * {@code MockitoJUnitRunner}, {@code MockitoJUnit.rule()} or {@code MockitoAnnotations.initMocks()} / {@code MockitoAnnotations.openMocks()},
+ * there is no need for explicit initialization of them.
  * <p>
  * Explicit initializer is reported only when the field is annotated as either {@code @Mock} or {@code InjectMocks}.
  * <p>
  * It also provides a quick fix to remove the field initializer.
  *
- * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#mock_annotation">@Mock annotation</a>
- * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#21">@InjectMocks annotation</a>
+ * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#mock_annotation">@Mock annotation</a>
+ * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#21">@InjectMocks annotation</a>
  * @see <a href="https://www.baeldung.com/mockito-annotations">Baeldung - Mockito Annotations</a>
  * @since 1.3.0
  */
-final class MockFieldInitializationInspection extends MockitoolsBaseInspection {
+final class MockFieldInitializationInspection extends MockitoolsInspectionBase {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
@@ -48,7 +49,7 @@ final class MockFieldInitializationInspection extends MockitoolsBaseInspection {
         }
     }
 
-    private static final class RemoveFieldInitQuickFix extends BaseQuickFix {
+    private static final class RemoveFieldInitQuickFix extends QuickFixBase {
 
         @Override
         public @IntentionName @NotNull String getName() {

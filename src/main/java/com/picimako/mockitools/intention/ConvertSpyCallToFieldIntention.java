@@ -19,6 +19,7 @@ import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiNewExpression;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.picimako.mockitools.MockitoQualifiedNames;
@@ -72,7 +73,7 @@ import java.util.function.Supplier;
  */
 final class ConvertSpyCallToFieldIntention extends ConvertCallToFieldIntentionBase {
 
-    public ConvertSpyCallToFieldIntention() {
+    ConvertSpyCallToFieldIntention() {
         super(SPY, "@Spy");
     }
 
@@ -141,13 +142,13 @@ final class ConvertSpyCallToFieldIntention extends ConvertCallToFieldIntentionBa
         //new Clazz() + auto-gen Clazz() -> true
         //new Clazz() + Clazz(String) + Clazz(int) -> false
         //new Clazz("") + Clazz() + Clazz(int) + Clazz(double) -> false
-        return Optional.ofNullable(computeBlocking(newExpression::getClassReference))
-            .map(ref -> computeBlocking(ref::resolve))
+        return computeBlocking(() -> Optional.ofNullable(newExpression.getClassReference())
+            .map(PsiReference::resolve)
             .map(PsiClass.class::cast)
             .map(PsiClass::getConstructors)
             .stream()
             .flatMap(Arrays::stream)
-            .noneMatch(constr -> !computeBlocking(() -> constr.getParameterList().isEmpty()));
+            .noneMatch(constr -> !constr.getParameterList().isEmpty()));
     }
 
     /**

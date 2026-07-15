@@ -3,6 +3,7 @@
 package com.picimako.mockitools.inspection.consecutive;
 
 import static com.intellij.util.containers.ContainerUtil.find;
+import static com.intellij.util.containers.ContainerUtil.map2Array;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
@@ -11,11 +12,10 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.util.SmartList;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -29,7 +29,11 @@ import java.util.function.Predicate;
  * {@link #register} ->
  * {@link #doRegister}
  */
-abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsBaseInspection {
+abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsInspectionBase {
+
+    protected abstract List<ConsecutiveCallAnalyzer> analyzers();
+
+    protected abstract void register(ConsecutiveCallRegistrar context, @NotNull ProblemsHolder holder);
 
     //Analysis workflow
 
@@ -74,22 +78,20 @@ abstract class SimplifyConsecutiveCallsInspectionBase extends MockitoolsBaseInsp
         return call -> true;
     }
 
-    protected abstract List<ConsecutiveCallAnalyzer> analyzers();
-
     //Registration workflow
 
-    private void registerMultiple(ConsecutiveCallAnalyzer analyzer, List<PsiMethodCallExpression> callsInWholeChain,
-                                  List<Integer> consecutiveCallIndeces, @NotNull ProblemsHolder holder) {
+    private void registerMultiple(ConsecutiveCallAnalyzer analyzer,
+                                  List<PsiMethodCallExpression> callsInWholeChain,
+                                  List<Integer> consecutiveCallIndeces,
+                                  @NotNull ProblemsHolder holder) {
         if (consecutiveCallIndeces.size() > 1) {
             register(new ConsecutiveCallRegistrar(analyzer, callsInWholeChain, consecutiveCallIndeces), holder);
         }
     }
 
-    protected abstract void register(ConsecutiveCallRegistrar context, @NotNull ProblemsHolder holder);
-
     protected void doRegister(ConsecutiveCallRegistrar registrar, @NotNull ProblemsHolder holder, TypeConversionMethod... typeConversionMethods) {
+        var quickFixes = map2Array(typeConversionMethods, LocalQuickFix.class, method -> new MergeConsecutiveStubbingCallsQuickFix(registrar, method));
         holder.registerProblem(getReferenceNameElement(registrar.getLastConsecutiveCall()),
-            MockitoolsBundle.message("inspection.can.merge.with.previous.consecutive.calls", registrar.consecutiveMethodName),
-            Arrays.stream(typeConversionMethods).map(method -> new MergeConsecutiveStubbingCallsQuickFix(registrar, method)).toArray(LocalQuickFix[]::new));
+            MockitoolsBundle.message("inspection.can.merge.with.previous.consecutive.calls", registrar.consecutiveMethodName), quickFixes);
     }
 }

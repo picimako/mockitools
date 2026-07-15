@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Functional test for {@link CallOnMockitoResetInspection}
  */
-class CallOnMockitoResetInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class CallOnMockitoResetInspectionTest extends MockitoolsInspectionTestBase {
 
     @Override
     protected InspectionProfileEntry getInspection() {

@@ -18,11 +18,9 @@ import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.StubbingApproach;
-import lombok.Getter;
+import com.picimako.mockitools.dsl.StubbingApproach;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
 
@@ -35,10 +33,8 @@ import java.util.List;
  * @see StubbingConverter
  * @since 0.6.0
  */
-public class ConvertStubbingAction extends AnAction {
+class ConvertStubbingAction extends AnAction {
     private final StubbingApproach from;
-    @Getter
-    @TestOnly
     private final StubbingApproach to;
     /**
      * Whether the conversion is caret- (single call chain) or selection-based (one or more call chains).
@@ -46,7 +42,7 @@ public class ConvertStubbingAction extends AnAction {
     private final boolean isBulkMode;
     private StubbingConverter converter;
 
-    public ConvertStubbingAction(StubbingApproach from, StubbingApproach to, boolean isBulkMode) {
+    ConvertStubbingAction(StubbingApproach from, StubbingApproach to, boolean isBulkMode) {
         super(to.presentableText);
         this.from = from;
         this.to = to;
@@ -74,7 +70,7 @@ public class ConvertStubbingAction extends AnAction {
     /**
      * Performs this action for a single call chain, when the action is invoked under a single caret.
      */
-    private void performAction(PsiMethodCallExpression firstCallInChain) {
+    private void performAction(@NotNull PsiMethodCallExpression firstCallInChain) {
         converter.convert(firstCallInChain, from, to);
     }
 
@@ -93,7 +89,7 @@ public class ConvertStubbingAction extends AnAction {
     }
 
     @Nullable
-    public static PsiMethodCallExpression getFirstCallInChain(PsiExpressionStatement statement) {
+    static PsiMethodCallExpression getFirstCallInChain(PsiExpressionStatement statement) {
         return getParentOfType(/*identifier*/ findChildOfType(statement, PsiIdentifier.class), PsiMethodCallExpression.class);
     }
 }

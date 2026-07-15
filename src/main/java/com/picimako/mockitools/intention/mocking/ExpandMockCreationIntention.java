@@ -75,22 +75,21 @@ final class ExpandMockCreationIntention implements IntentionAction {
             if (computeBlocking(() -> MOCKITO_SPY_T.matches(call))) {
                 expand(call, project, () -> {
                     var spiedInstance = getFirstArgument(call);
-                    return String.format(
-                        "org.mockito.Mockito.mock(%s.class, org.mockito.Mockito.withSettings().spiedInstance(%s))",
-                        getRawType(spiedInstance.getType()).getCanonicalText(), spiedInstance.getText());
+                    return "org.mockito.Mockito.mock(%s.class, org.mockito.Mockito.withSettings().spiedInstance(%s))"
+                        .formatted(getRawType(spiedInstance.getType()).getCanonicalText(), spiedInstance.getText());
                 });
             }
             //Mockito.mock(<type>.class, <name>) -> Mockito.mock(<type>.class, withSettings().name(<name>))
             else if (computeBlocking(() -> MOCK_WITH_NAME.matches(call))) {
-                expand(call, project, () -> String.format(
-                    "org.mockito.Mockito.mock(%s, org.mockito.Mockito.withSettings().name(%s))",
-                    getFirstArgument(call).getText(), get2ndArgument(call).getText()));
+                expand(call, project, () ->
+                    "org.mockito.Mockito.mock(%s, org.mockito.Mockito.withSettings().name(%s))"
+                        .formatted(getFirstArgument(call).getText(), get2ndArgument(call).getText()));
             }
             //Mockito.mock(<type>.class, <answer>) -> Mockito.mock(<type>.class, withSettings().defaultAnswer(<answer>))
             else if (computeBlocking(() -> MOCK_WITH_ANSWER.matches(call))) {
-                expand(call, project, () -> String.format(
-                    "org.mockito.Mockito.mock(%s, org.mockito.Mockito.withSettings().defaultAnswer(%s))",
-                    getFirstArgument(call).getText(), get2ndArgument(call).getText()));
+                expand(call, project, () ->
+                    "org.mockito.Mockito.mock(%s, org.mockito.Mockito.withSettings().defaultAnswer(%s))"
+                        .formatted(getFirstArgument(call).getText(), get2ndArgument(call).getText()));
             }
         });
     }

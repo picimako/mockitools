@@ -12,20 +12,21 @@ import static com.picimako.mockitools.util.Ranges.endOffsetOf;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 /**
- * This inspection reports arguments passed into {@code Mockito.mock()} and {@code Mockito.spy()} which are designed to determine the mock type based on
- * the variable's type they are assigned to, and not by the type passed into them.
+ * This inspection reports arguments passed into {@code Mockito.mock()} and {@code Mockito.spy()}
+ * which are designed to determine the mock type based on the variable's type they are assigned to,
+ * and not by the type passed into them.
  *
- * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#54">Mocking/Spying without specifying class</a>
+ * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#54">Mocking/Spying without specifying class</a>
  * @see com.picimako.mockitools.inspection.captor.GenericInferredCaptorCreationInspection
  * @since 0.11.0
  */
-final class GenericInferredMockAndSpyCreationInspection extends MockitoolsBaseInspection {
+final class GenericInferredMockAndSpyCreationInspection extends MockitoolsInspectionBase {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {

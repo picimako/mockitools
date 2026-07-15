@@ -8,7 +8,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCK;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_SPY;
 import static com.picimako.mockitools.intention.ConvertMockSpyFieldToCallAction.introduceMockitoMockingCall;
 import static com.picimako.mockitools.intention.MethodRearranger.reOrder;
-import static com.picimako.mockitools.util.ListPopupHelper.showActionsInListPopup;
+import static com.picimako.mockitools.intention.ListPopupHelper.showActionsInListPopup;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.util.IntentionFamilyName;

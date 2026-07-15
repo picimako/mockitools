@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Base implementation for quick fixes. Based on the original {@code com.siyeh.ig.InspectionGadgetsFix}.
  */
-public abstract class BaseQuickFix implements LocalQuickFix {
+public abstract class QuickFixBase implements LocalQuickFix {
 
     public final void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
         var problemElement = descriptor.getPsiElement();

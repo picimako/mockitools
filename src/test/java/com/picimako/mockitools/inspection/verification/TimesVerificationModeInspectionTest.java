@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Functional test for {@link TimesVerificationModeInspection}.
  */
-class TimesVerificationModeInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class TimesVerificationModeInspectionTest extends MockitoolsInspectionTestBase {
 
     @Override
     protected InspectionProfileEntry getInspection() {

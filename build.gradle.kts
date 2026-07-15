@@ -3,57 +3,50 @@ import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 plugins {
-    id("java") // Java support
-    alias(libs.plugins.kotlin) // Kotlin support
-    alias(libs.plugins.intelliJPlatform) // IntelliJ Platform Gradle Plugin
-    alias(libs.plugins.changelog) // Gradle Changelog Plugin
-    alias(libs.plugins.lombok) // Lombok
+    id("java")
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.intelliJPlatform)
+    alias(libs.plugins.changelog)
+    alias(libs.plugins.lombok)
 }
 
 group = providers.gradleProperty("pluginGroup").get()
 version = providers.gradleProperty("pluginVersion").get()
 
 // Set the JVM language level used to build the project.
-kotlin {
-    jvmToolchain(21)
-}
+kotlin { jvmToolchain(21) }
 
 // Configure project's dependencies
 repositories {
     mavenCentral()
-    // IntelliJ Platform Gradle Plugin Repositories Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-repositories-extension.html
-    intellijPlatform {
-        defaultRepositories()
-    }
+    intellijPlatform { defaultRepositories() }
 }
 
 dependencies {
 
     //Testing
 
-    //Required for 'junit.framework.TestCase' referenced in 'com.intellij.testFramework.UsefulTestCase'
-    testImplementation(libs.junit)
-    testImplementation(libs.assertj)
-    testImplementation(libs.junitJupiterApi)
+    setOf(
+        //Required for 'junit.framework.TestCase' referenced in 'com.intellij.testFramework.UsefulTestCase'
+        libs.junit,
+        libs.assertj,
+        libs.junitJupiterApi,
+        libs.junitJupiterParams,
+        libs.junitPlatformLauncher,
+    ).forEach(::testImplementation)
     testRuntimeOnly(libs.junitJupiterEngine)
-    testImplementation(libs.junitJupiterParams)
-    testImplementation(libs.junitPlatformLauncher)
 
     // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
 
     intellijPlatform {
         create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion"))
 
-        // Plugin Dependencies. Uses `platformBundledPlugins` property from the gradle.properties file for bundled IntelliJ Platform plugins.
         bundledPlugins(providers.gradleProperty("platformBundledPlugins").map { it.split(',') })
-
-        // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file for plugin from JetBrains Marketplace.
         plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
 
         pluginVerifier()
         zipSigner()
         testFramework(TestFrameworkType.Platform)
-        //Required for 'LightJavaCodeInsightFixtureTestCase5'
         testFramework(TestFrameworkType.Plugin.Java)
         testFramework(TestFrameworkType.JUnit5)
     }
@@ -91,17 +84,10 @@ intellijPlatform {
             }
         }
 
-        ideaVersion {
-            sinceBuild = providers.gradleProperty("pluginSinceBuild")
-//            untilBuild = providers.gradleProperty("pluginUntilBuild")
-        }
+        ideaVersion { sinceBuild = providers.gradleProperty("pluginSinceBuild") }
     }
 
-    pluginVerification {
-        ides {
-            recommended()
-        }
-    }
+    pluginVerification { ides { recommended() } }
 }
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin

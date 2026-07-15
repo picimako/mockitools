@@ -21,7 +21,7 @@ import com.picimako.mockitools.MockitoolsPsiUtil;
 import java.util.Optional;
 
 /**
- * Represents a mock variable regardless if it is a local variable or a field.
+ * Represents a mock variable regardless of it being a local variable or a field.
  *
  * @since 0.8.0
  */

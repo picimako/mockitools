@@ -2,7 +2,8 @@
 
 package com.picimako.mockitools.inspection.verification;
 
-import static com.intellij.codeInspection.options.OptPane.*;
+import static com.intellij.codeInspection.options.OptPane.number;
+import static com.intellij.codeInspection.options.OptPane.pane;
 import static com.picimako.mockitools.MockitoQualifiedNames.AT_LEAST;
 import static com.picimako.mockitools.MockitoQualifiedNames.AT_MOST;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_MOCKITO;
@@ -10,6 +11,7 @@ import static com.picimako.mockitools.MockitoQualifiedNames.TIMES;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isAfter;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isCalls;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isTimeout;
+import static com.picimako.mockitools.resources.MockitoolsBundle.message;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
@@ -18,11 +20,9 @@ import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.options.OptPane;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.util.PsiLiteralUtil;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
-
-import com.picimako.mockitools.resources.MockitoolsBundle;
 
 /**
  * Reports when arguments of calls on time and occurrence based {@code VerificationMode}s are out of allowed bounds.
@@ -39,23 +39,19 @@ import com.picimako.mockitools.resources.MockitoolsBundle;
  * <p>
  * None of these calls are allowed negative values as argument. Additionally, {@code Mockito.calls()} doesn't allow 0 as argument either,
  * and {@code Mockito.timeout()} doesn't allow values above a user-defined threshold (with 5000 as its default value.)
- * <p>
- * Only unit test classes (class name ending with Test) are considered, since (in ordinary projects) Mockito is supposed to be used only in test classes.
- * <p>
  *
  * @since 0.1.0
  */
-final class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBaseInspection {
+final class VerificationModeValuesBetweenLimitsInspection extends MockitoolsInspectionBase {
 
     private static final CallMatcher MOCKITO_OCCURRENCE_BASED_VERIFICATION_MODES = staticCall(ORG_MOCKITO_MOCKITO, TIMES, AT_LEAST, AT_MOST).parameterCount(1);
 
-    @SuppressWarnings("PublicField")
     public int timeoutMaxThreshold = 5000;
 
     @Override
     public @NotNull OptPane getOptionsPane() {
         return pane(
-            number("timeoutMaxThreshold", MockitoolsBundle.message("inspection.timeout.max.threshold.config.title"), Integer.MIN_VALUE, Integer.MAX_VALUE));
+            number("timeoutMaxThreshold", message("inspection.timeout.max.threshold.config.title"), Integer.MIN_VALUE, Integer.MAX_VALUE));
     }
 
     @Override
@@ -76,7 +72,7 @@ final class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBase
 
         if (argValue != null && argValue < upperLimit) {
             holder.registerProblem(verificationModeArgument,
-                MockitoolsBundle.message("inspection.verification.mode.value.less.than.allowed", getMethodName(methodCall), upperLimit));
+                message("inspection.verification.mode.value.less.than.allowed", getMethodName(methodCall), upperLimit));
         }
     }
 
@@ -87,10 +83,10 @@ final class VerificationModeValuesBetweenLimitsInspection extends MockitoolsBase
         if (argValue != null) {
             if (argValue < 0L /*upper limit*/) {
                 holder.registerProblem(verificationModeArgument,
-                    MockitoolsBundle.message("inspection.verification.mode.value.less.than.allowed", getMethodName(methodCall), 0L));
+                    message("inspection.verification.mode.value.less.than.allowed", getMethodName(methodCall), 0L));
             }
             if (isTimeout && argValue > timeoutMaxThreshold) {
-                holder.registerProblem(verificationModeArgument, MockitoolsBundle.message("inspection.timeout.value.more.than.allowed", timeoutMaxThreshold));
+                holder.registerProblem(verificationModeArgument, message("inspection.timeout.value.more.than.allowed", timeoutMaxThreshold));
             }
         }
     }

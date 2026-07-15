@@ -2,7 +2,6 @@
 
 package com.picimako.mockitools.intention.convert.stub;
 
-import static com.google.common.collect.Iterables.getLast;
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
@@ -11,17 +10,18 @@ import static com.picimako.mockitools.util.PsiMethodUtil.getReferenceNameElement
 import static com.picimako.mockitools.util.Ranges.endOffsetOf;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
-import java.util.List;
-
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.StubType;
-import com.picimako.mockitools.StubbingApproach;
-import com.picimako.mockitools.util.PsiClassUtil;
+import com.picimako.mockitools.dsl.StubType;
+import com.picimako.mockitools.dsl.StubbingApproach;
+import com.picimako.mockitools.intention.PsiClassUtil;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * Converts stubbing call chains between the different approaches.
@@ -37,7 +37,7 @@ public record StubbingConverter(Project project, Document document, PsiFile file
      * @param from             the stubbing approach to convert from
      * @param to               the target stubbing approach to convert to
      */
-    public void convert(PsiMethodCallExpression firstCallInChain, StubbingApproach from, StubbingApproach to) {
+    public void convert(@NotNull PsiMethodCallExpression firstCallInChain, StubbingApproach from, StubbingApproach to) {
         //To make sure that converting a chain to itself doesn't happen
         if (from.hasSameStubTypeAs(to) && from.methodCallStubber.equals(to.methodCallStubber))
             return;
@@ -59,13 +59,14 @@ public record StubbingConverter(Project project, Document document, PsiFile file
      * <p>
      * For example:
      * <pre>
+     * {@code
      * BDDMockito.given(mock.doSomething()).will*();
      * //may become
      * Mockito.when(mock.doSomething()).then*();
-     * </pre>
+     * }</pre>
      */
-    private void convertSameType(List<PsiMethodCallExpression> calls, StubbingApproach from, StubbingApproach to) {
-        doBaseConversion(from, to, calls, endOffsetOf(getQualifier(calls.getFirst())), to.getBeginningOfStubbing(from));
+    private void convertSameType(@NotNull List<PsiMethodCallExpression> calls, StubbingApproach from, StubbingApproach to) {
+        doBaseConversion(calls, from, to, endOffsetOf(getQualifier(calls.getFirst())), to.getBeginningOfStubbing(from));
     }
 
     /**
@@ -73,23 +74,24 @@ public record StubbingConverter(Project project, Document document, PsiFile file
      * <p>
      * For example:
      * <pre>
+     * {@code
      * Mockito.when(mock.doSomething()).then*();
      * //may become
      * Mockito.do*().when(mock).doSomething();
-     * </pre>
+     * }</pre>
      */
-    private void convertToStubber(List<PsiMethodCallExpression> calls, StubbingApproach from, StubbingApproach to) {
+    private void convertToStubber(@NotNull List<PsiMethodCallExpression> calls, StubbingApproach from, StubbingApproach to) {
         //These have to be saved before the base conversion, so their values are kept properly
         var stubbedCall = ((PsiMethodCallExpression) getFirstArgument(calls.getFirst())); //mock.doSomething()
         var stubbedCallQualifier = getQualifier(stubbedCall).getText(); //"mock"
         var stubbedCallText = stubbedCall.getText(); //"mock.doSomething()"
 
         //At this point the example chain becomes 'Mockito.do*();'
-        doBaseConversion(from, to, calls, endOffsetOf(calls.getFirst()), to.getBeginningOfStubbing(from));
+        doBaseConversion(calls, from, to, endOffsetOf(calls.getFirst()), to.getBeginningOfStubbing(from));
 
         //Adds the '.when(mock).doSomething()' part at the end of the call chain, so the example becomes: 'Mockito.do*().when(mock).doSomething();'
         document.insertString(
-            endOffsetOf(getLast(calls)),
+            endOffsetOf(calls.getLast()),
             "." + to.methodCallStubber + "(" + stubbedCallQualifier + ")" + stubbedCallText.replace(stubbedCallQualifier, ""));
     }
 
@@ -98,28 +100,29 @@ public record StubbingConverter(Project project, Document document, PsiFile file
      * <p>
      * For example:
      * <pre>
+     * {@code
      * Mockito.do*().when(mock).doSomething();
      * //may become
      * BDDMockito.given(mock.doSomething()).will*();
-     * </pre>
+     * }</pre>
      */
-    private void convertToStubbing(List<PsiMethodCallExpression> calls, StubbingApproach from, StubbingApproach to) {
+    private void convertToStubbing(@NotNull List<PsiMethodCallExpression> calls, StubbingApproach from, StubbingApproach to) {
         var stubbingMethod = calls.get(calls.size() - 2); //when(mock)
         int endOffset = endOffsetOf(getQualifier(calls.getFirst())); //end offset of Mockito
 
         //BDDMockito.given + ( + mock + .doSomething() + )
-        String replacement = to.getBeginningOfStubbing(from) + "(" + getFirstArgument(stubbingMethod).getText() + getLast(calls).getText().replace(stubbingMethod.getText(), "") + ")";
+        String replacement = to.getBeginningOfStubbing(from) + "(" + getFirstArgument(stubbingMethod).getText() + calls.getLast().getText().replace(stubbingMethod.getText(), "") + ")";
 
         //At this point the example chain becomes 'BDDMockito.given(mock.doSomething()).will*().when(mock).doSomething();'
-        doBaseConversion(from, to, calls, endOffset, replacement);
+        doBaseConversion(calls, from, to, endOffset, replacement);
 
         //Removes the '.when(mock).doSomething()' part at the end, and the example becomes: 'BDDMockito.given(mock.doSomething()).will*();'
-        document.deleteString(endOffsetOf(calls.get(calls.size() - 3)), endOffsetOf(getLast(calls)));
+        document.deleteString(endOffsetOf(calls.get(calls.size() - 3)), endOffsetOf(calls.getLast()));
     }
 
     //Low-level conversion logic
 
-    private void doBaseConversion(StubbingApproach from, StubbingApproach to, List<PsiMethodCallExpression> calls, int endOffset, String replacement) {
+    private void doBaseConversion(@NotNull List<PsiMethodCallExpression> calls, StubbingApproach from, StubbingApproach to, int endOffset, String replacement) {
         replaceBeginningOfChain(calls, endOffset, replacement);
         PsiClassUtil.importClassAndCommit(to.getStubStarterClassFqn(), project, file, document);
         convertMethodNames(calls, from, to);
@@ -130,11 +133,12 @@ public record StubbingConverter(Project project, Document document, PsiFile file
      * <p>
      * For example:
      * <pre>
+     * {@code
      * //The following text:
      * Mockito.do*().when(mock).doSomething();
      * //could become:
      * BDDMockito.given(mock.doSomething).do*().when(mock).doSomething();
-     * </pre>
+     * }</pre>
      *
      * @param calls       the call chain
      * @param endOffset   the end offset to replace the text from the start offset of the chain

@@ -4,7 +4,7 @@ package com.picimako.mockitools.inspection.verification;
 
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
-import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.inspection.UnitTestPsiUtil.isInTestSourceContent;
 import static com.siyeh.ig.psiutils.TypeUtils.typeEquals;
 
 import com.intellij.codeInspection.LocalInspectionTool;
@@ -16,7 +16,7 @@ import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.search.searches.ReferencesSearch;
-import com.picimako.mockitools.VerificationApproach;
+import com.picimako.mockitools.dsl.VerificationApproach;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,14 +38,12 @@ final class SingleInOrderVerificationInspection extends LocalInspectionTool {
 
                 var inOrderRefs = ReferencesSearch.search(variable).findAll();
                 //If there is only one reference to/usage of the InOrder variable
-                if (inOrderRefs.size() == 1) {
-                    var ref = inOrderRefs.iterator().next();
-                    if (ref instanceof PsiReferenceExpression inOrderRef) {
-                        var verifyOrShould = getParentOfType(inOrderRef, PsiMethodCallExpression.class);
-                        //If the only usage is a method call to InOrder.verify() or BDDMockito.should(InOrder)
-                        if (VerificationApproach.INORDER_VERIFY.isVerifiedBy(verifyOrShould) || VerificationApproach.BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(verifyOrShould))
-                            holder.registerProblem(variable.getNameIdentifier(), MockitoolsBundle.message("inspection.in.order.is.used.only.once"));
-                    }
+                if (inOrderRefs.size() == 1 && inOrderRefs.iterator().next() instanceof PsiReferenceExpression inOrderRef) {
+                    var verifyOrShould = getParentOfType(inOrderRef, PsiMethodCallExpression.class);
+                    //If the only usage is a method call to InOrder.verify() or BDDMockito.should(InOrder)
+                    if (VerificationApproach.INORDER_VERIFY.isVerifiedBy(verifyOrShould)
+                        || VerificationApproach.BDDMOCKITO_THEN_SHOULD.isInOrderSpecific(verifyOrShould))
+                        holder.registerProblem(variable.getNameIdentifier(), MockitoolsBundle.message("inspection.in.order.is.used.only.once"));
                 }
 
                 super.visitLocalVariable(variable);

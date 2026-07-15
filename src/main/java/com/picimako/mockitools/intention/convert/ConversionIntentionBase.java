@@ -13,7 +13,6 @@ import static com.picimako.mockitools.util.PsiMethodUtil.getMethodCallForIdentif
 import static com.picimako.mockitools.util.PsiMethodUtil.getQualifier;
 import static com.picimako.mockitools.util.PsiMethodUtil.isIdentifierOfMethodCall;
 import static com.picimako.mockitools.util.Ranges.charSequenceInRange;
-import static com.picimako.mockitools.util.TokenTypes.isTokenType;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -25,15 +24,18 @@ import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
+import com.intellij.psi.PsiJavaToken;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
+import com.picimako.mockitools.intention.ListPopupHelper;
 import com.picimako.mockitools.intention.convert.verification.NoActionAvailableAction;
-import com.picimako.mockitools.util.ListPopupHelper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -47,15 +49,27 @@ import java.util.List;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class ConversionIntentionBase implements IntentionAction {
     protected static final List<AnAction> NO_ACTION_AVAILABLE = Collections.singletonList(NoActionAvailableAction.INSTANCE);
+    /**
+     * A display name for the stubbing or verification approach. Used in the intention actions' family names.
+     */
     protected final String sourceApproachName;
+    /**
+     * Used for bulk conversions to limit the execution of some logic when the selection is shorter than this value
+     *
+     * @see isAvailableForBulkConversion
+     */
     private final int minSelectionLength;
 
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-        if (computeBlocking(() -> !editor.getSelectionModel().hasSelection())) {
-            final var element = file.findElementAt(computeBlocking(() -> editor.getCaretModel().getOffset()));
-            return isIdentifierOfMethodCall(element) && isAvailableFor(getMethodCallForIdentifier(element));
-        } else return isAvailableForBulkConversion(editor, file);
+        @Nullable final var elementAtCaret = computeBlocking(() -> {
+            var hasSelection = editor.getSelectionModel().hasSelection();
+            return !hasSelection ? file.findElementAt(editor.getCaretModel().getOffset()) : null;
+        });
+
+        return elementAtCaret != null
+            ? isIdentifierOfMethodCall(elementAtCaret) && isAvailableFor(getMethodCallForIdentifier(elementAtCaret))
+            : isAvailableForBulkConversion(editor, file);
     }
 
     /**
@@ -108,6 +122,13 @@ public abstract class ConversionIntentionBase implements IntentionAction {
     private boolean isSymbolAfterMethodCallChain(PsiElement element) {
         return (element instanceof PsiWhiteSpace && getPrevSiblingOfType(element, PsiExpressionStatement.class) != null)
             || (isTokenType(element, JavaTokenType.SEMICOLON) && getPrevSiblingOfType(element, PsiMethodCallExpression.class) != null);
+    }
+
+    /**
+     * Returns if the element is of the provided type.
+     */
+    private static boolean isTokenType(PsiElement element, IElementType type) {
+        return element instanceof PsiJavaToken && element.getNode().getElementType() == type;
     }
 
     /**

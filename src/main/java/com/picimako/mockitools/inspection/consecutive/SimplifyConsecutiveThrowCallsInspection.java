@@ -9,10 +9,10 @@ import static com.picimako.mockitools.MockitoQualifiedNames.THEN_THROW;
 import static com.picimako.mockitools.MockitoQualifiedNames.WHEN;
 import static com.picimako.mockitools.MockitoQualifiedNames.WILL_RETURN;
 import static com.picimako.mockitools.MockitoQualifiedNames.WILL_THROW;
-import static com.picimako.mockitools.StubbingApproach.BDDMOCKITO_GIVEN;
-import static com.picimako.mockitools.StubbingApproach.BDDMOCKITO_WILL_X;
-import static com.picimako.mockitools.StubbingApproach.MOCKITO_DO_X;
-import static com.picimako.mockitools.StubbingApproach.MOCKITO_WHEN;
+import static com.picimako.mockitools.dsl.StubbingApproach.BDDMOCKITO_GIVEN;
+import static com.picimako.mockitools.dsl.StubbingApproach.BDDMOCKITO_WILL_X;
+import static com.picimako.mockitools.dsl.StubbingApproach.MOCKITO_DO_X;
+import static com.picimako.mockitools.dsl.StubbingApproach.MOCKITO_WHEN;
 import static com.picimako.mockitools.util.PsiMethodUtil.containsCallToNonDefaultConstructor;
 import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
 

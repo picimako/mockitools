@@ -5,9 +5,9 @@ package com.picimako.mockitools.inspection.stubbing;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ADDITIONAL_MATCHERS;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_ARGUMENT_MATCHERS;
 import static com.picimako.mockitools.MockitoolsPsiUtil.isAdditionalMatchers;
-import static com.picimako.mockitools.StubbingApproach.BDDMOCKITO_GIVEN;
-import static com.picimako.mockitools.StubbingApproach.MOCKITO_DO_X;
-import static com.picimako.mockitools.StubbingApproach.MOCKITO_WHEN;
+import static com.picimako.mockitools.dsl.StubbingApproach.BDDMOCKITO_GIVEN;
+import static com.picimako.mockitools.dsl.StubbingApproach.MOCKITO_DO_X;
+import static com.picimako.mockitools.dsl.StubbingApproach.MOCKITO_WHEN;
 import static com.siyeh.ig.callMatcher.CallMatcher.staticCall;
 import static com.siyeh.ig.psiutils.MethodCallUtils.getMethodName;
 
@@ -16,9 +16,8 @@ import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiExpressionList;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiTypeCastExpression;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
-import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,12 +36,12 @@ import org.jetbrains.annotations.Nullable;
  * TODO: Additional customization option may be added in IDE settings to configure classes that also provide static methods for creating argument matchers,
  *  besides ArgumentMatchers and AdditionalMatchers.
  *
- * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#argument_matchers">Argument matchers documentation</a>
+ * @see <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#argument_matchers">Argument matchers documentation</a>
  * @see <a href="https://javadoc.io/static/org.mockito/mockito-core/3.11.2/org/mockito/ArgumentMatchers.html">ArgumentMatchers javadoc</a>
  * @see <a href="https://rules.sonarsource.com/java/tag/mockito/RSPEC-6073">SonarLint alternative</a>
  * @since 0.1.0
  */
-final class InconsistentArgumentMatcherUsageInspection extends MockitoolsBaseInspection {
+final class InconsistentArgumentMatcherUsageInspection extends MockitoolsInspectionBase {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
@@ -90,9 +89,7 @@ final class InconsistentArgumentMatcherUsageInspection extends MockitoolsBaseIns
     }
 
     private boolean isArgumentMatcher(PsiExpression arg, String methodName) {
-        return CallMatcher.anyOf(
-            staticCall(ORG_MOCKITO_ARGUMENT_MATCHERS, methodName),
-            staticCall(ORG_MOCKITO_ADDITIONAL_MATCHERS, methodName)
-        ).matches(arg);
+        return staticCall(ORG_MOCKITO_ARGUMENT_MATCHERS, methodName).matches(arg)
+            || staticCall(ORG_MOCKITO_ADDITIONAL_MATCHERS, methodName).matches(arg);
     }
 }

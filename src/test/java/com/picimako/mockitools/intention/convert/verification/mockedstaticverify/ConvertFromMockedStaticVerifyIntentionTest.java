@@ -110,7 +110,7 @@ class ConvertFromMockedStaticVerifyIntentionTest extends EnforceConventionAwareI
                     }
                 }""");
         List<Class<?>> actions = map(
-            new ConvertFromMockedStaticVerifyIntention().actionSelectionOptions(getFixture().getEditor(), getFixture().getFile()),
+            new ConvertFromMockedStaticVerifyIntention().actionSelectionOptions(getEditor(), getFile()),
             Object::getClass
         );
 

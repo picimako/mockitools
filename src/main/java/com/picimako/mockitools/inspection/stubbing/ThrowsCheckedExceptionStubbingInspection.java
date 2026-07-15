@@ -4,10 +4,12 @@ package com.picimako.mockitools.inspection.stubbing;
 
 import static com.intellij.psi.CommonClassNames.JAVA_LANG_EXCEPTION;
 import static com.intellij.psi.CommonClassNames.JAVA_LANG_THROWABLE;
-import static com.picimako.mockitools.util.EvaluationHelper.evaluateClassObjectOrNewExpressionType;
-import static com.picimako.mockitools.util.EvaluationHelper.evaluateType;
-import static com.picimako.mockitools.util.ExceptionUtil.isCheckedException;
-import static com.picimako.mockitools.util.PointersUtil.toPointer;
+import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
+import static com.intellij.util.containers.ContainerUtil.find;
+import static com.picimako.mockitools.inspection.EvaluationHelper.evaluateClassObjectOrNewExpressionType;
+import static com.picimako.mockitools.inspection.EvaluationHelper.evaluateType;
+import static com.picimako.mockitools.inspection.PointersUtil.toPointer;
+import static com.picimako.mockitools.util.MockitoolsContainerUtil.none;
 import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.util.PsiMethodUtil.getSubsequentMethodCall;
 
@@ -15,19 +17,26 @@ import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.*;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.picimako.mockitools.StubType;
-import com.picimako.mockitools.StubbingApproach;
-import com.picimako.mockitools.inspection.BaseQuickFix;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.intellij.psi.CommonClassNames;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiClassObjectAccessExpression;
+import com.intellij.psi.PsiClassType;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiExpression;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiMethodCallExpression;
+import com.intellij.psi.PsiType;
+import com.intellij.psi.SmartPsiElementPointer;
+import com.intellij.psi.util.InheritanceUtil;
+import com.picimako.mockitools.dsl.StubType;
+import com.picimako.mockitools.dsl.StubbingApproach;
+import com.picimako.mockitools.inspection.QuickFixBase;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
+import com.picimako.mockitools.util.ClassObjectAccessUtil;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Arrays;
-import java.util.Optional;
 
 /**
  * Reports exception references in {@code *Throw()} stubbing methods based on Mockito's rule on checked exceptions:
@@ -47,14 +56,12 @@ import java.util.Optional;
  *
  * @since 0.3.0
  */
-final class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInspection {
+final class ThrowsCheckedExceptionStubbingInspection extends MockitoolsInspectionBase {
 
     @Override
     protected void checkMethodCallExpression(PsiMethodCallExpression expression, @NotNull ProblemsHolder holder) {
-        Arrays.stream(StubbingApproach.values())
-            .filter(approach -> approach.getExceptionStubber().isApplicableTo(expression))
-            .findFirst()
-            .ifPresent(approach -> checkAndRegister(approach, expression, holder));
+        var approach = find(StubbingApproach.values(), sa -> sa.getExceptionStubber().isApplicableTo(expression));
+        if (approach != null) checkAndRegister(approach, expression, holder);
     }
 
     /**
@@ -89,18 +96,36 @@ final class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInspe
             });
     }
 
+    /**
+     * Returns whether the exception class referenced by the argument expression is a checked exception.
+     */
+    private static boolean isCheckedException(PsiExpression expression) {
+        return expression instanceof PsiClassObjectAccessExpression
+            ? isCheckedException(ClassObjectAccessUtil.getOperandType(expression))
+            : isCheckedException(expression.getType());
+    }
+
+    /**
+     * Returns whether the argument type is a checked exception.
+     */
+    private static boolean isCheckedException(@Nullable PsiType type) {
+        return !InheritanceUtil.isInheritor(type, CommonClassNames.JAVA_LANG_RUNTIME_EXCEPTION)
+            && !InheritanceUtil.isInheritor(type, CommonClassNames.JAVA_LANG_ERROR);
+    }
+
     private static boolean doesntHaveMatchingCheckedExceptionInThrowsClause(PsiClassType[] exceptionTypesInThrowsClause, PsiExpression stubbedException) {
         var stubbedExceptionType = evaluateType(stubbedException);
-        return stubbedExceptionType != null && Arrays.stream(exceptionTypesInThrowsClause).noneMatch(type -> type.getCanonicalText().equals(stubbedExceptionType.getCanonicalText()));
+        return stubbedExceptionType != null
+            && none(exceptionTypesInThrowsClause, type -> type.getCanonicalText().equals(stubbedExceptionType.getCanonicalText()));
     }
 
     private static boolean doesntHaveExceptionOrThrowableInThrowsClause(PsiClassType[] exceptionTypesInThrowsClause) {
-        return Arrays.stream(exceptionTypesInThrowsClause)
-            .noneMatch(type -> {
+        return none(exceptionTypesInThrowsClause, type -> {
                 String typeCanonicalText = type.getCanonicalText();
-                //Checking java.lang.Exception because it might be more likely to be used in a throws clause than java.lang.Throwable
+                //Checking java.lang.Exception first because it might be more likely to be used in a 'throws' clause than java.lang.Throwable
                 return typeCanonicalText.equals(JAVA_LANG_EXCEPTION) || typeCanonicalText.equals(JAVA_LANG_THROWABLE);
-            });
+            }
+        );
     }
 
     /**
@@ -113,11 +138,10 @@ final class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInspe
      */
     @Nullable
     private PsiMethod resolveStubbedMethod(PsiExpression stub, StubType stubType) {
-        return stubType == StubType.STUBBING
-            ? ((PsiMethodCallExpression) stub).resolveMethod()
-            : Optional.ofNullable(getSubsequentMethodCall(PsiTreeUtil.getParentOfType(stub, PsiMethodCallExpression.class)))
-            .map(PsiCall::resolveMethod)
-            .orElse(null);
+        if (stubType == StubType.STUBBING) return ((PsiMethodCallExpression) stub).resolveMethod();
+
+        var subsequentMethodCall = getSubsequentMethodCall(getParentOfType(stub, PsiMethodCallExpression.class));
+        return subsequentMethodCall != null ? subsequentMethodCall.resolveMethod() : null;
     }
 
     /**
@@ -147,7 +171,7 @@ final class ThrowsCheckedExceptionStubbingInspection extends MockitoolsBaseInspe
      * @since 0.5.0
      */
     @RequiredArgsConstructor
-    private static final class AddExceptionToThrowsClauseQuickFix extends BaseQuickFix {
+    private static final class AddExceptionToThrowsClauseQuickFix extends QuickFixBase {
         private final SmartPsiElementPointer<PsiMethod> stubbedMethod;
 
         @Override

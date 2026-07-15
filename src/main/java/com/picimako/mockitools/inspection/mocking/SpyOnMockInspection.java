@@ -15,7 +15,7 @@ import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
 import com.picimako.mockitools.dsl.MockObject;
-import com.picimako.mockitools.inspection.MockitoolsBaseInspection;
+import com.picimako.mockitools.inspection.MockitoolsInspectionBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import com.siyeh.ig.callMatcher.CallMatcher;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @since 0.11.0
  */
-final class SpyOnMockInspection extends MockitoolsBaseInspection {
+final class SpyOnMockInspection extends MockitoolsInspectionBase {
 
     private static final CallMatcher MOCKITO_SPY = staticCall(ORG_MOCKITO_MOCKITO, SPY).parameterTypes("T");
 

@@ -2,6 +2,7 @@
 
 package com.picimako.mockitools.intention.convert.verification.inorderverify;
 
+import static com.picimako.mockitools.dsl.VerificationApproach.MOCKED_STATIC_VERIFY;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 
@@ -20,7 +21,7 @@ import com.picimako.mockitools.intention.convert.verification.ConvertVerificatio
 public class ConvertInOrderVerifyToMockedStaticVerifyAction extends ConvertVerificationActionBase {
 
     protected ConvertInOrderVerifyToMockedStaticVerifyAction(boolean isBulkMode) {
-        super("MockedStatic.verify()", isBulkMode);
+        super(MOCKED_STATIC_VERIFY.presentableText, isBulkMode);
     }
 
     @Override

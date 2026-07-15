@@ -22,7 +22,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNewExpression;
 import com.intellij.util.IncorrectOperationException;
-import com.picimako.mockitools.StubbingApproach;
+import com.picimako.mockitools.dsl.StubbingApproach;
 import com.picimako.mockitools.inspection.consecutive.TypeConversionMethod;
 import com.picimako.mockitools.inspection.stubbing.ExceptionStubber;
 import com.picimako.mockitools.resources.MockitoolsBundle;
@@ -43,7 +43,7 @@ import java.util.Arrays;
  *     <li>BDDMockito.given().willThrow()</li>
  *     <li>Mockito.doThrow().when()</li>
  *     <li>Mockito.do*().doThrow().when()</li>
- *     <li>BDDMockito.willl*).willThrow().given()</li>
+ *     <li>BDDMockito.will*).willThrow().given()</li>
  *     <li>BDDMockito.willThrow().given()</li>
  * </ul>
  *

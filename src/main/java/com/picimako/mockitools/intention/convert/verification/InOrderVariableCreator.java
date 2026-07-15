@@ -2,9 +2,8 @@
 
 package com.picimako.mockitools.intention.convert.verification;
 
-import static com.google.common.collect.Iterables.getLast;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
-import static com.picimako.mockitools.util.PsiClassUtil.importClassAndCommit;
+import static com.picimako.mockitools.intention.PsiClassUtil.importClassAndCommit;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
 
 import com.intellij.openapi.editor.Document;
@@ -18,12 +17,12 @@ import com.picimako.mockitools.MockitoQualifiedNames;
 import java.util.List;
 
 /**
- * Creates {@code InOrder} type local variables in the form of an {@code InOrder inOrder = Mockito.inOrder([mock objects])} call.
+ * Creates {@code InOrder}-type local variables in the form of an {@code InOrder inOrder = Mockito.inOrder([mock objects])} call.
  */
 public record InOrderVariableCreator(Document document) {
 
     /**
-     * Creates an {@code org.mockito.InOrder} type local variable and inserts it right before the verification call
+     * Creates an {@code org.mockito.InOrder}-type local variable and inserts it right before the verification call
      * that is being converted.
      * <p>
      * The arguments of the {@code Mockito.inOrder()} call will be the mock object used in {@code verificationCall}-
@@ -37,7 +36,7 @@ public record InOrderVariableCreator(Document document) {
     }
 
     /**
-     * Creates an {@code org.mockito.InOrder} type local variable and inserts it right before the verification call
+     * Creates an {@code org.mockito.InOrder}-type local variable and inserts it right before the verification call
      * that is being converted.
      *
      * @param verificationCall the verification call being converted
@@ -57,9 +56,9 @@ public record InOrderVariableCreator(Document document) {
         //Add the new variable to the parent block, before the Mockito.verify()/BDDMockito.then() call chain
         var parentBlock = getParentOfType(verificationCall, PsiCodeBlock.class);
 
-        //'Iterables.getLast(calls)' returns the call expression for the whole call chain.
+        //'calls.getLast()' returns the call expression for the whole call chain.
         // The addition has to happen to before the whole call chain, so it has the proper formatting and underlying PSI.
-        var addedVariable = parentBlock.addBefore(inOrderVariable, getLast(calls).getParent());
+        var addedVariable = parentBlock.addBefore(inOrderVariable, calls.getLast().getParent());
         PsiDocumentManager.getInstance(project).doPostponedOperationsAndUnblockDocument(document);
         return addedVariable;
     }

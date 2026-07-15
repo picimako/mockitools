@@ -3,17 +3,17 @@
 package com.picimako.mockitools.intention.convert.stub;
 
 import static com.intellij.openapi.application.ReadAction.computeBlocking;
-import static com.picimako.mockitools.EnforceConventionUtil.isBDDMockitoEnforced;
-import static com.picimako.mockitools.EnforceConventionUtil.isMockitoEnforced;
+import static com.picimako.mockitools.intention.convert.EnforceConventionUtil.isBDDMockitoEnforced;
+import static com.picimako.mockitools.intention.convert.EnforceConventionUtil.isMockitoEnforced;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_BDDMOCKITO;
-import static com.picimako.mockitools.StubbingApproach.BDDMOCKITO_GIVEN;
+import static com.picimako.mockitools.dsl.StubbingApproach.BDDMOCKITO_GIVEN;
 import static com.picimako.mockitools.intention.convert.stub.DoesntContainUnsupportedMethod.DOESNT_CONTAIN_WILL;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.StubbingApproach;
+import com.picimako.mockitools.dsl.StubbingApproach;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.List;
 final class ConvertFromBDDMockitoGivenIntention extends ConvertStubbingIntentionBase {
 
     public ConvertFromBDDMockitoGivenIntention() {
-        super("BDDMockito.given()", ORG_MOCKITO_BDDMOCKITO);
+        super(StubbingApproach.BDDMOCKITO_GIVEN, ORG_MOCKITO_BDDMOCKITO);
     }
 
     @Override

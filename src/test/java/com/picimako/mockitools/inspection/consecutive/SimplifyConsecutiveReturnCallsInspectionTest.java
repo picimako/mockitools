@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 /**
  * Functional test for {@link SimplifyConsecutiveReturnCallsInspection}.
  */
-class SimplifyConsecutiveReturnCallsInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
+class SimplifyConsecutiveReturnCallsInspectionTest extends MockitoolsInspectionTestBase {
 
     private static final String MOCK_OBJECT_CLASS =
         """
@@ -436,70 +436,73 @@ class SimplifyConsecutiveReturnCallsInspectionTest extends MockitoolsInspectionT
         return new SimplifyConsecutiveReturnCallsInspection();
     }
 
-//Highlighting
+    //Highlighting
 
     @Test
     void testSimplifyConsecutiveStubbingCalls() {
         doJavaTest();
     }
 
-//Quick fixes
+    //Quick fixes
 
     @ParameterizedTest
     @MethodSource("whenThenReturnCases")
     void testReplacesWhenThenReturns(String before, String after) {
-        doQuickFixTest("Merge thenReturn calls", "QuickFix.java", createClassText(before), createClassText(after));
+        doQuickFixTest("Merge thenReturn calls", classText(before), classText(after));
     }
 
     @ParameterizedTest
     @MethodSource("doReturnWhenCases")
     void testReplacesDoReturnWhens(String before, String after) {
-        doQuickFixTest("Merge doReturn calls", "QuickFix.java", createClassText(before), createClassText(after));
+        doQuickFixTest("Merge doReturn calls", classText(before), classText(after));
     }
 
     @ParameterizedTest
     @MethodSource("givenWillReturnCases")
     void testReplacesGivenWillReturns(String before, String after) {
-        doQuickFixTest("Merge willReturn calls", "QuickFix.java", createClassText(before), createClassText(after));
+        doQuickFixTest("Merge willReturn calls", classText(before), classText(after));
     }
 
     @ParameterizedTest
     @MethodSource("willReturnGivenCases")
     void testReplacesWillReturnGivens(String before, String after) {
-        doQuickFixTest("Merge willReturn calls", "QuickFix.java", createClassText(before), createClassText(after));
+        doQuickFixTest("Merge willReturn calls", classText(before), classText(after));
     }
 
     @ParameterizedTest
     @MethodSource("mockedStaticWhenThenReturnCases")
     void testReplacesMockedStaticWhenThenReturns(String before, String after) {
-        doQuickFixTest("Merge thenReturn calls", "QuickFix.java", createMockedStaticClassText(before), createMockedStaticClassText(after));
+        doQuickFixTest("Merge thenReturn calls", mockedStaticClassText(before), mockedStaticClassText(after));
     }
 
-    private String createClassText(String beforeOrAfter) {
-        return "import org.mockito.Mockito;\n" +
-               "import org.mockito.BDDMockito;\n" +
-               "\n" +
-               "class QuickFix {\n" +
-               "   void testMethod() {\n" +
-               beforeOrAfter + "\n" +
-               "   }\n" +
-               "\n" +
-               MOCK_OBJECT_CLASS +
-               "}";
+    private String classText(String beforeOrAfter) {
+        return """
+            import org.mockito.Mockito;
+            import org.mockito.BDDMockito;
+            
+            class QuickFix {
+                void testMethod() {
+            %s
+                }
+            %s
+            }
+            """.formatted(beforeOrAfter, MOCK_OBJECT_CLASS);
     }
 
-    private String createMockedStaticClassText(String beforeOrAfter) {
-        return "import org.mockito.Mockito;\n" +
-               "import org.mockito.MockedStatic;\n" +
-               "import java.util.Collections;\n" +
-               "import java.util.List;\n" +
-               "\n" +
-               "class QuickFix {\n" +
-               "   void testMethod() {\n" +
-               "       try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {\n" +
-               beforeOrAfter + "\n" +
-               "       }\n" +
-               "   }\n" +
-               "}";
+    private String mockedStaticClassText(String beforeOrAfter) {
+        return """
+            import org.mockito.Mockito;
+            import org.mockito.MockedStatic;
+            import java.util.Collections;
+            import java.util.List;
+            
+            class QuickFix {
+                void testMethod() {
+                    try (MockedStatic<List> mock = Mockito.mockStatic(List.class)) {
+            %s
+                    }
+                }
+            }
+            """.formatted(beforeOrAfter);
     }
 }

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Integration test for {@link SingleInOrderVerificationInspection};
  */
-class SingleInOrderVerificationInspectionTest extends MockitoolsInspectionTestBase.MockitoV4 {
+class SingleInOrderVerificationInspectionTest extends MockitoolsInspectionTestBase {
 
     @Override
     protected InspectionProfileEntry getInspection() {

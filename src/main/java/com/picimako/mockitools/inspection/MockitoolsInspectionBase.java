@@ -2,7 +2,7 @@
 
 package com.picimako.mockitools.inspection;
 
-import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
+import static com.picimako.mockitools.inspection.UnitTestPsiUtil.isInTestSourceContent;
 
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.LocalInspectionToolSession;
@@ -19,13 +19,16 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Base class for inspections that has to distinguish validation between files in test sources and actual unit test classes.
  */
-public abstract class MockitoolsBaseInspection extends LocalInspectionTool {
+public abstract class MockitoolsInspectionBase extends LocalInspectionTool {
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
         return isInTestSourceContent(session.getFile()) ? methodCallVisitor(holder) : PsiElementVisitor.EMPTY_VISITOR;
     }
 
+    /**
+     * Creates a Java element visitor that visits only {@code PsiMethodCallExpression} nodes.
+     */
     @NotNull
     protected JavaElementVisitor methodCallVisitor(@NotNull ProblemsHolder holder) {
         return new JavaElementVisitor() {
@@ -46,6 +49,9 @@ public abstract class MockitoolsBaseInspection extends LocalInspectionTool {
         };
     }
 
+    /**
+     * Creates a Java element visitor that visits only {@code PsiField} nodes.
+     */
     @NotNull
     protected JavaElementVisitor fieldVisitor(@NotNull ProblemsHolder holder) {
         return new JavaElementVisitor() {
@@ -56,6 +62,9 @@ public abstract class MockitoolsBaseInspection extends LocalInspectionTool {
         };
     }
 
+    /**
+     * Creates a Java element visitor that visits only {@code PsiField} and {@code PsiMethodCallExpression} nodes.
+     */
     @NotNull
     protected JavaElementVisitor fieldAndMethodCallVisitor(@NotNull ProblemsHolder holder) {
         return new JavaElementVisitor() {
@@ -81,6 +90,9 @@ public abstract class MockitoolsBaseInspection extends LocalInspectionTool {
         };
     }
 
+    /**
+     * Creates a Java element visitor that visits only {@code PsiAnnotation} and {@code PsiMethodCallExpression} nodes.
+     */
     @NotNull
     protected JavaElementVisitor annotationAndMethodCallVisitor(@NotNull ProblemsHolder holder) {
         return new JavaElementVisitor() {

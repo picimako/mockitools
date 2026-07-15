@@ -4,11 +4,12 @@ package com.picimako.mockitools.inspection.verification;
 
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
+import static com.intellij.util.containers.ContainerUtil.all;
 import static com.intellij.util.containers.ContainerUtil.map;
 import static com.picimako.mockitools.MockitoQualifiedNames.ORG_MOCKITO_INORDER;
+import static com.picimako.mockitools.inspection.UnitTestPsiUtil.isInTestSourceContent;
 import static com.picimako.mockitools.util.PsiMethodUtil.getArguments;
 import static com.picimako.mockitools.util.PsiMethodUtil.getFirstArgument;
-import static com.picimako.mockitools.util.UnitTestPsiUtil.isInTestSourceContent;
 import static com.siyeh.ig.psiutils.TypeUtils.typeEquals;
 
 import com.intellij.codeInspection.LocalInspectionTool;
@@ -25,11 +26,10 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.util.SmartList;
-import com.picimako.mockitools.VerificationApproach;
+import com.picimako.mockitools.dsl.VerificationApproach;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,7 +38,7 @@ import java.util.List;
  * <ul>
  *     <li>The mock is added to the arguments of {@code Mockito.inOrder()} but is not used in any verification
  *     performed via that {@code InOrder} object.</li>
- *     <li>The mock is used in an {@code InOrder} verification but it is not added to the arguments of {@code Mockito.inOrder()}.</li>
+ *     <li>The mock is used in an {@code InOrder} verification, but it is not added to the arguments of {@code Mockito.inOrder()}.</li>
  * </ul>
  *
  * @since 0.5.0
@@ -71,10 +71,10 @@ final class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loca
                     }
 
                     //The mock arguments as Strings from 'Mockito.inOrder()'
-                    var mocksInMockitoInOrderAsString = Arrays.stream(mocksInMockitoInOrder).map(PsiElement::getText).toList();
+                    var mocksInMockitoInOrderAsString = map(mocksInMockitoInOrder, PsiElement::getText);
                     //Report all mocks in verifications that are not configured in 'Mockito.inOrder()'
                     //This corresponds to the 'inOrderRequiresFamiliarMock()' method in
-                    // https://github.com/mockito/mockito/blob/main/src/main/java/org/mockito/internal/exceptions/Reporter.java
+                    // https://github.com/mockito/mockito/blob/main/mockito-core/src/main/java/org/mockito/internal/exceptions/Reporter.java
                     for (var mockInVerification : mocksInVerifications) {
                         if (!mocksInMockitoInOrderAsString.contains(mockInVerification.getText()))
                             holder.registerProblem(mockInVerification, MockitoolsBundle.message("inspection.mock.is.not.configured.in.in.order"));
@@ -94,7 +94,7 @@ final class UnusedOrUnconfiguredMockInInOrderVerificationInspection extends Loca
      * the related mock objects are used.
      */
     private boolean areAllVerifications(PsiReference[] inOrderRefs) {
-        return Arrays.stream(inOrderRefs).allMatch(ref -> {
+        return all(inOrderRefs, ref -> {
             if (ref instanceof PsiReferenceExpression inOrderRef) {
                 var verifyOrShould = getParentOfType(inOrderRef, PsiMethodCallExpression.class);
                 return VerificationApproach.INORDER_VERIFY.isVerifiedBy(verifyOrShould)

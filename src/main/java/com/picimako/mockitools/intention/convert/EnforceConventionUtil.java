@@ -1,10 +1,11 @@
 //Copyright 2026 Tamás Balog. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.picimako.mockitools;
+package com.picimako.mockitools.intention.convert;
 
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.psi.PsiElement;
+import com.picimako.mockitools.dsl.Convention;
 import com.picimako.mockitools.inspection.stubbing.EnforceConventionInspection;
 
 /**

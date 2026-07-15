@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Functional test for {@link VerificationModeValuesBetweenLimitsInspection}.
  */
-class VerificationModeValuesBetweenLimitsInspectionTest extends MockitoolsInspectionTestBase.MockitoV3 {
+class VerificationModeValuesBetweenLimitsInspectionTest extends MockitoolsInspectionTestBase {
 
     @Override
     protected InspectionProfileEntry getInspection() {

@@ -9,15 +9,14 @@ import static com.siyeh.ig.psiutils.ImportUtils.isAlreadyStaticallyImported;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.inspection.BaseQuickFix;
-import com.picimako.mockitools.inspection.migrationaids.v4.ArgumentMatchersCalledViaMatchersInspection.ReplaceMatchersWithArgumentMatchersQuickFix;
+import com.picimako.mockitools.inspection.QuickFixBase;
 import com.picimako.mockitools.resources.MockitoolsBundle;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Base class for Mockito v4 migration aid quick fixes.
  */
-public abstract class MigrationAidV4BaseQuickFix extends BaseQuickFix {
+abstract class MigrationAidV4QuickFix extends QuickFixBase {
 
     @Override
     public @IntentionFamilyName @NotNull String getFamilyName() {
@@ -25,8 +24,8 @@ public abstract class MigrationAidV4BaseQuickFix extends BaseQuickFix {
     }
 
     /**
-     * Replaces org.mockito.Matchers qualifiers with org.mockito.ArgumentMatchers and static imports the matcher
-     * that is provided in {@code matcherToImport}.
+     * Replaces {@code org.mockito.Matchers} qualifiers with {@code org.mockito.ArgumentMatchers} and
+     * static-imports the matcher that is provided in {@code matcherToImport}.
      */
     protected void replaceMatchersQualifierAndStaticImportMatcher(PsiMethodCallExpression parentCall, String matcherToImport, PsiElement context) {
         if (!replaceMatchersQualifier(parentCall) && !isAlreadyStaticallyImported(parentCall.getMethodExpression())) {
@@ -44,11 +43,12 @@ public abstract class MigrationAidV4BaseQuickFix extends BaseQuickFix {
     }
 
     /**
-     * Returns whether the argument method call has a qualifier or not.
+     * Replaces {@code org.mockito.Matchers} qualifiers with {@code org.mockito.ArgumentMatchers}.
+     * Returns whether the argument method call had a qualifier.
      */
     protected boolean replaceMatchersQualifier(PsiMethodCallExpression parentCall) {
         if (parentCall.getMethodExpression().isQualified()) {
-            new ReplaceMatchersWithArgumentMatchersQuickFix().replace(getQualifier(parentCall), parentCall.getProject());
+            QualifierReplacements.replaceMatchersWithArgumentMatchers(getQualifier(parentCall), parentCall.getProject());
             return true;
         }
         return false;

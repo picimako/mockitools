@@ -2,13 +2,14 @@
 
 package com.picimako.mockitools.intention.convert.verification.mockitoverify;
 
+import static com.picimako.mockitools.dsl.VerificationApproach.INORDER_VERIFY;
 import static com.picimako.mockitools.intention.convert.FromSelectionDataRetriever.collectMockObjects;
 import static com.picimako.mockitools.util.PsiMethodUtil.collectCallsInChainFromFirst;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiMethodCallExpression;
-import com.picimako.mockitools.MemberInplaceRenameHelper;
+import com.picimako.mockitools.intention.MemberInplaceRenameHelper;
 import com.picimako.mockitools.intention.convert.verification.ConvertVerificationActionBase;
 
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.List;
  */
 public class ConvertMockitoVerifyToInOrderVerifyAction extends ConvertVerificationActionBase {
     public ConvertMockitoVerifyToInOrderVerifyAction(boolean isBulkMode) {
-        super("InOrder.verify()", isBulkMode);
+        super(INORDER_VERIFY.presentableText, isBulkMode);
     }
 
     @Override
